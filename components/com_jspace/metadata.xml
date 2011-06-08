@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE install PUBLIC "-//Joomla! 1.5//DTD component 1.0//EN" "http://dev.joomla.org/xml/1.5/component-install.dtd">
+<install type="component" version="1.5.0">
+	<name>JSpace</name>
+	<creationDate>2011-05-24</creationDate>
+	<author>Wijiti</author>
+	<authorEmail>development@wijiti.com</authorEmail>
+	<authorUrl>http://www.wijiti.com</authorUrl>
+	<copyright>>Copyright (C) 2011 Wijiti Pty Ltd. All rights reserved.</copyright>
+	<license>http://www.gnu.org/licenses/gpl-3.0.html</license>
+	<version>0.1.0</version>
+	<description>The JSpace component provides a method for displaying digital assets from a DSpace system using the RESTful API.</description>
+
+	<installfile></installfile>
+	<uninstallfile></uninstallfile>
+    
+    <install><sql></sql></install>
+    <uninstall><sql></sql></uninstall>
+	
+	<files folder="site">
+		<folder>helpers</folder>
+		<folder>models</folder>
+		<folder>views</folder>
+		<filename>controller.php</filename>		
+		<filename>jspace.php</filename>
+		<filename>router.php</filename>
+	</files>
+	
+ 	<languages folder="language/site">
+ 		<language tag="en-GB">en-GB.com_jspace.ini</language>
+ 	</languages>
+ 	
+    <media destination="com_jspace">
+    	<folder>js</folder>
+    	<folder>css</folder>
+		<folder>images</folder>
+		<folder>flowplayer</folder>
+    </media>
+
+	<administration>
+		<menu view="configuration">JSpace</menu>
+
+		<files folder="admin">
+			<filename>jspace.php</filename>
+			<filename>controller.php</filename>
+			<filename>configuration.php</filename>
+			<folder>elements</folder>	
+			<folder>helpers</folder>
+			<folder>models</folder>
+			<folder>views</folder>
+		</files>
+		
+		<languages folder="language/admin">
+			<language tag="en-GB">en-GB.com_jspace.ini</language>
+		</languages>
+	</administration>
+	
+    <params>
+    </params>	
+</install>

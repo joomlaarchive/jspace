@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<metadata>
+	<layout title="Default Layout">
+		<message>
+			<![CDATA[COM_JSPACE_COLLECTION_LAYOUT_DESC]]>
+		</message>
+	</layout>
+	<state>
+		<name>Default Layout</name>
+		<description>COM_JSPACE_COLLECTION_LAYOUT_DESC</description>
+		<url addpath="/administrator/components/com_jspace/elements">
+			<param name="id" type="collection" default="0" label="Select Collection" description="A Collection" />
+		</url>
+		<params>
+		</params>
+	</state>
+</metadata>

@@ -1,0 +1,135 @@
+@CHARSET "UTF-8";
+
+.jspace-community-tree {
+    margin-top: 30px;
+}
+
+.jspace-community {
+    font-size: 14pt;
+    font-weight: bold;
+    margin: 10px 0 10px 0;
+}
+
+.jspace-collection {
+    font-size: 80%;
+    margin: 10px 0;
+}
+
+.jspace-items, 
+.jspace-results {
+	overflow: hidden;
+	padding: 10px 0;
+	width: 100%;
+}
+
+.jspace-title {
+    font-size: 130%;
+    line-height: 120%;
+}
+
+.jspace-thumbnail {
+	width: 75px; 
+	height: 75px; 
+	float: left;
+	padding-right: 6px;
+	padding-top: 2px;
+}
+
+.jspace-thumbnail img,
+.jspace-array-thumbnails li img {
+	width: 100%;
+	height: 100%;
+}
+
+.jspace-array-thumbnails {
+    margin: 0;
+    overflow: hidden;
+    padding: 0;
+}
+
+.jspace-array-thumbnails li {
+	width: 75px; 
+	height: 75px; 
+	float: left;
+	list-style: none;
+	padding-right: 5px;
+}
+
+.jspace-item {
+	overflow: hidden;
+	padding: 5px 0;
+}
+
+.jspace-item .dc-element-name {
+	font-weight: bold;
+	float: left; 
+	width: 20%;
+}
+
+.jspace-item .dc-element-value {
+	float: left;
+	width: 80%;
+}
+
+.jspace-bitstreams {
+	margin: 20px 0;	
+}
+
+.jspace-bitstream {
+	overflow: hidden;
+	margin: 25px 0;
+	clear: right;
+}
+
+.jspace-bitstream-thumbnail {
+	float: left;
+	width: 20%;
+	text-align: right !important;
+}
+
+.jspace-bitstream-thumbnail img {
+	padding-right: 10px;	
+}
+
+.jspace-bitstream-details {
+    margin: 0;
+    padding: 0;	
+}
+
+.jspace-bitstream-details li {
+	list-style: none;
+}
+
+.jspace-file-name {
+    font-size: 130%;
+    line-height: 130%;
+}
+
+.jspace-file-size {
+	margin: 1px 0;
+}
+
+.jspace-file-type {
+	margin: 1px 0;
+}
+
+.jspace-preview, .jspace-download {
+     padding: 0 0 0 16px;
+     margin: 1px 0;	
+} 
+
+.jspace-preview {
+     background: url("../../../media/com_jspace/images/icon-16-preview.png") no-repeat scroll 0 bottom transparent;
+}
+
+.pdf-preview {
+	margin: 1cm;
+	font-size: 110%;	
+}
+.jspace-preview:hover, .jspace-download:hover {
+    background-position: 0 top;
+}
+
+.jspace-download {
+     background: url("../../../media/com_jspace/images/icon-16-download.png") no-repeat scroll 0 bottom transparent;
+}
