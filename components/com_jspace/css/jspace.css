@@ -91,45 +91,50 @@
 	padding-right: 10px;	
 }
 
-.jspace-bitstream-details {
+#jspaceBitstreams .jspace-bitstream-details {
     margin: 0;
     padding: 0;	
 }
 
-.jspace-bitstream-details li {
+#jspaceBitstreams .jspace-bitstream-details li {
 	list-style: none;
+	line-height: 130%;
 }
 
-.jspace-file-name {
+#jspaceBitstreams .jspace-file-name {
     font-size: 130%;
-    line-height: 130%;
 }
 
-.jspace-file-size {
+#jspaceBitstreams .jspace-file-size {
 	margin: 1px 0;
 }
 
-.jspace-file-type {
+#jspaceBitstreams .jspace-file-type {
 	margin: 1px 0;
 }
 
-.jspace-preview, .jspace-download {
+#jspaceBitstreams .jspace-preview, #jspaceBitstreams .jspace-download {
      padding: 0 0 0 16px;
      margin: 1px 0;	
 } 
 
-.jspace-preview {
+#jspaceBitstreams .jspace-preview {
      background: url("../../../media/com_jspace/images/icon-16-preview.png") no-repeat scroll 0 bottom transparent;
 }
 
-.pdf-preview {
+#jspaceBitstreams .jspace-preview:hover {
+	background: url("../../../media/com_jspace/images/icon-16-preview.png") no-repeat scroll 0 top transparent;
+}
+
+#jspaceBitstreams .pdf-preview {
 	margin: 1cm;
 	font-size: 110%;	
 }
-.jspace-preview:hover, .jspace-download:hover {
-    background-position: 0 top;
+
+#jspaceBitstreams .jspace-download {
+	background: url("../../../media/com_jspace/images/icon-16-download.png") no-repeat scroll 0 bottom transparent;
 }
 
-.jspace-download {
-     background: url("../../../media/com_jspace/images/icon-16-download.png") no-repeat scroll 0 bottom transparent;
+#jspaceBitstreams .jspace-download:hover {
+	background: url("../../../media/com_jspace/images/icon-16-download.png") no-repeat scroll 0 top transparent;
 }

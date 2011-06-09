@@ -35,7 +35,7 @@ require_once(JPATH_COMPONENT.DS.'helpers'.DS.'metadata.php');
 
 <?php if ($this->get("Data")) : ?>
 
-	<div class="componentheading"><?php echo $this->get("Data")->name; ?></div>
+	<h2><?php echo $this->get("Data")->name; ?></h2>
 
 	<?php if ($this->get("Data")->shortDescription) : ?>
 		<div><?php echo $this->get("Data")->shortDescription; ?></div>

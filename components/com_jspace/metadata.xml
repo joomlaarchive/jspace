@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE install PUBLIC "-//Joomla! 1.5//DTD component 1.0//EN" "http://dev.joomla.org/xml/1.5/component-install.dtd">
-<install type="component" version="1.5.0">
+<extension type="component" version="1.6.0">
 	<name>JSpace</name>
-	<creationDate>2011-05-24</creationDate>
+	<creationDate>2011-06-09</creationDate>
 	<author>Wijiti</author>
 	<authorEmail>development@wijiti.com</authorEmail>
 	<authorUrl>http://www.wijiti.com</authorUrl>
@@ -26,8 +25,8 @@
 		<filename>router.php</filename>
 	</files>
 	
- 	<languages folder="language/site">
- 		<language tag="en-GB">en-GB.com_jspace.ini</language>
+ 	<languages folder="site">
+ 		<language tag="en-GB">language/en-GB/en-GB.com_jspace.ini</language>
  	</languages>
  	
     <media destination="com_jspace">
@@ -38,23 +37,23 @@
     </media>
 
 	<administration>
-		<menu view="configuration">JSpace</menu>
+		<menu link="option=com_sharethis&amp;view=configuration">JSpace</menu>
 
 		<files folder="admin">
 			<filename>jspace.php</filename>
 			<filename>controller.php</filename>
 			<filename>configuration.php</filename>
-			<folder>elements</folder>	
 			<folder>helpers</folder>
 			<folder>models</folder>
 			<folder>views</folder>
 		</files>
 		
-		<languages folder="language/admin">
-			<language tag="en-GB">en-GB.com_jspace.ini</language>
-		</languages>
+	 	<languages folder="admin">
+ 			<language tag="en-GB">language/en-GB/en-GB.com_jspace.ini</language>
+ 			<language tag="en-GB">language/en-GB/en-GB.com_jspace.sys.ini</language>
+ 		</languages>
 	</administration>
 	
     <params>
     </params>	
-</install>
+</extension>

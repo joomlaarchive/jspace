@@ -1,6 +1,6 @@
 <?php 
 /**
- * A form view for adding/editing JSolrIndex configuration.
+ * A form view for adding/editing JSpace configuration.
  * 
  * @author		$LastChangedBy$
  * @package		JSpace
@@ -31,108 +31,68 @@
 
 defined( '_JEXEC' ) or die( 'Restricted access' );
 
-$application = JFactory::getApplication("administrator");
-
-$document = JFactory::getDocument();
-
-JToolBarHelper::title(JText::_('Configuration'), 'config.png');
-
-JToolBarHelper::save();
-JToolBarHelper::cancel();
+JHtml::_('behavior.tooltip');
+JHtml::_('behavior.formvalidation');
 ?>
+<script type="text/javascript">
+	Joomla.submitbutton = function(task)
+	{
+		if (task == 'cancel' || document.formvalidator.isValid(document.id('item-form'))) {
+			Joomla.submitform(task, document.getElementById('item-form'));
+		}
+		else {
+			alert('<?php echo $this->escape(JText::_('JGLOBAL_VALIDATION_FORM_FAILED'));?>');
+		}
+	}
+</script>
 
-<form autocomplete="off" name="adminForm" method="post" action="index.php">
-	<div id="config-document">
-		<div id="page-site" style="display: block;">
-			<table class="noshow">
-				<tbody>
-					<tr>
-						<td width="65%">
-							<fieldset class="adminform">
-								<legend>DSpace Settings</legend>
-	
-								<table cellspacing="1" class="admintable">
-									<tbody>
-										<tr>
-											<td class="key">
-												<span class="editlinktip hasTip"><?php echo JText::_("COM_JSPACE_BASE_URL"); ?></span>
-											</td>
-											<td>
-												<input type="text" value="<?php echo $this->getModel()->getParam("base_url"); ?>" size="50" id="base_url" name="base_url" class="text_area"/>
-											</td>
-										</tr>
-										<tr>
-											<td class="key">
-												<span class="editlinktip hasTip"><?php echo JText::_("COM_JSPACE_REST_URL"); ?></span>
-											</td>
-											<td>
-												<input type="text" value="<?php echo $this->getModel()->getParam("rest_url"); ?>" size="50" id="rest_url" name="rest_url" class="text_area"/>
-											</td>
-										</tr>
-										<tr>
-											<td class="key">
-												<span class="editlinktip hasTip"><?php echo JText::_("COM_JSPACE_REST_USERNAME"); ?></span>
-											</td>
-											<td>
-												<input type="text" value="<?php echo $this->getModel()->getParam("username"); ?>" size="50" id="username" name="username" class="text_area"/>
-											</td>
-										</tr>
-										<tr>
-											<td class="key">
-												<span class="editlinktip hasTip"><?php echo JText::_("COM_JSPACE_REST_PASSWORD"); ?></span>
-											</td>
-											<td>
-												<input type="text" value="<?php echo $this->getModel()->getParam("password"); ?>" size="50" id="password" name="password" class="text_area"/>
-											</td>
-										</tr>
-									</tbody>																	
-								</table>
-							</fieldset>
-							<fieldset class="adminform">
-								<legend>Prerequisite Components</legend>
-	
-								<table cellspacing="1" class="admintable">
-									<tbody>
-										<tr>
-											<td class="key">
-												<span class="editlinktip hasTip"><?php echo JText::_("COM_JSPACE_GD_LIBRARY"); ?></span>
-											</td>
-											<td>
-												<?php 
-												if ($this->getModel()->isGDInstalled()) :
-													echo JText::_("COM_JSPACE_IS_INSTALLED");
-												else :
-													echo JText::_("COM_JSPACE_IS_NOT_INSTALLED");
-												endif;
-												?>
-											</td>
-										</tr>
-										<tr>
-											<td class="key">
-												<span class="editlinktip hasTip"><?php echo JText::_("COM_JSPACE_FFMPEG_LIBRARY"); ?></span>
-											</td>
-											<td>
-												<?php 
-												if ($this->getModel()->isFFMPEGInstalled()) :
-													echo JText::_("COM_JSPACE_IS_INSTALLED");
-												else :
-													echo JText::_("COM_JSPACE_IS_NOT_INSTALLED");
-												endif;
-												?>
-											</td>
-										</tr>
-									</tbody>
-								</table>
-							</fieldset>
-						</td>
-					</tr>
-				</tbody>
-			</table>
-		</div>
+<form action="<?php echo JRoute::_('index.php?option=com_jspace&view=configuration'); ?>" method="post" name="adminForm" id="item-form" class="form-validate">
+	<div class="width-100">
+		<fieldset class="adminform">
+			<legend><?php echo JText::_("DSpace Settings"); ?></legend>
+			<ul class="adminformlist">
+				<li>
+					<?php echo $this->form->getLabel('base_url'); ?>
+					<?php echo $this->form->getInput('base_url'); ?>
+				</li>
+
+				<li><?php echo $this->form->getLabel('rest_url'); ?></li>
+				<li><?php echo $this->form->getInput('rest_url'); ?></li>
+				
+				<li><?php echo $this->form->getLabel('username'); ?></li>
+				<li><?php echo $this->form->getInput('username'); ?></li>
+
+				<li><?php echo $this->form->getLabel('password'); ?></li>
+				<li><?php echo $this->form->getInput('password'); ?></li>				
+			</ul>
+		</fieldset>
+		<fieldset class="adminform">
+			<legend><?php echo JText::_("Prerequisite Libraries"); ?></legend>
+			<ul class="adminformlist">
+				<li><span class="faux-label"><?php echo JText::_("COM_JSPACE_GD_LIBRARY"); ?></span></li>
+				<li><span class="readonly">
+				<?php 
+				if ($this->getModel()->isGDInstalled()) :
+					echo JText::_("COM_JSPACE_IS_INSTALLED");
+				else :
+					echo JText::_("COM_JSPACE_IS_NOT_INSTALLED");
+				endif;
+				?>
+				</span></li>	
+				<li><span class="faux-label"><?php echo JText::_("COM_JSPACE_FFMPEG_LIBRARY"); ?></span></li>
+				<li><span class="readonly">
+				<?php 
+				if ($this->getModel()->isFFMPEGInstalled()) :
+					echo JText::_("COM_JSPACE_IS_INSTALLED");
+				else :
+					echo JText::_("COM_JSPACE_IS_NOT_INSTALLED");
+				endif;
+				?>
+				</span></li>
+			</ul>
+		</fieldset>
 	</div>
-	<div class="clr"></div>
-	
-	<input type="hidden" value="com_jspace" name="option"/>
-	<input type="hidden" value="" name="task"/>
-	<input type="hidden" value="configuration" name="view"/>
+	<input type="hidden" name="option" value="<?php echo JRequest::getCmd("option");?>" />
+	<input type="hidden" name="task" value="" />
+	<?php echo JHTML::_( 'form.token' ); ?>
 </form>

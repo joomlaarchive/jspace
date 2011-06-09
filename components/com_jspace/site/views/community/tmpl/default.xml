@@ -1,17 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <metadata>
-	<layout title="Default Layout">
+	<layout title="COM_JSPACE_COMMUNITY_LAYOUT_TITLE" option="com_jspace_community_view_default_option">
 		<message>
 			<![CDATA[COM_JSPACE_COMMUNITY_LAYOUT_DESC]]>
 		</message>
 	</layout>
-	<state>
-		<name>Default Layout</name>
-		<description>COM_JSPACE_COMMUNITY_LAYOUT_DESC</description>
-		<url addpath="/administrator/components/com_jspace/elements">
-			<param name="id" type="community" default="0" label="Select Community" description="A Community" />
-		</url>
-		<params>
-		</params>
-	</state>
+	
+	<fields name="request">
+		<fieldset name="request"
+			addfieldpath="/administrator/components/com_jspace/models/fields">
+	
+			<field name="id" type="community"
+				label="COM_JSPACE_FIELD_SELECT_COMMUNITY_LABEL"
+				required="true"
+				description="COM_JSPACE_FIELD_SELECT_COMMUNITY_DESC"
+			/>
+		</fieldset>
+	</fields>
 </metadata>

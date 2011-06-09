@@ -33,7 +33,7 @@ defined( '_JEXEC' ) or die( 'Restricted access' );
 
 <?php if ($this->get("Data")) : ?>
 
-	<div class="componentheading"><?php echo $this->get("Data")->name; ?></div>
+	<h2><?php echo $this->get("Data")->name; ?></h2>
 
 	<?php if ($this->get("Data")->shortDescription) : ?>
 		<div><?php echo $this->get("Data")->shortDescription; ?></div>

@@ -37,7 +37,7 @@ require_once(JPATH_COMPONENT.DS.'helpers'.DS.'metadata.php');
 
 <?php if ($this->get("Data")) : ?>
 
-	<div class="componentheading"><?php echo JSpaceMetadata::getElementAsString($this->get("Data")->metadata, "DC.title"); ?></div>
+	<h2><?php echo JSpaceMetadata::getElementAsString($this->get("Data")->metadata, "DC.title"); ?></h2>
 
 	<?php if (JSpaceMetadata::getElementAsString($this->get("Data")->metadata, "DC.title")) : ?>
 		<div class="jspace-item">
@@ -54,6 +54,13 @@ require_once(JPATH_COMPONENT.DS.'helpers'.DS.'metadata.php');
 					<div><?php echo $creator; ?></div>
 				<?php endforeach; ?>
 			</div>
+		</div>
+	<?php endif; ?>
+
+	<?php if (JSpaceMetadata::getElementAsString($this->get("Data")->metadata, "DCTERMS.abstract")) : ?>
+		<div class="jspace-item">
+			<div class="dc-element-name"><?php echo JText::_("COM_JSPACE_DC_ABSTRACT_LABEL"); ?>:</div>
+			<div class="dc-element-value"><?php echo JSpaceMetadata::getElementAsString($this->get("Data")->metadata, "DCTERMS.abstract"); ?></div>
 		</div>
 	<?php endif; ?>
 
@@ -93,7 +100,7 @@ require_once(JPATH_COMPONENT.DS.'helpers'.DS.'metadata.php');
 		</div>
 	</div>	
 
-	<div class="jspace-bitstreams">
+	<div id="jspaceBitstreams" class="jspace-bitstreams">
 	<?php foreach ($this->get("OriginalBitstreams") as $bitstream) : ?>
 		<div class="jspace-bitstream">
 			<?php if ($thumbnail = $this->getModel()->getThumbnail($bitstream)) : ?>

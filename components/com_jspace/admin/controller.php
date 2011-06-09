@@ -31,40 +31,30 @@
 
 defined('_JEXEC') or die('Restricted access');
 
-jimport('joomla.application.component.controller');
+jimport('joomla.application.component.controllerform');
 
-class JSpaceController extends JController 
+class JSpaceController extends JControllerForm 
 {
-	const DEFAULT_VIEW = "configuration";
+	protected $default_view = 'configuration';
 	
 	function __construct()
 	{
 		parent::__construct();
 	}
 
-	public function save()
+	public function save($key = null)
 	{
-		$model = $this->getModel(JRequest::getWord("view", self::DEFAULT_VIEW));
+		$model = $this->getModel(JRequest::getWord("view", $this->default_view));
 		
-		$model->save(JRequest::get("post"));
+		$model->save(JRequest::getVar('jform', array(), 'post', 'array'));
 
-		$view = $this->getView(JRequest::getWord("view", self::DEFAULT_VIEW), JRequest::getWord("format", "html"));
+		$view = $this->getView(JRequest::getWord("view", $this->default_view), JRequest::getWord("format", "html"));
 		$view->setModel($model, true);
 		
 		$url = new JURI("index.php");
 		$url->setVar("option", JRequest::getWord("option"));
-		$url->setVar("view", JRequest::getWord("view", self::DEFAULT_VIEW));
-		
-		$this->setRedirect($url->toString(), JText::_("COM_JSPACE_".strtoupper(JRequest::getWord("view", self::DEFAULT_VIEW))."_SAVE_SUCCESSFUL"));
-	}
-	
-	function display()
-	{
-		$model = $this->getModel(JRequest::getWord("view", self::DEFAULT_VIEW));
-		
-		$view = $this->getView(JRequest::getWord("view", self::DEFAULT_VIEW), 'html');
-		$view->setModel($model, true);
-		$view->setLayout('default');
-		$view->display();
+		$url->setVar("view", JRequest::getWord("view", $this->default_view));
+
+		$this->setRedirect($url->toString(), JText::_("COM_JSPACE_".strtoupper(JRequest::getWord("view", $this->default_view))."_SAVE_SUCCESSFUL"));
 	}	
 }

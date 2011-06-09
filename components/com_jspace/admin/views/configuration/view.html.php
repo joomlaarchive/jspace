@@ -31,12 +31,22 @@
  
 defined( '_JEXEC' ) or die( 'Restricted access' );
  
-jimport( 'joomla.application.component.view');
+jimport('joomla.application.component.view');
  
 class JSpaceViewConfiguration extends JView
 {
     function display($tpl = null)
-    {    	
+    {
+    	$this->set("form", $this->get('Form'));
+
+		$this->addToolbar();
+		    	
         parent::display($tpl);
+    }
+    
+    protected function addToolbar()
+    {
+    	JToolBarHelper::title(JText::_('Configuration'), 'config.png');
+		JToolBarHelper::apply('save', 'JTOOLBAR_APPLY');
     }
 }

@@ -33,18 +33,15 @@ defined('_JEXEC') or die('Restricted access');
 
 jimport('joomla.registry.registry');
 jimport('joomla.filesystem.file');
+jimport('joomla.application.component.modeladmin');
 
-class JSpaceModelConfiguration extends JModel
+class JSpaceModelConfiguration extends JModelAdmin
 {
 	var $configPath = null;
-	
-	var $configuration = null;
 	
 	public function __construct()
 	{
 		$this->configPath = JPATH_ROOT.DS."administrator".DS."components".DS."com_jspace".DS."configuration.php";
-		
-		require_once($this->configPath);
 		
 		parent::__construct();
 	}
@@ -56,11 +53,15 @@ class JSpaceModelConfiguration extends JModel
 	 */
 	public function getConfig()
 	{
-		if (!$this->configuration) {
-			$this->configuration = new JSpaceConfig();	
-		}
+		require_once($this->configPath);
 		
-		return $this->configuration;
+		$config = new JSpaceConfig(); 
+		
+		$registry = JFactory::getConfig();
+
+		$registry->loadObject($config);
+
+		return $config;
 	}
 
 	public function getParam($name)
@@ -68,21 +69,43 @@ class JSpaceModelConfiguration extends JModel
 		return $this->getConfig()->$name;
 	}
 	
-	public function save($array)
+	public function save($data)
 	{
 		$config = new JRegistry('jspaceconfig');
 
 		$config->loadObject($this->getConfig());
-		
+
 		foreach(array_keys($config->toArray()) as $key) {
-			if ($value = JArrayHelper::getValue($array, $key)) {
+			if ($value = JArrayHelper::getValue($data, $key)) {
 				$config->setValue($key, $value);
 			}
 		}
 
-		JFile::write($this->configPath, $config->toString("PHP", "jspaceconfig", array("class"=>"JSpaceConfig")));
+		JFile::write($this->configPath, $config->toString("PHP", array("class"=>"JSpaceConfig", "closingtag"=>false)));
+	}
+	
+	public function getForm($data = array(), $loadData = true) 
+	{
+		// Get the form.
+		$form = $this->loadForm('com_jspace.configuration', 'configuration', array('control' => 'jform', 'load_data' => $loadData));
 
-		$this->configuration = null;
+		if (empty($form)) {
+			return false;
+		}
+
+		return $form;
+	}
+	
+	protected function loadFormData() 
+	{
+		// Check the session for previously entered form data.
+		$data = JFactory::getApplication()->getUserState('com_jspace.edit.configuration.data', array());
+
+		if (empty($data)) {
+			$data = JArrayHelper::fromObject($this->getConfig());
+		}
+
+		return $data;
 	}
 	
 	public function isGDInstalled()

@@ -33,6 +33,6 @@ defined( '_JEXEC' ) or die( 'Restricted access' );
 require_once(JPATH_COMPONENT.DS.'helpers'.DS.'community.php');
 ?>
 
-<div class="componentheading"><?php echo JText::_("COM_JSPACE_COMMUNITIES_HEADING"); ?></div>
+<h2><?php echo JText::_("COM_JSPACE_COMMUNITIES_HEADING"); ?></h2>
 
 <?php echo JSpaceCommunity::tree($this->get("List")); ?>

@@ -1,8 +1,8 @@
 <?php
 /**
- * A menu element for selecting a community.
+ * Supports a collection picker.
  * 
- * @author		$LastChangedBy$
+ * @author		$LastChangedBy: spauldingsmails $
  * @package		JSpace
  * @copyright	Copyright (C) 2011 Wijiti Pty Ltd. All rights reserved.
  * @license     This file is part of the JSpace component for Joomla!.
@@ -29,50 +29,49 @@
  * 
  */
 
-defined('_JEXEC') or die( 'Restricted access' );
+defined('JPATH_BASE') or die;
 
+jimport('joomla.form.formfield');
 jimport("joomla.filesystem.file");
 jimport('joomla.error.log');
 jimport('joomla.utilities');
 
 require_once(JPATH_ROOT.DS."administrator".DS."components".DS."com_jspace".DS."helpers".DS."restrequest.php");
 
-class JElementCommunity extends JElement
+class JFormFieldCollection extends JFormField
 {
 	/**
-	 * Element name
+	 * The form field type.
 	 *
-	 * @access      protected
 	 * @var         string
+	 * @since       1.6
 	 */
-	var $_name = 'Community';
+	protected $type = 'Collection';
 
-	function fetchElement($name, $value, &$node, $control_name)
+	protected function getInput()
 	{
 		$array = array();
-		$array[] = JHTML::_("select.option", 0, JText::_("Select a community"));
+		$array[] = JHTML::_("select.option", 0, JText::_("Select a collection"));
 		
 		require_once(JPATH_ROOT.DS."administrator".DS."components".DS."com_jspace".DS."configuration.php");
 		
 		$configuration = new JSpaceConfig();
 		
-		$request = new JSpaceRestRequestHelper($configuration->rest_url.'/communities.json?topLevelOnly=false', 'GET');
+		$request = new JSpaceRestRequestHelper($configuration->rest_url.'/collections.json', 'GET');
 		$request->execute();
 
 		if (JArrayHelper::getValue($request->getResponseInfo(), "http_code") == 200) {
 			$response = json_decode($request->getResponseBody());
 			
-			foreach ($response->communities_collection as $community) {
-				$array[] = JHTML::_("select.option", $community->id, $community->name);
+			foreach ($response->collections_collection as $collection) {
+				$array[] = JHTML::_("select.option", $collection->id, $collection->name);
 			}
 		} else {
 			$this->data = array();
 			$log = JLog::getInstance();
 			$log->addEntry(array("c-ip"=>JArrayHelper::getValue($request->getResponseInfo(), "http_code", 0), "comment"=>$request->getResponseBody()));
 		}
-		
-		$fieldName = $control_name.'['.$name.']';
 
-		return JHTML::_("select.genericlist", $array, $fieldName, null, "value", "text", intval($value), "'.$name.'_id");
+		return JHTML::_("select.genericlist", $array, $this->name, null, "value", "text", intval($this->value), $this->id);
 	}
 }
