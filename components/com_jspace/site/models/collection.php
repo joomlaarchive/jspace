@@ -35,7 +35,7 @@ jimport('joomla.application.component.model');
 jimport("joomla.filesystem.file");
 jimport('joomla.error.log');
 jimport('joomla.utilities');
-
+jimport('jspace.factory');
 require_once(JPATH_COMPONENT_ADMINISTRATOR.DS."helpers".DS."restrequest.php");
 
 class JSpaceModelCollection extends JModel
@@ -91,16 +91,24 @@ class JSpaceModelCollection extends JModel
 	public function getData()
 	{
 		if (!$this->data) {
-			$request = new JSpaceRestRequestHelper($this->getConfig()->rest_url.'/collections/'. $this->getId() .'.json', 'GET');
-			$request->execute();
+		try {
+			$endpoint = JSpaceFactory::getEndpoint('/collections/'. $this->getId() .'.json');
+			$this->data = $resp = json_decode(JSpaceFactory::getRepository()->getConnector()->get($endpoint));
+// 			var_dump($resp);
+		} catch (Exception $e) {
+			throw JSpaceRepositoryError::raiseError($this, JText::sprintf('COM_JSPACE_JSPACEITEM_ERROR_CANNOT_FETCH', $this->getId()));
+		}
+			
+// 			$request = new JSpaceRestRequestHelper($this->getConfig()->rest_url.'/collections/'. $this->getId() .'.json', 'GET');
+// 			$request->execute();
 
-			if (JArrayHelper::getValue($request->getResponseInfo(), "http_code") == 200) {
-				$this->data = json_decode($request->getResponseBody());
-			} else {
-				$this->data = array();
-				$log = JLog::getInstance();
-				$log->addEntry(array("c-ip"=>JArrayHelper::getValue($request->getResponseInfo(), "http_code", 0), "comment"=>$request->getResponseBody()));
-			}
+// 			if (JArrayHelper::getValue($request->getResponseInfo(), "http_code") == 200) {
+// 				$this->data = json_decode($request->getResponseBody());
+// 			} else {
+// 				$this->data = array();
+// 				$log = JLog::getInstance();
+// 				$log->addEntry(array("c-ip"=>JArrayHelper::getValue($request->getResponseInfo(), "http_code", 0), "comment"=>$request->getResponseBody()));
+// 			}
 		}
 		
 		return $this->data;
@@ -114,21 +122,29 @@ class JSpaceModelCollection extends JModel
 	public function getItems()
 	{
 		if (!$this->items) {
-			$request = new JSpaceRestRequestHelper($this->getConfig()->rest_url.'/collections/'. $this->getId() .'/items.json', 'GET');
-			$request->execute();
-
-			if (JArrayHelper::getValue($request->getResponseInfo(), "http_code") == 200) {
-				$response = json_decode($request->getResponseBody());
-				$this->items = $response->data;
-				
-				for ($i = 0; $i < count($this->items); $i++) {
-					$this->items[$i]->thumbnails = $this->getThumbnails($this->items[$i]->id);
-				}
-			} else {
-				$this->items = array();
-				$log = JLog::getInstance();
-				$log->addEntry(array("c-ip"=>JArrayHelper::getValue($request->getResponseInfo(), "http_code", 0), "comment"=>$request->getResponseBody()));
+// 			$request = new JSpaceRestRequestHelper($this->getConfig()->rest_url.'/collections/'. $this->getId() .'/items.json', 'GET');
+// 			$request->execute();
+			
+			try {
+				$endpoint = JSpaceFactory::getEndpoint('/collections/'. $this->getId() .'/items.json?_start=1&_limit=1');
+				$this->items = $resp = json_decode(JSpaceFactory::getRepository()->getConnector()->get($endpoint));
+				var_dump($resp);
+			} catch (Exception $e) {
+				throw JSpaceRepositoryError::raiseError($this, JText::sprintf('COM_JSPACE_JSPACEITEM_ERROR_CANNOT_FETCH', $this->getId()));
 			}
+
+// 			if (JArrayHelper::getValue($request->getResponseInfo(), "http_code") == 200) {
+// 				$response = json_decode($request->getResponseBody());
+// 				$this->items = $response->data;
+				
+// 				for ($i = 0; $i < count($this->items); $i++) {
+// 					$this->items[$i]->thumbnails = $this->getThumbnails($this->items[$i]->id);
+// 				}
+// 			} else {
+// 				$this->items = array();
+// 				$log = JLog::getInstance();
+// 				$log->addEntry(array("c-ip"=>JArrayHelper::getValue($request->getResponseInfo(), "http_code", 0), "comment"=>$request->getResponseBody()));
+// 			}
 		}
 		
 		return $this->items;		

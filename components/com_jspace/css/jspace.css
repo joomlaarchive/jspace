@@ -142,12 +142,14 @@
 
 
 /* Categories */
+ul.jspace-items,
 ul.jspace-categories{
 	list-style-type: none;
 }
 
 ul.jspace-categories li{
 }
+ul.jspace-items li a,
 ul.jspace-categories li a{
 	background: transparent url(../images/folder.png) left center no-repeat;
 	display: block;
@@ -157,20 +159,40 @@ ul.jspace-categories li a{
 	color: #444;
 }
 
+ul.jspace-items li:nth-child(2n+1) a,
 ul.jspace-categories li:nth-child(2n+1) a{
 	background-color: rgba(244,244,244,0.5);
 }
+ul.jspace-items li:nth-child(2n) a,
 ul.jspace-categories li:nth-child(2n) a{
 	background-color: rgba(244,244,244,0.3);
 }
 
+ul.jspace-items li a:hover,
 ul.jspace-categories li a:hover{
 	background-color: #fff;
 }
 
+ul.jspace-items li a{
+	background: transparent url(../images/item.png) left center no-repeat;
+}
 
 
 
+/* Pagination */
+.jspace-pagination ul{
+	list-style-type: none;
+	padding:0px;
+	margin:0px;
+	display: inline-block;
+}
+.jspace-pagination ul li{
+	display: inline-block;
+	padding:3px;
+}
+.jspace-pagination ul li a{
+	text-decoration: none;
+}
 
 
 

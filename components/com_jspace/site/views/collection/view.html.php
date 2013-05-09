@@ -40,6 +40,12 @@ class JSpaceViewCollection extends JView
     	$document = JFactory::getDocument();
 
     	$document->addStyleSheet(JURI::base()."media/com_jspace/css/jspace.css");
+    	
+    	$model = $this->getModel();
+    	$input = JFactory::getApplication()->input;
+    	$item_id = $input->getInt('id', 0);
+    	$model->setId( $item_id );
+    	var_dump($item_id);
 
         parent::display($tpl);
     }

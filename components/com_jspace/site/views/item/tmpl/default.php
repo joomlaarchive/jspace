@@ -45,17 +45,23 @@ $repository = $this->repository;
 
 /* @var $model JSpaceModelItem */
 $model = $this->model;
+
+
+JLoader::discover('JSpaceHelper', JPATH_BASE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_jspace' . DIRECTORY_SEPARATOR . 'helpers' );
 ?>
 
 <?php if( $item instanceof JSpaceRepositoryItem ): ?>
 	<div class="jspace-item-body">
+		<a href="<?php echo JRoute::_( JSpaceHelperRoute::getCategoryUrl( $item->getCategory()->getId() ) ); ?>">
+			<?php echo $item->getCategory()->getName(); ?>
+		</a>
 		<!-- one special metadata value -->
 		<h2><?php echo $item->getMetadata('title'); ?></h2>
 		
 		<div class="jspace-item-metadata">
 			<?php foreach( $item->getMetadata() as $key => $value ): ?>
 				<div class="jspace-item">
-					<div class="dc-element-name"><?php echo JText::_( $model->getItemMetadataTranslationKey( $key ) ); ?>:</div>
+					<div class="dc-element-name"><?php echo $model->getItemMetadataKeyTranslation( $key ); ?>:</div>
 					<div class="dc-element-value"><?php echo $value; ?></div>
 				</div>
 			<?php endforeach; ?>

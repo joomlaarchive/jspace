@@ -34,6 +34,7 @@ defined( '_JEXEC' ) or die( 'Restricted access' );
  
 jimport( 'joomla.application.component.view');
 jimport( 'jspace.factory' );
+jimport('joomla.html.pagination');
  
 class JSpaceViewCategory extends JViewLegacy
 {
@@ -47,8 +48,16 @@ class JSpaceViewCategory extends JViewLegacy
     	$id = empty($id) ? 0 : $id;
     	$model = $this->getModel();
     	$category = $model->getCategory($id);
+    	
+    	$config = JSpaceFactory::getConfig();
+    	$start = $input->get('start', 0);
+    	$pagination = new JPagination($category->getItemsCount(), $start, $config->get('limit_items'));
+    	$items = $category->getItems( $start ); 
+    	
     	$this->assignRef('model', $model);
     	$this->assignRef('category', $category);
+    	$this->assignRef('pagination', $pagination);
+    	$this->assignRef('items', $items);
     	
     	
         parent::display($tpl);

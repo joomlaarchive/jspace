@@ -37,6 +37,11 @@ class JSpaceViewCommunity extends JView
 {
     function display($tpl = null)
     {    	
+    	$model = $this->getModel();
+    	$input = JFactory::getApplication()->input;
+    	$item_id = $input->getInt('id', 0);
+    	$model->setItemId( $item_id );
+    	var_dump($model);
         parent::display($tpl);
     }
 }

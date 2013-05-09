@@ -155,7 +155,41 @@ class JSpaceRepositoryDspaceCategory extends JSpaceRepositoryCategory
 		return $ret;
 	}
 	
-	protected function _getItems() {
+	protected function _getItems( $limitstart=0 ) {
+		if( !$this->dspaceIsCollection() ) {
+			return array();
+		}
+		
+		$config = JSpaceFactory::getConfig();
+		$limit = (int)$config->get('limit_items');
+		
+		try {
+			$endpoint = JSpaceFactory::getEndpoint('/collections/'. $this->dspaceGetCollection()->getId() .'/items.json', array('start'=>$limitstart,'limit'=>$limit));
+			$resp = json_decode($this->getRepository()->getConnector()->get($endpoint));
+		} catch (Exception $e) {
+			throw JSpaceRepositoryError::raiseError($this, JText::sprintf('COM_JSPACE_JSPACE_CATEGORY_ERROR_CANNOT_FETCH_ITEMS', $this->getId()));
+		}
+
+		$ret = array();
+		foreach( $resp as $rawItem ) {
+			$ret[ $rawItem->id ] = $this->getRepository()->getItem( $rawItem->id );
+		}
+		return $ret;
+	}
+	
+	protected function _getItemsCount() {
+		if( !$this->dspaceIsCollection() ) {
+			return 0;
+		}
+		
+		try {
+			$endpoint = JSpaceFactory::getEndpoint('/collections/'. $this->dspaceGetCollection()->getId() .'/itemscount.json');
+			$resp = json_decode($this->getRepository()->getConnector()->get($endpoint));
+		} catch (Exception $e) {
+			throw JSpaceRepositoryError::raiseError($this, JText::sprintf('COM_JSPACE_JSPACE_CATEGORY_ERROR_CANNOT_FETCH_ITEMS_COUNT', $this->getId()));
+		}
+		
+		return $resp;
 	}
 	
 	protected function _getParent() {

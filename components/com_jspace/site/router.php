@@ -46,10 +46,11 @@ function JSpaceBuildRoute(&$query)
 		}
 	}
 	
-	if (isset($query['view'])) {
-		$segments[] = JArrayHelper::getValue($query, "view");
+// 	if (isset($query['view'])) {
+// 		$segments[] = JArrayHelper::getValue($query, "view");
+// 		unset($query['view']);
+// 	}
 		unset($query['view']);
-	}
 
 	if (isset($query['id'])) {
 		$segments[] = JArrayHelper::getValue($query, "id");

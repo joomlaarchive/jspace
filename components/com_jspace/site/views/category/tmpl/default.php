@@ -32,6 +32,9 @@ defined( '_JEXEC' ) or die( 'Restricted access' );
 /* @var $category JSpaceRepositoryCategory */
 $category = $this->category;
 
+/* @var $pagination JPagination */
+$pagination = $this->pagination;
+
 JLoader::discover('JSpaceHelper', JPATH_BASE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_jspace' . DIRECTORY_SEPARATOR . 'helpers' );
 
 ?>
@@ -50,6 +53,18 @@ JLoader::discover('JSpaceHelper', JPATH_BASE . DIRECTORY_SEPARATOR . 'components
 		</li>
 	<?php endforeach; ?>
 </ul>
+<ul class="jspace-items">
+	<?php foreach( $this->items as $id => $item ): ?>
+		<li>
+			<a href="<?php echo JRoute::_( JSpaceHelperRoute::getItemUrl( $id ) ); ?>">
+				<?php echo $item->getMetadata('title'); ?>
+			</a>
+		</li>
+	<?php endforeach; ?>
+</ul>
 
+<div class="jspace-pagination">
+	<?php echo $pagination->getPagesLinks(); ?>
+</div>
 
 

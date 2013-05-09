@@ -41,6 +41,12 @@ class JSpaceViewCommunities extends JView
 
     	$document->addStyleSheet(JURI::base()."media/com_jspace/css/jspace.css");
     	
+    	$model = $this->getModel();
+    	$input = JFactory::getApplication()->input;
+    	$item_id = $input->getInt('id', 0);
+    	$model->setItemId( $item_id );
+    	var_dump($model);exit; 
+    	
         parent::display($tpl);
     }
 }

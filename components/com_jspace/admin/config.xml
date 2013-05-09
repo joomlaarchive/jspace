@@ -9,6 +9,12 @@
             type="text" 
             label="COM_JSPACE_GENERAL_ADMINEMAIL_LABEL"
             description="COM_JSPACE_GENERAL_ADMINEMAIL_DESC"/>    
+		<field 
+			name="limit_items" 
+			type="text" 
+			label="COM_JSPACE_REPOSITORY_LIMIT_ITEMS_LABEL" 
+			description="COM_JSPACE_REPOSITORY_LIMIT_ITEMS_DESC"
+			value="10" />
     </fieldset>
 	<fieldset name="rest"
 		label="COM_JSPACE_FIELDSET_CONFIG_REPOSITORY_OPTIONS_LABEL"
@@ -29,6 +35,12 @@
 			description="COM_JSPACE_REPOSITORY_STORAGEDIR_DESC"
 			default="images.jspace.bundles"
 			size="45"/>
+		<field 
+			name="show_translation_keys" 
+			type="checkbox" 
+			label="COM_JSPACE_REPOSITORY_SHOW_TRANSLATION_KEYS_LABEL" 
+			description="COM_JSPACE_REPOSITORY_SHOW_TRANSLATION_KEYS_DESC"
+			value="1" />
 	</fieldset>
 	<fieldset name="DSpace"
         label="COM_JSPACE_FIELDSET_CONFIG_DSPACE_OPTIONS_LABEL"

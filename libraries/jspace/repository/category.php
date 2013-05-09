@@ -51,6 +51,8 @@ abstract class JSpaceRepositoryCategory extends JObject
 	protected $_name = null;
 	
 	protected $_children = null;
+	
+	protected $_itemsCount = null;
 
 	/**
 	 * @param JSpaceRepositoryItem $item
@@ -94,11 +96,21 @@ abstract class JSpaceRepositoryCategory extends JObject
 	
 	abstract protected function _getChildren();
 	
-	public function getItems() {
-		$this->_getItems();
+	public function getItems( $limitstart=0 ) {
+		return $this->_getItems( $limitstart );
 	}
 	
-	abstract protected function _getItems();
+	abstract protected function _getItems( $page=0 );
+	
+	public function getItemsCount() {
+		if( is_null($this->_itemsCount) ) {
+			$this->_itemsCount = $this->_getItemsCount();
+		}
+		
+		return $this->_itemsCount;
+	}
+	
+	abstract protected function _getItemsCount();
 	
 	/**
 	 * 

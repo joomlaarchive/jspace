@@ -45,48 +45,22 @@ abstract class JSpaceHelperRoute
 		$Itemid = self::_findItem('category');
 		
 		$link = new JURI('index.php');
-// 		$link->setVar('option', 'com_jspace');
-// 		$link->setVar('view', 'category');
+		$link->setVar('option', 'com_jspace');
+		$link->setVar('view', 'category');
 		$link->setVar('id', $id);
 		$link->setVar('Itemid', $Itemid);
 		return (string)$link;
 	}
 
-	/**
-	 * Builds a route for basic search and results.
-	 * 
-	 * Each filter should be defined within the array as $array[$key] = $value.
-	 * 
-	 * @example
-	 * $query = 'author: Ann-Teresa Young';
-	 * $filters = array('o'=>'com_jspace','q_custom'=>'my custom filter');
-	 * 
-	 * JSolrSearchHelperRoute::getSearchRoute($query, $filters);
-	 * 
-	 * @param string $query The query to search on. Do not specify if the 
-	 * search page should be shown.
-	 * @param array $filters An array of additional query filters. Each filter 
-	 * should be defined within the array as $array[$key] = $value.
-	 */
-	public static function getSearchRoute($query = null, $filters = array())
-	{	
-		$link = new JURI('index.php');
-		$link->setVar('option', 'com_jsolrsearch');
-		$link->setVar('view', 'basic');
-
-		if ($query) {
-			$link->setVar('q', $query);
-		}
+	public static function getItemUrl( $id ) {
+		$Itemid = self::_findItem('item');
 		
-		foreach ($filters as $key=>$value) {
-			$link->setVar($key, $value);
-		}
-		
-		if ($item = self::_findItem('basic')) {
-			$link->setVar('Itemid', $item);
-		}
-
-		return (string)$link;
+		$link = new JURI( 'index.php');
+		$link->setVar('option', 'com_jspace');
+		$link->setVar('view', 'item');
+		$link->setVar('id', $id);
+		$link->setVar('Itemid', $Itemid);
+		return (string)$link; 
 	}
 	
 	protected static function _findItem($view = 'basic')
@@ -96,11 +70,9 @@ abstract class JSpaceHelperRoute
 		$found = false;
 		$itemId = 0;
 		
-		// Prepare the reverse lookup array.
-		if (self::$lookup === null) {
-			self::$lookup = array();
 
-			$component = JComponentHelper::getComponent('com_jsolrsearch');
+		if( !isset(self::$lookup[$view]) ) {
+			$component = JComponentHelper::getComponent('com_jspace');
 			$items = $menus->getItems('component_id', $component->id);
 
 			while (($item = current($items)) && !$found) {

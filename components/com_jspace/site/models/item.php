@@ -68,8 +68,12 @@ class JSpaceModelItem extends JModelLegacy
 		return $this->_item;
 	}
 	
-	public function getItemMetadataTranslationKey( $key ) {
-		return 'COM_JSPACE_ITEM_METADATA_' . strtoupper( JSpaceFactory::getRepository()->getMapper()->getCrosswalk()->getKey($key) );
+	public function getItemMetadataKeyTranslation( $key ) {
+		$config = JSpaceFactory::getConfig();
+		$show_keys = (bool)$config->get('show_translation_keys',false);
+		$tkey = 'COM_JSPACE_ITEM_METADATA_' . strtoupper( JSpaceFactory::getRepository()->getMapper()->getCrosswalk()->getKey($key) );
+		$translated = JText::_( $tkey );
+		return  $translated !== $tkey || $show_keys ? $translated : $key;
 	}
 	
 	public function formatFileSize($size)
