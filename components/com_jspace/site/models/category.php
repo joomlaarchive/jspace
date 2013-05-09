@@ -1,6 +1,6 @@
-<?php
+<?php 
 /**
- * HTML View class for displaying a DSpace item.
+ * A model that displays information about category.
  * 
  * @author		$LastChangedBy$
  * @package		JSpace
@@ -26,30 +26,45 @@
  * contributed any source code changes.
  * Name							Email
  * Hayden Young					<haydenyoung@wijiti.com> 
+ * Michał Kocztorz				<michalkocztorz@wijiti.com> 
  * 
  */
- 
-defined( '_JEXEC' ) or die( 'Restricted access' );
- 
-jimport( 'joomla.application.component.view');
- 
-class JSpaceViewItem extends JView
-{
-    function display($tpl = null)
-    {
-    	$document = JFactory::getDocument();
 
-    	$document->addStyleSheet(JURI::base()."media/com_jspace/css/jspace.css");
-    	
-    	$model = $this->getModel();
-    	$input = JFactory::getApplication()->input;
-    	$item_id = $input->getInt('id', 0);
-    	$model->setItemId( $item_id );
-    	
-    	$this->assignRef('model', $model);
-    	$this->assignRef('repository', JSpaceFactory::getRepository());
-    	$this->assignRef('item', $this->get('Item'));
-    	
-        parent::display($tpl);
-    }
+defined('_JEXEC') or die('Restricted access');
+
+jimport('joomla.application.component.model');
+
+
+class JSpaceModelCategory extends JModelLegacy
+{
+	/**
+	 * 
+	 * @var JSpaceRepositoryCategory
+	 */
+	protected $_category = null;
+	
+	/**
+	 * 
+	 * @param mixed $id
+	 * @return JSpaceRepositoryCategory
+	 */
+	public function getCategory( $id=0 ) {
+		if( is_null( $this->_category ) ) {
+			try {
+				$this->_category = JSpaceFactory::getRepository()->getCategory( $id );
+			}
+			catch( Exception $e ) {
+				//
+			}
+		}
+		
+		return $this->_category;
+	}
 }
+
+
+
+
+
+
+

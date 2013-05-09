@@ -1,6 +1,6 @@
 <?php
 /**
- * Default display for details about a single DSpace item.
+ * Default display for details about a single repository item.
  * 
  * @author		$LastChangedBy$
  * @copyright	Copyright (C) 2011 Wijiti Pty Ltd. All rights reserved.
@@ -25,6 +25,7 @@
  * contributed any source code changes.
  * Name							Email
  * Hayden Young					<haydenyoung@wijiti.com> 
+ * Michał Kocztorz				<michalkocztorz@wijiti.com> 
  * 
  */
 
@@ -32,94 +33,68 @@ defined( '_JEXEC' ) or die( 'Restricted access' );
 
 JHTML::_('behavior.modal');
 
-require_once(JPATH_COMPONENT.DS.'helpers'.DS.'metadata.php');
+/*
+ * Available variables:
+ */
+
+/* @var $item JSpaceRepositoryItem */
+$item = $this->item;
+
+/* @var $repository JSpaceRepository */
+$repository = $this->repository;
+
+/* @var $model JSpaceModelItem */
+$model = $this->model;
 ?>
 
-<?php if ($this->get("Data")) : ?>
-
-	<h2><?php echo JSpaceMetadata::getElementAsString($this->get("Data")->metadata, "DC.title"); ?></h2>
-
-	<?php if (JSpaceMetadata::getElementAsString($this->get("Data")->metadata, "DC.title")) : ?>
-		<div class="jspace-item">
-			<div class="dc-element-name"><?php echo JText::_("COM_JSPACE_DC_TITLE_LABEL"); ?>:</div>
-			<div class="dc-element-value"><?php echo JSpaceMetadata::getElementAsString($this->get("Data")->metadata, "DC.title"); ?></div>
+<?php if( $item instanceof JSpaceRepositoryItem ): ?>
+	<div class="jspace-item-body">
+		<!-- one special metadata value -->
+		<h2><?php echo $item->getMetadata('title'); ?></h2>
+		
+		<div class="jspace-item-metadata">
+			<?php foreach( $item->getMetadata() as $key => $value ): ?>
+				<div class="jspace-item">
+					<div class="dc-element-name"><?php echo JText::_( $model->getItemMetadataTranslationKey( $key ) ); ?>:</div>
+					<div class="dc-element-value"><?php echo $value; ?></div>
+				</div>
+			<?php endforeach; ?>
 		</div>
-	<?php endif; ?>
-
-	<?php if (JSpaceMetadata::getElementAsString($this->get("Data")->metadata, "DC.creator")) : ?>
+		<div class="jspace-item-bundles">
+			<?php foreach( $item->getBundles() as $type => $bundle ): /* @var $bundle JSpaceRepositoryBundle */ ?>
+				<h3><?php echo JText::_( 'COM_JSPACE_ITEM_BUNDLE_TYPE_' . strtoupper( $type ) ); ?></h3>
+				<ul class="jspace-item-bundle">
+					<?php foreach( $bundle->getBitstreams() as $bitstream ): /* @var $bitstream JSpaceRepositoryBitstream */ ?>
+						<li>
+							<ul class="jspace-bitstream-details">
+								<li class="jspace-file-name"><a href="<?php echo $bitstream->getUrl(); ?>"><?php echo $bitstream->getName(); ?></a></li>
+								<li class="jspace-file-description"><?php echo $bitstream->getDescription(); ?></li>
+								<li class="jspace-file-size"><?php echo $model->formatFileSize( $bitstream->getSize() ); ?></li>
+								<li class="jspace-file-type"><?php echo $bitstream->getFormatDescription(); ?></li>
+								<!-- 
+								<li class="jspace-file-actions">
+									<?php //echo $this->getModel()->getPreviewLink($bitstream); ?>
+									<?php //echo JHTML::link($bitstream->url, "", array("class"=>"jspace-download", "title"=>JText::_("COM_JSPACE_BITSTREAM_DOWNLOAD"))); ?>
+								</li>
+								 -->
+							</ul>						
+						</li>
+					<?php endforeach; ?>
+				</ul>
+			<?php endforeach; ?>
+		</div>
+		
 		<div class="jspace-item">
-			<div class="dc-element-name"><?php echo JText::_("COM_JSPACE_DC_CREATOR_LABEL"); ?>:</div>
+			<div class="dc-element-name"><?php echo JText::_("COM_JSPACE_DC_COLLECTION_LABEL"); ?>:</div>
 			<div class="dc-element-value">
-				<?php foreach (JSpaceMetadata::getElementAsArray($this->get("Data")->metadata, "DC.creator") as $creator) : ?>
-					<div><?php echo $creator; ?></div>
-				<?php endforeach; ?>
+				<?php echo JHTML::link(JRoute::_("index.php?option=com_jspace&view=collection&id=" . $item->getCollection()->getId()), $item->getCollection()->getName() ); ?>
 			</div>
-		</div>
-	<?php endif; ?>
-
-	<?php if (JSpaceMetadata::getElementAsString($this->get("Data")->metadata, "DCTERMS.abstract")) : ?>
-		<div class="jspace-item">
-			<div class="dc-element-name"><?php echo JText::_("COM_JSPACE_DC_ABSTRACT_LABEL"); ?>:</div>
-			<div class="dc-element-value"><?php echo JSpaceMetadata::getElementAsString($this->get("Data")->metadata, "DCTERMS.abstract"); ?></div>
-		</div>
-	<?php endif; ?>
-
-	<?php if (JSpaceMetadata::getElementAsString($this->get("Data")->metadata, "DC.identifier", "DCTERMS.URI")) : ?>
-		<div class="jspace-item">
-			<div class="dc-element-name"><?php echo JText::_("COM_JSPACE_DC_HANDLE_LABEL"); ?>:</div>
-			<div class="dc-element-value"><?php echo JSpaceMetadata::getElementAsString($this->get("Data")->metadata, "DC.identifier", "DCTERMS.URI"); ?></div>
-		</div>
-	<?php endif; ?>
-	
-	<?php if (JSpaceMetadata::getElementAsString($this->get("Data")->metadata, "DCTERMS.issued")) : ?>
-		<div class="jspace-item">
-			<div class="dc-element-name"><?php echo JText::_("COM_JSPACE_DC_DATE_ISSUED_LABEL"); ?>:</div>
-			<div class="dc-element-value">
-				<?php foreach (JSpaceMetadata::getElementAsArray($this->get("Data")->metadata, "DCTERMS.issued") as $issued) : ?>
-					<div><?php echo $issued; ?></div>
-				<?php endforeach; ?>
-			</div>
-		</div>
-	<?php endif; ?>
-
-	<?php if (JSpaceMetadata::getElementAsString($this->get("Data")->metadata, "DC.subject")) : ?>
-		<div class="jspace-item">
-			<div class="dc-element-name"><?php echo JText::_("COM_JSPACE_DC_SUBJECT_LABEL"); ?>:</div>
-			<div class="dc-element-value">
-				<?php foreach (JSpaceMetadata::getElementAsArray($this->get("Data")->metadata, "DC.subject") as $subject) : ?>
-					<div><?php echo $subject; ?></div>
-				<?php endforeach; ?>
-			</div>
-		</div>
-	<?php endif; ?>
-	
-	<div class="jspace-item">
-		<div class="dc-element-name"><?php echo JText::_("COM_JSPACE_DC_COLLECTION_LABEL"); ?>:</div>
-		<div class="dc-element-value">
-			<?php echo JHTML::link(JRoute::_("index.php?option=com_jspace&view=collection&id=".$this->get("Data")->owningCollection->id), $this->get("Data")->owningCollection->name); ?>
-		</div>
-	</div>	
-
-	<div id="jspaceBitstreams" class="jspace-bitstreams">
-	<?php foreach ($this->get("OriginalBitstreams") as $bitstream) : ?>
-		<div class="jspace-bitstream">
-			<?php if ($thumbnail = $this->getModel()->getThumbnail($bitstream)) : ?>
-			<div class="jspace-bitstream-thumbnail">
-				<img src="<?php echo $thumbnail; ?>"/>
-			</div>
-			<?php endif; ?>
-			
-			<ul class="jspace-bitstream-details">
-				<li class="jspace-file-name"><a href="<?php echo $bitstream->url; ?>"><?php echo $bitstream->name; ?></a></li>
-				<li class="jspace-file-description"><?php echo $bitstream->description; ?></li>
-				<li class="jspace-file-size"><?php echo $this->getModel()->formatFileSize($bitstream->size); ?></li>
-				<li class="jspace-file-type"><?php echo $bitstream->formatDescription; ?></li>
-				<li class="jspace-file-actions">
-					<?php echo $this->getModel()->getPreviewLink($bitstream); ?>
-					<?php echo JHTML::link($bitstream->url, "", array("class"=>"jspace-download", "title"=>JText::_("COM_JSPACE_BITSTREAM_DOWNLOAD"))); ?>
-				</li>
-			</ul>
-		</div>
-	<?php endforeach; ?>
+		</div>	
+		
 	</div>
+<?php else: ?>
+	<div class="warning"><?php echo JText::_('COM_JSPACE_ITEM_NOT_FOUND'); ?></div>
 <?php endif; ?>
+
+
+

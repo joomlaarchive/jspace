@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- $Id$ -->
+<config>
+    <fieldset name="general"
+        label="COM_JSPACE_FIELDSET_GENERAL_LABEL"
+        description="COM_JSPACE_FIELDSET_GENERAL_DESC">
+        <field 
+            name="admin_email" 
+            type="text" 
+            label="COM_JSPACE_GENERAL_ADMINEMAIL_LABEL"
+            description="COM_JSPACE_GENERAL_ADMINEMAIL_DESC"/>    
+    </fieldset>
+	<fieldset name="rest"
+		label="COM_JSPACE_FIELDSET_CONFIG_REPOSITORY_OPTIONS_LABEL"
+		description="COM_JSPACE_FIELDSET_CONFIG_REPOSITORY_OPTIONS_DESC"
+		addfieldpath="/libraries/jspace/form/fields">
+		<field
+		  name="driver" 
+		  type="list"
+		  label="COM_JSPACE_REPOSITORY_DRIVER_SELECT_LABEL"
+		  description="COM_JSPACE_REPOSITORY_DRIVER_SELECT_DESCRIPTION">
+		  <option value="DSpace">COM_JSPACE_REPOSITORY_DRIVER_DSPACE</option>
+		  <option value="fedora">COM_JSPACE_REPOSITORY_DRIVER_FC</option>
+		</field>
+		<field 
+			name="storage_directory" 
+			type="text" 
+			label="COM_JSPACE_REPOSITORY_STORAGEDIR_LABEL" 
+			description="COM_JSPACE_REPOSITORY_STORAGEDIR_DESC"
+			default="images.jspace.bundles"
+			size="45"/>
+	</fieldset>
+	<fieldset name="DSpace"
+        label="COM_JSPACE_FIELDSET_CONFIG_DSPACE_OPTIONS_LABEL"
+        description="COM_JSPACE_FIELDSET_CONFIG_DSPACE_OPTIONS_DESC"
+        addfieldpath="/libraries/jspace/form/fields">
+        <field 
+            name="DSpace_base_url" 
+            type="text" 
+            label="COM_JSPACE_REPOSITORY_BASE_URL_LABEL" 
+            size="45"/>
+        <field 
+            name="DSpace_rest_url" 
+            type="text" 
+            label="COM_JSPACE_REPOSITORY_REST_URL_LABEL" 
+            size="45"/>
+        <field 
+            name="DSpace_username" 
+            type="text" 
+            label="COM_JSPACE_REPOSITORY_USERNAME_LABEL" 
+            description="COM_JSPACE_REPOSITORY_USERNAME_DESC"
+            size="45"/>
+        <field 
+            name="DSpace_password" 
+            type="text" 
+            label="COM_JSPACE_REPOSITORY_PASSWORD_LABEL"
+            description="COM_JSPACE_REPOSITORY_PASSWORD_DESC" 
+            size="45"/>
+        <field 
+            name="DSpace_defaultcollectionid" 
+            type="JSpace.Collection" 
+            label="COM_JSPACE_REPOSITORY_DEFAULTCOLLECTION_LABEL"
+            description="COM_JSPACE_REPOSITORY_DEFAULTCOLLECTION_DESC"/>
+	</fieldset>
+	<fieldset name="fedora"
+        label="COM_JSPACE_FIELDSET_CONFIG_FC_OPTIONS_LABEL"
+        description="COM_JSPACE_FIELDSET_CONFIG_FC_OPTIONS_DESC"
+        addfieldpath="/libraries/jspace/form/fields">
+	</fieldset>
+	<fieldset name="permissions"
+		label="JCONFIG_PERMISSIONS_LABEL"
+		description="JCONFIG_PERMISSIONS_DESC">
+		<field name="rules"
+			type="rules"
+			label="JCONFIG_PERMISSIONS_LABEL"
+			validate="rules"
+			filter="rules"
+			component="com_jspace"
+			section="component"/>
+	</fieldset>
+	<fieldset name="usermanagement"
+		label="COM_JSPACE_FIELDSET_USERMANAGEMENT_LABEL"
+		description="COM_JSPACE_FIELDSET_USERMANAGEMENT_DESC"
+		addfieldpath="/administrator/components/com_jspace/models/fields">
+		<field 
+			name="groupmappings" 
+			type="groupmappings" 
+			label="COM_JSPACE_GROUPMAPPINGS_LABEL"
+			description="COM_JSPACE_GROUPMAPPINGS_DESC"
+			notes="COM_JSPACE_GROUPMAPPINGS_NOTES"/>	
+	</fieldset>
+	<fieldset name="notifications"
+		label="COM_JSPACE_FIELDSET_NOTIFICATIONS_LABEL"
+		description="COM_JSPACE_FIELDSET_NOTIFICATIONS_DESC"
+		addfieldpath="/administrator/components/com_jspace/models/fields">
+		<field 
+			name="onarchive" 
+			type="Usergroup" 
+			label="COM_JSPACE_NOTIFICATIONS_ARCHIVE_LABEL"
+			description="COM_JSPACE_NOTIFICATIONS_ARCHIVE_DESC"
+			notes="COM_JSPACE_NOTIFICATIONS_ARCHIVE_NOTES"/>	
+		<field 
+			name="onarchiverecursive" 
+			type="Checkbox" 
+			value="1"
+			label="COM_JSPACE_NOTIFICATIONS_ARCHIVERECURSIVE_LABEL"
+			description="COM_JSPACE_NOTIFICATIONS_ARCHIVERECURSIVE_DESC"
+			notes="COM_JSPACE_NOTIFICATIONS_ARCHIVERECURSIVE_NOTES"/>	
+	</fieldset>
+</config>

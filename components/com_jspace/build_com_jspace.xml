@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="JSpace" default="" basedir=".">
+	<target name="clean" description="Clean JSpace component from Joomla.">
+		<delete dir="${dest.administrator.components}/com_jspace"/>
+		
+		<delete>
+			<fileset dir="${dest.administrator.languages}" defaultexcludes="true">
+				<include name="**/*.com_jspace*.ini"/>
+			</fileset>
+		</delete>
+		
+		<delete dir="${dest.media}/com_jspace"/>
+		
+		<delete dir="${dest.components}/com_jspace"/>
+		
+		<delete>
+			<fileset dir="${dest.languages}" defaultexcludes="true">
+				<include name="**/*.com_jspace*.ini"/>
+			</fileset>
+		</delete>
+	</target>
+			
+	<target name="update" description="Copies JSpace component to existing Joomla install.">
+		<echo message="Deploying JSpace component to Joomla! environment."/>
+		
+		<antcall target="clean"/>
+		
+		<copy todir="${dest.administrator.components}/com_jspace">
+			<fileset dir="${src}/admin" defaultexcludes="true">
+				<include name="**"/>
+				<exclude name="**/language/**"/>
+			</fileset>
+		</copy>
+		<copy todir="${dest.administrator.languages}">
+			<fileset dir="${src}/admin/language" defaultexcludes="true">
+				<include name="**/**"/>
+			</fileset>
+		</copy>
+		<copy todir="${dest.media}/com_jspace/js">
+			<fileset dir="${src}/js" defaultexcludes="true">
+				<include name="**/**"/>
+			</fileset>
+		</copy>
+		<copy todir="${dest.media}/com_jspace/images">
+			<fileset dir="${src}/images" defaultexcludes="true">
+				<include name="**/**"/>
+			</fileset>
+		</copy>
+		<copy todir="${dest.media}/com_jspace/css">
+			<fileset dir="${src}/css" defaultexcludes="true">
+				<include name="**/**"/>
+			</fileset>
+		</copy>
+		<copy todir="${dest.media}/com_jspace/flowplayer">
+			<fileset dir="${src}/flowplayer" defaultexcludes="true">
+				<include name="**/**"/>
+			</fileset>
+		</copy>
+		<copy todir="${dest.components}/com_jspace">
+			<fileset dir="${src}/site" defaultexcludes="true">
+				<include name="**/**"/>
+				<exclude name="**/language/**"/>
+			</fileset>
+		</copy>
+		<copy todir="${dest.languages}">
+			<fileset dir="${src}/site/language" defaultexcludes="true">
+				<include name="**/**"/>
+			</fileset>
+		</copy>
+	</target>
+	
+	<target name="package" description="Creates a JSpace component package.">
+		<echo message="Packaging JSpace component."/>
+		<zip destfile="${package.dest}/com_jspace.zip"
+		       basedir="${src}"
+		       update="true"
+		       excludes="build*.xml"/>
+	</target>
+</project>

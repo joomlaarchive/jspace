@@ -51,14 +51,10 @@ class JSpaceController extends JController
 	public function display()
 	{
 		$model = $this->getModel(JRequest::getWord("view", self::DEFAULT_VIEW));
-	
-		if (JRequest::getInt("id", 0)) {
-			$model->setId(JRequest::getInt("id", 0));
-		}
 		
 		$view = $this->getView(JRequest::getWord("view", self::DEFAULT_VIEW), 'html');
 		$view->setModel($model, true);
 		$view->setLayout(JRequest::getWord('layout', 'default'));
 		$view->display();
-	}	
+	}
 }

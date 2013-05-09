@@ -26,7 +26,6 @@
  * contributed any source code changes.
  * Name							Email
  * Hayden Young					<haydenyoung@wijiti.com> 
- * Michał Kocztorz				<michalkocztorz@wijiti.com> 
  * 
  */
 

@@ -86,22 +86,6 @@ class JRestClient
 				default:
 					throw new InvalidArgumentException('Current verb (' . $this->verb . ') is an invalid REST verb.');
 			}
-
-			// if debugging is on, or the request was not successful, log the problem.
-			$httpCode = JArrayHelper::getValue($this->getResponseInfo(), "http_code");			
-			
-			if (JDEBUG || array_search($httpCode, array(200, 201, 204)) === false) {				
-				$entry = array(
-					"c-ip"=>$httpCode, 
-					"comment"=>
-						$this->url.'\n'.
-						strtoupper($this->verb).'\n'.
-						$this->requestBody.'\n'.
-						$this->getResponseBody()
-				);
-				
-				JLog::getInstance("jspace.error.php")->addEntry($entry);
-			}	
 		}
 		catch (InvalidArgumentException $e)
 		{
@@ -123,9 +107,9 @@ class JRestClient
 	
 	protected function executePost ($ch)
 	{		
-		curl_setopt($ch, CURLOPT_POSTFIELDS, $this->requestBody);
-		curl_setopt($ch, CURLOPT_POST, 1);
 		
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $this->requestBody);
 		$this->doExecute($ch);	
 	}
 	
@@ -169,18 +153,19 @@ class JRestClient
 	
 	protected function setCurlOpts (&$curlHandle)
 	{
-		curl_setopt($curlHandle, CURLOPT_TIMEOUT, 10);
+		curl_setopt($curlHandle, CURLOPT_TIMEOUT, 180);
 		curl_setopt($curlHandle, CURLOPT_URL, $this->url);
 		curl_setopt($curlHandle, CURLOPT_RETURNTRANSFER, true);
-		curl_setopt($curlHandle, CURLOPT_HTTPHEADER, array ('Accept: ' . $this->acceptType, 'Content-Type: ' . $this->acceptType));
 	}
 	
 	protected function setAuth (&$curlHandle)
 	{
-		if ($this->username !== null && $this->password !== null)
+		if ($this->username != null && $this->password != null)
 		{
-			curl_setopt($curlHandle, CURLOPT_HTTPAUTH, CURLAUTH_DIGEST);
-			curl_setopt($curlHandle, CURLOPT_USERPWD, $this->username . ':' . $this->password);
+            curl_setopt($curlHandle, CURLOPT_HTTPHEADER, array ("Expect:", "user:".$this->username, "pass:".$this->password));
+		}
+		else {
+			curl_setopt($curlHandle, CURLOPT_HTTPHEADER, array("Expect:"));
 		}
 	}
 	
@@ -252,5 +237,14 @@ class JRestClient
 	public function setVerb ($verb)
 	{
 		$this->verb = $verb;
-	} 
+	}
+	
+	public static function isCURLInstalled()
+	{
+		if (extension_loaded('curl')) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 }

@@ -1,8 +1,8 @@
 <?php
 /**
- * HTML View class for displaying a DSpace item.
+ * Supports a collection picker.
  * 
- * @author		$LastChangedBy$
+ * @author		$LastChangedBy: michalkocztorz $
  * @package		JSpace
  * @copyright	Copyright (C) 2011 Wijiti Pty Ltd. All rights reserved.
  * @license     This file is part of the JSpace component for Joomla!.
@@ -25,31 +25,42 @@
  * Please feel free to add your name and email (optional) here if you have 
  * contributed any source code changes.
  * Name							Email
- * Hayden Young					<haydenyoung@wijiti.com> 
+ * Michał Kocztorz				<michalkocztorz@wijiti.com> 
  * 
  */
- 
-defined( '_JEXEC' ) or die( 'Restricted access' );
- 
-jimport( 'joomla.application.component.view');
- 
-class JSpaceViewItem extends JView
-{
-    function display($tpl = null)
-    {
-    	$document = JFactory::getDocument();
 
-    	$document->addStyleSheet(JURI::base()."media/com_jspace/css/jspace.css");
-    	
-    	$model = $this->getModel();
-    	$input = JFactory::getApplication()->input;
-    	$item_id = $input->getInt('id', 0);
-    	$model->setItemId( $item_id );
-    	
-    	$this->assignRef('model', $model);
-    	$this->assignRef('repository', JSpaceFactory::getRepository());
-    	$this->assignRef('item', $this->get('Item'));
-    	
-        parent::display($tpl);
-    }
+defined('JPATH_BASE') or die;
+
+jimport('joomla.form.formfield');
+jimport('joomla.form.helper');
+jimport('jspace.database.table.metadata');
+JFormHelper::loadFieldClass('text');
+
+
+class JSpaceFormFieldMetadatatext extends JFormFieldText
+{
+	/**
+	 * The form field type.
+	 *
+	 * @var         string
+	 * @since       1.6
+	 */
+	protected $type = 'JSpace.Metadatatext';
+	
+	/**
+	 * 
+	 * @var JSpaceTableMetadata
+	 */
+	protected $value;
+	
+	public $isMetadata = true;
 }
+
+
+
+
+
+
+
+
+

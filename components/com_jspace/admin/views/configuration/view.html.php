@@ -40,13 +40,15 @@ class JSpaceViewConfiguration extends JView
     	$this->set("form", $this->get('Form'));
 
 		$this->addToolbar();
-		    	
+		    	 
         parent::display($tpl);
     }
     
     protected function addToolbar()
     {
     	JToolBarHelper::title(JText::_('Configuration'), 'config.png');
-		JToolBarHelper::apply('save', 'JTOOLBAR_APPLY');
+// 		JToolBarHelper::apply('save', 'JTOOLBAR_APPLY');
+    	JToolBarHelper::preferences('com_jspace');
+    	JToolBarHelper::divider();
     }
 }

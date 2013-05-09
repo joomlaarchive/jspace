@@ -67,17 +67,66 @@ function JSpaceParseRoute($segments)
 {
 	$vars = array();
 
-	$vars['option'] = 'com_jspace';
+	$app	= JFactory::getApplication();
+	$menu	= $app->getMenu();
+	$item	= $menu->getActive();
 
+	// Count route segments
+	$count = count($segments);
+	if (!isset($item)) {
+		$vars['view'] = JArrayHelper::getValue($segments, 0);
+
+		if ($count > 1) {
+			$vars['id'] = JArrayHelper::getValue($segments, $count - 1);
+		}
+
+		return $vars;
+	}
+
+	// if count is 2 then we have all the vars we require to parse the route.
 	if (count($segments) == 2) {
 		if ($var = array_shift($segments)) {
-			$vars['view'] = $var;	
+			$vars['view'] = $var;
+		}
+
+		if ($var = array_shift($segments)) {
+			$vars['id'] = $var;
 		}
 	}
 
-	if ($var = array_shift($segments)) {
-		$vars['id'] = $var;	
+	// if the count is 1 then we need to check whether we need to pull the view,
+	// or whether the view is already available as part of the active menu.
+	if (count($segments) == 1) {
+		$vars['view'] = JArrayHelper::getValue($item->query, 'view');
+		
+		$var = array_shift($segments);
+		$vars['id'] = $var;
 	}
 
 	return $vars;
 }
+
+
+
+// /**
+//  * @param	array
+//  * @return	array
+//  */
+// function JSpaceParseRoute($segments)
+// {
+// 	$vars = array();
+
+// 	$vars['option'] = 'com_jspace';
+
+// 	if (count($segments) == 2) {
+// 		if ($var = array_shift($segments)) {
+// 			$vars['view'] = $var;	
+// 		}
+// 	}
+
+// 	if ($var = array_shift($segments)) {
+// 		$vars['id'] = $var;	
+// 	}
+
+// 	return $vars;
+// }

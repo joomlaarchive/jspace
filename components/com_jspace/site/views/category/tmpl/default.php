@@ -1,9 +1,8 @@
 <?php
 /**
- * HTML View class for displaying a DSpace item.
+ * Default display for details about a single category.
  * 
  * @author		$LastChangedBy$
- * @package		JSpace
  * @copyright	Copyright (C) 2011 Wijiti Pty Ltd. All rights reserved.
  * @license     This file is part of the JSpace component for Joomla!.
 
@@ -25,31 +24,32 @@
  * Please feel free to add your name and email (optional) here if you have 
  * contributed any source code changes.
  * Name							Email
- * Hayden Young					<haydenyoung@wijiti.com> 
+ * Michał Kocztorz				<michalkocztorz@wijiti.com> 
  * 
  */
- 
-defined( '_JEXEC' ) or die( 'Restricted access' );
- 
-jimport( 'joomla.application.component.view');
- 
-class JSpaceViewItem extends JView
-{
-    function display($tpl = null)
-    {
-    	$document = JFactory::getDocument();
 
-    	$document->addStyleSheet(JURI::base()."media/com_jspace/css/jspace.css");
-    	
-    	$model = $this->getModel();
-    	$input = JFactory::getApplication()->input;
-    	$item_id = $input->getInt('id', 0);
-    	$model->setItemId( $item_id );
-    	
-    	$this->assignRef('model', $model);
-    	$this->assignRef('repository', JSpaceFactory::getRepository());
-    	$this->assignRef('item', $this->get('Item'));
-    	
-        parent::display($tpl);
-    }
-}
+defined( '_JEXEC' ) or die( 'Restricted access' );
+/* @var $category JSpaceRepositoryCategory */
+$category = $this->category;
+
+JLoader::discover('JSpaceHelper', JPATH_BASE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_jspace' . DIRECTORY_SEPARATOR . 'helpers' );
+
+?>
+<?php if( !$category->isRoot() ): ?>
+	<a href="<?php echo JRoute::_( JSpaceHelperRoute::getCategoryUrl( $category->getParent()->getId() ) ); ?>">
+		<?php echo $category->getParent()->getName(); ?>
+	</a>
+<?php endif; ?>
+<h2><?php echo $category->getName(); ?></h2>
+<ul>
+	<?php foreach( $category->getChildren() as $subcategory ): ?>
+		<li>
+			<a href="<?php echo JRoute::_( JSpaceHelperRoute::getCategoryUrl( $subcategory->getId() ) ); ?>">
+				<?php echo $subcategory->getName(); ?>
+			</a>
+		</li>
+	<?php endforeach; ?>
+</ul>
+
+
+

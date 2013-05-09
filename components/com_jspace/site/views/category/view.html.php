@@ -1,6 +1,6 @@
 <?php
 /**
- * HTML View class for displaying a DSpace item.
+ * HTML View class for displaying details about a category.
  * 
  * @author		$LastChangedBy$
  * @package		JSpace
@@ -26,29 +26,27 @@
  * contributed any source code changes.
  * Name							Email
  * Hayden Young					<haydenyoung@wijiti.com> 
+ * Michał Kocztorz				<michalkocztorz@wijiti.com> 
  * 
  */
  
 defined( '_JEXEC' ) or die( 'Restricted access' );
  
 jimport( 'joomla.application.component.view');
+jimport( 'jspace.factory' );
  
-class JSpaceViewItem extends JView
+class JSpaceViewCategory extends JViewLegacy
 {
     function display($tpl = null)
     {
-    	$document = JFactory::getDocument();
-
-    	$document->addStyleSheet(JURI::base()."media/com_jspace/css/jspace.css");
-    	
-    	$model = $this->getModel();
     	$input = JFactory::getApplication()->input;
-    	$item_id = $input->getInt('id', 0);
-    	$model->setItemId( $item_id );
-    	
+    	$id = $input->get('id', 0);
+    	$id = empty($id) ? 0 : $id;
+    	$model = $this->getModel();
+    	$category = $model->getCategory($id);
     	$this->assignRef('model', $model);
-    	$this->assignRef('repository', JSpaceFactory::getRepository());
-    	$this->assignRef('item', $this->get('Item'));
+    	$this->assignRef('category', $category);
+    	
     	
         parent::display($tpl);
     }
