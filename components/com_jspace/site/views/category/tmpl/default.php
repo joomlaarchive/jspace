@@ -41,7 +41,7 @@ JLoader::discover('JSpaceHelper', JPATH_BASE . DIRECTORY_SEPARATOR . 'components
 	</a>
 <?php endif; ?>
 <h2><?php echo $category->getName(); ?></h2>
-<ul>
+<ul class="jspace-categories">
 	<?php foreach( $category->getChildren() as $subcategory ): ?>
 		<li>
 			<a href="<?php echo JRoute::_( JSpaceHelperRoute::getCategoryUrl( $subcategory->getId() ) ); ?>">

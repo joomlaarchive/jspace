@@ -38,7 +38,6 @@ class JSpaceViewItem extends JView
     function display($tpl = null)
     {
     	$document = JFactory::getDocument();
-
     	$document->addStyleSheet(JURI::base()."media/com_jspace/css/jspace.css");
     	
     	$model = $this->getModel();

@@ -39,6 +39,9 @@ class JSpaceViewCategory extends JViewLegacy
 {
     function display($tpl = null)
     {
+    	$document = JFactory::getDocument();
+    	$document->addStyleSheet(JURI::base()."media/com_jspace/css/jspace.css");
+    	
     	$input = JFactory::getApplication()->input;
     	$id = $input->get('id', 0);
     	$id = empty($id) ? 0 : $id;

@@ -138,3 +138,48 @@
 #jspaceBitstreams .jspace-download:hover {
 	background: url("../../../media/com_jspace/images/icon-16-download.png") no-repeat scroll 0 top transparent;
 }
+
+
+
+/* Categories */
+ul.jspace-categories{
+	list-style-type: none;
+}
+
+ul.jspace-categories li{
+}
+ul.jspace-categories li a{
+	background: transparent url(../images/folder.png) left center no-repeat;
+	display: block;
+	min-height: 32px;
+	line-height: 32px;
+	padding: 3px 3px 3px 36px;
+	color: #444;
+}
+
+ul.jspace-categories li:nth-child(2n+1) a{
+	background-color: rgba(244,244,244,0.5);
+}
+ul.jspace-categories li:nth-child(2n) a{
+	background-color: rgba(244,244,244,0.3);
+}
+
+ul.jspace-categories li a:hover{
+	background-color: #fff;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
