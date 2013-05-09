@@ -33,6 +33,7 @@
 defined('JPATH_PLATFORM') or die;
 
 jimport('jspace.repository.dspace.item');
+jimport('jspace.repository.dspace.collection');
 
 /**
  * JSpace connector endpoint class.
@@ -180,6 +181,28 @@ class JSpaceRepositoryDspaceRepository extends JSpaceRepository
 			JSpaceRepositoryError::raiseError($this, JText::sprintf('COM_JSPACE_REPOSITORY_CANT_CREATE_ZIP', JURI::current()));
 			return null;
 		}
+	}
+	
+	
+
+	/**
+	 *
+	 * @param mixed $id
+	 * @return JSpaceRepositoryDspaceCollection
+	 */
+	public function dspaceGetCollection( $id ) {
+		$this->flushErrors();
+	
+		if( !isset( $this->_collections[ $id ] ) ) {
+			try {
+				$this->_collections[ $id ] = new JSpaceRepositoryDspaceCollection($id, $this);
+			}
+			catch( Exception $e ) {
+				throw JSpaceRepositoryError::raiseError( $this, $e );
+			}
+		}
+	
+		return $this->_collections[ $id ];
 	}
 }
 

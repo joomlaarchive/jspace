@@ -98,11 +98,20 @@ class JSpaceRepositoryDspaceItem extends JSpaceRepositoryItem
 	}
 	
 	/**
+	 * @deprecated
 	 * (non-PHPdoc)
 	 * @see JSpaceRepositoryItem::_getCollection()
 	 */
 	protected function _getCollection() {
-		return $this->getRepository()->getCollection( $this->_dspaceRaw->collection->id );
+		return $this->getRepository()->dspaceGetCollection( $this->_dspaceRaw->collection->id );
+	}
+	
+	/**
+	 * 
+	 * @return JSpaceRepositoryCategory
+	 */
+	public function _getCategory() {
+		return $this->getRepository()->getCategory( 'collection_'. $this->_dspaceRaw->collection->id );
 	}
 	
 	/**

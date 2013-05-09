@@ -38,11 +38,27 @@ defined('JPATH_PLATFORM') or die;
  * @package     JSpace
  * @subpackage  Repository
  */
-class JSpaceRepositoryDspaceCollection extends JSpaceRepositoryCollection
+class JSpaceRepositoryDspaceCollection extends JObject
 {
+	/**
+	 *
+	 * @var JSpaceRepository
+	 */
+	protected $_repository = null;
+	
+	protected $_id = null;
+	
+	protected $_name = null;
+	
 	protected $_dspaceRawCollection = null;
 	
-	public function _init() {
+	/**
+	 * @param JSpaceRepositoryItem $item
+	 * @param mixed $id
+	 */
+	public function __construct( $id, $repository ) {
+		$this->_id = $id;
+		$this->_repository = $repository;
 		try {
 			$endpoint = JSpaceFactory::getEndpoint('/collections/'.$this->_id.'.json');
 			$client = $this->getRepository()->getConnector();
@@ -53,6 +69,25 @@ class JSpaceRepositoryDspaceCollection extends JSpaceRepositoryCollection
 			throw JSpaceRepositoryError::raiseError($this, JText::sprintf('COM_JSPACE_REPOSITORY_COLLECTION_NOT_FOUND', $this->_id));
 		}
 	}
+	
+	/**
+	 *
+	 * @return JSpaceRepository
+	 */
+	public function getRepository() {
+		return $this->_repository;
+	}
+	
+	
+	public function getId() {
+		return $this->_id;
+	}
+	
+	public function getName() {
+		return $this->_name;
+	}
+	
+	
 }
 
 

@@ -120,7 +120,7 @@ class JSpaceRepositoryDspaceCategory extends JSpaceRepositoryCategory
 // 			var_dump('collection_' . $collection->id);
 			if( $this->_id === 'collection_' . $collection->id ) {
 				$this->_dspaceRawCollection = $collection;
-				$this->_dspaceCollection = $this->getRepository()->getCollection( $collection->id );
+				$this->_dspaceCollection = $this->getRepository()->dspaceGetCollection( $collection->id );
 				$this->_name = $this->_dspaceCollection->getName();
 				return true;
 			}
@@ -165,6 +165,29 @@ class JSpaceRepositoryDspaceCategory extends JSpaceRepositoryCategory
 	
 	public function isRoot() {
 		return $this->_id === 0;
+	}
+	
+/*
+ * DSpace specyfic functions.
+ */
+	/**
+	 * Check if category is dspace collection.
+	 * NOTE: use only in dspace specyfic project.
+	 * 
+	 * @return boolean
+	 */
+	public function dspaceIsCollection() {
+		return !is_null( $this->_dspaceCollection);
+	}
+	
+	/**
+	 * Get JSpaceRepositoryDspaceCollection object.
+	 * NOTE: use only in dspace specyfic project.
+	 * 
+	 * @return JSpaceRepositoryDspaceCollection
+	 */
+	public function dspaceGetCollection() {
+		return $this->_dspaceCollection;
 	}
 }
 

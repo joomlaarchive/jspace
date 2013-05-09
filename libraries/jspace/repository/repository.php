@@ -36,7 +36,6 @@ jimport('jspace.repository.item');
 jimport('jspace.repository.bundle');
 jimport('jspace.repository.bitstream');
 jimport('jspace.repository.metadata');
-jimport('jspace.repository.collection');
 jimport('jspace.repository.error');
 jimport('jspace.repository.filter');
 jimport('jspace.repository.category');
@@ -71,7 +70,6 @@ abstract class JSpaceRepository extends JObject
 				jimport('jspace.repository.' . strtolower($type) . '.bundle' );
 				jimport('jspace.repository.' . strtolower($type) . '.bitstream' );
 				jimport('jspace.repository.' . strtolower($type) . '.metadata' );
-				jimport('jspace.repository.' . strtolower($type) . '.collection' );
 				jimport('jspace.repository.' . strtolower($type) . '.filter' );
 				jimport('jspace.repository.' . strtolower($type) . '.category' );
 				if( !class_exists($class) ) {
@@ -278,36 +276,7 @@ abstract class JSpaceRepository extends JObject
 	protected function _getItems( $filter ) {
 		return $filter->getItems();
 	}
-	
-	/**
-	 * 
-	 * @param mixed $id
-	 * @return JSpaceRepositoryCollection
-	 */
-	public function getCollection( $id ) {
-		$this->flushErrors();
-		
-		if( !isset( $this->_collections[ $id ] ) ) {
-			try {
-				$this->_collections[ $id ] = $this->_getCollection( $id );
-			}
-			catch( Exception $e ) {
-				throw JSpaceRepositoryError::raiseError( $this, $e );
-			}
-		}
-		
-		return $this->_collections[ $id ];
-	}
-	
-	/**
-	 *
-	 * @param mixed $id
-	 * @return JSpaceRepositoryCollection
-	 */
-	protected function _getCollection( $id ) {
-		$class = "JSpaceRepository" . ucfirst(strtolower($this->_driver)) . "Collection";
-		return new $class($id, $this);
-	}
+
 	
 	/**
 	 * 

@@ -228,7 +228,7 @@ abstract class JSpaceRepositoryItem extends JObject
 	abstract protected function _getMetadataArray(); 
 	
 	/**
-	 * 
+	 * @deprecated
 	 * @return JSpaceRepositoryCollection
 	 */
 	public function getCollection() {
@@ -236,6 +236,22 @@ abstract class JSpaceRepositoryItem extends JObject
 	}
 	
 	abstract protected function _getCollection();
+	
+	/**
+	 * Get category item is in.
+	 * 
+	 * @return JSpaceRepositoryCategory
+	 */
+	public function getCategory() {
+		return $this->_getCategory();
+	}
+	
+	/**
+	 * Get category item is in.
+	 * 
+	 * @return JSpaceRepositoryCategory
+	 */
+	abstract public function _getCategory();
 	
 	/**
 	 * Translates JSpace metadata key with crosswalk to crosswalk key (e.g. 'author' -> 'dc.author')
