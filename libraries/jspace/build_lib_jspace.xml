@@ -30,13 +30,12 @@
 		</copy>
 		-->
 	</target>
-	<!--
-	<target name="package" description="Creates a JSolr library package.">
-		<echo message="Packaging JSolr library."/>
-		<zip destfile="${package.dest}/lib_jsolr.zip"
+
+	<target name="package" description="Creates a JSpace library package.">
+		<echo message="Packaging JSpace library."/>
+		<zip destfile="${package.dest}/lib_jspace.zip"
 		       basedir="${src}"
 		       update="true"
 		       excludes="build*.xml"/>
 	</target>
-	-->
 </project>
