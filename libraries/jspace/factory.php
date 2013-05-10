@@ -59,7 +59,7 @@ class JSpaceFactory
 		
 		if (is_null($options)) {
 			$options = array();
-			$options['driver'] = $config->get('driver');;
+			$options['driver'] = $config->get('driver');
 			$options['url'] 		= $config->get( $options['driver'] . '_rest_url');
 			$options['username'] 	= $config->get( $options['driver'] . '_username');
 			$options['password'] 	= $config->get( $options['driver'] . '_password');
@@ -96,7 +96,7 @@ class JSpaceFactory
 			$options['password'] 	= $config->get( $options['driver'] . '_password');
 			$options['base_url'] 	= $config->get( $options['driver'] . '_base_url');
 			
-			$options['mapper'] = self::getMapper( JSpaceMapper::MAPPER_DUBLINCORE ); //ToDo: move to config
+			$options['mapper'] = self::getMapper( $config->get($options['driver'] . '_crosswalk', JSpaceMapper::MAPPER_DUBLINCORE) ); //ToDo: move to config
 			$options['cache'] = array(
 				'enabled' 	=> true,
 // 				'options'	=> array(

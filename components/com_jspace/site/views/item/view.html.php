@@ -42,7 +42,7 @@ class JSpaceViewItem extends JView
     	
     	$model = $this->getModel();
     	$input = JFactory::getApplication()->input;
-    	$item_id = $input->getInt('id', 0);
+    	$item_id = $input->getString('id', 0);
     	$model->setItemId( $item_id );
     	
     	$this->assignRef('model', $model);

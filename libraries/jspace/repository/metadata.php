@@ -99,7 +99,8 @@ abstract class JSpaceRepositoryMetadata extends JObject implements Iterator, Cou
 	abstract protected function _init();
 	
 	public function __toString() {
-		return $this->getValue();
+		$str = $this->getValue();
+		return empty($str) ? '' : $str;
 	}
 	
 	

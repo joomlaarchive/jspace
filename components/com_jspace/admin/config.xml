@@ -34,7 +34,7 @@
 			label="COM_JSPACE_REPOSITORY_STORAGEDIR_LABEL" 
 			description="COM_JSPACE_REPOSITORY_STORAGEDIR_DESC"
 			default="images.jspace.bundles"
-			size="45"/>
+			size="45" />
 		<field 
 			name="show_translation_keys" 
 			type="checkbox" 
@@ -73,11 +73,39 @@
             type="JSpace.Collection" 
             label="COM_JSPACE_REPOSITORY_DEFAULTCOLLECTION_LABEL"
             description="COM_JSPACE_REPOSITORY_DEFAULTCOLLECTION_DESC"/>
+        <field 
+            name="DSpace_crosswalk" 
+            type="text" 
+            label="COM_JSPACE_REPOSITORY_CROSSWALK_LABEL"  />
 	</fieldset>
 	<fieldset name="fedora"
         label="COM_JSPACE_FIELDSET_CONFIG_FC_OPTIONS_LABEL"
         description="COM_JSPACE_FIELDSET_CONFIG_FC_OPTIONS_DESC"
         addfieldpath="/libraries/jspace/form/fields">
+        <field 
+            name="fedora_base_url" 
+            type="text" 
+            label="COM_JSPACE_REPOSITORY_FC_BASE_URL_LABEL" 
+            size="45"/>
+        <field 
+            name="fedora_rest_url" 
+            type="text" 
+            label="COM_JSPACE_REPOSITORY_FC_REST_URL_LABEL" 
+            size="45"/>
+        <field 
+            name="fedora_username" 
+            type="text" 
+            label="COM_JSPACE_REPOSITORY_FC_USERNAME_LABEL" 
+            size="45"/>
+        <field 
+            name="fedora_password" 
+            type="text" 
+            label="COM_JSPACE_REPOSITORY_FC_PASSWORD_LABEL"
+            size="45"/>
+        <field 
+            name="fedora_crosswalk" 
+            type="text" 
+            label="COM_JSPACE_REPOSITORY_CROSSWALK_LABEL"  />
 	</fieldset>
 	<fieldset name="permissions"
 		label="JCONFIG_PERMISSIONS_LABEL"

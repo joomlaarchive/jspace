@@ -76,7 +76,7 @@ class JSpaceRepositoryDspaceRepository extends JSpaceRepository
 		 */
 		$bundles = $storageItem->getBundles() ;
 		$metadatas = $storageItem->getMetadatas( true ) ; //There is more data saved than we need to archive. Param=true will filter only those for archiving.
-		$mapper = new JSpaceMapper( JSpaceMapper::MAPPER_DUBLINCORE );
+		$mapper = $this->getMapper();
 		$finfo = new finfo(FILEINFO_MIME_TYPE);
 		
 		$xml = new JSimpleXML();

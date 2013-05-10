@@ -97,7 +97,7 @@ JLoader::discover('JSpaceHelper', JPATH_BASE . DIRECTORY_SEPARATOR . 'components
 		<div class="jspace-item">
 			<div class="dc-element-name"><?php echo JText::_("COM_JSPACE_DC_COLLECTION_LABEL"); ?>:</div>
 			<div class="dc-element-value">
-				<?php echo JHTML::link(JRoute::_("index.php?option=com_jspace&view=collection&id=" . $item->getCollection()->getId()), $item->getCollection()->getName() ); ?>
+				<?php echo JHTML::link(JRoute::_( JSpaceHelperRoute::getCategoryUrl( $item->getCategory()->getId() ) ), $item->getCategory()->getName() ); ?>
 			</div>
 		</div>	
 		

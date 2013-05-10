@@ -227,15 +227,15 @@ abstract class JSpaceRepositoryItem extends JObject
 	
 	abstract protected function _getMetadataArray(); 
 	
-	/**
-	 * @deprecated
-	 * @return JSpaceRepositoryCollection
-	 */
-	public function getCollection() {
-		return $this->_getCollection();
-	}
+// 	/**
+// 	 * @deprecated
+// 	 * @return JSpaceRepositoryCollection
+// 	 */
+// 	public function getCollection() {
+// 		return $this->_getCollection();
+// 	}
 	
-	abstract protected function _getCollection();
+// 	abstract protected function _getCollection();
 	
 	/**
 	 * Get category item is in.
