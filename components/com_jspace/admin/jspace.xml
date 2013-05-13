@@ -11,14 +11,15 @@
 	<description>COM_JSPACE_XML_DESCRIPTION</description>
 	<administration>
 		<files folder="admin">
+			<filename>jspace.php</filename>
 			<filename>controller.php</filename>
 			<filename>index.html</filename>
-			<filename>login.php</filename>
+	    	<filename>config.xml</filename>
 			<folder>views</folder>
 			<folder>models</folder>
 		</files>
 		<languages folder="admin">
-			<language tag="en-GB">language/en-GB.com_jspace.ini
+			<language tag="en-GB">language/en-GB/en-GB.com_jspace.ini
 			</language>
 		</languages>
 	</administration>

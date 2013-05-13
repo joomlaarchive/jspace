@@ -16,13 +16,12 @@
 			</fileset>
 		</copy> 
 	</target>
-	<!--
-	<target name="package" description="Creates a JSolr library package.">
-		<echo message="Packaging JSolr library."/>
-		<zip destfile="${package.dest}/lib_jsolr.zip"
+	
+	<target name="package" description="Creates a JRest library package.">
+		<echo message="Packaging JRest library."/>
+		<zip destfile="${package.dest}/lib_jrest.zip"
 		       basedir="${src}"
 		       update="true"
 		       excludes="build*.xml"/>
 	</target>
-	-->
 </project>
