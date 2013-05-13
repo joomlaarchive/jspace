@@ -35,26 +35,10 @@ jimport('joomla.application.component.controllerform');
 
 class JSpaceController extends JControllerForm 
 {
-	protected $default_view = 'configuration';
+	protected $default_view = 'dashboard';
 	
 	function __construct()
 	{
 		parent::__construct();
 	}
-
-	public function save($key = null)
-	{
-		$model = $this->getModel(JRequest::getWord("view", $this->default_view));
-		
-		$model->save(JRequest::getVar('jform', array(), 'post', 'array'));
-
-		$view = $this->getView(JRequest::getWord("view", $this->default_view), JRequest::getWord("format", "html"));
-		$view->setModel($model, true);
-		
-		$url = new JURI("index.php");
-		$url->setVar("option", JRequest::getWord("option"));
-		$url->setVar("view", JRequest::getWord("view", $this->default_view));
-
-		$this->setRedirect($url->toString(), JText::_("COM_JSPACE_".strtoupper(JRequest::getWord("view", $this->default_view))."_SAVE_SUCCESSFUL"));
-	}	
 }

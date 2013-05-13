@@ -37,7 +37,7 @@ $pagination = $this->pagination;
 
 JLoader::discover('JSpaceHelper', JPATH_BASE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_jspace' . DIRECTORY_SEPARATOR . 'helpers' );
 
-?>
+?> 
 <?php if( !$category->isRoot() ): ?>
 	<a href="<?php echo JRoute::_( JSpaceHelperRoute::getCategoryUrl( $category->getParent()->getId() ) ); ?>">
 		<?php echo $category->getParent()->getName(); ?>

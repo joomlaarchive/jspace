@@ -35,79 +35,8 @@ jimport('joomla.registry.registry');
 jimport('joomla.filesystem.file');
 jimport('joomla.application.component.modeladmin');
 
-class JSpaceModelConfiguration extends JModelAdmin
+class JSpaceModelDashboard extends JModelLegacy
 {
-	var $configPath = null;
-	
-	public function __construct()
-	{
-		$this->configPath = JPATH_ROOT.DS."administrator".DS."components".DS."com_jspace".DS."configuration.php";
-		
-		parent::__construct();
-	}
-	
-	/**
-	 * Gets the configuration settings.
-	 * 
-	 * @return The configuration settings.
-	 */
-	public function getConfig()
-	{
-		require_once($this->configPath);
-		
-		$config = new JSpaceConfig(); 
-		
-		$registry = JFactory::getConfig();
-
-		$registry->loadObject($config);
-
-		return $config;
-	}
-
-	public function getParam($name)
-	{
-		return $this->getConfig()->$name;
-	}
-	
-	public function save($data)
-	{
-		$config = new JRegistry('jspaceconfig');
-
-		$config->loadObject($this->getConfig());
-
-		foreach(array_keys($config->toArray()) as $key) {
-			if ($value = JArrayHelper::getValue($data, $key)) {
-				$config->setValue($key, $value);
-			}
-		}
-
-		JFile::write($this->configPath, $config->toString("PHP", array("class"=>"JSpaceConfig", "closingtag"=>false)));
-	}
-	
-	public function getForm($data = array(), $loadData = true) 
-	{
-		// Get the form.
-		$form = $this->loadForm('com_jspace.configuration', 'configuration', array('control' => 'jform', 'load_data' => $loadData));
-
-		if (empty($form)) {
-			return false;
-		}
-
-		return $form;
-	}
-	
-	protected function loadFormData() 
-	{
-		// Check the session for previously entered form data.
-		$data = JFactory::getApplication()->getUserState('com_jspace.edit.configuration.data', array());
-
-		if (empty($data)) {
-			$data = JArrayHelper::fromObject($this->getConfig());
-		}
-
-		return $data;
-	}
-	
 	public function isGDInstalled()
 	{
 		if (extension_loaded('gd') && function_exists('gd_info')) {

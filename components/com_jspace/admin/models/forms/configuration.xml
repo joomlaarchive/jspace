@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<form>
-	<fieldset>
-		<field name="base_url" type="text" label="COM_JSPACE_BASE_URL" size="45" filter="unset" />
-		<field name="rest_url" type="text" label="COM_JSPACE_REST_URL" size="45" filter="unset" />
-		<field name="username" type="text" label="COM_JSPACE_REST_USERNAME" size="45" filter="unset" />
-		<field name="password" type="text" label="COM_JSPACE_REST_PASSWORD" size="45" filter="unset" />
-	</fieldset>
-</form>	

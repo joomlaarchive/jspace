@@ -33,12 +33,10 @@ defined( '_JEXEC' ) or die( 'Restricted access' );
  
 jimport('joomla.application.component.view');
  
-class JSpaceViewConfiguration extends JView
+class JSpaceViewDashboard extends JView
 {
     function display($tpl = null)
     {
-    	$this->set("form", $this->get('Form'));
-
 		$this->addToolbar();
 		    	 
         parent::display($tpl);
