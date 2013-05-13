@@ -172,7 +172,13 @@ class JSpaceRepositoryDspaceCategory extends JSpaceRepositoryCategory
 
 		$ret = array();
 		foreach( $resp as $rawItem ) {
-			$ret[ $rawItem->id ] = $this->getRepository()->getItem( $rawItem->id );
+			try {
+				$ret[ $rawItem->id ] = $this->getRepository()->getItem( $rawItem->id );
+			}
+			catch( Exception $e ) {
+				//item was in list but can't load it
+// 				var_dump($rawItem);
+			}
 		}
 		return $ret;
 	}
