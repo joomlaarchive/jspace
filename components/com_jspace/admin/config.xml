@@ -118,21 +118,9 @@
 			component="com_jspace"
 			section="component"/>
 	</fieldset>
-	<fieldset name="usermanagement"
-		label="COM_JSPACE_FIELDSET_USERMANAGEMENT_LABEL"
-		description="COM_JSPACE_FIELDSET_USERMANAGEMENT_DESC"
-		addfieldpath="/administrator/components/com_jspace/models/fields">
-		<field 
-			name="groupmappings" 
-			type="groupmappings" 
-			label="COM_JSPACE_GROUPMAPPINGS_LABEL"
-			description="COM_JSPACE_GROUPMAPPINGS_DESC"
-			notes="COM_JSPACE_GROUPMAPPINGS_NOTES"/>	
-	</fieldset>
 	<fieldset name="notifications"
 		label="COM_JSPACE_FIELDSET_NOTIFICATIONS_LABEL"
-		description="COM_JSPACE_FIELDSET_NOTIFICATIONS_DESC"
-		addfieldpath="/administrator/components/com_jspace/models/fields">
+		description="COM_JSPACE_FIELDSET_NOTIFICATIONS_DESC">
 		<field 
 			name="onarchive" 
 			type="Usergroup" 

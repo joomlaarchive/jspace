@@ -2,7 +2,7 @@
 /**
  * Supports a collection picker.
  * 
- * @author		$LastChangedBy$
+ * @author		$LastChangedBy: spauldingsmails $
  * @package		JSpace
  * @copyright	Copyright (C) 2011 Wijiti Pty Ltd. All rights reserved.
  * @license     This file is part of the JSpace component for Joomla!.
@@ -31,18 +31,13 @@
 
 defined('JPATH_BASE') or die;
 
-jimport('joomla.html.html');
-// jimport('joomla.form.formfield');
-jimport('joomla.form.helper');
-// jimport('joomla.error.log');
-// jimport('joomla.utilities');
-// jimport('joomla.application.component.helper');
-// jimport('joomla.environment.uri');
+jimport('joomla.form.formfield');
+jimport("joomla.filesystem.file");
+jimport('joomla.error.log');
+jimport('joomla.utilities');
 jimport('jspace.factory');
 
-JFormHelper::loadFieldClass('list');
-
-class JSpaceFormFieldCollection extends JFormFieldList
+class JSpaceFormFieldCollection extends JFormField
 {
 	/**
 	 * The form field type.
@@ -50,36 +45,34 @@ class JSpaceFormFieldCollection extends JFormFieldList
 	 * @var         string
 	 * @since       1.6
 	 */
-	protected $type = 'JSpace.Collection';
+	protected $type = 'Collection';
+	
+	protected $_collections = array();
 
-	protected function getOptions()
+	protected function getInput()
 	{
-		$options = array();
-
-		try {
-			$endpoint = JSpaceFactory::getEndpoint('/collections.json');
-			$client = JSpaceFactory::getConnector();
-
-			$response = json_decode($client->get($endpoint));
-			
-			$params = JComponentHelper::getParams('com_jspace', true);
-			$default = $params->get('defaultcollectionid');
-			if( empty($this->value) ){
-				$this->value = $default;
-			}
-
-			if( is_array($response->collections) ) {
-				foreach ($response->collections as $collection) {
-					$options[] = JHTML::_("select.option", $collection->id, $collection->name);
-				}
-			}
-			if( count($options) == 0 ) {//no options found, use the default one 
-				$options[] = JHTML::_("select.option", $default, JTEXT::_("COM_JSPACE_FORMFIELD_COLLECTION_DEFAULT_COLLECTION"));
-			}
-		} catch (Exception $e) {
-			// do nothing
-		}
+		$this->_collections[] = JHTML::_("select.option", 0, JText::_("Select a collection"));
 		
-		return $options;
+		$rootCategory = JSpaceFactory::getRepository()->getCategory();
+		$this->_getCollections( $rootCategory );
+		
+		return JHTML::_("select.genericlist", $this->_collections, $this->name, null, "value", "text", intval($this->value), $this->id);
+	}
+
+	/**
+	 * 
+	 * @param JSpaceRepositoryCategory $category
+	 */
+	protected function _getCollections( JSpaceRepositoryDspaceCategory $category ) {
+		if( strpos($category->getId(), 'collection_') === 0 ) {
+			$this->_collections[] = JHTML::_("select.option", $category->dspaceGetCollection()->getId(), $category->dspaceGetCollection()->getName()); 
+		}
+		foreach( $category->getChildren() as $sub ) {
+			$this->_getCollections($sub);
+		}
 	}
 }
+
+
+
+
