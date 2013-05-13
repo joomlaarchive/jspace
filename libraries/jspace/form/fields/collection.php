@@ -64,7 +64,7 @@ class JSpaceFormFieldCollection extends JFormField
 	 * @param JSpaceRepositoryCategory $category
 	 */
 	protected function _getCollections( JSpaceRepositoryDspaceCategory $category ) {
-		if( strpos($category->getId(), 'collection_') === 0 ) {
+		if( $category->dspaceIsCollection() ) {
 			$this->_collections[] = JHTML::_("select.option", $category->dspaceGetCollection()->getId(), $category->dspaceGetCollection()->getName()); 
 		}
 		foreach( $category->getChildren() as $sub ) {
