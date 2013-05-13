@@ -1,6 +1,6 @@
 <?php
 /**
- * HTML View class for displaying a DSpace collection.
+ * HTML View class for displaying details about a category.
  * 
  * @author		$LastChangedBy$
  * @package		JSpace
@@ -26,27 +26,40 @@
  * contributed any source code changes.
  * Name							Email
  * Hayden Young					<haydenyoung@wijiti.com> 
+ * Michał Kocztorz				<michalkocztorz@wijiti.com> 
  * 
  */
  
 defined( '_JEXEC' ) or die( 'Restricted access' );
  
 jimport( 'joomla.application.component.view');
+jimport( 'jspace.factory' );
+jimport('joomla.html.pagination');
  
-class JSpaceViewCollection extends JView
+class JSpaceViewCategories extends JViewLegacy
 {
     function display($tpl = null)
     {
     	$document = JFactory::getDocument();
-
     	$document->addStyleSheet(JURI::base()."media/com_jspace/css/jspace.css");
     	
-    	$model = $this->getModel();
     	$input = JFactory::getApplication()->input;
-    	$item_id = $input->getInt('id', 0);
-    	$model->setId( $item_id );
-    	var_dump($item_id);
-
+    	$id = $input->get('id', 0);
+    	$id = (empty($id) || $id == '') ? 0 : $id;
+    	$model = $this->getModel();
+    	$category = $model->getCategory($id);
+    	
+    	$config = JSpaceFactory::getConfig();
+    	$start = $input->get('start', 0);
+    	$pagination = new JPagination($category->getItemsCount(), $start, $config->get('limit_items'));
+    	$items = $category->getItems( $start ); 
+    	
+    	$this->assignRef('model', $model);
+    	$this->assignRef('category', $category);
+    	$this->assignRef('pagination', $pagination);
+    	$this->assignRef('items', $items);
+    	
+    	
         parent::display($tpl);
     }
 }

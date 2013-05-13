@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<metadata>
-	<layout title="COM_JSPACE_COMMUNITIES_LAYOUT_TITLE" option="com_jspace_communities_view_default_option">
-		<message>
-			<![CDATA[COM_JSPACE_COMMUNITIES_LAYOUT_DESC]]>
-		</message>
-	</layout>
-</metadata>

@@ -35,7 +35,7 @@ defined('_JEXEC') or die('Restricted access');
 jimport('joomla.application.component.model');
 
 
-class JSpaceModelCategory extends JModelLegacy
+class JSpaceModelCategories extends JModelLegacy
 {
 	/**
 	 * 
