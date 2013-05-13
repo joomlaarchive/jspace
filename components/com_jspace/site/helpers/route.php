@@ -42,7 +42,7 @@ abstract class JSpaceHelperRoute
 	protected static $lookup = array();
 	
 	public static function getCategoryUrl( $id ) {
-		$Itemid = self::_findItem('category');
+		$Itemid = self::_findItem('categories');
 		
 		$link = new JURI('index.php');
 		$link->setVar('option', 'com_jspace');

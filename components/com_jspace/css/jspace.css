@@ -1,7 +1,21 @@
 @CHARSET "UTF-8";
 
-.jspace-community-tree {
+.jspace-community-tree ul{
+	margin:0px;
+}
+.jspace-community-tree li{
+	margin:0px;
+}
+.jspace-community-tree li a{
+	display:block;
+	padding:5px;
+}
+.jspace-community-tree-root {
     margin-top: 30px;
+    list-style-type: none;
+}
+.jspace-community-tree-node {
+    list-style-type: none; 
 }
 
 .jspace-community {
