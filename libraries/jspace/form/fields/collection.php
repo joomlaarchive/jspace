@@ -52,10 +52,13 @@ class JSpaceFormFieldCollection extends JFormField
 	protected function getInput()
 	{
 		$this->_collections[] = JHTML::_("select.option", 0, JText::_("Select a collection"));
-		
-		$rootCategory = JSpaceFactory::getRepository()->getCategory();
-		$this->_getCollections( $rootCategory );
-		
+		try {
+			$rootCategory = JSpaceFactory::getRepository()->getCategory();
+			$this->_getCollections( $rootCategory );
+		}
+		catch( Exception $e ) {
+			
+		}
 		return JHTML::_("select.genericlist", $this->_collections, $this->name, null, "value", "text", intval($this->value), $this->id);
 	}
 
@@ -63,7 +66,10 @@ class JSpaceFormFieldCollection extends JFormField
 	 * 
 	 * @param JSpaceRepositoryCategory $category
 	 */
-	protected function _getCollections( JSpaceRepositoryDspaceCategory $category ) {
+	protected function _getCollections( JSpaceRepositoryCategory $category ) {
+		if( !($category instanceof JSpaceRepositoryDspaceCategory) ) {
+			return;
+		}
 		if( $category->dspaceIsCollection() ) {
 			$this->_collections[] = JHTML::_("select.option", $category->dspaceGetCollection()->getId(), $category->dspaceGetCollection()->getName()); 
 		}
