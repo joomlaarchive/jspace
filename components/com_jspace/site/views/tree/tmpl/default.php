@@ -35,5 +35,4 @@ $category = $this->category;
 JLoader::discover('JSpaceHelper', JPATH_BASE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_jspace' . DIRECTORY_SEPARATOR . 'helpers' );
 
 ?> 
-
 <?php echo JSpaceHelperTree::html($category, '' ); ?>

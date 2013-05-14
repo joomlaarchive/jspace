@@ -33,7 +33,7 @@ defined( '_JEXEC' ) or die( 'Restricted access' );
  
 jimport('joomla.application.component.view');
  
-class JSpaceViewDashboard extends JView
+class JSpaceViewDashboard extends JViewLegacy
 {
     function display($tpl = null)
     {

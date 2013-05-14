@@ -28,8 +28,12 @@
  *
  */
 
-defined('JPATH_PLATFORM') or die;
+//j2.5.x backwards compatibility fix 
+if( !class_exists(JLoggerFormattedText) ) {
+	class JLoggerFormattedText extends JLogLoggerFormattedtext {}
+}
 
+defined('JPATH_PLATFORM') or die;
 class JSpaceLogger extends JLoggerFormattedText {
 	protected static $on = true;
 	protected static $logger = null;
@@ -40,7 +44,7 @@ class JSpaceLogger extends JLoggerFormattedText {
 		}
 		if( is_null(self::$logger) ) {
 			$options = array('text_file'=>'debug.php');
-			self::$logger = new JLoggerFormattedText($options);
+			self::$logger = new JSpaceLogger($options);
 		}
 		if( is_null($priority) ) {
 			$priority = JLog::DEBUG;

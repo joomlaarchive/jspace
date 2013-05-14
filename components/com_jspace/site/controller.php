@@ -33,7 +33,7 @@ defined('_JEXEC') or die('Restricted access');
 
 jimport('joomla.application.component.controller');
 
-class JSpaceController extends JController 
+class JSpaceController extends JControllerLegacy
 {
 	const DEFAULT_VIEW = "communities";
 		
@@ -51,7 +51,6 @@ class JSpaceController extends JController
 	public function display()
 	{
 		$model = $this->getModel(JRequest::getWord("view", self::DEFAULT_VIEW));
-		
 		$view = $this->getView(JRequest::getWord("view", self::DEFAULT_VIEW), 'html');
 		$view->setModel($model, true);
 		$view->setLayout(JRequest::getWord('layout', 'default'));
