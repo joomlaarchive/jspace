@@ -94,6 +94,8 @@ class JSpaceRepositoryFedoraItem extends JSpaceRepositoryItem
 			);
 			$resp = $this->getRepository()->getConnector()->get($endpoint);
 			$this->_fcRaw = $resp;
+			
+// 			echo $this->_fcRaw; exit;
 			$this->_fdo = new JSpaceRepositoryFedoraDigitalObject( $resp );
 			
 			//load DC datastream

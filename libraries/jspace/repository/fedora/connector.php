@@ -59,7 +59,6 @@ class JSpaceRepositoryFedoraConnector extends JSpaceRepositoryConnector
 		
 		try {
 			$url = new JURI(JArrayHelper::getValue($this->options, 'url').'/'.$endpoint->get('url'));
-
 			if( !is_null($endpoint->get('vars')) ){
 				foreach ($endpoint->get('vars') as $key=>$value) {
 					$url->setVar($key, $value);	

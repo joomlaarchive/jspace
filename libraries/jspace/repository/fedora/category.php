@@ -41,6 +41,7 @@ defined('JPATH_PLATFORM') or die;
 class JSpaceRepositoryFedoraCategory extends JSpaceRepositoryCategory
 {
 	public function _init() {
+		$this->_name = JText::_('COM_JSPACE_CATEGORY_ROOT_NAME');
 	}
 
 	protected function _getChildren() {
@@ -49,6 +50,60 @@ class JSpaceRepositoryFedoraCategory extends JSpaceRepositoryCategory
 	}
 	
 	protected function _getItems( $limitstart=0 ) {
+		try {
+// 			$endpoint = JSpaceFactory::getEndpoint('objects?query=' . urlencode('pid=*'), array(
+// 						//not stored in DC
+// 						'label'			=> 'true',
+// 						'state'			=> 'true',
+// 						'ownerId'		=> 'true',
+// 						'cDate'			=> 'true',
+// 						'mDate'			=> 'true',
+// 						'dcmDate'		=> 'true',
+// 						'pid'			=> 'true',
+// 						'maxResults' 	=> '10',
+// 						'resultFormat'	=> 'xml'
+// 				)
+// 			);
+			
+// 			$endpoint = JSpaceFactory::getEndpoint('objects?query=' . urlencode('pid=' . base64_decode($this->getId()) ), array(
+			$vars = array(
+				'label'			=> 'true',
+				'state'			=> 'true',
+				'ownerId'		=> 'true',
+				'cDate'			=> 'true',
+				'mDate'			=> 'true',
+				'dcmDate'		=> 'true',
+				'query'			=> '',
+				'pid'			=> 'true',
+				'maxResults' 	=> '10',
+				'page' 			=> '1',
+				'resultFormat'	=> 'xml'
+			);
+			
+			
+			$endpoint = JSpaceFactory::getEndpoint('objects?' . http_build_query($vars));
+			$resp = $this->getRepository()->getConnector()->get($endpoint);
+			$this->_fcRaw = $resp;
+				
+			echo $this->_fcRaw; exit;
+// 			$this->_fdo = new JSpaceRepositoryFedoraDigitalObject( $resp );
+				
+			//load DC datastream
+// 			$endpoint = JSpaceFactory::getEndpoint('objects/' . urlencode(base64_decode($this->getId())) . '/datastreams/DC/content' );
+// 			$resp = $this->getRepository()->getConnector()->get($endpoint);
+// 			$this->_dcDatastream = new JSpaceRepositoryFedoraDCDataStream( $resp );
+				
+// 			$this->_dcDatastream->set( $this->getRepository()->getMapper()->getCrosswalk()->_('fedora_label'), $this->_fdo->getData( 'label' ));
+// 			$this->_dcDatastream->set( $this->getRepository()->getMapper()->getCrosswalk()->_('fedora_state'), $this->_fdo->getData( 'state' ));
+// 			$this->_dcDatastream->set( $this->getRepository()->getMapper()->getCrosswalk()->_('fedora_ownerid'), $this->_fdo->getData( 'ownerId' ));
+// 			$this->_dcDatastream->set( $this->getRepository()->getMapper()->getCrosswalk()->_('date_issued'), $this->_fdo->getData( 'cDate' ));
+// 			$this->_dcDatastream->set( $this->getRepository()->getMapper()->getCrosswalk()->_('fedora_mdate'), $this->_fdo->getData( 'mDate' ));
+// 			$this->_dcDatastream->set( $this->getRepository()->getMapper()->getCrosswalk()->_('fedora_dcmdate'), $this->_fdo->getData( 'dcmDate' ));
+				
+		} catch (Exception $e) {
+						var_dump($e);exit;
+			throw JSpaceRepositoryError::raiseError($this, JText::sprintf('COM_JSPACE_JSPACE_CATEGORY_ERROR_CANNOT_FETCH', $this->getId()));
+		}
 		$ret = array();
 		return $ret;
 	}
@@ -61,6 +116,7 @@ class JSpaceRepositoryFedoraCategory extends JSpaceRepositoryCategory
 	}
 	
 	public function isRoot() {
+		return true;
 	}
 }
 
