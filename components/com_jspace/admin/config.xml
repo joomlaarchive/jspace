@@ -41,6 +41,12 @@
 			label="COM_JSPACE_REPOSITORY_SHOW_TRANSLATION_KEYS_LABEL" 
 			description="COM_JSPACE_REPOSITORY_SHOW_TRANSLATION_KEYS_DESC"
 			value="1" />
+		<field 
+			name="show_unmapped_metadata" 
+			type="checkbox" 
+			label="COM_JSPACE_REPOSITORY_SHOW_UNMAPPED_METADATA_LABEL" 
+			description="COM_JSPACE_REPOSITORY_UNMAPPED_METADATA_KEYS_DESC"
+			value="1" />
 	</fieldset>
 	<fieldset name="DSpace"
         label="COM_JSPACE_FIELDSET_CONFIG_DSPACE_OPTIONS_LABEL"

@@ -179,6 +179,15 @@ class JSpaceCrosswalk {
 	}
 	
 	/**
+	 * 
+	 * @param string $key
+	 * @param string $val
+	 */
+	protected function _addKey( $key, $val ) {
+		$this->map[ $key ] = $val;
+	}
+	
+	/**
 	 * Returns: 
 	 * - false or string when $returnOnlyFirst = true
 	 * - array (may be empty) when $returnOnlyFirst = false
@@ -188,11 +197,26 @@ class JSpaceCrosswalk {
 	 * @return mixed|multitype:
 	 */
 	public function getKey( $value, $returnOnlyFirst = true ) {
+		$config = JSpaceFactory::getConfig();
 		if( $returnOnlyFirst ) {
-			return array_search( $value, $this->map );
+			$ret = array_search( $value, $this->map );
+			if( $ret === false ) {
+				if( $config->get('show_unmapped_metadata', false) ) {
+					$this->_addKey($value, $value); //adding a pair of the same key->value
+					$ret = $value;
+				}
+			}
+			return $ret;
 		}
 		else {
-			return array_keys( $this->map, $value);
+			$ret = array_keys( $this->map, $value);
+			if( count($ret) == 0 ) {
+				if( $config->get('show_unmapped_metadata', false) ) {
+					$this->_addKey($value, $value);
+					$ret = array($value);
+				}
+			}
+			return $ret;
 		}
 	}
 }
