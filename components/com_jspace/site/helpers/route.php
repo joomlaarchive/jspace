@@ -46,7 +46,7 @@ abstract class JSpaceHelperRoute
 		
 		$link = new JURI('index.php');
 		$link->setVar('option', 'com_jspace');
-		$link->setVar('view', 'category');
+		$link->setVar('view', 'categories');
 		$link->setVar('id', $id);
 		$link->setVar('Itemid', $Itemid);
 		return (string)$link;
