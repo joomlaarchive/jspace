@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="library" method="upgrade" version="3.0">
+	<name>JSpace library</name>
+	<libraryname>jspace</libraryname>
+	<author>Wijiti</author>
+	<authorEmail>development@wijiti.com</authorEmail>
+	<authorUrl>http://www.wijiti.com</authorUrl>
+	<copyright>Copyright (C) 2012-2013 Wijiti Pty Ltd. All rights reserved.</copyright>
+	<license>http://www.gnu.org/licenses/gpl-3.0.html</license>
+    <version>0.3.0</version>
+    <description>LIB_JSPACE_XML_DESCRIPTION</description>
+	<packager>Wijiti Pty Ltd</packager>
+	<packagerurl>http://www.wijiti.org</packagerurl>
+	<update>http://developer.wijiti.org/projects/jspace</update>
+	
+    <files folder="libraries">
+        <folder>crosswalk</folder>
+        <folder>database</folder>
+        <folder>debug</folder>
+        <folder>fineuploader</folder>
+        <folder>form</folder>
+        <folder>image</folder>
+        <folder>messenger</folder>
+        <folder>multifileupload</folder>
+        <folder>repository</folder>
+        <filename>factory.php</filename>
+        <filename>dspaceapi.php</filename>
+    </files>
+    
+	<languages>
+		<language tag="en-GB">language/en-GB/en-GB.lib_jspace.ini</language>
+		<language tag="en-GB">language/en-GB/en-GB.lib_jspace.sys.ini</language>
+	</languages>
+</extension>

@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<extension type="component" version="1.6.0">
-	<name>JSpace</name>
-	<creationDate>2011-06-09</creationDate>
+<extension type="component" version="3.0" method="upgrade">
+	<name>com_jspace</name>
+	<creationDate>2013-05-15</creationDate>
 	<author>Wijiti</author>
 	<authorEmail>development@wijiti.com</authorEmail>
 	<authorUrl>http://www.wijiti.com</authorUrl>
-	<copyright>>Copyright (C) 2011 Wijiti Pty Ltd. All rights reserved.</copyright>
+	<copyright>>Copyright (C) 2011-2013 Wijiti Pty Ltd. All rights reserved.</copyright>
 	<license>http://www.gnu.org/licenses/gpl-3.0.html</license>
-	<version>0.1.0</version>
-	<description>The JSpace component provides a method for displaying digital assets from a DSpace system using the RESTful API.</description>
-
-	<installfile></installfile>
-	<uninstallfile></uninstallfile>
+	<version>0.3.0</version>
+	<description>COM_JSPACE_XML_DESCRIPTION</description>
+	<packager>Wijiti Pty Ltd</packager>
+	<packagerurl>http://www.wijiti.org</packagerurl>
+	<update>http://developer.wijiti.org/projects/jspace</update>
     
     <install><sql></sql></install>
     <uninstall><sql></sql></uninstall>

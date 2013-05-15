@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- $Id$ -->
 <config>
     <fieldset name="general"
         label="COM_JSPACE_FIELDSET_GENERAL_LABEL"
@@ -24,7 +23,8 @@
 		  name="driver" 
 		  type="list"
 		  label="COM_JSPACE_REPOSITORY_DRIVER_SELECT_LABEL"
-		  description="COM_JSPACE_REPOSITORY_DRIVER_SELECT_DESCRIPTION">
+		  description="COM_JSPACE_REPOSITORY_DRIVER_SELECT_DESCRIPTION"
+		  default="DSpace">
 		  <option value="DSpace">COM_JSPACE_REPOSITORY_DRIVER_DSPACE</option>
 		  <option value="fedora">COM_JSPACE_REPOSITORY_DRIVER_FC</option>
 		</field>
