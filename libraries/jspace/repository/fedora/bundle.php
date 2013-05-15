@@ -75,7 +75,7 @@ class JSpaceRepositoryFedoraBundle extends JSpaceRepositoryBundle
 		foreach( $list as $dsid ) {
 			$arr[ $dsid ] = $this->getBitstream( $dsid );
 		}
-		var_dump($arr);
+// 		var_dump($arr);
 		return $arr;
 	}
 }

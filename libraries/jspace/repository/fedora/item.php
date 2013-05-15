@@ -106,7 +106,7 @@ class JSpaceRepositoryFedoraItem extends JSpaceRepositoryItem
 			$this->_dcDatastream->set( $this->getRepository()->getMapper()->getCrosswalk()->_('fedora_dcmdate'), $this->_fdo->getData( 'dcmDate' ));
 			
 		} catch (Exception $e) {
-// 			var_dump($e);
+// 			var_dump($e->getMessage());
 			throw JSpaceRepositoryError::raiseError($this, JText::sprintf('COM_JSPACE_JSPACEITEM_ERROR_CANNOT_FETCH', $this->getId()));
 		}
 		

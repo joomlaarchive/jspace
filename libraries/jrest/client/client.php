@@ -162,7 +162,10 @@ class JRestClient
 	{
 		if ($this->username != null && $this->password != null)
 		{
-            curl_setopt($curlHandle, CURLOPT_HTTPHEADER, array ("Expect:", "user:".$this->username, "pass:".$this->password));
+// 			var_dump($this->username.":".$this->password);exit;
+//             curl_setopt($curlHandle, CURLOPT_HTTPHEADER, array ("Expect:", "user:".$this->username, "pass:".$this->password));
+            curl_setopt($curlHandle, CURLOPT_USERPWD, $this->username.":".$this->password);
+            curl_setopt($curlHandle, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
 		}
 		else {
 			curl_setopt($curlHandle, CURLOPT_HTTPHEADER, array("Expect:"));

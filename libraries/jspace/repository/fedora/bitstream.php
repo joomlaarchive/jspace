@@ -40,6 +40,8 @@ defined('JPATH_PLATFORM') or die;
 class JSpaceRepositoryFedoraBitstream extends JSpaceRepositoryBitstream
 {
 	protected function _init() {
+		$item = $this->getBundle()->getItem();
+		$datastream = JSpaceRepositoryFedoraDatastream::getInstance($item, $this->getId());
 	}
 	
 	/**

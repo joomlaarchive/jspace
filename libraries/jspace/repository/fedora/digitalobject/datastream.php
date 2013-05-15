@@ -86,7 +86,26 @@ class JSpaceRepositoryFedoraDatastream extends JObject
 		}
 		else {
 			//determine datastream type and create object
-			return new JSpaceRepositoryFedoraDatastream($item, $dsid);
+			$item_id = base64_decode($item->getId());
+			$endpoint = JSpaceFactory::getEndpoint('objects/' . $item_id . '/datastreams/' . $dsid . '?format=xml');
+			$resp = JSpaceFactory::getRepository()->getConnector()->get($endpoint);
+			$xml = new SimpleXMLElement( $resp );
+// 			var_dump((string)$xml->dsControlGroup);
+			switch( (string)$xml->dsControlGroup ) {
+				case 'X': //inline XML
+					return new JSpaceRepositoryFedoraDatastream($item, $dsid);
+					break;
+				case 'M': //Managed content
+					break;
+				case 'R': //Redirect
+					break;
+				case 'E': //External Reference
+					break;
+				default:
+					//it will load it again, but it is cached anyway
+					return new JSpaceRepositoryFedoraDatastream($item, $dsid);
+					break;
+			}
 		}
 	}
 
@@ -98,6 +117,7 @@ class JSpaceRepositoryFedoraDatastream extends JObject
 	public function __construct( JSpaceRepositoryFedoraItem $item, $dsid ) {
 		$this->_dsid = $dsid;
 		$this->_item = $item;
+		var_dump($dsid);
 // 		$item_id = base64_decode($this->_item->getId()); 
 // 		$endpoint = JSpaceFactory::getEndpoint('objects/' . $item_id . '/datastreams/' . base64_decode($dsid) . '?format=xml');
 // 		$resp = $this->getItem()->getRepository()->getConnector()->get($endpoint);

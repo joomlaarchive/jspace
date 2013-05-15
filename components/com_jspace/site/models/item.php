@@ -62,6 +62,7 @@ class JSpaceModelItem extends JModelLegacy
 			}
 			catch( Exception $e ) {
 				//
+// 				var_dump($e->getMessage());
 			}
 		}
 		

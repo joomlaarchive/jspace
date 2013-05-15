@@ -46,9 +46,9 @@ class JSpaceRepositoryFedoraConnector extends JSpaceRepositoryConnector
 			$repository = JSpaceFactory::getRepository();
 			if( $repository->hasCache() ) {
 				JSpaceLogger::log('Repository uses cache');
-				$key = md5( JArrayHelper::getValue($this->options, 'url') . serialize( $endpoint ) );
-				JSpaceLogger::log('Cache key: ' . $key);
-				$cachedResponse = $repository->getCache()->get( $key );
+				$cacheKey = md5( JArrayHelper::getValue($this->options, 'url') . serialize( $endpoint ) );
+				JSpaceLogger::log('Cache key: ' . $cacheKey);
+				$cachedResponse = $repository->getCache()->get( $cacheKey );
 				if( !is_null( $cachedResponse ) ) {
 					JSpaceLogger::log('Found in cache. Returning.');
 					return $cachedResponse;
@@ -66,11 +66,14 @@ class JSpaceRepositoryFedoraConnector extends JSpaceRepositoryConnector
 			}
 			
 			$client = new JRestClient((string)$url, $action);
-			
+
             if (!$endpoint->get('anonymous')) {
-                $client->setUsername(JArrayHelper::getValue($this->options, 'username'));
-                $client->setPassword(JArrayHelper::getValue($this->options, 'password'));
             }
+	            $client->setUsername(JArrayHelper::getValue($this->options, 'username'));
+	            $client->setPassword(JArrayHelper::getValue($this->options, 'password'));
+            
+
+	            
             
 			if (!is_null($endpoint->get('data'))) {
                 $client->setRequestBody($endpoint->get('data'));
@@ -85,8 +88,8 @@ class JSpaceRepositoryFedoraConnector extends JSpaceRepositoryConnector
 				case 201:
 					$response = $client->getResponseBody();
 					if( $useCache && $repository->hasCache() ) {
-						JSpaceLogger::log('Setting cache. Key: ' . $key);
-						$repository->getCache()->set($key, $response);
+						JSpaceLogger::log('Setting cache. Key: ' . $cacheKey);
+						$repository->getCache()->set($cacheKey, $response);
 					}
 					break;
 					
