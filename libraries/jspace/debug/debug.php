@@ -29,7 +29,7 @@
  */
 
 //j2.5.x backwards compatibility fix 
-if( !class_exists(JLoggerFormattedText) ) {
+if( !class_exists('JLoggerFormattedText') ) {
 	class JLoggerFormattedText extends JLogLoggerFormattedtext {}
 }
 
