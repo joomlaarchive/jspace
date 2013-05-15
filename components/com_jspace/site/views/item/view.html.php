@@ -45,9 +45,12 @@ class JSpaceViewItem extends JViewLegacy
     	$item_id = $input->getString('id', 0);
     	$model->setItemId( $item_id );
     	
+    	$repository = JSpaceFactory::getRepository();
+    	$item = $this->get('Item');
+    	
     	$this->assignRef('model', $model);
-    	$this->assignRef('repository', JSpaceFactory::getRepository());
-    	$this->assignRef('item', $this->get('Item'));
+    	$this->assignRef('repository', $repository);
+    	$this->assignRef('item', $item);
     	
         parent::display($tpl);
     }

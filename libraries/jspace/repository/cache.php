@@ -36,7 +36,7 @@ defined('JPATH_PLATFORM') or die;
  * @package     JSpace
  * @subpackage  Repository
  */
-abstract class JSpaceRepositoryCache extends JObject
+abstract class JSpaceRepositoryCache
 {
 	const DEFAULT_VALID_PERIOD = 172800; //2 days
 	/**

@@ -79,7 +79,8 @@ class JSpaceRepositoryConnectorDSpace extends JSpaceRepositoryConnector
 
 			$client->execute();
 
-			$code = intval(JArrayHelper::getValue($client->getResponseInfo(), "http_code", 0));
+			$info = $client->getResponseInfo();
+			$code = intval(JArrayHelper::getValue($info, "http_code", 0));
 			
 
 

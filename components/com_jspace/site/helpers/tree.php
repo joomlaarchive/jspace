@@ -66,7 +66,7 @@ class JSpaceHelperTree
 	 * 
 	 * @return string
 	 */
-	public static function html( JSpaceRepositoryCategory $root, $class = null) {
+	public static function html( JSpaceRepositoryCategory $root, $class = '') {
 		$tree = new JSpaceHelperTree($root, $class);
 		return $tree->categoryTreeNode();
 	}
@@ -80,7 +80,7 @@ class JSpaceHelperTree
 	public function categoryTreeNode() {
 		$children = array();
 		foreach( $this->_category->getChildren() as $id => $sub ) {
-			$tree = new JSpaceHelperTree($sub, $class);
+			$tree = new JSpaceHelperTree($sub, '');
 			$children[ $id ] = $tree->categoryTreeNode();
 		}
 		$this->_view->assignRef('children', $children);

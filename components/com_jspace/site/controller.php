@@ -48,7 +48,7 @@ class JSpaceController extends JControllerLegacy
 		$this->setRedirect($model->buildQueryURL(JRequest::get()));
 	}
 
-	public function display()
+	public function display($cachable = false, $urlparams = false)
 	{
 		$model = $this->getModel(JRequest::getWord("view", self::DEFAULT_VIEW));
 		$view = $this->getView(JRequest::getWord("view", self::DEFAULT_VIEW), 'html');
