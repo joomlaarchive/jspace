@@ -175,6 +175,9 @@ class JSpaceCrosswalk {
 	 * @return Ambigous <bool, string >
 	 */
 	public function _( $key ) {
+		/*
+		 * ToDo: if config setting is set to add unmapped metadata, add it ? 
+		 */
 		return isset( $this->map[ $key ] ) ? $this->map[ $key ] : false;
 	}
 	

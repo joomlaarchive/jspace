@@ -3,6 +3,13 @@
  * A repository item class.
  * Contains a business logic for particular repository type.
  * 
+ * Structure of objects in JSpaceRepositoryFedoraItem
+ * 
+ * JSpaceRepositoryFedoraItem
+ *   - JSpaceRepositoryFedoraDigitalObject - Raw information about fedora item retrieved by /objects/query?pid=<pid>&... 
+ *   - JSpaceRepositoryFedoraDatastreams - Raw information about list of datastreams in object, retrieved by /objects/<pid>/datastreams
+ *       - JSpaceRepositoryFedoraDatastreamDC - Representation of reserved DC datastream
+ * 
  * @package		JSpace
  * @subpackage	Repository
  * @copyright	Copyright (C) 2012 Wijiti Pty Ltd. All rights reserved.
@@ -51,9 +58,15 @@ class JSpaceRepositoryFedoraItem extends JSpaceRepositoryItem
 	
 	/**
 	 * 
-	 * @var JSpaceRepositoryFedoraDCDataStream
+	 * @var JSpaceRepositoryFedoraDatastreamDC
 	 */
 	protected $_dcDatastream = null;
+	
+	/**
+	 * 
+	 * @var JSpaceRepositoryFedoraDatastreams
+	 */
+	protected $_fcDatastreams = null;
 	
 	/**
 	 * (non-PHPdoc)
@@ -70,23 +83,6 @@ class JSpaceRepositoryFedoraItem extends JSpaceRepositoryItem
 					'cDate'			=> 'true',
 					'mDate'			=> 'true',
 					'dcmDate'		=> 'true',
-
-					//stored in DC
-// 					'contributor'	=> 'true',
-// 					'coverage'		=> 'true',
-// 					'creator'		=> 'true',
-// 					'date'			=> 'true',
-// 					'description'	=> 'true',
-// 					'format'		=> 'true',
-// 					'identifier'	=> 'true',
-// 					'language'		=> 'true',
-// 					'publisher'		=> 'true',
-// 					'relation'		=> 'true',
-// 					'rights'		=> 'true',
-// 					'source'		=> 'true',
-// 					'subject'		=> 'true',
-// 					'title'			=> 'true',
-// 					'type'			=> 'true',
 					'pid'			=> 'true',
 					'maxResults' 	=> '1',
 					'resultFormat'	=> 'xml'
@@ -97,11 +93,10 @@ class JSpaceRepositoryFedoraItem extends JSpaceRepositoryItem
 			
 // 			echo $this->_fcRaw; exit;
 			$this->_fdo = new JSpaceRepositoryFedoraDigitalObject( $resp );
+// 			var_dump($resp);exit;
 			
 			//load DC datastream
-			$endpoint = JSpaceFactory::getEndpoint('objects/' . urlencode(base64_decode($this->getId())) . '/datastreams/DC/content' );
-			$resp = $this->getRepository()->getConnector()->get($endpoint);
-			$this->_dcDatastream = new JSpaceRepositoryFedoraDCDataStream( $resp );
+			$this->_dcDatastream = $this->fcGetDatastream('DC');
 			
 			$this->_dcDatastream->set( $this->getRepository()->getMapper()->getCrosswalk()->_('fedora_label'), $this->_fdo->getData( 'label' ));
 			$this->_dcDatastream->set( $this->getRepository()->getMapper()->getCrosswalk()->_('fedora_state'), $this->_fdo->getData( 'state' ));
@@ -114,6 +109,7 @@ class JSpaceRepositoryFedoraItem extends JSpaceRepositoryItem
 // 			var_dump($e);
 			throw JSpaceRepositoryError::raiseError($this, JText::sprintf('COM_JSPACE_JSPACEITEM_ERROR_CANNOT_FETCH', $this->getId()));
 		}
+		
 		$this->_loaded = true;
 	}
 	
@@ -131,8 +127,6 @@ class JSpaceRepositoryFedoraItem extends JSpaceRepositoryItem
 		$arr = array();
 		foreach( $this->fcGetDC()->keys() as $key ) {
 			$keys = $crosswalk->getKey($key, false);	//reverse crosswalk lookup. Keys found are possible keys in crosswalk. May not be a part of this item.
-// 			var_dump($key);
-// 			var_dump($keys);
 			foreach( $keys as $jspaceKey ) {
 				try {
 					$arr[ $key ] = $this->getMetadata($jspaceKey);
@@ -166,6 +160,7 @@ class JSpaceRepositoryFedoraItem extends JSpaceRepositoryItem
 	 */
 	protected function _getBundles() {
 		$bundles = array();
+		$bundles[ 'DEFAULT' ] = $this->getBundle( 'DEFAULT' );
 		return $bundles;
 	}
 	
@@ -187,6 +182,33 @@ class JSpaceRepositoryFedoraItem extends JSpaceRepositoryItem
 	 */
 	public function fcGetDC() {
 		return $this->_dcDatastream;
+	}
+	
+	/**
+	 * Get fedora datastreams object containing a list of datastreams in item.
+	 * Fetch it if not yet present.
+	 * 
+	 * @return JSpaceRepositoryFedoraDatastreams
+	 */
+	public function fcGetDatastreams() {
+		if( is_null( $this->_fcDatastreams ) ) {
+			try {
+				$this->_fcDatastreams = new JSpaceRepositoryFedoraDatastreams( $this );
+			}
+			catch( Exception $e ) {
+				JSpaceLogger::log("Creating JSpaceRepositoryFedoraDatastreams object failed.");
+			}
+		}
+		return $this->_fcDatastreams;
+	}
+	
+	/**
+	 * 
+	 * @param string $dsid
+	 * @return JSpaceRepositoryFedoraDatastream
+	 */
+	public function fcGetDatastream( $dsid ) {
+		return $this->fcGetDatastreams()->getDatastream($dsid);
 	}
 }
 

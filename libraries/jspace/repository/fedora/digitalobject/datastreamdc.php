@@ -37,7 +37,7 @@ jimport('joomla.utilities.simplexml');
  * @package     JSpace
  * @subpackage  Repository
  */
-class JSpaceRepositoryFedoraDCDataStream extends JObject
+class JSpaceRepositoryFedoraDatastreamDC extends JSpaceRepositoryFedoraDatastream
 {
 	/**
 	 * 
@@ -51,9 +51,10 @@ class JSpaceRepositoryFedoraDCDataStream extends JObject
 	 */
 	protected $_data = array();
 	
-	
-	public function __construct( $xml ) {
-// 		var_dump($xml);
+	protected function _load() {
+		$endpoint = JSpaceFactory::getEndpoint('objects/' . urlencode(base64_decode($this->getItem()->getId())) . '/datastreams/DC/content' );
+		$xml = $this->getItem()->getRepository()->getConnector()->get($endpoint);
+		
 		$this->_xmlParser = new SimpleXMLElement( $xml );
 		foreach(  $this->_xmlParser->children('dc',true) as $key => $val ) {
 			$this->_data[ 'dc.' . $key ][] = (string)$val;
@@ -61,7 +62,7 @@ class JSpaceRepositoryFedoraDCDataStream extends JObject
 		
 // 		var_dump($this->_data);
 	}
-	
+		
 	/**
 	 * 
 	 * (non-PHPdoc)
@@ -71,7 +72,7 @@ class JSpaceRepositoryFedoraDCDataStream extends JObject
 		if( isset($this->_data[ $key ]) ) {
 			return $this->_data[ $key ];
 		}
-		return '';
+		return array();
 	}
 	
 	/**

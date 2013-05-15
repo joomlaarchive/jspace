@@ -41,6 +41,7 @@ class JSpaceRepositoryFedoraBundle extends JSpaceRepositoryBundle
 {
 	
 	protected function _init(){
+		//nothing to do here
 	}
 	
 	/**
@@ -67,7 +68,14 @@ class JSpaceRepositoryFedoraBundle extends JSpaceRepositoryBundle
 	 * @return array od JSpaceRepositoryBitstream
 	 */
 	public function _getBitstreams() {
+		$item = $this->getItem();
+		$list = $item->fcGetDatastreams()->getDatastreamsIdList();
+		
 		$arr = array();
+		foreach( $list as $dsid ) {
+			$arr[ $dsid ] = $this->getBitstream( $dsid );
+		}
+		var_dump($arr);
 		return $arr;
 	}
 }

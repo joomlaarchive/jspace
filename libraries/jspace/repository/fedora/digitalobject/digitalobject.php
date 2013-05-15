@@ -50,13 +50,17 @@ class JSpaceRepositoryFedoraDigitalObject extends JObject
 	protected $_objectField = null;
 	
 	public function __construct( $xml ) {
-// 		var_dump($xml);
 		$this->_xmlParser = JFactory::getXMLParser('Simple');
 		$this->_xmlParser->loadString( $xml );
 		
-// 		var_dump( $this->getData('ownerId') );
+		if( count($this->_xmlParser->document->resultList[0]->objectFields) == 0 ) {
+			throw JSpaceRepositoryError::raiseError($this, JText::_('COM_JSPACE_JSPACEITEM_ERROR_CANNOT_FETCH'));
+		}
 	}
 	
+	/**
+	 * 
+	 */
 	public function getObjectField() {
 		if( is_null( $this->_objectField ) ) {
 			$this->_objectField = $this->_xmlParser->document->resultList[0]->objectFields[0];
