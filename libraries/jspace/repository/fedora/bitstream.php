@@ -39,9 +39,16 @@ defined('JPATH_PLATFORM') or die;
  */
 class JSpaceRepositoryFedoraBitstream extends JSpaceRepositoryBitstream
 {
+	/**
+	 * 
+	 * @var JSpaceRepositoryFedoraDatastream
+	 */
+	private $_fcDatastream = null;
+	
 	protected function _init() {
 		$item = $this->getBundle()->getItem();
 		$datastream = JSpaceRepositoryFedoraDatastream::getInstance($item, $this->getId());
+		$this->_fcDatastream = $this->getBundle()->getItem()->fcGetDatastream( $this->getId() );
 	}
 	
 	/**
@@ -49,23 +56,24 @@ class JSpaceRepositoryFedoraBitstream extends JSpaceRepositoryBitstream
 	 * @see JSpaceRepositoryBitstream::getUrl()
 	 */
 	public function getUrl() {
-		return $this->getBundle()->getItem()->getRepository()->getBaseUrl();
+		$item_id = base64_decode($this->getBundle()->getItem()->getId());
+		return $this->getBundle()->getItem()->getRepository()->getBaseUrl() . '/' . 'objects/' . $item_id . '/datastreams/' . $this->getId() . '/content';
 	}
 	
 	public function getName() {
-		return "";
+		return $this->_fcDatastream->dsLabel;
 	}
 	
 	public function getDescription() {
-		return "";
+		return $this->_fcDatastream->dsFormatURI;
 	}
 	
 	public function getSize() {
-		return "";
+		return $this->_fcDatastream->dsSize;
 	}
 	
 	public function getFormatDescription() {
-		return "";
+		return $this->_fcDatastream->dsMIME;
 	}
 
 	

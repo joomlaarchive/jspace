@@ -1,6 +1,7 @@
 <?php
 /**
- * Fedora Data Stream representation
+ * Fedora Data Stream, control group M representation 
+ * 
  * 
  * @package		JSpace
  * @subpackage	Repository
@@ -37,62 +38,9 @@ jimport('joomla.utilities.simplexml');
  * @package     JSpace
  * @subpackage  Repository
  */
-class JSpaceRepositoryFedoraDatastreamDC extends JSpaceRepositoryFedoraDatastream
+class JSpaceRepositoryFedoraDatastreamR extends JSpaceRepositoryFedoraDatastream
 {
-	/**
-	 * 
-	 * @var SimpleXMLElement
-	 */
-	protected $_xmlContent = null;
-	
-	/**
-	 * 
-	 * @var array
-	 */
-	protected $_data = array();
-	
 	protected function _load() {
-		$endpoint = JSpaceFactory::getEndpoint('objects/' . urlencode(base64_decode($this->getItem()->getId())) . '/datastreams/DC/content' );
-		$xml = $this->getItem()->getRepository()->getConnector()->get($endpoint);
-		
-		$this->_xmlContent = new SimpleXMLElement( $xml );
-		foreach(  $this->_xmlContent->children('dc',true) as $key => $val ) {
-			$this->_data[ 'dc.' . $key ][] = (string)$val;
-		}
-	}
-		
-	/**
-	 * 
-	 * (non-PHPdoc)
-	 * @see JObject::get()
-	 */
-	public function get( $key ) {
-		if( isset($this->_data[ $key ]) ) {
-			return $this->_data[ $key ];
-		}
-		return array();
-	}
-	
-	/**
-	 * Some data are outside DC but will be used as if they were part of it.
-	 * Added when item is created.
-	 * 
-	 * 'label'			
-	 * 'state'			
-	 * 'ownerId'		
-	 * 'cDate'			
-	 * 'mDate'			
-	 * 'dcmDate'		
-	 * 
-	 * (non-PHPdoc)
-	 * @see JObject::set()
-	 */
-	public function set( $key, $val ) {
-		$this->_data[ $key ][] = $val;
-	}
-	
-	public function keys() {
-		return array_keys($this->_data);
 	}
 }
 

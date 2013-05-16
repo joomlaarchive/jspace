@@ -54,6 +54,42 @@ class JSpaceRepositoryFedoraDatastream extends JObject
 	 */
 	protected $_xmlParser = null;
 	
+	protected $_elements = array(
+			'dsLabel',
+			'dsVersionID',
+			'dsCreateDate',
+			'dsState',
+			'dsMIME',
+			'dsFormatURI',
+			'dsControlGroup',
+			'dsSize',
+			'dsVersionable',
+			'dsInfoType',
+			'dsLocation',
+			'dsLocationType',
+			'dsChecksumType',
+			'dsChecksum',
+			'dsChecksumValid',
+			'dsAltID',
+	);
+	
+    public $dsLabel = '';
+    public $dsVersionID = '';
+    public $dsCreateDate = '';
+    public $dsState = '';
+    public $dsMIME = '';
+    public $dsFormatURI = '';
+    public $dsControlGroup = '';
+    public $dsSize = '';
+    public $dsVersionable = '';
+    public $dsInfoType = '';
+    public $dsLocation = '';
+    public $dsLocationType = '';
+    public $dsChecksumType = '';
+    public $dsChecksum = '';
+    public $dsChecksumValid = '';
+    public $dsAltID = '';
+	
 
 	/**
 	 * Array of reserved datastreams according to Fedora docs.
@@ -73,40 +109,36 @@ class JSpaceRepositoryFedoraDatastream extends JObject
 	 * @return JSpaceRepositoryFedoraDatastream
 	 */
 	public static function getInstance( JSpaceRepositoryFedoraItem $item, $dsid) {
+		//determine datastream type and create object
+		$item_id = base64_decode($item->getId());
+		$endpoint = JSpaceFactory::getEndpoint('objects/' . $item_id . '/datastreams/' . $dsid . '?format=xml');
+		$resp = JSpaceFactory::getRepository()->getConnector()->get($endpoint);
+		$xml = new SimpleXMLElement( $resp );
+
 		if( in_array($dsid, self::$_reservedDatastreams) ) {
-			switch( $dsid ) {
-				case 'DC':
-					return new JSpaceRepositoryFedoraDatastreamDC($item, $dsid);
-					break;
-				case 'RELS-EXT':
-					break;
-				case 'AUDIT':
-					break;
-			}
+			/*
+			 * Instantiate approppriate subclass of JSpaceRepositoryFedoraDatastream based on reserved dsid value
+			*  - JSpaceRepositoryFedoraDatastreamDC
+			*  - JSpaceRepositoryFedoraDatastreamRELSEXT
+			*  - JSpaceRepositoryFedoraDatastreamAUDIT
+			*/
+			$class = 'JSpaceRepositoryFedoraDatastream' . str_replace("-", "", $dsid);
 		}
 		else {
-			//determine datastream type and create object
-			$item_id = base64_decode($item->getId());
-			$endpoint = JSpaceFactory::getEndpoint('objects/' . $item_id . '/datastreams/' . $dsid . '?format=xml');
-			$resp = JSpaceFactory::getRepository()->getConnector()->get($endpoint);
-			$xml = new SimpleXMLElement( $resp );
-// 			var_dump((string)$xml->dsControlGroup);
-			switch( (string)$xml->dsControlGroup ) {
-				case 'X': //inline XML
-					return new JSpaceRepositoryFedoraDatastream($item, $dsid);
-					break;
-				case 'M': //Managed content
-					break;
-				case 'R': //Redirect
-					break;
-				case 'E': //External Reference
-					break;
-				default:
-					//it will load it again, but it is cached anyway
-					return new JSpaceRepositoryFedoraDatastream($item, $dsid);
-					break;
-			}
+			/*
+			 * Instantiate approppriate subclass of JSpaceRepositoryFedoraDatastream based on control group value
+			 *  - JSpaceRepositoryFedoraDatastreamX
+			 *  - JSpaceRepositoryFedoraDatastreamM
+			 *  - JSpaceRepositoryFedoraDatastreamR
+			 *  - JSpaceRepositoryFedoraDatastreamE
+			 */
+			$controlGroup = in_array((string)$xml->dsControlGroup, array('X','M','R','E')) ? (string)$xml->dsControlGroup : '';
+			$class = 'JSpaceRepositoryFedoraDatastream' . $controlGroup;
 		}
+		if( !class_exists($class) ) {
+			throw new Exception(JText::_('COM_JSPACE_JSPACE_FEDORA_DATASTREAM_CLASS_NOT_FOUND'));
+		}
+		return new $class($item, $dsid, $xml);
 	}
 
 	/**
@@ -114,20 +146,15 @@ class JSpaceRepositoryFedoraDatastream extends JObject
 	 * @param JSpaceRepositoryFedoraItem $item
 	 * @param string $dsid
 	 */
-	public function __construct( JSpaceRepositoryFedoraItem $item, $dsid ) {
+	public function __construct( JSpaceRepositoryFedoraItem $item, $dsid, SimpleXMLElement $xml ) {
 		$this->_dsid = $dsid;
 		$this->_item = $item;
-		var_dump($dsid);
-// 		$item_id = base64_decode($this->_item->getId()); 
-// 		$endpoint = JSpaceFactory::getEndpoint('objects/' . $item_id . '/datastreams/' . base64_decode($dsid) . '?format=xml');
-// 		$resp = $this->getItem()->getRepository()->getConnector()->get($endpoint);
-		
-		//dont know yet which datastream type is it, creating datastream should be done in static factory method
-		 
-// 		$this->_xmlParser = new SimpleXMLElement( $resp );
-// 		var_dump($this->_xmlParser);
-
+		$this->_xmlParser = $xml;
+		foreach( $this->_elements as $key ) {
+			$this->$key = (string)$xml->$key;
+		}
 		$this->_load();
+// 		var_dump($this);
 	}
 	
 	protected function _load() {}
