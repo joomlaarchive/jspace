@@ -41,7 +41,7 @@ class JSpaceRepositoryFedoraDigitalObject extends JObject
 {
 	/**
 	 * 
-	 * @var JSimpleXML
+	 * @var SimpleXMLElement
 	 */
 	protected $_xmlParser = null;
 	
@@ -50,10 +50,9 @@ class JSpaceRepositoryFedoraDigitalObject extends JObject
 	protected $_objectField = null;
 	
 	public function __construct( $xml ) {
-		$this->_xmlParser = JFactory::getXMLParser('Simple');
-		$this->_xmlParser->loadString( $xml );
+		$this->_xmlParser = new SimpleXMLElement( $xml );
 		
-		if( count($this->_xmlParser->document->resultList[0]->objectFields) == 0 ) {
+		if( count($this->_xmlParser->resultList[0]->objectFields) == 0 ) {
 			throw JSpaceRepositoryError::raiseError($this, JText::_('COM_JSPACE_JSPACEITEM_ERROR_CANNOT_FETCH'));
 		}
 	}
@@ -63,7 +62,7 @@ class JSpaceRepositoryFedoraDigitalObject extends JObject
 	 */
 	public function getObjectField() {
 		if( is_null( $this->_objectField ) ) {
-			$this->_objectField = $this->_xmlParser->document->resultList[0]->objectFields[0];
+			$this->_objectField = $this->_xmlParser->resultList[0]->objectFields[0];
 		}
 		return $this->_objectField;
 	}
@@ -77,9 +76,9 @@ class JSpaceRepositoryFedoraDigitalObject extends JObject
 	public function getData( $key ) {
 		if( is_null( $this->_data[ $key ] ) ) {
 			try {
-				$val = $this->getObjectField()->getElementByPath( $key );
+				$val = $this->getObjectField()->$key;
 				if( $val ) {
-					$this->_data[ $key ] = $val->data();
+					$this->_data[ $key ] = (string)$val;
 				}
 				else {
 					$this->_data[ $key ] = '';
