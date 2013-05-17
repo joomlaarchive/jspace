@@ -36,19 +36,32 @@ defined('JPATH_PLATFORM') or die;
  * @package     JSpace
  * @subpackage  OAI
  */
-class JSpaceOAIRequestBadVerb extends JSpaceOAIRequest
+class JSpaceOAIRequestIdentify extends JSpaceOAIRequest
 {
-	public function __construct( JInput $input, JSpaceOAIExceptionBadVerb $e ) {
-		parent::__construct($input);
-		$this->_error = $e;
+	/**
+	 * Required HTTP OAI-PMH request arguments.
+	 * "required, the argument must be included with the request (the verb argument is always required, as described in HTTP Request Format)"
+	 *
+	 * @var array
+	 */
+	protected $_required = array('verb');
+	
+	public function __construct( JInput $input ) {
+		try {
+			parent::__construct( $input );
+			$this->_setResponseBody();
+		}
+		catch( JSpaceOAIException $e ) {
+			$this->_error = $e;
+		}
 	}
 	
-
 	/**
 	 * Set the body in response xml.
 	 */
 	public function _setResponseBody() {
-		//no body for error, method needed though
+		$identify = $this->_responseXml->addChild('Identify');
+		
 	}
 }
 

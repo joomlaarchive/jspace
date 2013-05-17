@@ -88,12 +88,14 @@ class JSpaceOAIRequestGetRecord extends JSpaceOAIRequest
 		
 		
 		$metadata = $record->addChild('metadata');
-		$data = $this->_disseminateFormat->createChild($metadata);
+		$dataTag = $this->_disseminateFormat->createChild($metadata);
 		$expected = $this->_disseminateFormat->getExpectedFields();
 		foreach( $expected as $element ) {
 			try {
 				$value = $this->_item->getMetadata($element, false, $crosswalk->getType());
-				$this->_disseminateFormat->createDataChild($element, $value, $data);
+				foreach( $value as $val ) {
+					$this->_disseminateFormat->createDataChild($element, $val, $dataTag);
+				}
 			}
 			catch( Exception $e ) {
 				//not found

@@ -42,7 +42,8 @@ JLoader::discover("JSpaceOAIDisseminateFormat", JPATH_SITE . "/libraries/jspace/
 abstract class JSpaceOAIRequest extends JObject
 {
 	protected static $_verbs = array(
-		'GetRecord'
+		'GetRecord',
+		'Identify',
 	);
 	
 	/**
