@@ -29,7 +29,8 @@
  */
 
 defined( '_JEXEC' ) or die( 'Restricted access' );
-/* @var $category JSpaceRepositoryCategory */
-// $category = $this->category;
 
-?> 
+/* @var $oai JSpaceOAIRequest */
+$oai = $this->oai;
+
+echo $oai->getResponseXML()->asXML();

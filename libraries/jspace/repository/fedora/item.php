@@ -122,8 +122,7 @@ class JSpaceRepositoryFedoraItem extends JSpaceRepositoryItem
 	 * (non-PHPdoc)
 	 * @see JSpaceRepositoryItem::_getMetadataArray()
 	 */
-	protected function _getMetadataArray() {
-		$crosswalk = $this->getRepository()->getMapper()->getCrosswalk();
+	protected function _getMetadataArray(JSpaceCrosswalk $crosswalk) {
 		$arr = array();
 		foreach( $this->fcGetDC()->keys() as $key ) {
 			$keys = $crosswalk->getKey($key, false);	//reverse crosswalk lookup. Keys found are possible keys in crosswalk. May not be a part of this item.

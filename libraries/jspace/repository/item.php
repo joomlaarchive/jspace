@@ -192,18 +192,32 @@ abstract class JSpaceRepositoryItem extends JObject
 	 * @param mixed $key
 	 * @return JSpaceRepositoryMetadata
 	 */
-	public function getMetadata( $key=null, $supressExceptions=true ) {
-		if( is_null( $key ) ) {
-			return $this->_getMetadataArray();
+	public function getMetadata( $key=null, $supressExceptions=true, $crosswalkType=null ) {
+		if( is_null($crosswalkType) ) {
+			$crosswalk = $this->getRepository()->getMapper()->getCrosswalk();
+			$crosswalkType = $crosswalk->getType();
 		}
-		if( !isset( $this->_metadata[ $key ] ) ) {
+		else {
+			$crosswalk = JSpaceFactory::getCrosswalk( $crosswalkType );
+		}
+		if( is_null( $key ) ) {
+			return $this->_getMetadataArray( $crosswalk );
+		}
+		
+		$crosswalkedKey = $crosswalk->_($key);
+		
+		if( !isset( $this->_metadata[ $crosswalkType ] ) ) {
+			$this->_metadata[ $crosswalkType ] = array();
+		}
+		
+		if( !isset( $this->_metadata[ $crosswalkType ][ $key ] ) ) {
 			try {
-				$this->_metadata[ $key ] = $this->_getMetadata( $key );
+				$this->_metadata[ $crosswalkType ][ $key ] = $this->_getMetadata( $crosswalkedKey );
 			}
 			catch( Exception $e ) {
 				$e = JSpaceRepositoryError::raiseError( $this, $e );
 				if( $supressExceptions ) {
-					$this->_metadata[ $key ] = JText::sprintf("COM_JSPACE_REPOSITORY_METADATA_UNKNOWN", $key);
+					$this->_metadata[ $crosswalkType ][ $key ] = JText::sprintf("COM_JSPACE_REPOSITORY_METADATA_UNKNOWN", $key);
 				}
 				else {
 					//rethrow exception and set error
@@ -212,12 +226,12 @@ abstract class JSpaceRepositoryItem extends JObject
 			}
 		}
 		
-		return $this->_metadata[ $key ];
+		return $this->_metadata[ $crosswalkType ][ $key ];
 	}
 	
 	/**
 	 *
-	 * @param mixed $key
+	 * @param mixed $key Crosswalked key.
 	 * @return JSpaceRepositoryMetadata
 	 */
 	protected function _getMetadata( $key ) {
@@ -225,7 +239,7 @@ abstract class JSpaceRepositoryItem extends JObject
 		return new $class( $this, $key );
 	}
 	
-	abstract protected function _getMetadataArray(); 
+	abstract protected function _getMetadataArray(JSpaceCrosswalk $crosswalk); 
 	
 // 	/**
 // 	 * @deprecated

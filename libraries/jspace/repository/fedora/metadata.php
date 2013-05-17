@@ -41,7 +41,8 @@ class JSpaceRepositoryFedoraMetadata extends JSpaceRepositoryMetadata
 {
 	
 	protected function _init() {
-		$crosswalkValue = $this->getItem()->getCrosswalkValue( $this->getKey() );
+// 		$crosswalkValue = $this->getItem()->getCrosswalkValue( $this->getKey() );
+		$crosswalkValue = $this->getKey();
 		foreach( $this->getItem()->fcGetDC()->get($crosswalkValue) as $value) {
 			$this->_value[] = $value;
 		}

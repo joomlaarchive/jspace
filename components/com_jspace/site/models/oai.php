@@ -33,12 +33,17 @@
 defined('_JEXEC') or die('Restricted access');
 
 jimport('joomla.application.component.model');
-
+jimport('jspace.factory');
 
 class JSpaceModelOAI extends JModelLegacy
 {
+	/**
+	 * 
+	 * @param string $id
+	 * @return JSpaceRepositoryItem
+	 */
 	public function getItem( $id ) {
-		
+		return JSpaceFactory::getRepository()->getItem( $id );
 	}
 }
 

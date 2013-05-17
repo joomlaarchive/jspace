@@ -39,6 +39,7 @@ jimport('jspace.repository.repository');
 jimport('jspace.debug.debug');
 
 JLoader::discover("JSpaceTable", JPATH_SITE . "/libraries/jspace/database/table/");
+JLoader::discover("JSpaceOAI", JPATH_SITE . "/libraries/jspace/oai/");
 
 class JSpaceFactory
 {
@@ -166,5 +167,13 @@ class JSpaceFactory
 	 */
 	public static function getMessenger() {
 		return new JSpaceMessenger();
+	}
+	
+	/**
+	 * 
+	 * @param JInput $input
+	 */
+	public static function getOAIRequest( JInput $input ) {
+		return JSpaceOAIRequest::getInstance( $input );
 	}
 }

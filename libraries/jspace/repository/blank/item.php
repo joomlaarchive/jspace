@@ -64,8 +64,7 @@ class JSpaceRepositoryBlankItem extends JSpaceRepositoryItem
 	 * (non-PHPdoc)
 	 * @see JSpaceRepositoryItem::_getMetadataArray()
 	 */
-	protected function _getMetadataArray() {
-		$crosswalk = $this->getRepository()->getMapper()->getCrosswalk();
+	protected function _getMetadataArray(JSpaceCrosswalk $crosswalk) {
 		$arr = array();
 		return $arr;
 	}

@@ -1,6 +1,5 @@
 <?php
 /**
- * Metadata class
  * 
  * @package		JSpace
  * @subpackage	Repository
@@ -31,49 +30,64 @@
  
 defined('JPATH_PLATFORM') or die;
 
-
 /**
  * @author Michał Kocztorz
  * @package     JSpace
- * @subpackage  Repository
+ * @subpackage  OAI
  */
-class JSpaceRepositoryDspaceMetadata extends JSpaceRepositoryMetadata
+class JSpaceOAIDisseminateFormatOai_dc extends JSpaceOAIDisseminateFormat
 {
-	protected $_dspaceRawMetadata = null;
-	
-	protected function _init() {
-		$rawMetadata = $this->getItem()->dspaceGetRaw()->metadata;
-// 		$crosswalkValue = $this->getItem()->getCrosswalkValue( $this->getKey() );
-		$crosswalkValue = $this->getKey();
-		foreach( $rawMetadata as $meta ) {
-			if( $meta->schema . "." . $meta->element . (is_null($meta->qualifier)?"":("." . $meta->qualifier)) == $crosswalkValue) {
-				$this->_dspaceRawMetadata[] = $meta;
-				$this->_value[] = $meta->value;
-			}
-		}
-		if( count($this->_value) == 0 ) {
-			throw JSpaceRepositoryError::raiseError($this, JText::sprintf("COM_JSPACE_REPOSITORY_METADATA_NOT_FOUND", $this->getKey()));
-		}
-	}
+	protected $_expected = array(
+			"title",
+			"creator",
+			"subject",
+			"description",
+			"publisher",
+			"contributor",
+			"date",
+			"type",
+			"format",
+			"identifier",
+			"source",
+			"language",
+			"relation",
+			"coverage",
+			"rights",
+	);
 	
 
-	public function getSchema() {
-		return $this->_dspaceRawMetadata[$this->position]->schema;
+	/**
+	 * Create main tag for data.
+	 *
+	 * @param SimpleXMLElement $parent
+	 * @return SimpleXMLElement
+	 */
+	public function createChild( SimpleXMLElement $parent ){
+		$parent->registerXPathNamespace('oai_dc', 'http://www.openarchives.org/OAI/2.0/oai_dc/');
+		$oai_dc = $parent->addChild('oai_dc:dc', '', 'http://www.openarchives.org/OAI/2.0/oai_dc/');
+		$oai_dc->registerXPathNamespace('dc', 'http://purl.org/dc/elements/1.1/');
+		return $oai_dc;
 	}
 	
-	public function getElement() {
-		return $this->_dspaceRawMetadata[$this->position]->element;
+	/**
+	 * Get array of expected fields.
+	 *
+	 * @return array
+	*/
+	public function getExpectedFields() {
+		return $this->_expected;
 	}
 	
-	public function getQualifier() {
-		return $this->_dspaceRawMetadata[$this->position]->qualifier;
-	}
-	
-	public function dspaceGetRawMetadata() {
-		return $this->_dspaceRawMetadata;
+	/**
+	 *
+	 * @param string $title
+	 * @param string $value
+	 * @param SimpleXMLElement $parent
+	 *
+	 * @return SimpleXMLElement
+	*/
+	public function createDataChild( $element, $value, SimpleXMLElement $parent ) {
+		return $parent->addChild('dc:' . $element, $value, 'http://purl.org/dc/elements/1.1/');
 	}
 }
-
-
-
 

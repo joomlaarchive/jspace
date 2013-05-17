@@ -78,9 +78,8 @@ class JSpaceRepositoryDspaceItem extends JSpaceRepositoryItem
 	 * (non-PHPdoc)
 	 * @see JSpaceRepositoryItem::_getMetadataArray()
 	 */
-	protected function _getMetadataArray() {
+	protected function _getMetadataArray(JSpaceCrosswalk $crosswalk) {
 		$rawMetadata = $this->_dspaceRaw->metadata;
-		$crosswalk = $this->getRepository()->getMapper()->getCrosswalk();
 		$arr = array();
 		foreach( $rawMetadata as $meta ) {
 			$key =  $meta->schema . "." . $meta->element . (is_null($meta->qualifier)?"":("." . $meta->qualifier)); //build the key

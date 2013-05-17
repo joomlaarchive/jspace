@@ -1,0 +1,17 @@
+{
+        "title"                         : "dc.title",
+        "creator"                       : "dc.creator",
+        "subject"                       : "dc.subject",
+        "description"                   : "dc.description",
+        "publisher"                     : "dc.publisher",
+        "contributor"                   : "dc.contributor.other",
+        "date"                          : "dc.date.available",
+        "type"                          : "dc.type",
+        "format"                        : "dc.format",
+        "identifier"                    : "dc.identifier",
+        "source"                        : "dc.source",
+        "language"                      : "dc.language",
+        "relation"                      : "dc.relation",
+        "coverage"                      : "dc.coverage",
+        "rights"                        : "dc.rights"
+}

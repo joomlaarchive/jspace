@@ -160,7 +160,6 @@ class JSpaceCrosswalk {
 				}
 			}
 		}
-		
 		if( !$loaded ) {
 			throw new Exception( JText::sprintf('COM_JSPACE_MISSING_CROSSWALK_CONFIGURATION', get_class($this)) );
 		}
@@ -221,5 +220,14 @@ class JSpaceCrosswalk {
 			}
 			return $ret;
 		}
+	}
+	
+	/**
+	 * Get crosswalk type.
+	 * 
+	 * @return string
+	 */
+	public function getType() {
+		return $this->_type;
 	}
 }

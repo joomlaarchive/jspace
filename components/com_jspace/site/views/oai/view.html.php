@@ -39,15 +39,16 @@ class JSpaceViewOAI extends JViewLegacy
 {
     function display($tpl = null)
     {
-//     	$input = JFactory::getApplication()->input;
-//     	$model = $this->getModel();
-//     	$category = $model->getCategory();
+    	header('Content-type: text/xml');
     	
+	    $input = JFactory::getApplication()->input;
+	    $model = $this->getModel();
+	    	
+		$oai = JSpaceFactory::getOAIRequest( $input );
     	
-//     	$this->assignRef('model', $model);
-//     	$this->assignRef('category', $category);
-    	
-    	
-        parent::display($tpl);
+    	$this->assignRef('oai', $oai);
+		
+		parent::display($tpl);
+        jexit();
     }
 }

@@ -1,6 +1,5 @@
 <?php
 /**
- * Metadata class
  * 
  * @package		JSpace
  * @subpackage	Repository
@@ -31,49 +30,19 @@
  
 defined('JPATH_PLATFORM') or die;
 
-
 /**
  * @author Michał Kocztorz
  * @package     JSpace
- * @subpackage  Repository
+ * @subpackage  OAI
  */
-class JSpaceRepositoryDspaceMetadata extends JSpaceRepositoryMetadata
+class JSpaceOAIException extends JException
 {
-	protected $_dspaceRawMetadata = null;
+	protected $_xmlCode = 'unknown';
+	protected $_xmlMsg = '';
 	
-	protected function _init() {
-		$rawMetadata = $this->getItem()->dspaceGetRaw()->metadata;
-// 		$crosswalkValue = $this->getItem()->getCrosswalkValue( $this->getKey() );
-		$crosswalkValue = $this->getKey();
-		foreach( $rawMetadata as $meta ) {
-			if( $meta->schema . "." . $meta->element . (is_null($meta->qualifier)?"":("." . $meta->qualifier)) == $crosswalkValue) {
-				$this->_dspaceRawMetadata[] = $meta;
-				$this->_value[] = $meta->value;
-			}
-		}
-		if( count($this->_value) == 0 ) {
-			throw JSpaceRepositoryError::raiseError($this, JText::sprintf("COM_JSPACE_REPOSITORY_METADATA_NOT_FOUND", $this->getKey()));
-		}
-	}
-	
-
-	public function getSchema() {
-		return $this->_dspaceRawMetadata[$this->position]->schema;
-	}
-	
-	public function getElement() {
-		return $this->_dspaceRawMetadata[$this->position]->element;
-	}
-	
-	public function getQualifier() {
-		return $this->_dspaceRawMetadata[$this->position]->qualifier;
-	}
-	
-	public function dspaceGetRawMetadata() {
-		return $this->_dspaceRawMetadata;
+	public function addResponseErrorTag(SimpleXMLElement $xml) {
+		$error = $xml->addChild('error', $this->_xmlMsg);
+		$error->addAttribute('code', $this->_xmlCode);
 	}
 }
-
-
-
 
