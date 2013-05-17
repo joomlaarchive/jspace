@@ -42,6 +42,13 @@ class JSpaceOAIRequestBadVerb extends JSpaceOAIRequest
 		parent::__construct($input);
 		$this->_error = $e;
 	}
+	
+
+	/**
+	 * Set the body in response xml.
+	 */
+	public function _setResponseBody() {
+	}
 }
 
 
