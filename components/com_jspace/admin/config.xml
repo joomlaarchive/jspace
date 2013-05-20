@@ -141,4 +141,41 @@
 			description="COM_JSPACE_NOTIFICATIONS_ARCHIVERECURSIVE_DESC"
 			notes="COM_JSPACE_NOTIFICATIONS_ARCHIVERECURSIVE_NOTES"/>	
 	</fieldset>
+	
+	<fieldset  name="oai"
+	           label="COM_JSPACE_FIELDSET_OAI_LABEL"
+	           description="COM_JSPACE_FIELDSET_OAI_DESCRIPTION" >
+	   <field
+	       name="oai_enabled"
+	       type="checkbox"
+	       value="1"
+	       label="COM_JSPACE_FIELD_OAI_ENABLED_LABEL"
+	       description="COM_JSPACE_FIELD_OAI_ENABLED_DESCRIPTION" />
+	   <field
+	       name="oai_repository_name"
+	       type="text"
+	       default="JSpace"
+	       label="COM_JSPACE_FIELD_OAI_REPOSITORY_NAME_LABEL"
+	       description="COM_JSPACE_FIELD_OAI_REPOSITORY_NAME_DESCRIPTION" />
+	   <field
+	       name="oai_earliest_datestamp"
+	       type="Calendar"
+	       default="1970-01-01"
+	       label="COM_JSPACE_FIELD_OAI_EARLIEST_DATESTAMP_LABEL"
+	       description="COM_JSPACE_FIELD_OAI_EARLIEST_DATESTAMP_DESCRIPTION" />
+	   <field
+	       name="oai_granularity"
+	       type="list"
+	       default="Y-m-d"
+	       label="COM_JSPACE_FIELD_OAI_GRANULARITY_LABEL"
+	       description="COM_JSPACE_FIELD_OAI_GRANULARITY_DESCRIPTION">
+	       <option value="Y-m-d">Day (YYYY-MM-DD)</option>
+	       <option value="Y-m-d\TH:i:s\Z">Second (YYYY-MM-DDThh:mm:ssZ)</option>
+	   </field>
+       <field
+           name="oai_administrators"
+           type="text"
+           label="COM_JSPACE_FIELD_OAI_ADMINISTRATORS_EMAILS_LABEL"
+           description="COM_JSPACE_FIELD_OAI_ADMINISTRATORS_EMAILS_DESCRIPTION" />
+	</fieldset>
 </config>

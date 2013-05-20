@@ -38,8 +38,11 @@ jimport('jspace.messenger.messenger');
 jimport('jspace.repository.repository');
 jimport('jspace.debug.debug');
 
+jimport('jspace.date');
+
 JLoader::discover("JSpaceTable", JPATH_SITE . "/libraries/jspace/database/table/");
-JLoader::discover("JSpaceOAI", JPATH_SITE . "/libraries/jspace/oai/");
+
+jimport('jspace.oai.oai');
 
 class JSpaceFactory
 {

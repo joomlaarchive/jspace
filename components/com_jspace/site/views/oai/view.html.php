@@ -41,6 +41,12 @@ class JSpaceViewOAI extends JViewLegacy
     {
     	header('Content-type: text/xml');
     	
+    	$config = JSpaceFactory::getConfig();
+    	if( !$config->get('oai_enabled', false) ) {
+    		header($_SERVER['SERVER_PROTOCOL'] . ' 404 Not found', true, 404);
+    		jexit();
+    	}
+    	
 	    $input = JFactory::getApplication()->input;
 	    $model = $this->getModel();
 	    	

@@ -60,8 +60,32 @@ class JSpaceOAIRequestIdentify extends JSpaceOAIRequest
 	 * Set the body in response xml.
 	 */
 	public function _setResponseBody() {
-		$identify = $this->_responseXml->addChild('Identify');
+		$config = JSpaceFactory::getConfig();
+		$earliestDatestamp = new JSpaceDate( $config->get('oai_earliest_datestamp', '') );
+		$granularity = $config->get('oai_granularity', 'Y-m-d');
+		$granularityXML = '';
+		switch( $granularity ) {
+			case JSpaceOAI::DATE_GRANULARITY_SECOND:
+				$granularityXML = 'YYYY-MM-DD';
+				break;
+			case JSpaceOAI::DATE_GRANULARITY_DAY:
+			default:
+				$granularityXML = 'YYYY-MM-DDThh:mm:ssZ';
+				break;
+		}
 		
+		$admins = JSpaceOAI::adminEmails(); 
+		
+		$identify = $this->_responseXml->addChild('Identify');
+		$identify->addChild('repositoryName', $config->get('oai_repository_name', ''));
+		$identify->addChild('baseURL', JUri::current());
+		$identify->addChild('protocolVersion', '2.0');
+		foreach( $admins as $email ) {
+			$identify->addChild('adminEmail', $email);
+		}
+		$identify->addChild('earliestDatestamp', $earliestDatestamp->format( $granularity ));
+		$identify->addChild('deletedRecord', 'transient');
+		$identify->addChild('granularity', $granularityXML);
 	}
 }
 
