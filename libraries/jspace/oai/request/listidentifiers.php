@@ -30,6 +30,7 @@
  
 defined('JPATH_PLATFORM') or die;
 
+jimport('jspace.oai.resumptiontoken.listidentifiers');
 
 /**
  * @author Michał Kocztorz
@@ -89,21 +90,17 @@ class JSpaceOAIRequestListIdentifiers extends JSpaceOAIRequest
 
 	/**
 	 * 
-	 * @var string
+	 * @var JSpaceOAIResumptionToken
 	 */
 	protected $_resumptionTokenParam = null;
 	
 	public function __construct( JInput $input ) {
 		try {
 			parent::__construct( $input );
-			$this->_resumptionTokenParam = $input->get('resumptionToken', null);
-			$defaultFormat = 0;
-			if( !is_null($this->_resumptionTokenParam) ) {
-				$this->_resumptionTokenParam = unserialize( base64_decode( $this->_resumptionTokenParam ) );
-				$defaultFormat = isset($this->_resumptionTokenParam['metadataPrefix']) ? $this->_resumptionTokenParam['metadataPrefix'] : 0;
-			}
-			$this->_disseminateFormat = $this->_getDisseminateFormat( $input->get('metadataPrefix', $defaultFormat ) );
-			$this->_setParam = $input->getString('set', null);
+			
+			$this->_resumptionTokenParam = new JSpaceOAIResumptionTokenListIdentifiers( $input );
+			$this->_disseminateFormat = $this->_getDisseminateFormat( $this->_resumptionTokenParam->getParam('metadataPrefix', 0) );
+			$this->_setParam = $this->_setParam = $this->_resumptionTokenParam->getParam('set', null);
 			$this->_fromParam = $input->get('from', null);
 			$this->_untilParam = $input->get('until', null);
 			
@@ -129,19 +126,8 @@ class JSpaceOAIRequestListIdentifiers extends JSpaceOAIRequest
 		 */
 		
 		$repository = JSpaceFactory::getRepository();
-		$config = JSpaceFactory::getConfig();
-		$limitstart = 0;
-		$limit = $config->get('limit_items');
-		/*
-		 * A resumption token was found
-		 */
-		if( !is_null($this->_resumptionTokenParam) ) {
-// 			$resume = unserialize( base64_decode( $this->_resumptionTokenParam ) );
-			$resume = $this->_resumptionTokenParam;
-			$this->_setParam = JArrayHelper::getValue($resume, 'set', null);
-			$limitstart = JArrayHelper::getValue($resume, 'cursor', 0);
-			$limitstart += $limit;
-		}
+		$limitstart = $this->_resumptionTokenParam->getCursor();
+		$limit = $this->_resumptionTokenParam->getLimit();
 		
 		
 		if( !is_null($this->_setParam) ) {
@@ -150,18 +136,12 @@ class JSpaceOAIRequestListIdentifiers extends JSpaceOAIRequest
 				$id = $id[count($id)-1];
 				$category = $repository->getCategory( $id );
 				$count = $category->getItemsCount();
-				
+				$this->_resumptionTokenParam->setCompleteListSize( $count );
 
-				if( $count > $limitstart + $limit ) {
-					$resumptionToken = array(
-						'set'				=> $id,
-						'cursor'			=> $limitstart,	//so far returned
-						'completeListSize'	=> $count,
-						'metadataPrefix'	=> $this->_disseminateFormat->getFormat(),
-					);
-				}
+				$this->_resumptionTokenParam->nextToken(); //next token may be the first if previously there was none
+
+				$list = $category->getItems( $this->_resumptionTokenParam->getCursor() ); 
 				
-				$list = $category->getItems( $limitstart );
 			}
 			catch( Exception $e ) {
 			}
@@ -181,12 +161,7 @@ class JSpaceOAIRequestListIdentifiers extends JSpaceOAIRequest
 			$header->addChild('setSpec', JSpaceOAI::getSetID( $category ));
 		}
 		
-		//if resumption token is not an empty array, list will be continued
-		if( count($resumptionToken) > 0 ) {
-			$token = $listIdentifiers->addChild( 'resumptionToken', base64_encode( serialize( $resumptionToken ) ) );
-			$token->addAttribute('completeListSize', $resumptionToken['completeListSize']);
-			$token->addAttribute('cursor', $resumptionToken['cursor']);
-		}
+		$this->_resumptionTokenParam->addResumptionToken( $listIdentifiers );
 	}
 }
 

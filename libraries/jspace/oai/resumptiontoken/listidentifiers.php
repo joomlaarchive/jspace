@@ -30,17 +30,16 @@
  
 defined('JPATH_PLATFORM') or die;
 
+
 /**
  * @author Michał Kocztorz
  * @package     JSpace
  * @subpackage  OAI
  */
-class JSpaceOAIExceptionBadResumptionToken extends JSpaceOAIException
+class JSpaceOAIResumptionTokenListIdentifiers extends JSpaceOAIResumptionToken
 {
-	public function __construct() {
-		parent::__construct(JText::sprintf('COM_JSPACE_OAI_PMH_EXCEPTION_BAD_RESUMPTION_TOKEN'));
-		$this->_xmlCode = 'badResumptionToken';
-		$this->_xmlMsg = JText::_('COM_JSPACE_OAI_PMH_EXCEPTION_BAD_RESUMPTION_TOKEN_XML_MSG');
+	protected function _paramsValid() {
+		return isset( $this->_params['set'] );
 	}
 }
 
