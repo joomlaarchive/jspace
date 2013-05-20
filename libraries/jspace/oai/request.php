@@ -212,10 +212,28 @@ abstract class JSpaceOAIRequest extends JObject
 	protected function _testRequestArguments() { 
 		$arguments = $this->_getArguments();
 		
-		//test if all required are available
-		foreach($this->_required as $required ) {
-			if( !isset( $arguments[ $required ] ) ) {
-				throw new JSpaceOAIExceptionBadArgument();
+		if( count($this->_exclusive) == 0 ) {
+			//test if all required are available
+			foreach($this->_required as $required ) {
+				if( !isset( $arguments[ $required ] ) ) {
+					throw new JSpaceOAIExceptionBadArgument();
+				}
+			}
+			
+			//test if illegal additional arguments are used
+			$allowed = array_merge($this->_required, $this->_optional, $this->_exclusive);
+			foreach( $arguments as $name => $argument ) {
+				if( !in_array($name, $allowed) ) {
+					throw new JSpaceOAIExceptionBadArgument();
+				}
+			}
+		}
+		else {
+			//test if exclusive arguments are used alone
+			foreach( $this->_exclusive as $exclusive ) {
+				if( isset( $arguments[$exclusive] ) && count($arguments) > 2 ) {
+					throw new JSpaceOAIExceptionBadArgument();
+				}
 			}
 		}
 	}

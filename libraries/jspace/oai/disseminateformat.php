@@ -94,6 +94,14 @@ abstract class JSpaceOAIDisseminateFormat extends JObject
 	}
 	
 	/**
+	 * 
+	 * @return string
+	 */
+	public function getFormat() {
+		return $this->_type;
+	}
+	
+	/**
 	 * Create main tag for data.
 	 * 
 	 * @param SimpleXMLElement $parent
