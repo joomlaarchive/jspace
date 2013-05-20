@@ -281,7 +281,7 @@ abstract class JSpaceRepository extends JObject
 	/**
 	 * 
 	 * @param mixed $id
-	 * @return JSpaceRepositoryCollection
+	 * @return JSpaceRepositoryCategory
 	 */
 	public function getCategory( $id=0 ) {
 		$this->flushErrors();
@@ -301,7 +301,7 @@ abstract class JSpaceRepository extends JObject
 	/**
 	 * 
 	 * @param mixed $id
-	 * @return JSpaceRepositoryCollection
+	 * @return JSpaceRepositoryCategory
 	 */
 	public function _getCategory( $id=0 ) {
 		$class = "JSpaceRepository" . ucfirst(strtolower($this->_driver)) . "Category";

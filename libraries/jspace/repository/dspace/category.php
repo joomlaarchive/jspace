@@ -80,6 +80,10 @@ class JSpaceRepositoryDspaceCategory extends JSpaceRepositoryCategory
 			$this->_dspaceParentId = 0;
 		}
 		
+		if( is_null($this->_name) ) {
+			throw JSpaceRepositoryError::raiseError($this, JText::sprintf('COM_JSPACE_JSPACE_COMMUNITY_ERROR_CANNOT_FETCH', $this->getId()));
+		}
+		
 // 		var_dump($this->_dspaceParentId);
 	}
 	

@@ -44,6 +44,7 @@ abstract class JSpaceOAIRequest extends JObject
 	protected static $_verbs = array(
 		'GetRecord',
 		'Identify',
+		'ListIdentifiers',
 	);
 	
 	/**

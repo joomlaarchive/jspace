@@ -30,42 +30,17 @@
  
 defined('JPATH_PLATFORM') or die;
 
-JLoader::discover("JSpaceOAI", JPATH_SITE . "/libraries/jspace/oai/");
-
 /**
  * @author Michał Kocztorz
  * @package     JSpace
  * @subpackage  OAI
  */
-class JSpaceOAI extends JObject
+class JSpaceOAIExceptionNoRecordsMatch extends JSpaceOAIException
 {
-	const DATE_GRANULARITY_DAY = 'Y-m-d';
-	const DATE_GRANULARITY_SECOND = 'Y-m-d\TH:i:s\Z';
-	
-	public static function adminEmails() {
-		$config = JSpaceFactory::getConfig();
-		$admins = $config->get('oai_administrators', array());
-		$admins = explode(";", $admins);
-		$admins = array_map('trim', $admins);
-		return $admins;
-	}
-	
-	/**
-	 * Get set id by category.
-	 * 
-	 * @param JSpaceRepositoryCategory $category
-	 * @return $id
-	 */
-	public static function getSetID( JSpaceRepositoryCategory $category ) {
-		$setId = array();
-		while( !$category->isRoot() ) {
-			$setId[] = $category->getId();
-			$category = $category->getParent();
-		}
-		$setId[] = $category->getId();
-		$setId = array_reverse($setId);
-		return implode(':', $setId);
+	public function __construct() {
+		parent::__construct(JText::_('COM_JSPACE_OAI_PMH_EXCEPTION_NO_RECORDS_MATCH'));
+		$this->_xmlCode = 'noRecordsMatch';
+		$this->_xmlMsg = JText::_('COM_JSPACE_OAI_PMH_EXCEPTION_NO_RECORDS_MATCH_XML_MSG');
 	}
 }
-
 

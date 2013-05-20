@@ -84,7 +84,7 @@ class JSpaceOAIRequestGetRecord extends JSpaceOAIRequest
 		$header->addChild('datestamp', $datestamp);
 		
 		$category = $this->_item->getCategory();
-		$header->addChild('setSpec', $category->getId());
+		$header->addChild('setSpec', JSpaceOAI::getSetID( $category ));
 		
 		
 		$metadata = $record->addChild('metadata');
