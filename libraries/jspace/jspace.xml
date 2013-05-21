@@ -22,6 +22,7 @@
         <folder>image</folder>
         <folder>messenger</folder>
         <folder>multifileupload</folder>
+        <folder>oai</folder>
         <folder>repository</folder>
         <filename>factory.php</filename>
         <filename>dspaceapi.php</filename>
