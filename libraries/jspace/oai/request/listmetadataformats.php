@@ -60,23 +60,21 @@ class JSpaceOAIRequestListMetadataFormats extends JSpaceOAIRequest
 	 */
 	protected $_item = null;
 	
-	public function __construct( JInput $input ) {
-		try {
-			parent::__construct( $input );
-			/*
-			 * Identifier in this implementation is irrelevant because all items have the same metadata formats as 
-			 * entire JSpace. To keep implementetion protocol conformant it checks if item exists if identifier is
-			 * passed as an argument. 
-			 */
-			$item_id = $input->getString('identifier', null);
-			if( !is_null( $item_id ) ) {
-				$this->_item = $this->_getItem( $item_id );
-			}
-			$this->_setResponseBody();
+	/**
+	 * (non-PHPdoc)
+	 * @see JSpaceOAIRequest::_load()
+	 */
+	protected function _load() {
+		/*
+		 * Identifier in this implementation is irrelevant because all items have the same metadata formats as 
+		 * entire JSpace. To keep implementetion protocol conformant it checks if item exists if identifier is
+		 * passed as an argument. 
+		 */
+		$item_id = $this->_input->getString('identifier', null);
+		if( !is_null( $item_id ) ) {
+			$this->_item = $this->_getItem( $item_id );
 		}
-		catch( JSpaceOAIException $e ) {
-			$this->_error = $e;
-		}
+		$this->_setResponseBody();
 	}
 	
 	/**

@@ -39,7 +39,6 @@ defined('JPATH_PLATFORM') or die;
 class JSpaceOAIRequestBadVerb extends JSpaceOAIRequest
 {
 	public function __construct( JInput $input, JSpaceOAIExceptionBadVerb $e ) {
-// 		parent::__construct($input);
 		$this->_error = $e;
 	}
 	
@@ -49,6 +48,10 @@ class JSpaceOAIRequestBadVerb extends JSpaceOAIRequest
 	 */
 	public function _setResponseBody() {
 		//no body for error, method needed though
+	}
+	
+	protected function _load() {
+		//Nothing to do here. Method must exist.
 	}
 }
 

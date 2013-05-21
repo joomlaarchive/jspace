@@ -46,14 +46,8 @@ class JSpaceOAIRequestIdentify extends JSpaceOAIRequest
 	 */
 	protected $_required = array('verb');
 	
-	public function __construct( JInput $input ) {
-		try {
-			parent::__construct( $input );
-			$this->_setResponseBody();
-		}
-		catch( JSpaceOAIException $e ) {
-			$this->_error = $e;
-		}
+	protected function _load() {
+		$this->_setResponseBody();
 	}
 	
 	/**

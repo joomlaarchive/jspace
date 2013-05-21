@@ -129,11 +129,24 @@ abstract class JSpaceOAIRequest extends JObject
 	 * @param JInput $input
 	 */
 	public function __construct( JInput $input ) {
-		$this->_input = $input;
-		$this->_init();
-		$this->_testRequestArguments();
-		$this->_setResponseRequestTag();
+		try {
+			$this->_input = $input;
+			$this->_init();
+			$this->_testRequestArguments();
+			$this->_setResponseRequestTag();
+			$this->_load();
+		}
+		catch( JSpaceOAIException $e ) {
+			$this->_error = $e;
+		}
 	}
+	
+	/**
+	 * Method called by the constructor as last stage of constructiong object.
+	 * JSpaceOAIExcepions thrown from it will be caught and apprpriate error
+	 * xml response created.
+	 */
+	abstract protected function _load();
 	
 	/**
 	 * Set the body in response xml.

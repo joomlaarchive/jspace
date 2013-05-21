@@ -94,21 +94,15 @@ class JSpaceOAIRequestListIdentifiers extends JSpaceOAIRequest
 	 */
 	protected $_resumptionTokenParam = null;
 	
-	public function __construct( JInput $input ) {
-		try {
-			parent::__construct( $input );
-			
-			$this->_resumptionTokenParam = new JSpaceOAIResumptionTokenListIdentifiers( $input );
-			$this->_disseminateFormat = $this->_getDisseminateFormat( $this->_resumptionTokenParam->getParam('metadataPrefix', 0) );
-			$this->_setParam = $this->_setParam = $this->_resumptionTokenParam->getParam('set', null);
-			$this->_fromParam = $input->get('from', null);
-			$this->_untilParam = $input->get('until', null);
-			
-			$this->_setResponseBody();
-		}
-		catch( JSpaceOAIException $e ) {
-			$this->_error = $e;
-		}
+	protected function _load() {
+		$input = $this->_input;
+		$this->_resumptionTokenParam = new JSpaceOAIResumptionTokenListIdentifiers( $input );
+		$this->_disseminateFormat = $this->_getDisseminateFormat( $this->_resumptionTokenParam->getParam('metadataPrefix', 0) );
+		$this->_setParam = $this->_setParam = $this->_resumptionTokenParam->getParam('set', null);
+		$this->_fromParam = $input->get('from', null);
+		$this->_untilParam = $input->get('until', null);
+		
+		$this->_setResponseBody();
 	}
 	
 	/**

@@ -58,16 +58,11 @@ class JSpaceOAIRequestGetRecord extends JSpaceOAIRequest
 	 */
 	protected $_disseminateFormat = null;
 	
-	public function __construct( JInput $input ) {
-		try {
-			parent::__construct( $input );
-			$this->_item = $this->_getItem( $input->get('identifier', 0 ) );
-			$this->_disseminateFormat = $this->_getDisseminateFormat( $input->get('metadataPrefix', 0 ) );
-			$this->_setResponseBody();
-		}
-		catch( JSpaceOAIException $e ) {
-			$this->_error = $e;
-		}
+	protected function _load() {
+		$input = $this->_input;
+		$this->_item = $this->_getItem( $input->get('identifier', 0 ) );
+		$this->_disseminateFormat = $this->_getDisseminateFormat( $input->get('metadataPrefix', 0 ) );
+		$this->_setResponseBody();
 	}
 	
 	/**
