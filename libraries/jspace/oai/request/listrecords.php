@@ -33,18 +33,22 @@ defined('JPATH_PLATFORM') or die;
 jimport('jspace.oai.resumptiontoken.listidentifiers');
 
 /**
+ * 
+ * Subclass of JSpaceOAIRequestListIdentifiers because these two verbs are almost identical.
+ * 
  * @author Michał Kocztorz
  * @package     JSpace
  * @subpackage  OAI
  */
-class JSpaceOAIRequestListIdentifiers extends JSpaceOAIRequestListItems
+class JSpaceOAIRequestListRecords extends JSpaceOAIRequestListItems
 {
 	/**
-	 * 
+	 *
 	 * @var string
 	 */
-	protected $_xmlBodyTag = 'ListIdentifiers';
-
+	protected $_xmlBodyTag = 'ListRecords';
+	
+	
 	/**
 	 * What actually differs ListIdentifiers from ListRecords.
 	 * 
@@ -54,7 +58,7 @@ class JSpaceOAIRequestListIdentifiers extends JSpaceOAIRequestListItems
 	protected function _setResponseBodyIn( SimpleXMLElement $parent, $list ) {
 		$crosswalk = $this->_disseminateFormat->getCrosswalk();
 		foreach( $list as $item ) {
-			$this->_addRecordHeader($parent, $item, $crosswalk);
+			$this->_addRecord($parent, $item, $this->_disseminateFormat);
 		}
 	}
 }

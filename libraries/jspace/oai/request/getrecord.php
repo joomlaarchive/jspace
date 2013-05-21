@@ -70,32 +70,7 @@ class JSpaceOAIRequestGetRecord extends JSpaceOAIRequest
 	 */
 	public function _setResponseBody() {
 		$getRecord = $this->_responseXml->addChild('GetRecord');
-		$record = $getRecord->addChild('record');
-		//todo: header tag
-		$crosswalk = $this->_disseminateFormat->getCrosswalk();
-		$header = $record->addChild('header');
-		$header->addChild('identifier', $this->_input->get('identifier'));
-		$datestamp = $this->_item->getMetadata('date', false, $crosswalk->getType());
-		$header->addChild('datestamp', $datestamp);
-		
-		$category = $this->_item->getCategory();
-		$header->addChild('setSpec', JSpaceOAI::getSetID( $category ));
-		
-		
-		$metadata = $record->addChild('metadata');
-		$dataTag = $this->_disseminateFormat->createChild($metadata);
-		$expected = $this->_disseminateFormat->getExpectedFields();
-		foreach( $expected as $element ) {
-			try {
-				$value = $this->_item->getMetadata($element, false, $crosswalk->getType());
-				foreach( $value as $val ) {
-					$this->_disseminateFormat->createDataChild($element, $val, $dataTag);
-				}
-			}
-			catch( Exception $e ) {
-				//not found
-			}
-		}
+		$this->_addRecord($getRecord, $this->_item, $this->_disseminateFormat);
 	}
 }
 

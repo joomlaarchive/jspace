@@ -46,6 +46,7 @@ abstract class JSpaceOAIRequest extends JObject
 		'Identify',
 		'ListIdentifiers',
 		'ListMetadataFormats',
+		'ListRecords',
 	);
 	
 	/**
@@ -286,6 +287,67 @@ abstract class JSpaceOAIRequest extends JObject
 		}
 	}
 	
+	/**
+	 * Helper method. 
+	 * Add a header tag to parent passed in argument. 
+	 * Used in GetRecord, ListRecords
+	 * 
+	 * @param SimpleXMLElement $parent
+	 * @param JSpaceRepositoryItem $item
+	 * @param JSpaceOAIDisseminateFormat $disseminateFormat
+	 */
+	protected function _addRecord( SimpleXMLElement $parent, JSpaceRepositoryItem $item, JSpaceOAIDisseminateFormat $disseminateFormat ) {
+		$record = $parent->addChild('record');
+		$crosswalk = $disseminateFormat->getCrosswalk();
+		$this->_addRecordHeader($record, $item, $crosswalk);
+		$this->_addMetadata($record, $item, $disseminateFormat);
+	}
+	
+	/**
+	 * Helper method. 
+	 * Add a header tag to parent passed in argument. 
+	 * Used in GetRecord, ListRecords, ListIdentifiers
+	 * 
+	 * @param SimpleXMLElement $parent
+	 * @param JSpaceRepositoryItem $item
+	 * @param JSpaceCrosswalk $crosswalk
+	 */
+	protected function _addRecordHeader( SimpleXMLElement $parent, JSpaceRepositoryItem $item, JSpaceCrosswalk $crosswalk ) {
+		$header = $parent->addChild('header');
+		
+		$header->addChild('identifier', $item->getId());
+		$datestamp = new JSpaceDate( $item->getMetadata('date', false, $crosswalk->getType()) );
+		$header->addChild('datestamp', $datestamp->format(JSpaceOAI::DATE_GRANULARITY_SECOND));
+		$category = $item->getCategory();
+		$header->addChild('setSpec', JSpaceOAI::getSetID( $category ));
+	}
+	
+	/**
+	 * Helper method. 
+	 * Add a metadata tag to parent passed in argument. 
+	 * Used in GetRecord, ListRecords
+	 * 
+	 * @param SimpleXMLElement $parent
+	 * @param JSpaceRepositoryItem $item
+	 * @param JSpaceOAIDisseminateFormat $disseminateFormat
+	 */
+	protected function _addMetadata( SimpleXMLElement $parent, JSpaceRepositoryItem $item, JSpaceOAIDisseminateFormat $disseminateFormat) {
+		$metadata = $parent->addChild('metadata');
+		$dataTag = $disseminateFormat->createChild($metadata);
+		$expected = $disseminateFormat->getExpectedFields();
+		$crosswalk = $disseminateFormat->getCrosswalk();
+		foreach( $expected as $element ) {
+			try {
+				$value = $item->getMetadata($element, false, $crosswalk->getType());
+				foreach( $value as $val ) {
+					$disseminateFormat->createDataChild($element, $val, $dataTag);
+				}
+			}
+			catch( Exception $e ) {
+				//not found
+			}
+		}
+	}
 }
 
 

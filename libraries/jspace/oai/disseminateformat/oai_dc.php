@@ -100,6 +100,8 @@ class JSpaceOAIDisseminateFormatOai_dc extends JSpaceOAIDisseminateFormat
 	 * @return SimpleXMLElement
 	*/
 	public function createDataChild( $element, $value, SimpleXMLElement $parent ) {
+		//get rid of & from element value
+		$value = str_replace("&", "&amp;", $value);
 		return $parent->addChild('dc:' . $element, $value, 'http://purl.org/dc/elements/1.1/');
 	}
 }
