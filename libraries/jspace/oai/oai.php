@@ -48,7 +48,7 @@ class JSpaceOAI extends JObject
 	
 	public static function adminEmails() {
 		$config = JSpaceFactory::getConfig();
-		$admins = $config->get('oai_administrators', array());
+		$admins = $config->get('oai_administrators', "");
 		$admins = explode(";", $admins);
 		$admins = array_map('trim', $admins);
 		return $admins;
