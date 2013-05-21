@@ -42,11 +42,12 @@ JLoader::discover("JSpaceOAIDisseminateFormat", JPATH_SITE . "/libraries/jspace/
 abstract class JSpaceOAIRequest extends JObject
 {
 	protected static $_verbs = array(
-		'GetRecord',
-		'Identify',
-		'ListIdentifiers',
-		'ListMetadataFormats',
-		'ListRecords',
+		'GetRecord',			// http://www.openarchives.org/OAI/openarchivesprotocol.html#GetRecord
+		'Identify',				// http://www.openarchives.org/OAI/openarchivesprotocol.html#Identify
+		'ListIdentifiers',		// http://www.openarchives.org/OAI/openarchivesprotocol.html#ListIdentifiers
+		'ListMetadataFormats',	// http://www.openarchives.org/OAI/openarchivesprotocol.html#ListMetadataFormats
+		'ListRecords',			// http://www.openarchives.org/OAI/openarchivesprotocol.html#ListRecords
+		'ListSets',				// http://www.openarchives.org/OAI/openarchivesprotocol.html#ListSets
 	);
 	
 	/**
