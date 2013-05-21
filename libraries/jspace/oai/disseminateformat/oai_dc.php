@@ -57,14 +57,27 @@ class JSpaceOAIDisseminateFormatOai_dc extends JSpaceOAIDisseminateFormat
 	
 
 	/**
+	 *
+	 * @var string
+	 */
+	protected $_schema = 'http://www.openarchives.org/OAI/2.0/oai_dc.xsd';
+	
+	/**
+	 *
+	 * @var string
+	 */
+	protected $_metadataNamespace = 'http://www.openarchives.org/OAI/2.0/oai_dc/';
+	
+
+	/**
 	 * Create main tag for data.
 	 *
 	 * @param SimpleXMLElement $parent
 	 * @return SimpleXMLElement
 	 */
 	public function createChild( SimpleXMLElement $parent ){
-		$parent->registerXPathNamespace('oai_dc', 'http://www.openarchives.org/OAI/2.0/oai_dc/');
-		$oai_dc = $parent->addChild('oai_dc:dc', '', 'http://www.openarchives.org/OAI/2.0/oai_dc/');
+		$parent->registerXPathNamespace('oai_dc', $this->getMetadataNamespace() );
+		$oai_dc = $parent->addChild('oai_dc:dc', '', $this->getMetadataNamespace() );
 		$oai_dc->registerXPathNamespace('dc', 'http://purl.org/dc/elements/1.1/');
 		return $oai_dc;
 	}

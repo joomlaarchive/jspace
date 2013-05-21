@@ -45,6 +45,7 @@ abstract class JSpaceOAIRequest extends JObject
 		'GetRecord',
 		'Identify',
 		'ListIdentifiers',
+		'ListMetadataFormats',
 	);
 	
 	/**

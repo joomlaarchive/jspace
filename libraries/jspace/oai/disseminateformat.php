@@ -41,6 +41,19 @@ abstract class JSpaceOAIDisseminateFormat extends JObject
 	
 	/**
 	 * 
+	 * @var string
+	 */
+	protected $_schema = '';
+	
+	/**
+	 * 
+	 * @var string
+	 */
+	protected $_metadataNamespace = '';
+	
+	
+	/**
+	 * 
 	 * @param string $type
 	 * @return JSpaceOAIDisseminateFormat
 	 */
@@ -99,6 +112,22 @@ abstract class JSpaceOAIDisseminateFormat extends JObject
 	 */
 	public function getFormat() {
 		return $this->_type;
+	}
+	
+	/**
+	 * 
+	 * @return string
+	 */
+	public function getSchema() {
+		return $this->_schema;
+	}
+	
+	/**
+	 * 
+	 * @return string
+	 */
+	public function getMetadataNamespace() {
+		return $this->_metadataNamespace;
 	}
 	
 	/**

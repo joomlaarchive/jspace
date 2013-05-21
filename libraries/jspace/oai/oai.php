@@ -42,6 +42,10 @@ class JSpaceOAI extends JObject
 	const DATE_GRANULARITY_DAY = 'Y-m-d';
 	const DATE_GRANULARITY_SECOND = 'Y-m-d\TH:i:s\Z';
 	
+	protected static $_disseminateFormats = array(
+		'oai_dc'
+	);
+	
 	public static function adminEmails() {
 		$config = JSpaceFactory::getConfig();
 		$admins = $config->get('oai_administrators', array());
@@ -65,6 +69,23 @@ class JSpaceOAI extends JObject
 		$setId[] = $category->getId();
 		$setId = array_reverse($setId);
 		return implode(':', $setId);
+	}
+	
+	/**
+	 * Get array of tested disseminate formats.
+	 * 
+	 * @return array
+	 */
+	public static function getAllDisseminateFormats() {
+		$formats = array();
+		foreach( self::$_disseminateFormats as $type ) {
+			try {
+				$formats[ $type ] = JSpaceOAIDisseminateFormat::getInstance( $type );
+			}
+			catch( Exception $e ) {
+			}
+		}
+		return $formats;
 	}
 }
 

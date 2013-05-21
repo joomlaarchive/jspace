@@ -30,28 +30,17 @@
  
 defined('JPATH_PLATFORM') or die;
 
-
 /**
  * @author Michał Kocztorz
  * @package     JSpace
  * @subpackage  OAI
  */
-class JSpaceOAIRequestBadVerb extends JSpaceOAIRequest
+class JSpaceOAIExceptionNoMetadataFormats extends JSpaceOAIException
 {
-	public function __construct( JInput $input, JSpaceOAIExceptionBadVerb $e ) {
-// 		parent::__construct($input);
-		$this->_error = $e;
-	}
-	
-
-	/**
-	 * Set the body in response xml.
-	 */
-	public function _setResponseBody() {
-		//no body for error, method needed though
+	public function __construct() {
+		parent::__construct(JText::_('COM_JSPACE_OAI_PMH_EXCEPTION_NO_METADATA_FORMATS'));
+		$this->_xmlCode = 'noMetadataFormats';
+		$this->_xmlMsg = JText::_('COM_JSPACE_OAI_PMH_EXCEPTION_NO_METADATA_FORMATS_XML_MSG');
 	}
 }
-
-
-
 
