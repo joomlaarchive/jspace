@@ -334,20 +334,7 @@ abstract class JSpaceOAIRequest extends JObject
 	 */
 	protected function _addMetadata( SimpleXMLElement $parent, JSpaceRepositoryItem $item, JSpaceOAIDisseminateFormat $disseminateFormat) {
 		$metadata = $parent->addChild('metadata');
-		$dataTag = $disseminateFormat->createChild($metadata);
-		$expected = $disseminateFormat->getExpectedFields();
-		$crosswalk = $disseminateFormat->getCrosswalk();
-		foreach( $expected as $element ) {
-			try {
-				$value = $item->getMetadata($element, false, $crosswalk->getType());
-				foreach( $value as $val ) {
-					$disseminateFormat->createDataChild($element, $val, $dataTag);
-				}
-			}
-			catch( Exception $e ) {
-				//not found
-			}
-		}
+		$disseminateFormat->createRecordMetadata($metadata, $item);
 	}
 }
 

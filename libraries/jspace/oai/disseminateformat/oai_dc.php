@@ -68,41 +68,31 @@ class JSpaceOAIDisseminateFormatOai_dc extends JSpaceOAIDisseminateFormat
 	 */
 	protected $_metadataNamespace = 'http://www.openarchives.org/OAI/2.0/oai_dc/';
 	
-
+	
 	/**
-	 * Create main tag for data.
-	 *
-	 * @param SimpleXMLElement $parent
-	 * @return SimpleXMLElement
+	 * 
+	 * (non-PHPdoc)
+	 * @see JSpaceOAIDisseminateFormat::createMetadata()
 	 */
-	public function createChild( SimpleXMLElement $parent ){
+	public function createRecordMetadata( SimpleXMLElement $parent, JSpaceRepositoryItem $item ) {
 		$parent->registerXPathNamespace('oai_dc', $this->getMetadataNamespace() );
-		$oai_dc = $parent->addChild('oai_dc:dc', '', $this->getMetadataNamespace() );
-		$oai_dc->registerXPathNamespace('dc', 'http://purl.org/dc/elements/1.1/');
-		return $oai_dc;
-	}
-	
-	/**
-	 * Get array of expected fields.
-	 *
-	 * @return array
-	*/
-	public function getExpectedFields() {
-		return $this->_expected;
-	}
-	
-	/**
-	 *
-	 * @param string $title
-	 * @param string $value
-	 * @param SimpleXMLElement $parent
-	 *
-	 * @return SimpleXMLElement
-	*/
-	public function createDataChild( $element, $value, SimpleXMLElement $parent ) {
-		//get rid of & from element value
-		$value = str_replace("&", "&amp;", $value);
-		return $parent->addChild('dc:' . $element, $value, 'http://purl.org/dc/elements/1.1/');
+		$dataTag = $parent->addChild('oai_dc:dc', '', $this->getMetadataNamespace() );
+		$dataTag->registerXPathNamespace('dc', 'http://purl.org/dc/elements/1.1/');
+		
+		$crosswalk = $this->getCrosswalk();
+		foreach( $this->_expected as $element ) {
+			try {
+				$value = $item->getMetadata($element, false, $crosswalk->getType());
+				foreach( $value as $val ) {
+					//get rid of & from element value
+					$val = str_replace("&", "&amp;", $val);
+					$dataTag->addChild('dc:' . $element, $val, 'http://purl.org/dc/elements/1.1/');
+				}
+			}
+			catch( Exception $e ) {
+				//not found
+			}
+		}
 	}
 }
 

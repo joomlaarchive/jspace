@@ -131,28 +131,11 @@ abstract class JSpaceOAIDisseminateFormat extends JObject
 	}
 	
 	/**
-	 * Create main tag for data.
+	 * Create contents of <metadata> tag in xml response. 
 	 * 
 	 * @param SimpleXMLElement $parent
-	 * @return SimpleXMLElement
+	 * @param JSpaceRepositoryItem $item
 	 */
-	abstract public function createChild( SimpleXMLElement $parent );
-	
-	/**
-	 * Get array of expected fields.
-	 * 
-	 * @return array
-	 */
-	abstract public function getExpectedFields();
-	
-	/**
-	 * 
-	 * @param string $title
-	 * @param string $value
-	 * @param SimpleXMLElement $parent
-	 * 
-	 * @return SimpleXMLElement
-	 */
-	abstract public function createDataChild( $element, $value, SimpleXMLElement $parent );
+	abstract public function createRecordMetadata( SimpleXMLElement $parent, JSpaceRepositoryItem $item );
 }
 
