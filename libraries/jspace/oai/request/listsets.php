@@ -50,12 +50,25 @@ class JSpaceOAIRequestListSets extends JSpaceOAIRequest
 	 */
 	protected $_required = array('verb');
 	
+	/**
+	 * Optional HTTP OAI-PMH request arguments. When present it should be the only argument apart from verb.
+	 * "exclusive, the argument may be included with request, but must be the only argument (in addition to the verb argument)"
+	 *
+	 * @var array
+	 */
+	protected $_exclusive = array('resumptionToken');
+	
 	
 	/**
 	 * (non-PHPdoc)
 	 * @see JSpaceOAIRequest::_load()
 	 */
 	protected function _load() {
+		$resumptionToken = $this->_input->getString('resumptionToken', null);
+		if( !is_null( $resumptionToken ) ) {
+			//not expected
+			throw new JSpaceOAIExceptionBadResumptionToken();
+		}
 		$this->_setResponseBody();
 	}
 	
