@@ -24,8 +24,9 @@
         <folder>multifileupload</folder>
         <folder>oai</folder>
         <folder>repository</folder>
-        <filename>factory.php</filename>
+        <filename>date.php</filename>
         <filename>dspaceapi.php</filename>
+        <filename>factory.php</filename>        
     </files>
     
 	<languages>
