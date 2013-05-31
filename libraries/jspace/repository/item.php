@@ -234,7 +234,7 @@ abstract class JSpaceRepositoryItem extends JObject
 // 	public function getCollection() {
 // 		return $this->_getCollection();
 // 	}
-	
+	 
 // 	abstract protected function _getCollection();
 	
 	/**

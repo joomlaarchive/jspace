@@ -63,9 +63,13 @@ JLoader::discover('JSpaceHelper', JPATH_BASE . DIRECTORY_SEPARATOR . 'components
 				<div class="jspace-item">
 					<div class="dc-element-name"><?php echo $model->getItemMetadataKeyTranslation( $key ); ?>:</div>
 					<div class="dc-element-value">
-						<?php foreach( $metadata as $key => $value): ?>
-							<div><?php echo $value; ?></div>
-						<?php endforeach; ?>
+						<?php if(is_array($metadata)): ?>
+							<?php foreach( $metadata as $key => $value): ?>
+								<div><?php echo $value; ?></div>
+							<?php endforeach; ?>
+						<?php else: ?>
+							<div><?php echo $metadata; ?></div>
+						<?php endif; ?>
 					</div>
 				</div>
 			<?php endforeach; ?>
