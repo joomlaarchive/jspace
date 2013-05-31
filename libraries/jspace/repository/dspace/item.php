@@ -71,7 +71,7 @@ class JSpaceRepositoryDspaceItem extends JSpaceRepositoryItem
 	
 	
 	protected function _getPackageUrl() {
-		
+		return $this->getOryginalBundlePackageURL();
 	}
 	
 	/**

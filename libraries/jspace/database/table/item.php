@@ -256,7 +256,7 @@ class JSpaceTableItem extends JTable
 	 */
 	public function setMetadata( $type, $value, $extra = array() ) {
 		$metadata = $this->getMetadata( $type );
-		$metadata->value = $value;
+		$metadata->setValue($value);
 		foreach( $extra as $key => $val ) {
 			$metadata->$key = $val;
 		}
@@ -420,6 +420,7 @@ class JSpaceTableItem extends JTable
 		$repository = JSpaceFactory::getRepository();
 		$id = $repository->storeItem( $this );
 		if( !is_null($id) ) {
+			$this->setMetadata('dspaceItemId', $id);
 			$this->state = self::ITEMSTATE_DELETED;
 			parent::store();
 		}
@@ -428,6 +429,7 @@ class JSpaceTableItem extends JTable
 				$this->setError( $error );
 			}
 		}
+		
 		
 		return $id;
 	}

@@ -112,10 +112,31 @@ class JSpaceTableMetadata extends JTable
 		    	$values = explode(",", $this->value );
     			break;
     		default:
-		    	$values = array( $this->value );
+		    	$values = $this->getValueArray();
     			break;
     	}
     	return $values;
+    }
+    
+    /**
+     * Set value. If array given, implode it with "|".
+     * 
+     * @param unknown_type $value
+     */
+    public function setValue( $value ) {
+    	if( is_array($value) ) {
+    		$value = implode("|", $value);
+    	}
+    	$this->value = $value;
+    }
+    
+    /**
+     * Return value as array. Value exploded by "|".
+     * 
+     * @return array 
+     */
+    public function getValueArray() {
+    	return explode("|", $this->value);
     }
 	
 // 	/**

@@ -147,6 +147,14 @@ abstract class JSpaceRepositoryConnector implements JSpaceConnectable
 
 		return $instance;
     }
+    
+    /**
+     * Expose read only options for connection object.
+     * 
+     */
+    public function getOptions() {
+    	return $this->options;
+    }
 	
 	public static function isRESTAvailable()
 	{
