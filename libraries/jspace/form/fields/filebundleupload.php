@@ -35,7 +35,9 @@ jimport('joomla.html.html');
 jimport('joomla.form.formfield');
 jimport('jspace.form.fields.multifileupload');
 jimport('jspace.form.fields.jspaceservermanipulation');
+jimport('saber.weblink');
 
+JFormHelper::loadRuleClass('url');
 
 // JHtml::addIncludePath("joomla.html.parameter.element");
 
@@ -49,10 +51,13 @@ class JSpaceFormFieldFileBundleUpload extends JSpaceFormFieldMultiFileUpload imp
 	 */
 	protected $type = 'JSpace.FileBundleUpload';
 	
-// 	protected $uploadImageURL = "index.php?option=com_jspace&task=submission.addBitstream";
-	protected $uploadImageURL = "index.php?option=com_jspace&task=submission.formFieldAction";
-// 	protected $currentImagesURL = "index.php?option=com_jspace&task=submission.bundleBitstreams";
+	/*
+	 * All the links are the same, but extended by constructor with formFieldTask. This value
+	 * returns as a case in switch in jspaceUpdate method so all logic is in one place. 
+	 */
+	protected $uploadImageURL 	= "index.php?option=com_jspace&task=submission.formFieldAction";
 	protected $currentImagesURL = "index.php?option=com_jspace&task=submission.formFieldAction";
+	protected $uploadLinkURL 	= "index.php?option=com_jspace&task=submission.formFieldAction";
 	protected $formName = '[bitstreams]';
 	
 	/**
@@ -73,6 +78,7 @@ class JSpaceFormFieldFileBundleUpload extends JSpaceFormFieldMultiFileUpload imp
 		
 		$this->uploadImageURL .= "&formFieldName=" . $this->element['name'] . "&formFieldTask=addBitstream&bundle_id=" . $this->value->id;
 		$this->currentImagesURL .= "&formFieldName=" . $this->element['name'] . "&formFieldTask=bundleBitstreams&bundle_id=" . $this->value->id;
+		$this->uploadLinkURL .= "&formFieldName=" . $this->element['name'] . "&formFieldTask=uploadLinkURL&bundle_id=" . $this->value->id;
 		return $ret;
 	}
 	
@@ -174,6 +180,52 @@ class JSpaceFormFieldFileBundleUpload extends JSpaceFormFieldMultiFileUpload imp
 						
 				}
 				return '';
+			case 'uploadLinkURL':
+				$ret = array(
+					'success' 	=> true,
+					'error'		=> '',
+				);
+				$bundle_id = $input->get('bundle_id');
+				try {
+					$bundle = $model->setItemByBundleID( $bundle_id );
+					$dstDir = $bundle->getPath();
+					$dstUrl = $bundle->getUrl();
+					
+					$addLinkText = $input->get('addLinkText','','string');
+					$addLinkURL = $input->get('addLinkURL','','string');
+					if( empty($addLinkText) ) {
+						throw new Exception(JText::_('COM_JSPACE_EXCEPTION_LINK_TEXT_EMPTY'));
+					}
+					
+					
+					$rule = new JFormRuleUrl();
+					$field = array('required'=>'true');
+					if( empty($addLinkURL) || !$rule->test($field, $addLinkURL) ) {
+						throw new Exception(JText::_('COM_JSPACE_EXCEPTION_LINK_EMPTY'));
+					}
+					
+					$generatedFileName=JFilterOutput::stringURLSafe($addLinkText) . '.weblink';
+					
+					if( !JFolder::exists($dstUrl) ) {
+						JFolder::create($dstDir);
+					}
+					
+					if( JFile::exists($dstDir . $generatedFileName) ) {
+						//naming conflict, add unique id
+						$generatedFileName=JFilterOutput::stringURLSafe($addLinkText) . uniqid('_') . '.weblink';
+					}
+					
+					if( !SaberWeblink::create($addLinkText, $addLinkURL)->save($dstDir . $generatedFileName) ) {
+						throw new Exception(JText::_('COM_JSPACE_EXCEPTION_CANT_CREATE_FILE'));
+					}
+					
+					$bundle->addBitstream($dstDir . $generatedFileName);
+				}
+				catch( Exception $e ) {
+					$ret['success'] = false;
+					$ret['error'] = $e->getMessage();
+				}
+				return json_encode($ret);
 				break;
 		}
 	}

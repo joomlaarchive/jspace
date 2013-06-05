@@ -45,6 +45,8 @@ class JSpaceFormFieldMultiFileUpload extends JFormField
 	protected $type = 'JSpace.MultiFileUpload';
 	
 	protected $uploadImageURL = "index.php?option=com_jspace&task=submission.uploadImage";
+
+	protected $uploadLinkURL = "index.php?option=com_jspace&task=submission.uploadLink";
 	
 	/**
 	 * Url to retrieve already uploaded images.
@@ -64,6 +66,9 @@ class JSpaceFormFieldMultiFileUpload extends JFormField
 	protected $formName = '';
 	
 	protected $value = array();
+	
+	protected $addLink = false;
+	
 	/**
 	 * Tell FormField where to look for value. Default it is value field.
 	 * @var string
@@ -75,9 +80,11 @@ class JSpaceFormFieldMultiFileUpload extends JFormField
 		$addfiles_label = JText::_('COM_JSPACE_MULTIFILEUPLOAD_ADDFILES_LABEL');
 		$cancelupload_label = JText::_('COM_JSPACE_MULTIFILEUPLOAD_CANCELUPLOAD_LABEL');
 		$delete_checkbox_label = JText::_('COM_JSPACE_MULTIFILEUPLOAD_DELETEALL_LABEL');
-		
+		$this->addLink = $this->element['addlink'] == 'true';
 		
 		$input = $this->_buildFormFileInput();
+		
+		$addLinkButton = $this->_addModalAddLinkButton();
 		
 		$html = <<< HTML
 	<div class="formfield-multifileupload" id="multifileupload_{$this->element['name']}">
@@ -91,6 +98,7 @@ class JSpaceFormFieldMultiFileUpload extends JFormField
                     <span>{$addfiles_label}</span>
                    	{$input}
                 </span>
+                {$addLinkButton}
                 <button type="button" class="btn btn-warning cancel_all">
                     <i class="icon-ban-circle icon-white"></i>
                     <span>{$cancelupload_label}</span>
@@ -119,7 +127,9 @@ class JSpaceFormFieldMultiFileUpload extends JFormField
         <table role="presentation" class="table table-striped"><tbody class="files" data-toggle="modal-gallery" data-target="#modal-gallery"></tbody></table>
 	</div>
 HTML;
-		return $html;
+        
+        $linkModal = $this->_addModalAddLink();
+		return $html . $linkModal;
 	}
 	
 	/**
@@ -262,6 +272,64 @@ HTML;
 	{
 		$path = $this->element['tmpPath'];
 		return empty($path) ? "tmp.multifileupload" : $path;
+	}
+	
+	
+	protected function _addModalAddLinkButton() {
+		$ret = "";
+		if( $this->addLink ) {
+			$addlink_label = JText::_('COM_JSPACE_MULTIFILEUPLOAD_ADD_LINK_BUTTON');
+			$list = JURI::base() . $this->currentImagesURL;
+			
+			$ret = <<< HTML
+	<span class="btn btn-success add-link-modal-button" role="button" data-toggle="modal" onclick="jQuery('#addLinkBitstream').modal('show');" 
+		data-url="{$this->uploadLinkURL}"
+		data-list="{$list}"
+		data-name="{$this->element['name']}"
+		>
+		<i class="icon-plus icon-white"></i>
+		<span>{$addlink_label}</span>
+	</span>
+HTML;
+		}
+		return $ret;
+	}
+	
+	protected static $_modalAddLinkAdded = false;
+	
+	/**
+	 * Add html creating modal window for adding links.
+	 */
+	protected function _addModalAddLink() {
+		$ret = "";
+		if( $this->addLink && !self::$_modalAddLinkAdded ) {
+			self::$_modalAddLinkAdded = true;
+			$header = JText::_('COM_JSPACE_MULTIFILEUPLOAD_ADD_LINK_HEADER');
+			$ok		= JText::_('COM_JSPACE_MULTIFILEUPLOAD_ADD_LINK_OK');
+			$cancel	= JText::_('COM_JSPACE_MULTIFILEUPLOAD_ADD_LINK_CANCEL');
+			$text	= JText::_('COM_JSPACE_MULTIFILEUPLOAD_ADD_LINK_LABEL_TEXT');
+			$url	= JText::_('COM_JSPACE_MULTIFILEUPLOAD_ADD_LINK_LABEL_URL');
+			
+			$ret = <<< HTML
+<div id="addLinkBitstream" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="addLinkBitstreamLabel" aria-hidden="true">
+	<div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+		<h3>{$header}</h3>
+	</div>
+	<div class="modal-body">
+		<div class="row">
+			<span class="span2">{$text}</span><span class="span3"><input type="text" id="addLinkText" /></span>
+			<span class="span2">{$url}</span><span class="span3"><input type="text" id="addLinkURL" /></span>
+		</div>
+	</div>
+	<div class="modal-footer">
+		<a href="#" class="btn btn-success" id="addLinkSubmit">{$ok}</a>
+		<a href="#" class="btn" data-dismiss="modal">{$cancel}</a>
+	</div>
+</div>
+HTML;
+		}
+		return $ret;
 	}
 }
 
