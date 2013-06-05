@@ -46,8 +46,9 @@ class JSpaceRepositoryFedoraConnector extends JSpaceRepositoryConnector
 			$repository = JSpaceFactory::getRepository();
 			if( $repository->hasCache() ) {
 				JSpaceLogger::log('Repository uses cache');
-				$cacheKey = md5( JArrayHelper::getValue($this->options, 'url') . serialize( $endpoint ) );
-				JSpaceLogger::log('Cache key: ' . $cacheKey);
+				$cacheKey = JSpaceFactory::getCacheKey($endpoint, JArrayHelper::getValue($this->options, 'url'));
+				$key = (string)$cacheKey;
+				JSpaceLogger::log('Cache key: ' . $key);
 				$cachedResponse = $repository->getCache()->get( $cacheKey );
 				if( !is_null( $cachedResponse ) ) {
 					JSpaceLogger::log('Found in cache. Returning.');
@@ -60,8 +61,8 @@ class JSpaceRepositoryFedoraConnector extends JSpaceRepositoryConnector
 		try {
 			$url = new JURI(JArrayHelper::getValue($this->options, 'url').'/'.$endpoint->get('url'));
 			if( !is_null($endpoint->get('vars')) ){
-				foreach ($endpoint->get('vars') as $key=>$value) {
-					$url->setVar($key, $value);	
+				foreach ($endpoint->get('vars') as $var=>$value) {
+					$url->setVar($var, $value);	
 				}
 			}
 			

@@ -58,15 +58,16 @@ class JSpaceRepositoryCacheSimpleCache extends JSpaceRepositoryCache
 	 * @return string
 	 */
 	protected function _fileName( $property ) {
-		return $this->_storageDirectory . md5( $property );
+		return $this->_storageDirectory . $property;
 	}
 	
 	/**
 	 * 
-	 * @param string $property
+	 * @param JSpaceRepositoryCacheKey $key
 	 * @return string|NULL
 	 */
-	public function get( $property ) {
+	public function get( JSpaceRepositoryCacheKey $key ) {
+		$property = (string)$key;
 		$ok = false;
 		$res = null;
 		$file = $this->_fileName( $property );
@@ -95,12 +96,13 @@ class JSpaceRepositoryCacheSimpleCache extends JSpaceRepositoryCache
 	
 	/**
 	 *
-	 * @param string $property
+	 * @param JSpaceRepositoryCacheKey $key
 	 * @param string $value
 	 * @param int $valid cache valid in seconds
 	 * @return bool
 	 */
-	public function set( $property, $value, $valid=null ) {
+	public function set( JSpaceRepositoryCacheKey $key, $value, $valid=null ) {
+		$property = (string)$key;
 		$file = $this->_fileName( $property );
 		$valid = is_null($valid) ? $this->_valid : $valid; //get default validity period
 		$res = false;

@@ -31,6 +31,7 @@
  
 defined('JPATH_PLATFORM') or die;
 
+JLoader::discover('JSpaceRepositoryCache', dirname(__FILE__) . DIRECTORY_SEPARATOR . "cache");
 
 /**
  * @package     JSpace
@@ -92,19 +93,19 @@ abstract class JSpaceRepositoryCache
 	
 	/**
 	 *
-	 * @param string $property
+	 * @param JSpaceRepositoryCacheKey $key
 	 * @return string|NULL
 	 */
-	public function get( $property ){}
+	public function get( JSpaceRepositoryCacheKey $key ){}
 	
 	/**
 	 * 
-	 * @param string $property
+	 * @param JSpaceRepositoryCacheKey $key
 	 * @param string $value
 	 * @param int $time
 	 * @return bool
 	 */
-	public function set( $property, $value, $valid=null ){}
+	public function set( JSpaceRepositoryCacheKey $key, $value, $valid=null ){}
 	
 }
 

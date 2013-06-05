@@ -167,4 +167,15 @@ class JSpaceFactory
 	public static function getMessenger() {
 		return new JSpaceMessenger();
 	}
+	
+	/**
+	 * 
+	 * @param JSpaceRepositoryEndpoint $endpoint
+	 * @param string $baseUrl
+	 * @return JSpaceRepositoryCacheKey
+	 */
+	public static function getCacheKey( JSpaceRepositoryEndpoint $endpoint, $baseUrl ) {
+		return new JSpaceRepositoryCacheKey($endpoint, $baseUrl);
+	}
+
 }

@@ -46,9 +46,11 @@ class JSpaceRepositoryConnectorDSpace extends JSpaceRepositoryConnector
 			$repository = JSpaceFactory::getRepository();
 			if( $repository->hasCache() ) {
 				JSpaceLogger::log('Repository uses cache');
-				$key = md5( JArrayHelper::getValue($this->options, 'url') . serialize( $endpoint ) );
+				$cacheKey = JSpaceFactory::getCacheKey($endpoint, JArrayHelper::getValue($this->options, 'url'));
+				$key = (string) $cacheKey;
+// 				$key = md5( JArrayHelper::getValue($this->options, 'url') . serialize( $endpoint ) );
 				JSpaceLogger::log('Cache key: ' . $key);
-				$cachedResponse = $repository->getCache()->get( $key );
+				$cachedResponse = $repository->getCache()->get( $cacheKey );
 				if( !is_null( $cachedResponse ) ) {
 					JSpaceLogger::log('Found in cache. Returning.');
 					return $cachedResponse;
@@ -61,8 +63,8 @@ class JSpaceRepositoryConnectorDSpace extends JSpaceRepositoryConnector
 			$url = new JURI(JArrayHelper::getValue($this->options, 'url').'/'.$endpoint->get('url'));
 
 			if( !is_null($endpoint->get('vars')) ){
-				foreach ($endpoint->get('vars') as $key=>$value) {
-					$url->setVar($key, $value);	
+				foreach ($endpoint->get('vars') as $var=>$value) {
+					$url->setVar($var, $value);	
 				}
 			}
 			
@@ -97,7 +99,7 @@ class JSpaceRepositoryConnectorDSpace extends JSpaceRepositoryConnector
 					$response = $client->getResponseBody();
 					if( $useCache && $repository->hasCache() ) {
 						JSpaceLogger::log('Setting cache. Key: ' . $key);
-						$repository->getCache()->set($key, $response);
+						$repository->getCache()->set($cacheKey, $response);
 					}
 					break;
 					
