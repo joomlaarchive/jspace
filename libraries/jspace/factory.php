@@ -117,7 +117,8 @@ class JSpaceFactory
 	public static function getCache( $options = null ) {
 		if( is_null($options) ) {
 			$options = array(
-				'driver'	=> 'simple',
+// 				'driver'	=> 'simple', 
+				'driver'	=> 'jcache',
 				'storageDirectory'	=> JPATH_BASE . "/tmp/cache/",
 			);
 		}

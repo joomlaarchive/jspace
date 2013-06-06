@@ -56,7 +56,7 @@ abstract class JSpaceRepositoryCache
 		$driver = JArrayHelper::getValue($options, 'driver');
 
 		if( !isset(self::$_instances[ $driver ]) ) {
-			$class = "JSpaceRepositoryCache" . ucfirst(strtolower($driver)) . 'Cache';
+			$class = "JSpaceRepositoryCache" . ucfirst(strtolower($driver));
 			if( !class_exists($class) ) {
 				//attempt import
 				jimport('jspace.repository.cache.' . strtolower($driver) . '.cache' );

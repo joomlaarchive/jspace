@@ -1,6 +1,8 @@
 <?php
 /**
- * A cache error class.
+ * Item aware cache class. 
+ * Caches requests for each item separately (if request is item related).
+ * This allows purging the cache for one item.
  * 
  * @package		JSpace
  * @subpackage	Repository
@@ -32,33 +34,38 @@
 defined('JPATH_PLATFORM') or die;
 
 jimport('jspace.repository.cache');
+jimport('jspace.repository.cache.itemaware.plain');//joomla cache controller
+
+JCacheController::addIncludePath(dirname(__FILE__));
+
 /**
  * @package     JSpace
  * @subpackage  Repository
  */
-class JSpaceRepositoryCacheSimple extends JSpaceRepositoryCache
+class JSpaceRepositoryCacheJcache extends JSpaceRepositoryCache
 {
-	protected $_storageDirectory = null;
 	/**
 	 * 
 	 * @param array $options
 	 */
 	public function __construct( $options ) {
 		parent::__construct( $options );
-		$this->_storageDirectory = JArrayHelper::getValue($options, 'storageDirectory');
-		if( !JFolder::exists($this->_storageDirectory) ) {
-			JFolder::create($this->_storageDirectory);
-		}
 	}
 	
 	/**
-	 * Get file name where property is stored.
+	 * Returns JCache obkect with group set.
+	 * Default group is: jspace.default
+	 * If cached data is related to item: jspace.item.<item_id> 
 	 * 
-	 * @param string $property
-	 * @return string
+	 * @param JSpaceRepositoryCacheKey $key
+	 * @return JCache
 	 */
-	protected function _fileName( $property ) {
-		return $this->_storageDirectory . $property;
+	protected function _getJCache( JSpaceRepositoryCacheKey $key ) {
+		$group = 'jspace.default';
+		JSpaceLogger::log("Cache [{$this->_driver}]. Fetch JCache group {$group}", JLog::DEBUG);
+		$cache = JFactory::getCache($group, 'plain');
+		$cache->setCaching( true );
+		return $cache;
 	}
 	
 	/**
@@ -67,31 +74,10 @@ class JSpaceRepositoryCacheSimple extends JSpaceRepositoryCache
 	 * @return string|NULL
 	 */
 	public function get( JSpaceRepositoryCacheKey $key ) {
+		$cache = $this->_getJCache( $key );
 		$property = (string)$key;
-		$ok = false;
-		$res = null;
-		$file = $this->_fileName( $property );
-		if( JFile::exists( $file ) ) {
-			if( JFile::exists( $file . '.time' ) ) {
-				$timestamp = JFile::read($file . '.time');
-				if( $timestamp < time() ) {
-					JFile::delete( $file );
-				}
-				else {
-					$ok = true;
-				}
-			}
-			else {
-				//to .time file == indefinite
-				$ok = true;
-			}
-		}
-		
-		if( $ok ) {
-			$res = JFile::read( $file );
-		}
-		
-		return $res;
+		$res = $cache->get($property);
+		return ($res===false) ? null : unserialize($res);
 	}
 	
 	/**
@@ -102,23 +88,16 @@ class JSpaceRepositoryCacheSimple extends JSpaceRepositoryCache
 	 * @return bool
 	 */
 	public function set( JSpaceRepositoryCacheKey $key, $value, $valid=null ) {
+		$cache = $this->_getJCache( $key );
+		$cache->setLifeTime($valid); //life time of cache object or particular vales stored in it?
 		$property = (string)$key;
-		$file = $this->_fileName( $property );
-		$valid = is_null($valid) ? $this->_valid : $valid; //get default validity period
-		$res = false;
-		
-		if( JFile::write($file, $value) ) {
-			if( !is_null( $valid ) ) {
-				$valid += time();
-				if( JFile::write($file . '.time', $valid) ) {
-					$res = true;
-				}
-			}
-			else {
-				$res = true;
-			}
+		$res = true;
+		try {
+			$cache->store($value, $property);
 		}
-		
+		catch( Exception $e ) {
+			$res = false;
+		}
 		return $res;
 	}
 	
