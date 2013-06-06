@@ -27,7 +27,7 @@
  * Please feel free to add your name and email (optional) here if you have 
  * contributed any source code changes.
  * Name							Email
- * Micha≈Ç Kocztorz				<michalkocztorz@wijiti.com> 
+ * Micha≥ Kocztorz				<michalkocztorz@wijiti.com> 
  * 
  */
  
