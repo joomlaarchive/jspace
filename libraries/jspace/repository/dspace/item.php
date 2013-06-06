@@ -60,8 +60,7 @@ class JSpaceRepositoryDspaceItem extends JSpaceRepositoryItem
 	 */
 	protected function _load() {
 		try {
-			$endpoint = JSpaceFactory::getEndpoint('/items/'. $this->getId() .'.json');
-			$resp = json_decode($this->getRepository()->getConnector()->get($endpoint));
+			$resp = $this->getRepository()->restCallJSON('item',array('id'=>$this->getId()));
 		} catch (Exception $e) {
 			throw JSpaceRepositoryError::raiseError($this, JText::sprintf('COM_JSPACE_JSPACEITEM_ERROR_CANNOT_FETCH', $this->getId()));
 		}
@@ -132,10 +131,7 @@ class JSpaceRepositoryDspaceItem extends JSpaceRepositoryItem
 	protected function _dspaceGetBundles() {
 		if( is_null( $this->_dspaceRawBundles ) ) {
 			try {
-				$endpoint = JSpaceFactory::getEndpoint('/items/' . $this->getId() . '/bundles.json');
-				$client = $this->getRepository()->getConnector();
-			
-				$this->_dspaceRawBundles = json_decode($client->get($endpoint));
+				$this->_dspaceRawBundles = $this->getRepository()->restCallJSON('item.bundles', array('id'=>$this->getId()));
 			} catch (Exception $e) {
 				throw JSpaceRepositoryError::raiseError( $this, JText::sprintf('COM_JSPACE_JSPACEITEM_ERROR_CANNOT_FETCH_BUNDLE', $this->getId()) );
 			}

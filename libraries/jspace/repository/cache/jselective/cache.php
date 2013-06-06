@@ -34,7 +34,7 @@
 defined('JPATH_PLATFORM') or die;
 
 jimport('jspace.repository.cache');
-jimport('jspace.repository.cache.jcache.plain');//joomla cache controller
+jimport('jspace.repository.cache.jcache.cache');//joomla cache controller
 
 JCacheController::addIncludePath(dirname(__FILE__));
 
@@ -42,16 +42,8 @@ JCacheController::addIncludePath(dirname(__FILE__));
  * @package     JSpace
  * @subpackage  Repository
  */
-class JSpaceRepositoryCacheJcache extends JSpaceRepositoryCache
+class JSpaceRepositoryCacheJselective extends JSpaceRepositoryCacheJcache
 {
-	/**
-	 * 
-	 * @param array $options
-	 */
-	public function __construct( $options ) {
-		parent::__construct( $options );
-	}
-	
 	/**
 	 * Returns JCache obkect with group set.
 	 * Default group is: jspace.default
@@ -61,51 +53,12 @@ class JSpaceRepositoryCacheJcache extends JSpaceRepositoryCache
 	 * @return JCache
 	 */
 	protected function _getJCache( JSpaceRepositoryCacheKey $key ) {
-		$group = 'jspace.default';
+		$group = $key->getEndpoint()->get('group');
 		JSpaceLogger::log("Cache [{$this->_driver}]. Fetch JCache group {$group}", JLog::DEBUG);
 		$cache = JFactory::getCache($group, 'plain');
 		$cache->setCaching( true );
 		return $cache;
 	}
-	
-	/**
-	 * 
-	 * @param JSpaceRepositoryCacheKey $key
-	 * @return string|NULL
-	 */
-	public function get( JSpaceRepositoryCacheKey $key ) {
-		$cache = $this->_getJCache( $key );
-		$property = (string)$key;
-		$res = $cache->get($property);
-		return ($res===false) ? null : unserialize($res);
-	}
-	
-	/**
-	 *
-	 * @param JSpaceRepositoryCacheKey $key
-	 * @param string $value
-	 * @param int $valid cache valid in seconds
-	 * @return bool
-	 */
-	public function set( JSpaceRepositoryCacheKey $key, $value, $valid=null ) {
-		if( !$key->getEndpoint()->get('cacheable', true) ) {
-			JSpaceLogger::log("Cache [{$this->_driver}]. Endpoint not cacheable.", JLog::DEBUG);
-			return false;
-		}
-		
-		$cache = $this->_getJCache( $key );
-		$cache->setLifeTime($valid); //life time of cache object or particular vales stored in it?
-		$property = (string)$key;
-		$res = true;
-		try {
-			$cache->store($value, $property);
-		}
-		catch( Exception $e ) {
-			$res = false;
-		}
-		return $res;
-	}
-	
 }
 
 

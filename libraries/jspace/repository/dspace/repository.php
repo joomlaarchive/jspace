@@ -168,8 +168,8 @@ class JSpaceRepositoryDspaceRepository extends JSpaceRepository
 		if ($zip->create($package, $files)) {
 		
 			try {
-				$endpoint = JSpaceFactory::getEndpoint('items.stream', array(), false, array('zip'=>"@$package"));
-				$client = $this->_connector;
+				$endpoint = $this->getRestAPI()->getEndpoint('deposit', array('zip'=>"@$package"));
+				$client = $this->getConnector();
 				$roles = json_decode($client->post($endpoint));
 				return $roles ;
 			} catch (Exception $e) {

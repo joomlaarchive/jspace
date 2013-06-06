@@ -68,6 +68,14 @@ class JSpaceRepositoryCacheKey
 	public function __toString() {
 		return md5($this->_baseUrl . serialize($this->_endpoint));
 	}
+	
+	/**
+	 * 
+	 * @return JSpaceRepositoryEndpoint
+	 */
+	public function getEndpoint() {
+		return $this->_endpoint;
+	} 
 }
 
 

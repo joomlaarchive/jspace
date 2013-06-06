@@ -64,9 +64,7 @@ class JSpaceRepositoryDspaceFilter extends JSpaceRepositoryFilter
 				}
 				
 				try {
-					$endpoint = JSpaceFactory::getEndpoint('discover.json',$vars);
-					$connector = $this->getRepository()->getConnector();
-					$response = json_decode($connector->get($endpoint));
+					$response = $this->getRepository()->restCallJSON('discover',$vars);
 					if (isset($response->response)) {
 						$docs = $response->response->docs;
 					}
@@ -128,9 +126,7 @@ class JSpaceRepositoryDspaceFilter extends JSpaceRepositoryFilter
 		);
 		
 		try {
-			$endpoint = JSpaceFactory::getEndpoint('statistics.json',$vars);
-			$connector = $this->getRepository()->getConnector();
-			$response = json_decode($connector->get($endpoint));
+			$response = $this->getRepository()->restCallJSON('statistics', $vars);
 			if( isset($response->facet_counts->facet_fields->id) ) {
 				$array = $response->facet_counts->facet_fields->id;
 				$ids = array();

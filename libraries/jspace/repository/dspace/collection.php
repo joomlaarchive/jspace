@@ -60,10 +60,7 @@ class JSpaceRepositoryDspaceCollection extends JObject
 		$this->_id = $id;
 		$this->_repository = $repository;
 		try {
-			$endpoint = JSpaceFactory::getEndpoint('/collections/'.$this->_id.'.json');
-			$client = $this->getRepository()->getConnector();
-				
-			$this->_dspaceRawCollection = json_decode($client->get($endpoint));
+			$this->_dspaceRawCollection = $this->getRepository()->restCallJSON('collection', array('id'=>$this->_id));
 			$this->_name = $this->_dspaceRawCollection->name;
 		} catch (Exception $e) {
 			throw JSpaceRepositoryError::raiseError($this, JText::sprintf('COM_JSPACE_REPOSITORY_COLLECTION_NOT_FOUND', $this->_id));

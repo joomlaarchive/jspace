@@ -39,6 +39,7 @@ jimport('jspace.repository.metadata');
 jimport('jspace.repository.error');
 jimport('jspace.repository.filter');
 jimport('jspace.repository.category');
+jimport('jspace.repository.restapi');
 
 /**
  * JSpace connector endpoint class.
@@ -72,6 +73,7 @@ abstract class JSpaceRepository extends JObject
 				jimport('jspace.repository.' . strtolower($type) . '.metadata' );
 				jimport('jspace.repository.' . strtolower($type) . '.filter' );
 				jimport('jspace.repository.' . strtolower($type) . '.category' );
+				jimport('jspace.repository.' . strtolower($type) . '.restapi' );
 				if( !class_exists($class) ) {
 					throw new Exception(JText::_('LIB_JSPACE_MISSING_REPOSITORY_CLASS') . ' ' . $class );
 				}
@@ -128,6 +130,12 @@ abstract class JSpaceRepository extends JObject
 	 * @var JSpaceRepositoryCache
 	 */
 	protected $_cache = null;
+	
+	/**
+	 * 
+	 * @var JSpaceRepositoryRestAPI
+	 */
+	protected $_restAPI = null;
 	
 
 	public function __construct( $options ) {
@@ -350,6 +358,51 @@ abstract class JSpaceRepository extends JObject
 	protected function _createFilter( $options ) {
 		$class = "JSpaceRepository" . ucfirst(strtolower($this->_driver)) . "Filter";
 		return new $class( $this, $options );
+	}
+	
+	/**
+	 * 
+	 * @return JSpaceRepositoryRestAPI
+	 */
+	public function getRestAPI() {
+		if( is_null( $this->_restAPI ) ) {
+			$this->_restAPI = $this->_getRestAPI();
+		}
+		return $this->_restAPI;
+	}
+	
+	/**
+	 * Get the rest API object.
+	 * 
+	 * @return JSpaceRepositoryRestAPI
+	 */
+	protected function _getRestAPI() {
+		$class = "JSpaceRepository" . ucfirst(strtolower($this->_driver)) . "RestAPI";
+		return new $class();
+	}
+	
+	/**
+	 * Helper method to get rest api response
+	 * 
+	 * @param string $name
+	 * @param array $config
+	 * @return string
+	 */
+	public function restCall( $name, $config=array() ) {
+		$endpoint = $this->getRestAPI()->getEndpoint($name, $config);
+		$connector = $this->getConnector();
+		return $connector->get($endpoint);
+	}
+	
+	/**
+	 * Helper method to get rest api JSON decoded response
+	 * 
+	 * @param string $name
+	 * @param array $config
+	 * @return json_decode result
+	 */
+	public function restCallJSON( $name, $config=array() ) {
+		return json_decode($this->restCall($name,$config));
 	}
 	
 }

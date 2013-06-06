@@ -118,7 +118,8 @@ class JSpaceFactory
 		if( is_null($options) ) {
 			$options = array(
 // 				'driver'	=> 'simple', 
-				'driver'	=> 'jcache',
+// 				'driver'	=> 'jcache',
+				'driver'	=> 'jselective',
 				'storageDirectory'	=> JPATH_BASE . "/tmp/cache/",
 			);
 		}
@@ -126,6 +127,8 @@ class JSpaceFactory
 	}
 
 	/**
+	 * @deprecated use JFactory::getRepository()->getRestAPI()->getEndpoint(...) or JSpaceRepository::restCall or JSpaceRepository::restCallJSON
+	 * 
 	 * Instantiates an instance of the JSpaceEndpoint class.
 	 *
 	 * @param string $endpoint The relative url of the REST API endpoint.

@@ -66,6 +66,18 @@ class JSpaceRepositoryEndpoint extends JObject
 	protected $anonymous;
 	
 	/**
+	 * 
+	 * @var bool
+	 */
+	protected $cacheable = true;
+	/**
+	 * A group of endpoints this one belongs to.
+	 * 
+	 * @var string
+	 */
+	protected $group = 'jspace.default';
+	
+	/**
 	 * Initializes an instance of the JRepositoryEndpoint class.
 	 *
 	 * @param string $endpoint The relative url of the REST API endpoint.
