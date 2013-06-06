@@ -34,7 +34,7 @@
 defined('JPATH_PLATFORM') or die;
 
 jimport('jspace.repository.cache');
-jimport('jspace.repository.cache.itemaware.plain');//joomla cache controller
+jimport('jspace.repository.cache.jcache.plain');//joomla cache controller
 
 JCacheController::addIncludePath(dirname(__FILE__));
 
