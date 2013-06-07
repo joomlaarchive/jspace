@@ -45,7 +45,7 @@ $repository = $this->repository;
 
 /* @var $model JSpaceModelItem */
 $model = $this->model;
-
+var_dump(base64_encode('fedora-system:ServiceDefinition-3.0'));
 
 JLoader::discover('JSpaceHelper', JPATH_BASE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_jspace' . DIRECTORY_SEPARATOR . 'helpers' );
 ?>

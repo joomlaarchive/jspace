@@ -101,7 +101,7 @@ class JSpaceRepositoryFedoraCategory extends JSpaceRepositoryCategory
 // 			$this->_dcDatastream->set( $this->getRepository()->getMapper()->getCrosswalk()->_('fedora_dcmdate'), $this->_fdo->getData( 'dcmDate' ));
 				
 		} catch (Exception $e) {
-						var_dump($e);exit;
+// 						var_dump($e->getMessage());exit;
 			throw JSpaceRepositoryError::raiseError($this, JText::sprintf('COM_JSPACE_JSPACE_CATEGORY_ERROR_CANNOT_FETCH', $this->getId()));
 		}
 		$ret = array();

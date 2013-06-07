@@ -542,7 +542,7 @@ class JSpaceTableItem extends JTable
 			//get oryginal item
 			$item = JTable::getInstance('item', 'JSpaceTable');
 			$where = array('updateditem_id' => $this->id);
-			var_dump($where);
+// 			var_dump($where);
 			if( $item->load( $where ) ) {
 				$item->updateditem_id = null;
 				$item->store(true);
