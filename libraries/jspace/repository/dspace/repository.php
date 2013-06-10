@@ -57,8 +57,11 @@ class JSpaceRepositoryDspaceRepository extends JSpaceRepository
 		 * Setting additional values in metadata
 		 * Contributor:
 		 */
-		$contributor = JFactory::getUser()->get('username','');
-		$storageItem->setMetadata("contributor", $contributor);
+		$username = JFactory::getUser()->get('username','');
+		$storageItem->setMetadata("username", $username);
+
+		$name = JFactory::getUser()->get('name','');
+		$storageItem->setMetadata("name", $name);
 		
 		/*
 		 * Will be changed when full submission process will be done.
