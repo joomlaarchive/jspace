@@ -56,6 +56,7 @@ class JSpaceTableItem extends JTable
 	const ITEMSTATE_PUBLISHED	= 110;
 	const ITEMSTATE_INWORKFLOW	= 150;
 	const ITEMSTATE_DELETED		= 999;
+	const ITEMSTATE_TEMPORARY	= 888;	//item loaded back from repo
 	
 	/**
 	 * This value is not saved in db. 

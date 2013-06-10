@@ -64,6 +64,8 @@ class JSpaceFormFieldMetadatacheckboxes extends JFormFieldCheckboxes
 	 */
 	protected function getInput()
 	{
+		$document = JFactory::getDocument();
+		$document->addStyleSheet('media/com_jspace/css/formfields.css');
 		// Initialize variables.
 		$html = array();
 	
@@ -75,7 +77,7 @@ class JSpaceFormFieldMetadatacheckboxes extends JFormFieldCheckboxes
 	
 		// Get the field options.
 		$options = $this->getOptions();
-		
+// 		var_dump($this->value);
 		$values = $this->value->getValueArray();
 // 		var_dump($options);
 	
