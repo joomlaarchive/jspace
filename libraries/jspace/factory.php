@@ -39,6 +39,7 @@ jimport('jspace.repository.repository');
 jimport('jspace.debug.debug');
 
 JLoader::discover("JSpaceTable", JPATH_SITE . "/libraries/jspace/database/table/");
+JLoader::discover("JSpaceTool", dirname(__FILE__) . "/tool/");
 
 class JSpaceFactory
 {
@@ -177,6 +178,15 @@ class JSpaceFactory
 	 */
 	public static function getCacheKey( JSpaceRepositoryEndpoint $endpoint, $baseUrl ) {
 		return new JSpaceRepositoryCacheKey($endpoint, $baseUrl);
+	}
+	
+	/**
+	 * 
+	 * @param JSpaceRepositoryItem $item
+	 * @return JSpaceToolMetadataSet
+	 */
+	public static function getMetadataSet( JSpaceRepositoryItem $item ) {
+		return new JSpaceToolMetadataSet( $item );
 	}
 
 }
