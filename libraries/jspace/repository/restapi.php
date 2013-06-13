@@ -89,7 +89,12 @@ abstract class JSpaceRepositoryRestAPI
 		$data = array();
 		foreach( $api['data'] as $key => $required ) {
 			if( isset($config[$key]) ) {
-				$data[$key] = $config[$key];
+				if( $key != 'data' && count($api['data'])>1 ) {
+					$data[$key] = $config[$key];
+				}
+				else {//if data array has only data key, then it is passed to data variable
+					$data = $config[$key];
+				}
 			}
 			else {
 				if( $required ) {

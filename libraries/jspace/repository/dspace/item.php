@@ -171,6 +171,81 @@ class JSpaceRepositoryDspaceItem extends JSpaceRepositoryItem
 		
 		return $bundles;
 	}
+	
+	/**
+	 * Uses https://jspace.atlassian.net/wiki/display/DSPACEAPI/PUT_items_id_metadata
+	 * to update all existing metadata in repository item.
+	 */
+	public function dspaceUpdateMetadata( $metadata=array(), $removeMetadata=array() ) {
+		/*
+		 * Prepare Key => array of values
+		 * Where key is crosswalked value e.g. 'dc.title'.
+		 */
+		$crosswalked = array();
+		foreach( $metadata as $key => $arr ) {
+			$ckey = $this->getCrosswalkValue($key);
+			if( !isset($crosswalked[$ckey]) ) {
+				$crosswalked[$ckey] = array();
+			}
+			$crosswalked[$ckey] = array_merge($crosswalked[$ckey], $arr);
+		}
+		
+		
+		$toParse = array(
+			"metadata" => array()
+		);
+// 		var_dump($metadata);
+// 		var_dump($removeMetadata);
+// var_dump($this->getMetadata());
+
+		/* @var $val JSpaceRepositoryDspaceMetadata */
+		foreach( $this->getMetadata() as $ckey2 => $val) {
+			/*
+			 * Add current metadata but only if it is not yet set.
+			 */
+			if( !isset($crosswalked[$ckey2]) ) {
+				$crosswalked[$ckey2] = $val->getValues();
+			}
+// 			var_dump($key);
+// 			var_dump($val);
+		}
+		
+		/*
+		 * WARNING: this may remove too much in some cases.
+		 * Example:
+		 * In crosswalk:
+		 * 'author': 'dc.author'
+		 * 'contributor': 'dc.contributor'
+		 * 
+		 * We get:
+		 * 'author' => 'John Doe'
+		 * 'contributor' => 'Jane Doe'
+		 * 
+		 * After crosswalking we get:
+		 * 'dc.author' => array('John Doe', 'Jane Doe')
+		 * 
+		 * If we would get:
+		 * $removeMetadata = array('contributor');
+		 * 
+		 * Then it will get crosswalked to: 'dc.author' and it would remove both 'author' and 'contributor'.
+		 * 
+		 */
+		
+		foreach($removeMetadata as $key) {
+			$ckey3 = $this->getCrosswalkValue($key);
+			if( isset( $crosswalked[$ckey3] ) ) {
+				unset( $crosswalked[$ckey3] );
+			}
+		}
+		
+		foreach( $crosswalked as $key => $val ) {
+			$toParse["metadata"][] = array("name"=>$key,"value"=>$val);
+		}
+		$json = json_encode($toParse);
+		$endpoint = $this->getRepository()->getRestAPI()->getEndpoint('updateitem',array('id'=>$this->getId(),'data'=>$json));
+		$connector = $this->getRepository()->getConnector();
+		$connector->put($endpoint);
+	}
 }
 
 

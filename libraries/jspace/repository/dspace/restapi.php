@@ -171,6 +171,18 @@ class JSpaceRepositoryDspaceRestAPI extends JSpaceRepositoryRestAPI
 					),
 					'cache'			=> false,
 			),
+
+				
+			'updateitem'	=> array(
+					'url'			=> 'items/%1$s/metadata.json',
+					'urlElements'	=> array(
+						'id'
+					),
+					'vars'			=> array(),
+					'anonymous'		=> false,
+					'data'			=> array('data'=>true), //$data will be $config['data'] (not $data['data']=$config['data'])
+					'cache'			=> false,
+			),
 		);
 	}
 }
