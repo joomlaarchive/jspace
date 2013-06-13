@@ -78,6 +78,12 @@ class JSpaceRepositoryEndpoint extends JObject
 	protected $group = 'jspace.default';
 	
 	/**
+	 * A timeout in seconds that is should be set in request. 
+	 * @var int
+	 */
+	protected $timeout = 10;
+	
+	/**
 	 * Initializes an instance of the JRepositoryEndpoint class.
 	 *
 	 * @param string $endpoint The relative url of the REST API endpoint.

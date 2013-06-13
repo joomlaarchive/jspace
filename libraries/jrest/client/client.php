@@ -39,6 +39,7 @@ class JRestClient
 	protected $acceptType;
 	protected $responseBody;
 	protected $responseInfo;
+	protected $timeout;
 	
 	public function __construct ($url = null, $verb = 'GET', $requestBody = null)
 	{
@@ -51,6 +52,7 @@ class JRestClient
 		$this->acceptType		= 'application/json';
 		$this->responseBody		= null;
 		$this->responseInfo		= null;
+		$this->timeout			= 10;
 	}
 	
 	public function flush ()
@@ -153,7 +155,7 @@ class JRestClient
 	
 	protected function setCurlOpts (&$curlHandle)
 	{
-		curl_setopt($curlHandle, CURLOPT_TIMEOUT, 180);
+		curl_setopt($curlHandle, CURLOPT_TIMEOUT, $this->timeout);
 		curl_setopt($curlHandle, CURLOPT_URL, $this->url);
 		curl_setopt($curlHandle, CURLOPT_RETURNTRANSFER, true);
 	}
@@ -240,6 +242,10 @@ class JRestClient
 	public function setVerb ($verb)
 	{
 		$this->verb = $verb;
+	}
+	
+	public function setTimeout( $timeout ) {
+		$this->timeout = $timeout;
 	}
 	
 	public static function isCURLInstalled()
