@@ -418,6 +418,7 @@ class JSpaceTableItem extends JTable
      * @author Piotr Dolistowski
 	 */
 	public function archive() {
+		JSpaceLogger::log("Archiving item");
 		$repository = JSpaceFactory::getRepository();
 		$id = $repository->storeItem( $this );
 		if( !is_null($id) ) {
@@ -566,6 +567,7 @@ class JSpaceTableItem extends JTable
 		$item->user_id = $this->user_id;
 		$item->name = $this->name;
 		$item->created = $this->created;
+		$item->collectionid = $this->collectionid;
 		$item->store();
 		$this->updateditem_id = $item->id;
 		parent::store();

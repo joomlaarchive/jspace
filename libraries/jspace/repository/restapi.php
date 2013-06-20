@@ -51,6 +51,8 @@ abstract class JSpaceRepositoryRestAPI
 	public function getEndpoint( $name, $config=array() ) {
 		JSpaceLogger::log("Getting endpoint: $name");
 		$api = $this->_getEndpointAPI( $name );
+		JSpaceLogger::log("RestAPI: " . print_r($api, true));
+		JSpaceLogger::log("RestAPI config: " . print_r($config, true));
 		$urlElements = array();
 		foreach( $api['urlElements'] as $key ) {
 			if( isset($config[$key]) ) {
@@ -62,16 +64,8 @@ abstract class JSpaceRepositoryRestAPI
 			}
 		}
 
-		$groupElements = array();
-		foreach(JArrayHelper::getValue($api, 'groupElements', array()) as $key ) {
-			if( isset($config[$key]) ) {
-				$groupElements[] = $config[$key];
-			}
-			else {
-				JSpaceLogger::log("Required for group config element missing: $key", JLog::ERROR);
-				throw new Exception(JText::_('LIB_JSPACE_ERROR_RESTAPI_GETENDPOINT_CONFIG_ERROR_GROUP'));
-			}
-		}
+		$cacheGroup = $this->_getCacheGroup($api, $config);
+
 		
 		$vars = array();
 		foreach( $api['vars'] as $key => $required ) {
@@ -89,11 +83,11 @@ abstract class JSpaceRepositoryRestAPI
 		$data = array();
 		foreach( $api['data'] as $key => $required ) {
 			if( isset($config[$key]) ) {
-				if( $key != 'data' && count($api['data'])>1 ) {
-					$data[$key] = $config[$key];
-				}
-				else {//if data array has only data key, then it is passed to data variable
+				if( $key == 'data' && count($api['data'])==1 ) {//if data array has only data key, then it is passed to data variable
 					$data = $config[$key];
+				}
+				else {
+					$data[$key] = $config[$key];
 				}
 			}
 			else {
@@ -106,13 +100,18 @@ abstract class JSpaceRepositoryRestAPI
 		
 		$url = vsprintf($api['url'], $urlElements);
 		$vars = (count($vars) > 0)? $vars : null ;
-		$anonymous = JArrayHelper::getValue($config, 'anonymous', $api['anonymous']);
+		
+		
+		$anonymous = (bool)JArrayHelper::getValue($config, 'anonymous', $api['anonymous']);
 		$data = (count($data)>0) ? $data : null;
+		
+		JSpaceLogger::log("RestAPI anonymous: " . print_r($anonymous, true));
+		JSpaceLogger::log("RestAPI setting data: " . print_r($data, true));
 		
 		$endpoint = new JSpaceRepositoryEndpoint($url, $vars, $anonymous, $data);
 
 		if( JArrayHelper::getValue($api, 'cache', true) ) {
-			$group = vsprintf($api['group'], $groupElements);
+			$group = $cacheGroup;
 			JSpaceLogger::log("Endpoint cache group: $group");
 			$endpoint->set('group', $group);
 		}
@@ -122,6 +121,17 @@ abstract class JSpaceRepositoryRestAPI
 		
 		JSpaceLogger::log("Returning endpoint: $name");
 		return $endpoint;
+	}
+	
+	/**
+	 * 
+	 * @param string $name
+	 * @param array $config
+	 * @return string
+	 */
+	public function getCacheGroup( $name, $config=array() ) {
+		$api = $this->_getEndpointAPI( $name );
+		return $this->_getCacheGroup($api, $config);
 	}
 	
 	/**
@@ -138,6 +148,29 @@ abstract class JSpaceRepositoryRestAPI
 			throw new Exception(JText::_('LIB_JSPACE_CRITICAL_ERROR_RESTAPI_GETENDPOINT_NO_ENDPOINT_FOUND'));
 		}
 		return $this->_endpoints[ $name ];
+	}
+	
+	/**
+	 * Gets defined (cache) group elements from $config.
+	 * 
+	 * @param array $api
+	 * @param array $config
+	 * @throws Exception
+	 * @return array
+	 */
+	protected function _getCacheGroup($api, $config) {
+		$groupElements = array();
+		foreach(JArrayHelper::getValue($api, 'groupElements', array()) as $key ) {
+			if( isset($config[$key]) ) {
+				$groupElements[] = $config[$key];
+			}
+			else {
+				JSpaceLogger::log("Required for group config element missing: $key", JLog::ERROR);
+				throw new Exception(JText::_('LIB_JSPACE_ERROR_RESTAPI_GETENDPOINT_CONFIG_ERROR_GROUP'));
+			}
+		}
+		
+		return vsprintf($api['group'], $groupElements);
 	}
 }
 

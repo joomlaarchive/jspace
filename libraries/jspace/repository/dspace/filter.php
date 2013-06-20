@@ -30,7 +30,7 @@
  */
  
 defined('JPATH_PLATFORM') or die;
-
+jimport('jspace.factory');
 
 /**
  * @package     JSpace
@@ -112,7 +112,27 @@ class JSpaceRepositoryDspaceFilter extends JSpaceRepositoryFilter
 		return $ret;
 	}
 	
+	
+	/**
+	 * ToDo: fix creating filters to avoid hacking lib
+	 */
 	protected function _getItemsPopular() {
+		$db = JFactory::getDbo();
+		$query = $db->getQuery(true);
+		$query->select('*')->from('#__saber_stats_item')->where('type="ITEM"')->order("cnt desc");
+		$db->setQuery($query,$this->getLimitstart(),$this->getLimit());
+		$obj = $db->loadObjectList();
+		$items = array();
+		foreach($obj as $row) {
+			$item = JSpaceFactory::getRepository()->getItem($row->ident);
+			$items[] = $item;
+		}
+		return $items;
+
+	}
+	
+	
+	protected function _getItemsPopular_old() {
 		$items = array();
 		$vars = array(
 			'facet'				=> 'true',

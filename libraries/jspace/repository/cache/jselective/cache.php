@@ -27,7 +27,7 @@
  * Please feel free to add your name and email (optional) here if you have 
  * contributed any source code changes.
  * Name							Email
- * Micha³ Kocztorz				<michalkocztorz@wijiti.com> 
+ * Michaï¿½ Kocztorz				<michalkocztorz@wijiti.com> 
  * 
  */
  
@@ -58,6 +58,13 @@ class JSpaceRepositoryCacheJselective extends JSpaceRepositoryCacheJcache
 		$cache = JFactory::getCache($group, 'plain');
 		$cache->setCaching( true );
 		return $cache;
+	}
+	
+	public function clean( JSpaceRepositoryCacheKey $key ) {
+		$group = $key->getEndpoint()->get('group');
+		JSpaceLogger::log("Cache [{$this->_driver}]. Fetch JCache group {$group}", JLog::DEBUG);
+		$cache = JFactory::getCache($group, 'plain');
+		return $cache->clean();
 	}
 }
 

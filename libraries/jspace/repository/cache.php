@@ -107,6 +107,14 @@ abstract class JSpaceRepositoryCache
 	 */
 	public function set( JSpaceRepositoryCacheKey $key, $value, $valid=null ){}
 	
+	/**
+	 * Clean cache related to the key if driver allows that.
+	 * Returns true on success or false if failed or not supported.
+	 * 
+	 * @param JSpaceRepositoryCacheKey $key
+	 * @return bool
+	 */
+	public function clean( JSpaceRepositoryCacheKey $key ){ return false; }
 }
 
 

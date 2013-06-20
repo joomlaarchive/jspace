@@ -208,6 +208,14 @@ abstract class JSpaceRepository extends JObject
 	}
 	
 	/**
+	 * Get base REST url for repository REST API.
+	 * @return string
+	 */
+	public function getBaseRestUrl() {
+		return $this->getConnector()->getRepositoryUrl();
+	}
+	
+	/**
 	 * 
 	 * @return JSpaceMapper
 	 */

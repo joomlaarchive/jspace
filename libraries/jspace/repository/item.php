@@ -265,4 +265,34 @@ abstract class JSpaceRepositoryItem extends JObject
 	 * Load item based on $this->id from $this->repository
 	 */
 	abstract protected function _load();
+	
+	/**
+	 * If cache driver allows it, clean cache created for this item.
+	 */
+	public function cleanCache() {
+		$ret = false;
+		JSpaceLogger::log('Clear cache for item: ' . $this->getId());
+		if( $this->getRepository()->hasCache() ) {
+			$endpoint = $this->getRepository()->getRestAPI()->getEndpoint('item',array('id'=>$this->getId()));
+			$baseUrl = $this->getRepository()->getBaseRestUrl();
+			$cacheKey = JSpaceFactory::getCacheKey($endpoint, $baseUrl);
+			$cache = $this->getRepository()->getCache();
+			try {
+				$ret = $cache->clean($cacheKey);
+			}
+			catch( Exception $e ) {
+				JSpaceLogger::log('Cleanup request failed: ' . $e->getMessage());
+			}
+			if( $ret ) {
+				JSpaceLogger::log('Cache cleaned.');
+			}
+			else {
+				JSpaceLogger::log('Cache cleanup failed or not supported. No cleanup done.');
+			}
+		}
+		else {
+			JSpaceLogger::log('Cache is disabled in this repository. No cleanup done.');
+		}
+		return $ret;
+	}
 }

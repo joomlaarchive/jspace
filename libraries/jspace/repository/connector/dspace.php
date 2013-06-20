@@ -68,17 +68,26 @@ class JSpaceRepositoryConnectorDSpace extends JSpaceRepositoryConnector
 				}
 			}
 			
+			JSpaceLogger::log($url);
+			JSpaceLogger::log(print_r($endpoint->get('vars'),true));
+			
 			$client = new JRestClient((string)$url, $action);
 			
+			
             if (!$endpoint->get('anonymous')) {
+				JSpaceLogger::log("Not anonymous");
                 $client->setUsername(JArrayHelper::getValue($this->options, 'username'));
                 $client->setPassword(JArrayHelper::getValue($this->options, 'password'));
             }
+            else {
+				JSpaceLogger::log("Anonymous");
+            }
             
+			JSpaceLogger::log("Request data: " . print_r($endpoint->get('data'),true));
 			if (!is_null($endpoint->get('data'))) {
                 $client->setRequestBody($endpoint->get('data'));
 			}
-
+			
 			$client->execute();
 
 			$info = $client->getResponseInfo();
@@ -97,6 +106,7 @@ class JSpaceRepositoryConnectorDSpace extends JSpaceRepositoryConnector
 				case 200:
 				case 201:
 					$response = $client->getResponseBody();
+					JSpaceLogger::log($response);
 					if( $useCache && $repository->hasCache() ) {
 						JSpaceLogger::log('Setting cache. Key: ' . $key);
 						$repository->getCache()->set($cacheKey, $response);
@@ -107,6 +117,7 @@ class JSpaceRepositoryConnectorDSpace extends JSpaceRepositoryConnector
 					break;
 					
 				default:
+					JSpaceLogger::log($response);
 					$msg = JText::_('JLIB_JSPACE_CONNECTION_ERROR_'.$code);
 					throw new Exception($msg, $code);
 					break;

@@ -102,6 +102,7 @@ abstract class JSpaceRepositoryMetadata extends JObject implements Iterator, Cou
 		foreach( $this as $meta ) {
 			$ret[] = $meta;
 		}
+		$this->rewind();
 		return $ret;
 	}
 	

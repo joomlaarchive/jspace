@@ -51,7 +51,7 @@ class JSpaceFormFieldCollection extends JFormField
 
 	protected function getInput()
 	{
-		$this->_collections[] = JHTML::_("select.option", 0, JText::_("Select a collection"));
+		$this->_collections[] = JHTML::_("select.option", "", JText::_("Select a collection"));
 		try {
 			$rootCategory = JSpaceFactory::getRepository()->getCategory();
 			$this->_getCollections( $rootCategory );

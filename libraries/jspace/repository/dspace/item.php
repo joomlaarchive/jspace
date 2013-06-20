@@ -194,9 +194,6 @@ class JSpaceRepositoryDspaceItem extends JSpaceRepositoryItem
 		$toParse = array(
 			"metadata" => array()
 		);
-// 		var_dump($metadata);
-// 		var_dump($removeMetadata);
-// var_dump($this->getMetadata());
 
 		/* @var $val JSpaceRepositoryDspaceMetadata */
 		foreach( $this->getMetadata() as $ckey2 => $val) {
@@ -206,8 +203,6 @@ class JSpaceRepositoryDspaceItem extends JSpaceRepositoryItem
 			if( !isset($crosswalked[$ckey2]) ) {
 				$crosswalked[$ckey2] = $val->getValues();
 			}
-// 			var_dump($key);
-// 			var_dump($val);
 		}
 		
 		/*
@@ -239,12 +234,21 @@ class JSpaceRepositoryDspaceItem extends JSpaceRepositoryItem
 		}
 		
 		foreach( $crosswalked as $key => $val ) {
-			$toParse["metadata"][] = array("name"=>$key,"value"=>$val);
+			foreach( $val as $singleVal ) {
+				$toParse["metadata"][] = array("name"=>$key,"value"=>$singleVal);
+			}
 		}
 		$json = json_encode($toParse);
-		$endpoint = $this->getRepository()->getRestAPI()->getEndpoint('updateitem',array('id'=>$this->getId(),'data'=>$json));
-		$connector = $this->getRepository()->getConnector();
-		$connector->put($endpoint);
+		try {
+			$endpoint = $this->getRepository()->getRestAPI()->getEndpoint('updateitem',array('id'=>$this->getId(),'data'=>$json));
+			$connector = $this->getRepository()->getConnector();
+			$connector->put($endpoint);
+			return true;
+		}
+		catch( Exception $e ) {
+			JSpaceLogger::log("Edit item failed: " . $e->getMessage());
+			return false;
+		}
 	}
 }
 
