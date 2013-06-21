@@ -170,6 +170,7 @@ class JSpaceRepositoryDspaceRestAPI extends JSpaceRepositoryRestAPI
 						'zip'	=> true,
 					),
 					'cache'			=> false,
+					'timeout'		=> 180,
 			),
 
 				
@@ -182,6 +183,7 @@ class JSpaceRepositoryDspaceRestAPI extends JSpaceRepositoryRestAPI
 					'anonymous'		=> false,
 					'data'			=> array('data'=>true), //$data will be $config['data'] (not $data['data']=$config['data'])
 					'cache'			=> false,
+					'timeout'		=> 180,
 			),
 		);
 	}

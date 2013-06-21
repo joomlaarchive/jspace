@@ -2,3 +2,4 @@
 2013-05-06  Michał Kocztorz         Added jselective cache driver.
                                     This is a sub class of jcache. It caches requests in different groups.
             Michał Kocztorz         Depreciated direct Endpoint object creating. Better to use restAPI class.
+2013-05-21  Michał Kocztorz         Timeout for REST call is now in RestAPI config. May be overriden by config passed when getting endpoint. May be left default.

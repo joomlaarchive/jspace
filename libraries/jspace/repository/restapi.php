@@ -108,7 +108,12 @@ abstract class JSpaceRepositoryRestAPI
 		JSpaceLogger::log("RestAPI anonymous: " . print_r($anonymous, true));
 		JSpaceLogger::log("RestAPI setting data: " . print_r($data, true));
 		
-		$endpoint = new JSpaceRepositoryEndpoint($url, $vars, $anonymous, $data);
+		//get timeout from $config or $api or set default
+		$timeout = JArrayHelper::getValue($config, 'timeout', JArrayHelper::getValue($api, 'timeout', 10));
+		JSpaceLogger::log("Getting timeout: " . $timeout);
+
+		$endpoint = new JSpaceRepositoryEndpoint($url, $vars, $anonymous, $data, $timeout);
+		
 
 		if( JArrayHelper::getValue($api, 'cache', true) ) {
 			$group = $cacheGroup;

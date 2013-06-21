@@ -200,11 +200,11 @@ class JSpaceCrosswalk {
 	 * @return mixed|multitype:
 	 */
 	public function getKey( $value, $returnOnlyFirst = true ) {
-		$config = JSpaceFactory::getConfig();
+		$config = JSpaceFactory::getConfiguration();
 		if( $returnOnlyFirst ) {
 			$ret = array_search( $value, $this->map );
 			if( $ret === false ) {
-				if( $config->get('show_unmapped_metadata', false) ) {
+				if( $config->get(JSpaceConfiguration::SHOW_UNMAPPED_METADATA, false) ) {
 					$this->_addKey($value, $value); //adding a pair of the same key->value
 					$ret = $value;
 				}
@@ -214,7 +214,7 @@ class JSpaceCrosswalk {
 		else {
 			$ret = array_keys( $this->map, $value);
 			if( count($ret) == 0 ) {
-				if( $config->get('show_unmapped_metadata', false) ) {
+				if( $config->get(JSpaceConfiguration::SHOW_UNMAPPED_METADATA, false) ) {
 					$this->_addKey($value, $value);
 					$ret = array($value);
 				}

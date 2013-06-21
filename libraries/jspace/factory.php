@@ -29,6 +29,7 @@
  */
 defined('JPATH_PLATFORM') or die;
 
+jimport('jspace.configuration');
 jimport('jspace.repository.cache');
 jimport('jspace.repository.connector');
 jimport('jspace.repository.endpoint');
@@ -45,6 +46,23 @@ class JSpaceFactory
 	const JSPACE_NAME = 'com_jspace'; 
 	
 	/**
+	 * 
+	 * @return JSpaceConfiguration
+	 */
+	public static function getConfiguration() {
+		return JSpaceConfiguration::getInstance();
+	}
+	
+	/**
+	 * 
+	 * @param array $options
+	 * @return JSpaceRepositoryConfiguration
+	 */
+	public static function getDriverConfiguration( $options ) {
+		return JSpaceRepositoryConfiguration::getInstance( JSpaceFactory::getConfiguration()->get( JSpaceConfiguration::DRIVER ), $options );
+	}
+	
+	/**
 	 * Instantiates an instance of the JSpaceRepositoryConnector class, loading the 
 	 * correct repository driver.
 	 * 
@@ -55,29 +73,21 @@ class JSpaceFactory
 	 */
 	public static function getConnector($options = null)
 	{
-		$config = self::getConfig();
-		
-		if (is_null($options)) {
-			$options = array();
-			$options['driver'] = $config->get('driver');
-			$options['url'] 		= $config->get( $options['driver'] . '_rest_url');
-			$options['username'] 	= $config->get( $options['driver'] . '_username');
-			$options['password'] 	= $config->get( $options['driver'] . '_password');
-		}
-		
+		$options = JSpaceFactory::getDriverConfiguration( $options )->getOptions();
 		return JSpaceRepositoryConnector::getInstance($options);
 	}
 	
+	/**
+	 * 
+	 * @return JRegistry
+	 */
 	public static function getConfig()
 	{
 		$config = new JRegistry();
-		
 		$component = JComponentHelper::getComponent(self::JSPACE_NAME);
-		
 		if ($component->enabled) {
 			$config = $component->params;
 		}
-		
 		return $config;
 	}
 	
@@ -85,31 +95,12 @@ class JSpaceFactory
 	 * Get the repository configured in app config or pass config by param.
 	 */
 	public static function getRepository( $options = null) {
-		$config = self::getConfig();
-		if (is_null($options)) {
-			$options = array();
-			$options['driver'] = $config->get('driver');
-			
-			/* ToDo: later these options should be moved to specyfic repository constructor. */
-			$options['url'] 		= $config->get( $options['driver'] . '_rest_url');
-			$options['username'] 	= $config->get( $options['driver'] . '_username');
-			$options['password'] 	= $config->get( $options['driver'] . '_password');
-			$options['base_url'] 	= $config->get( $options['driver'] . '_base_url');
-			
-			$options['mapper'] = self::getMapper( $config->get($options['driver'] . '_crosswalk', JSpaceMapper::MAPPER_DUBLINCORE) ); //ToDo: move to config
-			$options['cache'] = array(
-				'enabled' 	=> true,
-// 				'options'	=> array(
-// 					'driver'	=> 'simple',
-// 					'storageDirectory'	=> JPATH_BASE . "/tmp/cache/",
-// 				),
-			);
-		}
-		
+		$options = JSpaceFactory::getDriverConfiguration( $options )->getOptions();
 		return JSpaceRepository::getInstance( $options );
 	}
 	
 	/**
+	 * ToDo: make configurable
 	 * 
 	 * @param array $options
 	 * @return JSpaceCache
@@ -117,10 +108,7 @@ class JSpaceFactory
 	public static function getCache( $options = null ) {
 		if( is_null($options) ) {
 			$options = array(
-// 				'driver'	=> 'simple', 
-// 				'driver'	=> 'jcache',
 				'driver'	=> 'jselective',
-				'storageDirectory'	=> JPATH_BASE . "/tmp/cache/",
 			);
 		}
 		return JSpaceRepositoryCache::getInstance( $options );

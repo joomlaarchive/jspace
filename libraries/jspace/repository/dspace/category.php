@@ -159,8 +159,8 @@ class JSpaceRepositoryDspaceCategory extends JSpaceRepositoryCategory
 			return array();
 		}
 		
-		$config = JSpaceFactory::getConfig();
-		$limit = (int)$config->get('limit_items');
+		$config = JSpaceFactory::getConfiguration();
+		$limit = (int)$config->get(JSpaceConfiguration::LIMIT_ITEMS);
 		
 		try {
 			$resp = $this->getRepository()->restCallJSON('collection.items', array(

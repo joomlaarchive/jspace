@@ -70,8 +70,8 @@ class JSpaceModelItem extends JModelLegacy
 	}
 	
 	public function getItemMetadataKeyTranslation( $key ) {
-		$config = JSpaceFactory::getConfig();
-		$show_keys = (bool)$config->get('show_translation_keys',false);
+		$config = JSpaceFactory::getConfiguration();
+		$show_keys = (bool)$config->get(JSpaceConfiguration::SHOW_TRANSLATION_KEYS, false);
 		$tkey = 'COM_JSPACE_ITEM_METADATA_' . strtoupper( JSpaceFactory::getRepository()->getMapper()->getCrosswalk()->getKey($key) );
 		$translated = JText::_( $tkey );
 		return  $translated !== $tkey || $show_keys ? $translated : $key;

@@ -88,19 +88,12 @@ class JSpaceRepositoryConnectorDSpace extends JSpaceRepositoryConnector
                 $client->setRequestBody($endpoint->get('data'));
 			}
 			
+			$client->setTimeout( $endpoint->get('timeout') );
+			
 			$client->execute();
 
 			$info = $client->getResponseInfo();
 			$code = intval(JArrayHelper::getValue($info, "http_code", 0));
-			
-
-
-// 			$options = array('text_file'=>'restclient.php');
-// 			$log = new JLoggerFormattedText($options);
-// 			$log->addEntry(new JLogEntry("RESPONSE:") );
-// 			$log->addEntry(new JLogEntry($code) );
-// 			$log->addEntry(new JLogEntry($client->getResponseBody()) );
-// 			$log->addEntry(new JLogEntry(print_r($this->responseInfo,true)) );
 
 			switch ($code) {
 				case 200:

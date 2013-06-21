@@ -49,9 +49,9 @@ class JSpaceViewCategories extends JViewLegacy
     	$model = $this->getModel();
     	$category = $model->getCategory($id);
     	
-    	$config = JSpaceFactory::getConfig();
+    	$config = JSpaceFactory::getConfiguration();
     	$start = $input->get('start', 0);
-    	$pagination = new JPagination($category->getItemsCount(), $start, $config->get('limit_items'));
+    	$pagination = new JPagination($category->getItemsCount(), $start, $config->get(JSpaceConfiguration::LIMIT_ITEMS));
     	$items = $category->getItems( $start ); 
     	
     	$this->assignRef('model', $model);

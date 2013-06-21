@@ -93,11 +93,12 @@ class JSpaceRepositoryEndpoint extends JObject
 	 * to the repository. 
 	 * otherwise.
 	 */
-	public function __construct($url, $vars = null, $anonymous = true, $data = null)
+	public function __construct($url, $vars = null, $anonymous = true, $data = null, $timeout = 10)
 	{
 		$this->set('url', $url);
 		$this->set('vars', $vars);
 		$this->set('anonymous', $anonymous);
 		$this->set('data', $data);
+		$this->set('timeout', $timeout);
 	}
 }

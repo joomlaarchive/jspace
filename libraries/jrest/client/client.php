@@ -124,10 +124,13 @@ class JRestClient
 		
 		$this->requestLength = strlen($this->requestBody);
 		
-		$fh = fopen('php://memory', 'rw');
+		/** use a max of 256KB of RAM before going to disk */
+		$fh = fopen('php://temp/maxmemory:256000', 'rw');
 		fwrite($fh, $this->requestBody);
-		rewind($fh);
+		fseek($fh, 0);
 		
+		
+		curl_setopt($ch, CURLOPT_BINARYTRANSFER, true);
 		curl_setopt($ch, CURLOPT_INFILE, $fh);
 		curl_setopt($ch, CURLOPT_INFILESIZE, $this->requestLength);
 		curl_setopt($ch, CURLOPT_PUT, true);
@@ -150,11 +153,16 @@ class JRestClient
 		$this->responseBody = curl_exec($curlHandle);
 		$this->responseInfo	= curl_getinfo($curlHandle);
 		
+		$headerSent = curl_getinfo($curlHandle, CURLINFO_HEADER_OUT ); // request headers
+		JSpaceLogger::log("Headers sent: " . $headerSent);
+		
 		curl_close($curlHandle);
 	}
 	
 	protected function setCurlOpts (&$curlHandle)
 	{
+		curl_setopt($curlHandle, CURLINFO_HEADER_OUT, true); // enable tracking
+
 		curl_setopt($curlHandle, CURLOPT_TIMEOUT, $this->timeout);
 		curl_setopt($curlHandle, CURLOPT_URL, $this->url);
 		curl_setopt($curlHandle, CURLOPT_RETURNTRANSFER, true);
@@ -164,9 +172,7 @@ class JRestClient
 	{
 		if ($this->username != null && $this->password != null)
 		{
-// 			var_dump($this->username.":".$this->password);exit;
-//             curl_setopt($curlHandle, CURLOPT_HTTPHEADER, array ("Expect:", "user:".$this->username, "pass:".$this->password));
-            curl_setopt($curlHandle, CURLOPT_USERPWD, $this->username.":".$this->password);
+            curl_setopt($curlHandle, CURLOPT_HTTPHEADER, array ("Expect:", "user:".$this->username, "pass:".$this->password ));
             curl_setopt($curlHandle, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
 		}
 		else {
@@ -181,6 +187,7 @@ class JRestClient
 	
 	public function setRequestBody($requestBody)
 	{
+		JSpaceLogger::log("Setting request body: " . $requestBody);
 		$this->requestBody = $requestBody;
 	}
 	
@@ -201,6 +208,7 @@ class JRestClient
 	
 	public function setPassword ($password)
 	{
+		JSpaceLogger::log("Setting password");
 		$this->password = $password;
 	} 
 	
@@ -231,6 +239,7 @@ class JRestClient
 	
 	public function setUsername ($username)
 	{
+		JSpaceLogger::log("Setting username: " . $username);
 		$this->username = $username;
 	} 
 	
@@ -245,6 +254,7 @@ class JRestClient
 	}
 	
 	public function setTimeout( $timeout ) {
+		JSpaceLogger::log("Setting timeout: " . $timeout);
 		$this->timeout = $timeout;
 	}
 	
