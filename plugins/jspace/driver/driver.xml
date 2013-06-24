@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <extension version="1.7" type="plugin" group="jspace">
-	<name>plg_jspace_loggers</name>
+	<name>plg_jspace_driver</name>
 	<author>Wijiti</author>
 	<creationDate>2013-06-24</creationDate>
 	<copyright>Copyright (C) 2012 Wijiti Pty Ltd. All rights reserved.</copyright>
@@ -8,14 +8,14 @@
 	<authorEmail>development@wijiti.com</authorEmail>
 	<authorUrl>http://www.wijiti.com</authorUrl>
 	<version>0.1.0</version>
-	<description>PLG_JSPACE_LOGGERS_XML_DESCRIPTION</description>
+	<description>PLG_JSPACE_DRIVER_XML_DESCRIPTION</description>
 	<files>
-		<filename plugin="loggers">loggers.php</filename>
+		<filename plugin="driver">driver.php</filename>
 		<filename>index.html</filename>
 	</files>
 	<languages>
-		<language tag="en-GB">language/en-GB/en-GB.plg_loggers.ini</language>
-		<language tag="en-GB">language/en-GB/en-GB.plg_loggers.sys.ini</language>
+		<language tag="en-GB">language/en-GB/en-GB.plg_driver.ini</language>
+		<language tag="en-GB">language/en-GB/en-GB.plg_driver.sys.ini</language>
 	</languages>
 	<config>
 		<fields name="params"></fields>

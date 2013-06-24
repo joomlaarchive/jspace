@@ -28,40 +28,14 @@
  *
  */
 defined('JPATH_PLATFORM') or die;
-class JSpaceInit {
-	/**
-	 * Indicates if init was done.
-	 * @var bool
-	 */
-	protected static $_done = false;
+class JSpace {
+	protected static $_current = null;
 	
-	public static function init() {
-		if( JSpaceInit::$_done ) {
-			return;
-		}
+	public static function registerRepositoryDriver( JSpaceRepositoryDriver $driver ) {
 		
-		//init loggers
-		JSpaceLog::initInstance();
-		JSpaceLog::add('Initialized jspace logger', JLog::INFO, JSpaceLog::CAT_INIT);
-		
-		//register repository drivers
-		JSpaceInit::initRepositoryDrivers();
-		
-		JSpaceInit::$_done = true;
 	}
 	
-	/**
-	 * Trigger
-	 */
-	protected static function initRepositoryDrivers() {
-		JSpaceLog::add('Registering repository drivers', JLog::INFO, JSpaceLog::CAT_INIT);
-		try {
-			JPluginHelper::importPlugin('jspace');
-			$dispatcher = JDispatcher::getInstance();
-			$drivers = $dispatcher->trigger('onJSpaceRegisterDrivers');
-		}
-		catch( Exception $e ) {
-			JSpaceLog::add('Registering drivers failed with exception: ' . $e->getMessage(), JLog::ERROR, JSpaceLog::CAT_INIT);
-		}
+	public static function getRepositoryDriver( $key = null ) {
+		
 	}
 }
