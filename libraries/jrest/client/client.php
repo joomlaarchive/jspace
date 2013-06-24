@@ -43,6 +43,7 @@ class JRestClient
 	
 	public function __construct ($url = null, $verb = 'GET', $requestBody = null)
 	{
+		JSpaceLog::add('Constructing JRestClient for: (' . $verb . ') ' . $url , JLog::DEBUG, JSpaceLog::CAT_JREST);
 		$this->url				= $url;
 		$this->verb				= strtoupper($verb);
 		$this->requestBody		= $requestBody;
@@ -66,6 +67,7 @@ class JRestClient
 	
 	public function execute ()
 	{
+		JSpaceLog::add('JRestClient Executing' , JLog::DEBUG, JSpaceLog::CAT_JREST);
 		$ch = curl_init();
 		$this->setAuth($ch);
 		
@@ -86,7 +88,9 @@ class JRestClient
 					$this->executeDelete($ch);
 					break;
 				default:
-					throw new InvalidArgumentException('Current verb (' . $this->verb . ') is an invalid REST verb.');
+					$msg = 'Current verb (' . $this->verb . ') is an invalid REST verb.';
+					JSpaceLog::add($msg, JLog::ERROR, JSpaceLog::CAT_JREST);
+					throw new InvalidArgumentException( $msg );
 			}
 		}
 		catch (InvalidArgumentException $e)
@@ -154,7 +158,7 @@ class JRestClient
 		$this->responseInfo	= curl_getinfo($curlHandle);
 		
 		$headerSent = curl_getinfo($curlHandle, CURLINFO_HEADER_OUT ); // request headers
-		JSpaceLogger::log("Headers sent: " . $headerSent);
+		JSpaceLog::add("Headers sent: " . $headerSent, JLog::DEBUG, JSpaceLog::CAT_JREST);
 		
 		curl_close($curlHandle);
 	}
@@ -172,10 +176,12 @@ class JRestClient
 	{
 		if ($this->username != null && $this->password != null)
 		{
+			JSpaceLog::add('JRestClient Auth: setting' , JLog::DEBUG, JSpaceLog::CAT_JREST);
             curl_setopt($curlHandle, CURLOPT_HTTPHEADER, array ("Expect:", "user:".$this->username, "pass:".$this->password ));
             curl_setopt($curlHandle, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
 		}
 		else {
+			JSpaceLog::add('JRestClient Auth: anonymous' , JLog::DEBUG, JSpaceLog::CAT_JREST);
 			curl_setopt($curlHandle, CURLOPT_HTTPHEADER, array("Expect:"));
 		}
 	}
@@ -187,7 +193,7 @@ class JRestClient
 	
 	public function setRequestBody($requestBody)
 	{
-		JSpaceLogger::log("Setting request body: " . $requestBody);
+		JSpaceLog::add('Setting request body: ' . $requestBody , JLog::DEBUG, JSpaceLog::CAT_JREST);
 		$this->requestBody = $requestBody;
 	}
 	
@@ -208,7 +214,7 @@ class JRestClient
 	
 	public function setPassword ($password)
 	{
-		JSpaceLogger::log("Setting password");
+		JSpaceLog::add('Setting password', JLog::DEBUG, JSpaceLog::CAT_JREST);
 		$this->password = $password;
 	} 
 	
@@ -239,7 +245,7 @@ class JRestClient
 	
 	public function setUsername ($username)
 	{
-		JSpaceLogger::log("Setting username: " . $username);
+		JSpaceLog::add('Setting username: ' . $username, JLog::DEBUG, JSpaceLog::CAT_JREST);
 		$this->username = $username;
 	} 
 	
@@ -254,15 +260,17 @@ class JRestClient
 	}
 	
 	public function setTimeout( $timeout ) {
-		JSpaceLogger::log("Setting timeout: " . $timeout);
+		JSpaceLog::add("Setting timeout: " . $timeout, JLog::DEBUG, JSpaceLog::CAT_JREST);
 		$this->timeout = $timeout;
 	}
 	
 	public static function isCURLInstalled()
 	{
 		if (extension_loaded('curl')) {
+			JSpaceLog::add("JRestClient CURL found", JLog::DEBUG, JSpaceLog::CAT_JREST);
 			return true;
 		} else {
+			JSpaceLog::add("JRestClient CURL MISSING", JLog::ERROR, JSpaceLog::CAT_JREST);
 			return false;
 		}
 	}

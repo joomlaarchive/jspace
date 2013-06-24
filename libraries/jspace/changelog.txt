@@ -3,3 +3,6 @@
                                     This is a sub class of jcache. It caches requests in different groups.
             Michał Kocztorz         Depreciated direct Endpoint object creating. Better to use restAPI class.
 2013-05-21  Michał Kocztorz         Timeout for REST call is now in RestAPI config. May be overriden by config passed when getting endpoint. May be left default.
+2013-06-24  Michał Kocztorz         Added init subpackage/class. Invoked when JSpaceFactory loaded.
+                                    Now it is uset to init logger. May be used for any initialisation needed for jspace to work.
+2013-06-24  Michał Kocztorz         Added log subpackage: setup and JLog wrapper.

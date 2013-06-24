@@ -61,10 +61,14 @@ abstract class JSpaceRepository extends JObject
 	 */
 	public static function getInstance( $options ) {
 		$type = JArrayHelper::getValue($options, 'driver');
+		JSpaceLog::add('JSpaceRepository: Getting instance for driver: ' . $type, JLog::DEBUG, JSpaceLog::CAT_REPOSITORY);
 		
 		if( !isset(self::$_repos[ $type ]) ) {
+			JSpaceLog::add("JSpaceRepository: Instance not found. Creating.", JLog::DEBUG, JSpaceLog::CAT_REPOSITORY);
 			$class = "JSpaceRepository" . ucfirst(strtolower($type)) . 'Repository';
+			JSpaceLog::add('JSpaceRepository: Searching for driver class: ' . $class, JLog::DEBUG, JSpaceLog::CAT_REPOSITORY);
 			if( !class_exists($class) ) {
+				JSpaceLog::add("JSpaceRepository: Class $class not found. Attempting to load.", JLog::DEBUG, JSpaceLog::CAT_REPOSITORY);
 				//attempt import
 				jimport('jspace.repository.' . strtolower($type) . '.repository' );
 				jimport('jspace.repository.' . strtolower($type) . '.item' );
@@ -75,11 +79,14 @@ abstract class JSpaceRepository extends JObject
 				jimport('jspace.repository.' . strtolower($type) . '.category' );
 				jimport('jspace.repository.' . strtolower($type) . '.restapi' );
 				if( !class_exists($class) ) {
+					JSpaceLog::add("JSpaceRepository: Load attempt failed. Class $class not found.", JLog::CRITICAL, JSpaceLog::CAT_REPOSITORY);
 					throw new Exception(JText::_('LIB_JSPACE_MISSING_REPOSITORY_CLASS') . ' ' . $class );
 				}
 			}
+			JSpaceLog::add("JSpaceRepository: Creating $class instance.", JLog::DEBUG, JSpaceLog::CAT_REPOSITORY);
 			self::$_repos[ $type ] = new $class( $options );
 		}
+		JSpaceLog::add("JSpaceRepository: Returning repository object for $type.", JLog::DEBUG, JSpaceLog::CAT_REPOSITORY);
 		return self::$_repos[ $type ];
 	}
 	
@@ -139,17 +146,15 @@ abstract class JSpaceRepository extends JObject
 	
 
 	public function __construct( $options ) {
-		JSpaceLogger::log('Creating repository object');
-		$this->_connector = JSpaceFactory::getConnector( $options );
 		$this->_driver = JArrayHelper::getValue($options, 'driver');
+		JSpaceLog::add('Creating repository object. Driver: ' . $this->_driver, JLog::DEBUG, JSpaceLog::CAT_REPOSITORY);
+		$this->_connector = JSpaceFactory::getConnector( $options );
 		$this->_baseUrl = JArrayHelper::getValue($options, "base_url");
 		$this->_mapper = JArrayHelper::getValue($options, "mapper");
 
-		JSpaceLogger::log('Driver: ' . $this->_driver);
-
 		$cache = JArrayHelper::getValue($options, 'cache', array('enabled' => false));
 		if( JArrayHelper::getValue($cache, 'enabled', false) ) {
-			JSpaceLogger::log('Getting cache object for repository');
+			JSpaceLog::add('Getting cache object for repository', JLog::DEBUG, JSpaceLog::CAT_REPOSITORY);
 			$options = JArrayHelper::getValue($cache, 'options', null);
 			$this->_cache = JSpaceFactory::getCache( $options );
 		}
@@ -246,7 +251,7 @@ abstract class JSpaceRepository extends JObject
 	 * @return JSpaceRepositoryItem
 	 */
 	public function getItem( $id ) {
-		JSpaceLogger::log('Geting item id=' . $id);
+		JSpaceLog::add('Geting item id=' . $id, JLog::DEBUG, JSpaceLog::CAT_REPOSITORY);
 		$this->flushErrors();
 		
 		if( !isset( $this->_items[ $id ] ) ) { 

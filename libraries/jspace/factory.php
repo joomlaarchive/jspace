@@ -29,6 +29,9 @@
  */
 defined('JPATH_PLATFORM') or die;
 
+jimport('jspace.init');
+
+jimport('jspace.log.log');
 jimport('jspace.configuration');
 jimport('jspace.repository.cache');
 jimport('jspace.repository.connector');
@@ -40,6 +43,8 @@ jimport('jspace.repository.repository');
 jimport('jspace.debug.debug');
 
 JLoader::discover("JSpaceTable", JPATH_SITE . "/libraries/jspace/database/table/");
+
+JSpaceInit::init();
 
 class JSpaceFactory
 {
