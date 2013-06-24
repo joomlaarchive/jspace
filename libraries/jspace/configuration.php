@@ -75,7 +75,7 @@ class JSpaceConfiguration
 		$this->_componentConfiguration = JSpaceFactory::getConfig();
 	}
 	
-	public function get( $key, $dafault = null ) {
+	public function get( $key, $default = null ) {
 		return $this->_componentConfiguration->get($key, $default);
 	}
 }
