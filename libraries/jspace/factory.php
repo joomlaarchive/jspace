@@ -174,5 +174,13 @@ class JSpaceFactory
 	public static function getCacheKey( JSpaceRepositoryEndpoint $endpoint, $baseUrl ) {
 		return new JSpaceRepositoryCacheKey($endpoint, $baseUrl);
 	}
+	
+	/**
+	 * 
+	 * @return JSpaceLogLoggerConfig
+	 */
+	public static function createLoggerConfig() {
+		return new JSpaceLogLoggerConfig();
+	}
 
 }

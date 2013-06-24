@@ -6,3 +6,4 @@
 2013-06-24  Michał Kocztorz         Added init subpackage/class. Invoked when JSpaceFactory loaded.
                                     Now it is uset to init logger. May be used for any initialisation needed for jspace to work.
 2013-06-24  Michał Kocztorz         Added log subpackage: setup and JLog wrapper.
+                                    Added event onJSpaceInitLog to enable extending list of loggers

@@ -89,15 +89,16 @@ class JSpaceLog {
 				'priorities' => JLog::INFO,
 				'categories' => array(),
 			),
-// 			'debug' => array (
-// 				'options' => array(
-// 					'logger'	=> 'formattedtext',
-// 					'text_file'	=> 'jspace.debug.log'
-// 				),
-// 				'priorities' => JLog::DEBUG,
-// 				'categories' => array(),
-// 			),
 		);
+		
+		JPluginHelper::importPlugin( 'jspace' );
+		$dispatcher = JDispatcher::getInstance();
+		$configs = $dispatcher->trigger('onJSpaceInitLog');
+		foreach( $configs as $list ) {
+			foreach( $list as $name => $options ) {
+				$this->_setup[ $name ] = $options;
+			}
+		}
 		
 		foreach( $this->_setup as $name => $logger ){
 			$options = JArrayHelper::getValue($logger, 'options', array('text_file'	=> 'defaut.log'));
