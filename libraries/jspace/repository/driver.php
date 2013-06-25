@@ -30,6 +30,16 @@
  */
 defined('JPATH_PLATFORM') or die;
 class JSpaceRepositoryDriver {
+	const CLASS_REPOSITORY 	= 'Repository';
+	const CLASS_ITEM 		= 'Item';
+	const CLASS_BUNDLE 		= 'Bundle';
+	const CLASS_BITSTREAM 	= 'Bitstream';
+	const CLASS_CATEGORY 	= 'Category';
+	const CLASS_FILTER 		= 'Filter';
+	const CLASS_METADATA 	= 'Metadata';
+	const CLASS_RESTAPI 	= 'RestAPI';
+	const CLASS_CONNECTOR 	= 'Connector';
+	
 	/**
 	 * 
 	 * @var array
@@ -56,12 +66,22 @@ class JSpaceRepositoryDriver {
 	 * @return JSpaceRepositoryDriver
 	 */
 	public static function getInstance( $driver ) {
+		JSpaceLog::add('JSpaceRepositoryDriver: getInstance ' . $driver, JLog::DEBUG, JSpaceLog::CAT_REPOSITORY);
 		if( !isset( JSpaceRepositoryDriver::$_drivers[ $driver ] ) ) {
 			$msg = "Requested driver <$driver> was not registered.";
 			JSpaceLog::add($msg, JLog::CRITICAL, JSpaceLog::CAT_REPOSITORY);
 			throw new Exception( $msg );
 		}
 		return JSpaceRepositoryDriver::$_drivers[ $driver ];
+	}
+	
+	/**
+	 * List all the drivers registered.
+	 * 
+	 * @return array
+	 */
+	public static function listDriverKeys() {
+		return array_keys( JSpaceRepositoryDriver::$_drivers );
 	}
 	
 	/**
@@ -82,26 +102,108 @@ class JSpaceRepositoryDriver {
 	 */
 	protected $_classPrefix;
 	
+	/**
+	 * Base url for repository classes.
+	 * @var string
+	 */
+	protected $_basePath;
+	
 	public function __construct( $driver, $options ) {
 		$this->_driver = $driver;
-		$this->_configXmlPath = JArrayHelper::getValue($options, 'configXlPath', '');
+		$this->_configXmlPath = JArrayHelper::getValue($options, 'configXmlPath', '');
+		$this->_basePath = JArrayHelper::getValue($options, 'basePath', '');
 		$this->_classPrefix = JArrayHelper::getValue($options, 'classPrefix', '');
 		if( !JFile::exists($this->_configXmlPath) ) {
 			$msg = "Config XML file not found " . $this->_configXmlPath;
 			JSpaceLog::add($msg, JLog::CRITICAL, JSpaceLog::CAT_INIT);
 			throw new Exception( $msg );
 		}
+		if( !JFolder::exists($this->_basePath) ) {
+			$msg = "Classes folder not found " . $this->_basePath;
+			JSpaceLog::add($msg, JLog::CRITICAL, JSpaceLog::CAT_INIT);
+			throw new Exception( $msg );
+		}
 	}
 	
+	/**
+	 * Get driver name.
+	 * 
+	 * @return string
+	 */
 	public function getDriver() {
 		return $this->_driver;
 	}
 	
+	/**
+	 * Get ucfirst version of driver name.
+	 * 
+	 * @return string
+	 */
+	public function getDriverUcfirst() {
+		return ucfirst( strtolower( $this->_driver ) );
+	}
+	
+	/**
+	 * Get lowercase version of driver name.
+	 * 
+	 * @return string
+	 */
+	public function getDriverStrtolower() {
+		return strtolower( $this->_driver );
+	}
+	
+	/**
+	 * Get path to config xml.
+	 * 
+	 * @return string
+	 */
 	public function getConfigXmlPath() {
 		return $this->_configXmlPath;
 	}
 	
+	/**
+	 * Build class name for repository classes, checkes if class exists. If not tries to discover and checkes again.
+	 * 
+	 * @throws Exception
+	 * @param string $class
+	 * @return string
+	 */
 	public function getClassName( $class ) {
-		
+		$class = 'JSpaceRepository' . $this->getDriverUcfirst() . $class;
+		JSpaceLog::add("JSpaceRepositoryDriver: Testing if class $class exists.", JLog::DEBUG, JSpaceLog::CAT_REPOSITORY);
+		if( !class_exists($class) ) {
+			$this->discover();
+			if( !class_exists($class) ) {
+				JSpaceLog::add("JSpaceRepositoryDriver: Load attempt failed. Class $class not found.", JLog::CRITICAL, JSpaceLog::CAT_REPOSITORY);
+				throw new Exception(JText::_('LIB_JSPACE_MISSING_REPOSITORY_CLASS') . ' ' . $class );
+			}
+		}
+		return $class;
+	}
+	
+	/**
+	 * 
+	 * @return string
+	 */
+	public function getClassPrefix() {
+		return $this->_classPrefix;
+	}
+	
+	/**
+	 * 
+	 * @return string
+	 */
+	public function getBasePath() {
+		return $this->_basePath;
+	}
+	
+	/**
+	 * Discover repository classes using JLoader.
+	 * 
+	 * @return void
+	 */
+	public function discover() {
+		JSpaceLog::add('JSpaceRepositoryDriver: discover classes', JLog::DEBUG, JSpaceLog::CAT_REPOSITORY);
+		JLoader::discover($this->getClassPrefix(), $this->getBasePath());
 	}
 }

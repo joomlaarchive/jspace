@@ -19,6 +19,16 @@ class plgJspaceDriver extends JPlugin
 {
 	public function onJSpaceRegisterDrivers()
 	{
+		$this->loadLanguage();//translation for config
+		JSpaceLog::add('Triggered plgJspaceDriver.onJSpaceRegisterDrivers', JLog::DEBUG, JSpaceLog::CAT_INIT);
+		$blankPath = JPATH_LIBRARIES . DIRECTORY_SEPARATOR . 'jspace' . DIRECTORY_SEPARATOR . 'repository' . DIRECTORY_SEPARATOR . 'blank' . DIRECTORY_SEPARATOR;
+		return array(
+			'blank'	=> array(
+					'configXmlPath'	=> $blankPath . 'adminConfig.xml',
+					'classPrefix'	=> 'JSpaceRepositoryBlank',
+					'basePath'		=> $blankPath,
+			),
+		);
 	}
 }
 

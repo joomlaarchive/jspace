@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="JSpace Driver Plugin" default="" basedir=".">
-	<property name="dest.plugins.jspace" value="${dest.plugins}/jspace"/>
+<project name="JSpace Config System Plugin" default="" basedir=".">
+	<property name="dest.plugins.system" value="${dest.plugins}/system"/>
 	
 	<target name="update" description="">
-		<echo message="Deploying Jspace Driver plugin to Joomla! environment."/>
-		<copy todir="${dest.plugins.jspace}/driver">
+		<echo message="Deploying Jspace Config System plugin to Joomla! environment."/>
+		<copy todir="${dest.plugins.system}/jspaceconfig">
 			<fileset dir="${src}" defaultexcludes="true">
 				<include name="**"/>
 				<exclude name="**/language/**"/>

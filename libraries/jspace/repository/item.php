@@ -169,7 +169,7 @@ abstract class JSpaceRepositoryItem extends JObject
 	 * @return JSpaceRepositoryBundle
 	 */
 	protected function _getBundle( $type ) {
-		$class = 'JSpaceRepository' . $this->getRepository()->getDriverUcfirst() . 'Bundle';
+		$class = $this->getRepository()->getClassName( JSpaceRepositoryDriver::CLASS_BUNDLE );
 		return new $class( $this, $type );
 	}
 	
@@ -221,7 +221,7 @@ abstract class JSpaceRepositoryItem extends JObject
 	 * @return JSpaceRepositoryMetadata
 	 */
 	protected function _getMetadata( $key ) {
-		$class = 'JSpaceRepository' . $this->getRepository()->getDriverUcfirst() . 'Metadata';
+		$class = $this->getRepository()->getClassName( JSpaceRepositoryDriver::CLASS_METADATA );
 		return new $class( $this, $key );
 	}
 	

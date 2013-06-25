@@ -41,6 +41,7 @@ jimport('jspace.crosswalk.crosswalk');
 jimport('jspace.messenger.messenger');
 jimport('jspace.repository.repository');
 jimport('jspace.debug.debug');
+jimport('jspace.repository.driver');
 
 JLoader::discover("JSpaceTable", JPATH_SITE . "/libraries/jspace/database/table/");
 

@@ -121,20 +121,19 @@ abstract class JSpaceRepositoryConnector implements JSpaceConnectable
 		$this->options = $options;
 	}
 	
+	/**
+	 * 
+	 * @param array $options
+	 * @throws RuntimeException
+	 * @return JSpaceRepositoryConnector
+	 */
 	public static function getInstance($options = array())
     {
     	if (!self::isRESTAvailable()) {
 			throw new RuntimeException('Unable to load JRest API.');
 		}
 		
-		//check for the new JSpaceRepository<driver>Connector class first.
-		$class = 'JSpaceRepository' . ucfirst(strtolower(JArrayHelper::getValue($options, 'driver'))) . 'Connector';
-		jimport('jspace.repository.' . strtolower(JArrayHelper::getValue($options, 'driver')) . '.connector');
-
-		//depreciated
-// 		$class = 'JSpaceRepositoryConnector' . JArrayHelper::getValue($options, 'driver');
-// 		jimport('jspace.repository.connector.'.strtolower(JArrayHelper::getValue($options, 'driver')));
-		
+		$class = JSpaceRepositoryDriver::getInstance( JArrayHelper::getValue($options, 'driver') )->getClassName( JSpaceRepositoryDriver::CLASS_CONNECTOR );		
 		if (!class_exists($class)) {
 			throw new RuntimeException(sprintf('Unable to load repository driver: %s', $options['driver']));
 		}

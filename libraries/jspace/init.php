@@ -51,17 +51,49 @@ class JSpaceInit {
 	}
 	
 	/**
-	 * Trigger
+	 * Register all repository drivers
+	 * 
 	 */
 	protected static function initRepositoryDrivers() {
-		JSpaceLog::add('Registering repository drivers', JLog::INFO, JSpaceLog::CAT_INIT);
+		JSpaceLog::add('Registering repository drivers', JLog::DEBUG, JSpaceLog::CAT_INIT);
 		try {
+			/*
+			 * Register default drivers for JSpace
+			 */
+			JSpaceLog::add('Registering DSpace', JLog::DEBUG, JSpaceLog::CAT_INIT);
+			$dspacePath = JPATH_LIBRARIES . DIRECTORY_SEPARATOR . 'jspace' . DIRECTORY_SEPARATOR . 'repository' . DIRECTORY_SEPARATOR . 'dspace' . DIRECTORY_SEPARATOR;
+			JSpaceRepositoryDriver::registerDriver('DSpace', array(
+				'configXmlPath'	=> $dspacePath . 'adminConfig.xml',
+				'classPrefix'	=> 'JSpaceRepositoryDspace',
+				'basePath'		=> $dspacePath,
+			));
+			JSpaceLog::add('Registering fedora', JLog::DEBUG, JSpaceLog::CAT_INIT);
+			$fedoraPath = JPATH_LIBRARIES . DIRECTORY_SEPARATOR . 'jspace' . DIRECTORY_SEPARATOR . 'repository' . DIRECTORY_SEPARATOR . 'fedora' . DIRECTORY_SEPARATOR;
+			JSpaceRepositoryDriver::registerDriver('fedora', array(
+				'configXmlPath'	=> $fedoraPath . 'adminConfig.xml',
+				'classPrefix'	=> 'JSpaceRepositoryFedora',
+				'basePath'		=> $fedoraPath,
+			));
+			
+			JSpaceLog::add('Trigger onJSpaceRegisterDrivers', JLog::DEBUG, JSpaceLog::CAT_INIT);
 			JPluginHelper::importPlugin('jspace');
 			$dispatcher = JDispatcher::getInstance();
 			$drivers = $dispatcher->trigger('onJSpaceRegisterDrivers');
+			foreach( $drivers as $list ) {
+				foreach( $list as $key => $options ) {
+					try {
+						JSpaceLog::add('Registering ' . $key, JLog::DEBUG, JSpaceLog::CAT_INIT);
+						JSpaceRepositoryDriver::registerDriver($key, $options);
+					}
+					catch( Exception $e ) {
+						JSpaceLog::add('Registering ' . $key . ' failed with exception: ' . $e->getMessage(), JLog::ERROR, JSpaceLog::CAT_INIT);
+					}
+				}
+			}
 		}
 		catch( Exception $e ) {
 			JSpaceLog::add('Registering drivers failed with exception: ' . $e->getMessage(), JLog::ERROR, JSpaceLog::CAT_INIT);
 		}
+		JSpaceLog::add('Finished registering repository drivers', JLog::DEBUG, JSpaceLog::CAT_INIT);
 	}
 }

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+    <fields>
+	    <fieldset name="fedora"
+	        label="COM_JSPACE_FIELDSET_CONFIG_FC_OPTIONS_LABEL"
+	        description="COM_JSPACE_FIELDSET_CONFIG_FC_OPTIONS_DESC"
+	        addfieldpath="/libraries/jspace/form/fields">
+	        <field 
+	            name="fedora_base_url" 
+	            type="text" 
+	            label="COM_JSPACE_REPOSITORY_FC_BASE_URL_LABEL" 
+	            size="45"/>
+	        <field 
+	            name="fedora_rest_url" 
+	            type="text" 
+	            label="COM_JSPACE_REPOSITORY_FC_REST_URL_LABEL" 
+	            size="45"/>
+	        <field 
+	            name="fedora_username" 
+	            type="text" 
+	            label="COM_JSPACE_REPOSITORY_FC_USERNAME_LABEL" 
+	            size="45"/>
+	        <field 
+	            name="fedora_password" 
+	            type="text" 
+	            label="COM_JSPACE_REPOSITORY_FC_PASSWORD_LABEL"
+	            size="45"/>
+	        <field 
+	            name="fedora_crosswalk" 
+	            type="text" 
+	            label="COM_JSPACE_REPOSITORY_CROSSWALK_LABEL"  />
+	    </fieldset>
+    </fields>
+</form>

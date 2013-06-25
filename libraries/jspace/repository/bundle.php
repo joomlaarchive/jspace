@@ -142,7 +142,7 @@ abstract class JSpaceRepositoryBundle extends JObject
 		if( is_null($id) ) {
 			return $this->_getPrimaryBitstream();
 		}
-		$class = 'JSpaceRepository' . $this->getItem()->getRepository()->getDriverUcfirst() . 'Bitstream';
+		$class = $this->getItem()->getRepository()->getClassName( JSpaceRepositoryDriver::CLASS_BITSTREAM );
 		return new $class( $this, $id );
 	}
 	

@@ -65,24 +65,8 @@ abstract class JSpaceRepository extends JObject
 		
 		if( !isset(self::$_repos[ $type ]) ) {
 			JSpaceLog::add("JSpaceRepository: Instance not found. Creating.", JLog::DEBUG, JSpaceLog::CAT_REPOSITORY);
-			$class = "JSpaceRepository" . ucfirst(strtolower($type)) . 'Repository';
-			JSpaceLog::add('JSpaceRepository: Searching for driver class: ' . $class, JLog::DEBUG, JSpaceLog::CAT_REPOSITORY);
-			if( !class_exists($class) ) {
-				JSpaceLog::add("JSpaceRepository: Class $class not found. Attempting to load.", JLog::DEBUG, JSpaceLog::CAT_REPOSITORY);
-				//attempt import
-				jimport('jspace.repository.' . strtolower($type) . '.repository' );
-				jimport('jspace.repository.' . strtolower($type) . '.item' );
-				jimport('jspace.repository.' . strtolower($type) . '.bundle' );
-				jimport('jspace.repository.' . strtolower($type) . '.bitstream' );
-				jimport('jspace.repository.' . strtolower($type) . '.metadata' );
-				jimport('jspace.repository.' . strtolower($type) . '.filter' );
-				jimport('jspace.repository.' . strtolower($type) . '.category' );
-				jimport('jspace.repository.' . strtolower($type) . '.restapi' );
-				if( !class_exists($class) ) {
-					JSpaceLog::add("JSpaceRepository: Load attempt failed. Class $class not found.", JLog::CRITICAL, JSpaceLog::CAT_REPOSITORY);
-					throw new Exception(JText::_('LIB_JSPACE_MISSING_REPOSITORY_CLASS') . ' ' . $class );
-				}
-			}
+			$driver = JSpaceRepositoryDriver::getInstance($type);
+			$class = $driver->getClassName(JSpaceRepositoryDriver::CLASS_REPOSITORY);
 			JSpaceLog::add("JSpaceRepository: Creating $class instance.", JLog::DEBUG, JSpaceLog::CAT_REPOSITORY);
 			self::$_repos[ $type ] = new $class( $options );
 		}
@@ -174,6 +158,26 @@ abstract class JSpaceRepository extends JObject
 	 */
 	public function getDriver() {
 		return $this->_driver;
+	}
+	
+	/**
+	 * Get repository driver class.
+	 * 
+	 * @return JSpaceRepositoryDriver
+	 */
+	public function getDriverClass() {
+		return JSpaceRepositoryDriver::getInstance( $this->_driver );
+	}
+	
+	/**
+	 * A shotrcut method to get class name.
+	 * @see JSpaceRepositoryDriver::getClassName
+	 * 
+	 * @param string $class
+	 * @return string
+	 */
+	public function getClassName( $class ) {
+		return $this->getDriverClass()->getClassName( $class );
 	}
 	
 	/**
@@ -274,7 +278,7 @@ abstract class JSpaceRepository extends JObject
 	 * @return JSpaceRepositoryItem
 	 */
 	protected function _getItem( $id ) {
-		$class = "JSpaceRepository" . ucfirst(strtolower($this->_driver)) . "Item";
+		$class = $this->getClassName( JSpaceRepositoryDriver::CLASS_ITEM );
 		return new $class($id, $this);
 	}
 
@@ -325,7 +329,7 @@ abstract class JSpaceRepository extends JObject
 	 * @return JSpaceRepositoryCollection
 	 */
 	public function _getCategory( $id=0 ) {
-		$class = "JSpaceRepository" . ucfirst(strtolower($this->_driver)) . "Category";
+		$class = $this->getClassName( JSpaceRepositoryDriver::CLASS_CATEGORY );
 		return new $class($id, $this);
 	}
 	
@@ -369,7 +373,7 @@ abstract class JSpaceRepository extends JObject
 	 * @return JSpaceRepositoryFilter
 	 */
 	protected function _createFilter( $options ) {
-		$class = "JSpaceRepository" . ucfirst(strtolower($this->_driver)) . "Filter";
+		$class = $this->getClassName( JSpaceRepositoryDriver::CLASS_FILTER );
 		return new $class( $this, $options );
 	}
 	
@@ -390,7 +394,7 @@ abstract class JSpaceRepository extends JObject
 	 * @return JSpaceRepositoryRestAPI
 	 */
 	protected function _getRestAPI() {
-		$class = "JSpaceRepository" . ucfirst(strtolower($this->_driver)) . "RestAPI";
+		$class = $this->getClassName( JSpaceRepositoryDriver::CLASS_RESTAPI );
 		return new $class();
 	}
 	
