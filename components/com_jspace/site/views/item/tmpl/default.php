@@ -45,7 +45,8 @@ $repository = $this->repository;
 
 /* @var $model JSpaceModelItem */
 $model = $this->model;
-var_dump(base64_encode('fedora-system:ServiceDefinition-3.0'));
+
+$metadataSet = $item->getMetadataSet();
 
 JLoader::discover('JSpaceHelper', JPATH_BASE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_jspace' . DIRECTORY_SEPARATOR . 'helpers' );
 ?>
@@ -56,10 +57,10 @@ JLoader::discover('JSpaceHelper', JPATH_BASE . DIRECTORY_SEPARATOR . 'components
 			<?php echo $item->getCategory()->getName(); ?>
 		</a>
 		<!-- one special metadata value -->
-		<h2><?php echo $item->getMetadata('title'); ?></h2>
+		<h2><?php echo $metadataSet->getMetadata('title'); ?></h2>
 		
 		<div class="jspace-item-metadata">
-			<?php foreach( $item->getMetadata() as $key => $metadata ): ?>
+			<?php foreach( $metadataSet as $key => $metadata ): ?>
 				<div class="jspace-item">
 					<div class="dc-element-name"><?php echo $model->getItemMetadataKeyTranslation( $key ); ?>:</div>
 					<div class="dc-element-value">

@@ -44,6 +44,7 @@ jimport('jspace.debug.debug');
 jimport('jspace.repository.driver');
 
 JLoader::discover("JSpaceTable", JPATH_SITE . "/libraries/jspace/database/table/");
+JLoader::discover("JSpaceTool", dirname(__FILE__) . "/tool/");
 
 JSpaceInit::init();
 
@@ -182,6 +183,15 @@ class JSpaceFactory
 	 */
 	public static function createLoggerConfig() {
 		return new JSpaceLogLoggerConfig();
+	}
+	
+	/**
+	 * 
+	 * @param JSpaceRepositoryItem $item
+	 * @return JSpaceToolMetadataSet
+	 */
+	public static function getMetadataSet( JSpaceRepositoryItem $item ) {
+		return new JSpaceToolMetadataSet( $item );
 	}
 
 }
