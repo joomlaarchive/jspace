@@ -139,8 +139,8 @@ abstract class JSpaceRepository extends JObject
 		$cache = JArrayHelper::getValue($options, 'cache', array('enabled' => false));
 		if( JArrayHelper::getValue($cache, 'enabled', false) ) {
 			JSpaceLog::add('Getting cache object for repository', JLog::DEBUG, JSpaceLog::CAT_REPOSITORY);
-			$options = JArrayHelper::getValue($cache, 'options', null);
-			$this->_cache = JSpaceFactory::getCache( $options );
+			$instance = JArrayHelper::getValue($cache, 'instance', 'default');
+			$this->_cache = JSpaceFactory::getJSpace()->getCacheManager()->get( $instance );
 		}
 	}
 	

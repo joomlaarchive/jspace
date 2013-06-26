@@ -8,3 +8,6 @@
 2013-06-24  Michał Kocztorz         Added log subpackage: setup and JLog wrapper.
                                     Added event onJSpaceInitLog to enable extending list of loggers
 2013-06-25  Michał Kocztorz         Added system plugin jspaceconfig handling onContentPrepareForm event to add drivers' config tabs to admin config for JSpace.
+2013-06-26  Michał Kocztorz         Added JSpace object (singleton).
+                                    Added JSpaceCacheManager object (singleton).
+                                    Removed JSpaceInit (functionality moved to JSpace.

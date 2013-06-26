@@ -124,8 +124,13 @@ class JSpaceRepositoryDspaceFilter extends JSpaceRepositoryFilter
 		$obj = $db->loadObjectList();
 		$items = array();
 		foreach($obj as $row) {
-			$item = JSpaceFactory::getRepository()->getItem($row->ident);
-			$items[] = $item;
+			try {
+				$item = JSpaceFactory::getRepository()->getItem($row->ident);
+				$items[] = $item;
+			}
+			catch( Exception $e ) {
+				JSpaceLog::add($e->getMessage(), JLog::ERROR, JSpaceLog::CAT_REPOSITORY);
+			}
 		}
 		return $items;
 

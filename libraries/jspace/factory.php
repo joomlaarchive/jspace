@@ -29,7 +29,8 @@
  */
 defined('JPATH_PLATFORM') or die;
 
-jimport('jspace.init');
+jimport('jspace.jspace');
+jimport('jspace.cachemanager');
 
 jimport('jspace.log.log');
 jimport('jspace.configuration');
@@ -46,11 +47,18 @@ jimport('jspace.repository.driver');
 JLoader::discover("JSpaceTable", JPATH_SITE . "/libraries/jspace/database/table/");
 JLoader::discover("JSpaceTool", dirname(__FILE__) . "/tool/");
 
-JSpaceInit::init();
+/*
+ * Create JSpace instance.
+ */
+JSpace::getInstance();
 
 class JSpaceFactory
 {
-	const JSPACE_NAME = 'com_jspace'; 
+	const JSPACE_NAME = 'com_jspace';
+	
+	public static function getJSpace() {
+		return JSpace::getInstance();
+	}
 	
 	/**
 	 * 
@@ -63,7 +71,7 @@ class JSpaceFactory
 	/**
 	 * 
 	 * @param array $options
-	 * @return JSpaceRepositoryConfiguration
+	 * @return JSpaceRepositoryConfiguration 
 	 */
 	public static function getDriverConfiguration( $options ) {
 		return JSpaceRepositoryConfiguration::getInstance( JSpaceFactory::getConfiguration()->get( JSpaceConfiguration::DRIVER ), $options );
@@ -104,21 +112,6 @@ class JSpaceFactory
 	public static function getRepository( $options = null) {
 		$options = JSpaceFactory::getDriverConfiguration( $options )->getOptions();
 		return JSpaceRepository::getInstance( $options );
-	}
-	
-	/**
-	 * ToDo: make configurable
-	 * 
-	 * @param array $options
-	 * @return JSpaceCache
-	 */
-	public static function getCache( $options = null ) {
-		if( is_null($options) ) {
-			$options = array(
-				'driver'	=> 'jselective',
-			);
-		}
-		return JSpaceRepositoryCache::getInstance( $options );
 	}
 
 	/**

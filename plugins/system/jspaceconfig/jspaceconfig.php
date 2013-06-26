@@ -21,7 +21,7 @@ class plgSystemJspaceconfig extends JPlugin
 	public function onContentPrepareForm($form, $data)
 	{
 		if( !($form instanceof JForm) ) {
-			return;
+			return true;
 		}
 		
 		$app = JFactory::getApplication();
@@ -30,7 +30,7 @@ class plgSystemJspaceconfig extends JPlugin
 		 */
 		if( $app->isAdmin() && $form->getName() == 'com_config.component' && $app->input->getString('component') == 'com_jspace' ) {
 			JSpaceLog::add('System Config plugin: Adding repository tabs co configuration', JLog::DEBUG, JSpaceLog::CAT_INIT);
-			JSpaceInit::init(); //make sure it is initialized (drivers registered). If already initialized, then no harm done.
+			JSpaceFactory::getJSpace(); //make sure it is initialized (drivers registered). If already initialized, then no harm done.
 			$drivers = JSpaceRepositoryDriver::listDriverKeys();
 			JSpaceLog::add('System Config plugin: Found registered drivers: ' . count($drivers), JLog::DEBUG, JSpaceLog::CAT_INIT );
 			foreach( $drivers as $key ) {
@@ -39,6 +39,7 @@ class plgSystemJspaceconfig extends JPlugin
 				$form->loadFile( $driver->getConfigXmlPath() );
 			}
 		}
+		return true;
 	}
 }
 

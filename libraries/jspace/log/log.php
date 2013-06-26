@@ -54,6 +54,7 @@ class JSpaceLog {
 	const CAT_INIT			= 'jspace.init';
 	const CAT_REPOSITORY 	= 'jspace.repo';
 	const CAT_JREST 		= 'jspace.jrest';
+	const CAT_EVENT 		= 'jspace.event';
 	
 	public function __construct() {
 		$this->_setup = array(
@@ -91,9 +92,7 @@ class JSpaceLog {
 			),
 		);
 		
-		JPluginHelper::importPlugin( 'jspace' );
-		$dispatcher = JDispatcher::getInstance();
-		$configs = $dispatcher->trigger('onJSpaceInitLog');
+		$configs = JSpaceFactory::getJSpace()->trigger('onJSpaceInitLog');
 		foreach( $configs as $list ) {
 			foreach( $list as $name => $options ) {
 				$this->_setup[ $name ] = $options;

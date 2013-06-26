@@ -51,10 +51,7 @@ class JSpaceRepositoryDspaceConfiguration extends JSpaceRepositoryConfiguration
 			'mapper' 	=> JSpaceFactory::getMapper( $config->get('DSpace_crosswalk') ),
 			'cache' 	=> array(
 					'enabled' 	=> true,
-	// 				'options'	=> array(
-	// 					'driver'	=> 'simple',
-	// 					'storageDirectory'	=> JPATH_BASE . "/tmp/cache/",
-	// 				),
+					'instance'	=> 'default',
 			),
 		);
 		

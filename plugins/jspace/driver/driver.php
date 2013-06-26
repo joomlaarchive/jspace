@@ -30,5 +30,14 @@ class plgJspaceDriver extends JPlugin
 			),
 		);
 	}
+	
+	public function onJSpaceRegisterCacheDrivers()
+	{
+		return array(
+				'other'	=> array(
+						'driver'	=> 'jselective',
+				),
+		);
+	}
 }
 
