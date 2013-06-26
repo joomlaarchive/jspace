@@ -53,7 +53,7 @@ class JSpaceHelperTree
 		$this->_view = new JSpaceViewTree();
 		$this->_view->addTemplatePath(array(
 				JPATH_BASE . "/components/com_jspace/views/tree/tmpl/",
-				JPATH_THEMES . "/" . JFactory::getApplication()->getTemplate() . "/html/com_jspace/tree/tmpl/"
+				JPATH_THEMES . "/" . JFactory::getApplication()->getTemplate() . "/html/com_jspace/tree/"
 		));
 		$this->_view->assignRef('category', $this->_category);
 		$this->_view->assignRef('class', $class);		

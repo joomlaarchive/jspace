@@ -7,4 +7,4 @@
                                     Now it is uset to init logger. May be used for any initialisation needed for jspace to work.
 2013-06-24  Michał Kocztorz         Added log subpackage: setup and JLog wrapper.
                                     Added event onJSpaceInitLog to enable extending list of loggers
-2013-06-25  Michał Kocztorz         Added system plugin handling onContentPrepareForm event to add drivers' config tabs to admin config for JSpace.
+2013-06-25  Michał Kocztorz         Added system plugin jspaceconfig handling onContentPrepareForm event to add drivers' config tabs to admin config for JSpace.
