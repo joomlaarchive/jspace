@@ -10,4 +10,6 @@
 2013-06-25  Michał Kocztorz         Added system plugin jspaceconfig handling onContentPrepareForm event to add drivers' config tabs to admin config for JSpace.
 2013-06-26  Michał Kocztorz         Added JSpace object (singleton).
                                     Added JSpaceCacheManager object (singleton).
-                                    Removed JSpaceInit (functionality moved to JSpace.
+                                    Removed JSpaceInit (functionality moved to JSpace).
+                                    Added JSpaceFormFieldRegisteredCacheDrivers form field, that lists all cache instances registered with JSpace.
+                                    

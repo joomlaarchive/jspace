@@ -50,8 +50,8 @@ class JSpaceRepositoryDspaceConfiguration extends JSpaceRepositoryConfiguration
 			'base_url' 	=> $config->get( 'DSpace_base_url'),
 			'mapper' 	=> JSpaceFactory::getMapper( $config->get('DSpace_crosswalk') ),
 			'cache' 	=> array(
-					'enabled' 	=> true,
-					'instance'	=> 'default',
+					'enabled' 	=> (bool)$config->get( 'DSpace_cache_enabled', false ),
+					'instance'	=> $config->get( 'DSpace_cache_instance', 'default' ),
 			),
 		);
 		

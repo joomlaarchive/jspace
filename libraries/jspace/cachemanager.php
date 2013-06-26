@@ -57,6 +57,8 @@ class JSpaceCacheManager {
 	
 	/**
 	 * Indicates if driver was instantiated or not.
+	 * Most of the times only one cache driver will be used, so there would be 
+	 * no point in instantiating them all.
 	 * 
 	 * @var array
 	 */
@@ -128,5 +130,12 @@ class JSpaceCacheManager {
 			$this->_loaded[ $name ] = true;
 		}
 		return $this->_drivers[ $name ];
+	}
+	
+	/**
+	 * Get array of instance names.
+	 */
+	public function listInstances() {
+		return array_keys($this->_drivers);
 	}
 }

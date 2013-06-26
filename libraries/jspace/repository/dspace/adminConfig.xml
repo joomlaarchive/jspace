@@ -36,6 +36,15 @@
 	            name="DSpace_crosswalk" 
 	            type="text" 
 	            label="COM_JSPACE_REPOSITORY_CROSSWALK_LABEL"  />
+	        <field 
+	            name="DSpace_cache_enabled" 
+	            type="checkbox" 
+	            label="COM_JSPACE_REPOSITORY_CACHE_ENABLED_LABEL"
+	            value="1" />
+	        <field 
+	            name="DSpace_cache_instance" 
+	            type="JSpace.RegisteredCacheDrivers" 
+	            label="COM_JSPACE_REPOSITORY_CACHE_INSTANCE_LABEL"  />
 		</fieldset>
     </fields>
 </form>
