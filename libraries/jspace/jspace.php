@@ -90,7 +90,12 @@ class JSpace {
 		/*
 		 * The default cache instance is jselective.
 		 */
-		$options = array('driver' => 'jselective',);
+		$basePath = JPATH_LIBRARIES . DIRECTORY_SEPARATOR . 'jspace' . DIRECTORY_SEPARATOR . 'repository' . DIRECTORY_SEPARATOR . 'cache' . DIRECTORY_SEPARATOR . 'jselective' . DIRECTORY_SEPARATOR;
+		$options = array(
+			'options'		=> array('driver'	=> 'jselective'),
+			'classPrefix'	=> 'JSpaceRepositoryCacheJselective',	
+			'basePath'		=> $basePath,
+		);
 		$this->_cacheManager->registerDriver('default', $options);
 		
 		$drivers = $this->trigger('onJSpaceRegisterCacheDrivers');

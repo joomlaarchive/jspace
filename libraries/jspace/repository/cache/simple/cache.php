@@ -36,7 +36,7 @@ jimport('jspace.repository.cache');
  * @package     JSpace
  * @subpackage  Repository
  */
-class JSpaceRepositoryCacheSimple extends JSpaceRepositoryCache
+class JSpaceRepositoryCacheSimpleCache extends JSpaceRepositoryCache
 {
 	protected $_storageDirectory = null;
 	/**

@@ -42,7 +42,7 @@ JCacheController::addIncludePath(dirname(__FILE__));
  * @package     JSpace
  * @subpackage  Repository
  */
-class JSpaceRepositoryCacheJselective extends JSpaceRepositoryCacheJcache
+class JSpaceRepositoryCacheJselectiveCache extends JSpaceRepositoryCacheJcacheCache
 {
 	/**
 	 * Returns JCache obkect with group set.

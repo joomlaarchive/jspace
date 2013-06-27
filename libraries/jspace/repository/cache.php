@@ -47,22 +47,22 @@ abstract class JSpaceRepositoryCache
 	protected static $_instances = array();
 	
 	/**
-	 *
+	 * TODO: load from any place like repository driver.
+	 * 
 	 * @param array $options
 	 * @throws Exception
 	 * @return JSpaceCache
 	*/
 	public static function getInstance( $options ) {
 		$driver = JArrayHelper::getValue($options, 'driver');
+		JSpaceLog::add("JSpaceCache::getInstance: driver=$driver", JLog::DEBUG, JSpaceLog::CAT_REPOSITORY);
 
 		if( !isset(self::$_instances[ $driver ]) ) {
-			$class = "JSpaceRepositoryCache" . ucfirst(strtolower($driver));
+			$class = "JSpaceRepositoryCache" . ucfirst(strtolower($driver)) . 'Cache';
 			if( !class_exists($class) ) {
-				//attempt import
-				jimport('jspace.repository.cache.' . strtolower($driver) . '.cache' );
-				if( !class_exists($class) ) {
-					throw new Exception(JText::_('LIB_JSPACE_MISSING_CACHE_CLASS') . ' ' . $class );
-				}
+				$msg = JText::_('LIB_JSPACE_MISSING_CACHE_CLASS') . ' ' . $class;
+				JSpaceLog::add($msg, JLog::CRITICAL, JSpaceLog::CAT_REPOSITORY);
+				throw new Exception( $msg );
 			}
 			self::$_instances[ $driver ] = new $class( $options );
 		}

@@ -33,9 +33,12 @@ class plgJspaceDriver extends JPlugin
 	
 	public function onJSpaceRegisterCacheDrivers()
 	{
+		$basePath = JPATH_LIBRARIES . DIRECTORY_SEPARATOR . 'jspace' . DIRECTORY_SEPARATOR . 'repository' . DIRECTORY_SEPARATOR . 'cache' . DIRECTORY_SEPARATOR . 'jselective' . DIRECTORY_SEPARATOR;
 		return array(
 				'other'	=> array(
-						'driver'	=> 'jselective',
+					'options'		=> array('driver'	=> 'jselective'),
+					'classPrefix'	=> 'JSpaceRepositoryCacheJselective',	
+					'basePath'		=> $basePath,
 				),
 		);
 	}

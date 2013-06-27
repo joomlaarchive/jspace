@@ -70,7 +70,7 @@ class JSpaceCacheManager {
 	 * @param array $options
 	 * @throws Exception
 	 */
-	public function registerDriver( $name, $options ) {
+	public function registerDriver( $name, $config ) {
 		JSpaceLog::add("JSpaceCacheManager::registerDriver: <$name>", JLog::DEBUG, JSpaceLog::CAT_INIT);
 		if( isset( $this->_drivers[ $name ] ) ) {
 			$msg = "JSpaceCacheManager::registerDriver: Driver <$name> already registered.";
@@ -78,7 +78,7 @@ class JSpaceCacheManager {
 			throw new Exception( $msg );
 		}
 		
-		$this->_drivers[ $name ] = $options;
+		$this->_drivers[ $name ] = $config;
 		$this->_loaded[ $name ] = false;
 		
 		/*
@@ -126,7 +126,13 @@ class JSpaceCacheManager {
 		
 		if( !$this->_loaded[ $name ] ) {
 			JSpaceLog::add("JSpaceCacheManager::get: get instance <$name>", JLog::DEBUG, JSpaceLog::CAT_REPOSITORY);
-			$this->_drivers[ $name ] = JSpaceRepositoryCache::getInstance( $this->_drivers[ $name ] );
+			$config = $this->_drivers[ $name ];
+			$classPrefix = JArrayHelper::getValue($config, 'classPrefix', 'JSpaceRepositoryCache');
+			$basePath = JArrayHelper::getValue($config, 'basePath', JPATH_LIBRARIES . DIRECTORY_SEPARATOR . 'jspace' . DIRECTORY_SEPARATOR . 'repository' . DIRECTORY_SEPARATOR . 'cache' . DIRECTORY_SEPARATOR . 'jselective');
+			JSpaceLog::add("JSpaceCacheManager::get: discovering classPrefix=$classPrefix basePath=$basePath", JLog::DEBUG, JSpaceLog::CAT_REPOSITORY);
+			JLoader::discover($classPrefix, $basePath);
+			$options = JArrayHelper::getValue($config, 'options', array('driver'=>'jselective')); //fallback to jselective if fail to get options
+			$this->_drivers[ $name ] = JSpaceRepositoryCache::getInstance( $options );
 			$this->_loaded[ $name ] = true;
 		}
 		return $this->_drivers[ $name ];
