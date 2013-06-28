@@ -1,6 +1,6 @@
 <?php
 /**
- * A Blank connector class.
+ * Example class registered via plugin.
  * 
  * @package		JSpace
  * @subpackage	Repository
@@ -28,15 +28,28 @@
  * Michał Kocztorz				<michalkocztorz@wijiti.com> 
  * 
  */
+ 
+defined('JPATH_PLATFORM') or die;
+jimport('jspace.factory');
 
 /**
- * @deprecated
- * @see JSpaceRepositoryConnector
+ * @package     JSpace
+ * @subpackage  Repository
  */
-class JSpaceRepositoryFedoraConnector extends JSpaceRepositoryConnector
+class JSpaceRepositoryDspaceFiltersExample extends JSpaceRepositoryFilter
 {
-	public function execute($endpoint, $action, $useCache = false)
-	{
-		return $this->_execute($endpoint, $action, $useCache);
+	/**
+	 * ToDo: Filtering is not done yet (filterBy option)
+	 * ToDo: can sort for multiple columns?
+	 * 
+	 * (non-PHPdoc)
+	 * @see JSpaceRepositoryFilter::getItems()
+	 */
+	public function getItems() {
+		return array();
 	}
 }
+
+
+
+

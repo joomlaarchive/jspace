@@ -62,7 +62,7 @@ class JSpaceRepositoryCacheJcacheCache extends JSpaceRepositoryCache
 	 */
 	protected function _getJCache( JSpaceRepositoryCacheKey $key ) {
 		$group = 'jspace.default';
-		JSpaceLogger::log("Cache [{$this->_driver}]. Fetch JCache group {$group}", JLog::DEBUG);
+		JSpaceLog::add("Cache [{$this->_driver}]. Fetch JCache group {$group}", JLog::DEBUG, JSpaceLog::CAT_CACHE);
 		$cache = JFactory::getCache($group, 'plain');
 		$cache->setCaching( true );
 		return $cache;
@@ -89,7 +89,7 @@ class JSpaceRepositoryCacheJcacheCache extends JSpaceRepositoryCache
 	 */
 	public function set( JSpaceRepositoryCacheKey $key, $value, $valid=null ) {
 		if( !$key->getEndpoint()->get('cacheable', true) ) {
-			JSpaceLogger::log("Cache [{$this->_driver}]. Endpoint not cacheable.", JLog::DEBUG);
+			JSpaceLog::add("Cache [{$this->_driver}]. Endpoint not cacheable.", JLog::DEBUG, JSpaceLog::CAT_CACHE);
 			return false;
 		}
 		

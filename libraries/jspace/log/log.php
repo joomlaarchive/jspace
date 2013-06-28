@@ -55,6 +55,11 @@ class JSpaceLog {
 	const CAT_REPOSITORY 	= 'jspace.repo';
 	const CAT_JREST 		= 'jspace.jrest';
 	const CAT_EVENT 		= 'jspace.event';
+	const CAT_CACHE			= 'jspace.cache';
+	const CAT_CONNECTOR		= 'jspace.conn';
+	const CAT_ERROR			= 'jspace.err';
+	
+	const CAT_DEV			= 'jspace.dev';	//a group to push dev debug
 	
 	public function __construct() {
 		$this->_setup = array(
@@ -90,6 +95,15 @@ class JSpaceLog {
 				'priorities' => JLog::INFO,
 				'categories' => array(),
 			),
+			//for development
+			'dev' => array (
+				'options' => array(
+					'logger'	=> 'formattedtext',
+					'text_file'	=> 'jspace.dev.log'
+				),
+				'priorities' => JLog::ALL,
+				'categories' => array( JSpaceLog::CAT_DEV),
+			),
 		);
 		
 		$configs = JSpaceFactory::getJSpace()->trigger('onJSpaceInitLog');
@@ -118,5 +132,13 @@ class JSpaceLog {
 	 */
 	public static function add($entry, $priority = JLog::INFO, $category = '', $date = null) {
 		JLog::add($entry, $priority, $category, $date );
+	}
+	
+	/**
+	 * For development: a shortcut to dev log.
+	 * @param string $entry
+	 */
+	public static function dev( $entry ) {
+		JSpaceLog::add( $entry, JLog::DEBUG, JSpaceLog::CAT_DEV );
 	}
 }

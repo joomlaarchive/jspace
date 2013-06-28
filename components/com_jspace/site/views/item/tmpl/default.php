@@ -53,7 +53,7 @@ JLoader::discover('JSpaceHelper', JPATH_BASE . DIRECTORY_SEPARATOR . 'components
 
 <?php if( $item instanceof JSpaceRepositoryItem ): ?>
 	<div class="jspace-item-body">
-		<a href="<?php echo JRoute::_( JSpaceHelperRoute::getCategoryUrl( $item->getCategory()->getId() ) ); ?>">
+		<a href="<?php echo JSpaceHelperRoute::getCategoryUrl( $item->getCategory()->getId() ); ?>">
 			<?php echo $item->getCategory()->getName(); ?>
 		</a>
 		<!-- one special metadata value -->
@@ -102,7 +102,7 @@ JLoader::discover('JSpaceHelper', JPATH_BASE . DIRECTORY_SEPARATOR . 'components
 		<div class="jspace-item">
 			<div class="dc-element-name"><?php echo JText::_("COM_JSPACE_DC_COLLECTION_LABEL"); ?>:</div>
 			<div class="dc-element-value">
-				<?php echo JHTML::link(JRoute::_( JSpaceHelperRoute::getCategoryUrl( $item->getCategory()->getId() ) ), $item->getCategory()->getName() ); ?>
+				<?php echo JHTML::link(JSpaceHelperRoute::getCategoryUrl( $item->getCategory()->getId() ), $item->getCategory()->getName() ); ?>
 			</div>
 		</div>	
 		

@@ -36,7 +36,7 @@ jimport('jspace.factory');
  * @package     JSpace
  * @subpackage  Repository
  */
-class JSpaceRepositoryDspaceFilter extends JSpaceRepositoryFilter
+class JSpaceRepositoryDspaceFiltersPopular extends JSpaceRepositoryFilter
 {
 	/**
 	 * ToDo: Filtering is not done yet (filterBy option)
@@ -46,99 +46,6 @@ class JSpaceRepositoryDspaceFilter extends JSpaceRepositoryFilter
 	 * @see JSpaceRepositoryFilter::getItems()
 	 */
 	public function getItems() {
-		switch( $this->getName() ) {
-			case 'popular':
-				return $this->_getItemsPopular();
-				break;
-			default:
-				$vars = array(
-					'start'	=> $this->getLimitstart(),
-					'rows'	=> $this->getLimit(),
-					'q'		=> '*',
-					'fq'	=> 'search.resourcetype:2'
-				);
-				
-				$sort = $this->_getSortString();
-				if( $sort != '' ) {
-					$vars['sort'] = $sort;
-				}
-				
-				try {
-					$response = $this->getRepository()->restCallJSON('discover',$vars);
-					if (isset($response->response)) {
-						$docs = $response->response->docs;
-					}
-					else {
-						return array();
-					}
-					
-					$items = array();
-					foreach( $docs as $item ) {
-						$id = $item->{'search.resourceid'};
-						try {
-							if( isset( $id ) ) {
-								$items[ $id ] = $this->getRepository()->getItem( $id );
-							}
-							else {
-								JSpaceRepositoryError::raiseError($this, JText::_('COM_JSPACE_REPOSITORY_FILTER_ITEM_NOT_FOUND ')  . $id);
-							}
-						}
-						catch( Exception $ex ) {
-							//item not found, keep loading other
-							JSpaceRepositoryError::raiseError($this, JText::_('COM_JSPACE_REPOSITORY_FILTER_ITEM_NOT_FOUND') . $id);
-						}
-					}
-					return $items;
-				} catch (Exception $e) {
-					JSpaceRepositoryError::raiseError($this, JText::_('COM_JSPACE_REPOSITORY_CANT_FILTER_ITEMS'));
-					JSpaceRepositoryError::raiseError($this, JText::_($e->getMessage()));
-					return array();
-				}
-				break;
-		}
-		
-	}
-	
-	protected function _getSortString() {
-		$crosswalk = $this->getRepository()->getMapper()->getCrosswalk();
-		
-		$sort = $this->getSortBy();
-		$ret = '';
-		foreach( $sort as $row ) {
-			$key = $crosswalk->_( $row[0] );
-			$dir = $row[1];
-			$ret = $key . '_dt+' . $dir;
-		}
-		return $ret;
-	}
-	
-	
-	/**
-	 * ToDo: fix creating filters to avoid hacking lib
-	 */
-	protected function _getItemsPopular() {
-		$db = JFactory::getDbo();
-		$query = $db->getQuery(true);
-		$query->select('*')->from('#__saber_stats_item')->where('type="ITEM"')->order("cnt desc");
-		$db->setQuery($query,$this->getLimitstart(),$this->getLimit());
-		$obj = $db->loadObjectList();
-		$items = array();
-		foreach($obj as $row) {
-			try {
-				$item = JSpaceFactory::getRepository()->getItem($row->ident);
-				$items[] = $item;
-			}
-			catch( Exception $e ) {
-				JSpaceLog::add($e->getMessage(), JLog::ERROR, JSpaceLog::CAT_REPOSITORY);
-			}
-		}
-		return $items;
-
-	}
-	
-	
-	protected function _getItemsPopular_old() {
-		$items = array();
 		$vars = array(
 			'facet'				=> 'true',
 			'rows'				=> 0,
@@ -183,13 +90,6 @@ class JSpaceRepositoryDspaceFilter extends JSpaceRepositoryFilter
 		
 		$cparams = JComponentHelper::getComponent("com_jspace", true);
 		$url = new JURI($cparams->get("rest_url").'/statistics.json');
-// 		$url->setVar('facet', 'true');
-// 		$url->setVar('rows', 0);
-// 		$url->setVar('facet.mincount', 1);
-// 		$url->setVar('facet.limit', $params->get('shownumber', 10));
-// 		$url->setVar('q', 'type:2');
-// 		$url->setVar('facet.field', 'id');
-// 		$url->setVar('fq', '-isBot:true');
 		
 		try {
 			$client = new JRestClient($url->toString(), 'get');

@@ -12,4 +12,6 @@
                                     Added JSpaceCacheManager object (singleton).
                                     Removed JSpaceInit (functionality moved to JSpace).
                                     Added JSpaceFormFieldRegisteredCacheDrivers form field, that lists all cache instances registered with JSpace.
+2013-06-26  Michał Kocztorz         Changed logger.
+                                    Filters registered through plugin.
                                     

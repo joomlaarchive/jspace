@@ -363,8 +363,8 @@ abstract class JSpaceRepository extends JObject
 	 * 
 	 * @return JSpaceRepositoryFilter
 	 */
-	public function createFilter( $options ) {
-		return $this->_createFilter( $options );
+	public function createFilter( $type, $options ) {
+		return $this->_createFilter( $type, $options );
 	}
 	
 	/**
@@ -372,9 +372,9 @@ abstract class JSpaceRepository extends JObject
 	 * @param array $options
 	 * @return JSpaceRepositoryFilter
 	 */
-	protected function _createFilter( $options ) {
-		$class = $this->getClassName( JSpaceRepositoryDriver::CLASS_FILTER );
-		return new $class( $this, $options );
+	protected function _createFilter( $type, $options ) {
+		$driver = $this->getDriverClass();
+		return $driver->getFilter( $type, $options );
 	}
 	
 	/**

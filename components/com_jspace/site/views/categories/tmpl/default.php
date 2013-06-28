@@ -39,7 +39,7 @@ JLoader::discover('JSpaceHelper', JPATH_BASE . DIRECTORY_SEPARATOR . 'components
 
 ?> 
 <?php if( !$category->isRoot() ): ?>
-	<a href="<?php echo JRoute::_( JSpaceHelperRoute::getCategoryUrl( $category->getParent()->getId() ) ); ?>">
+	<a href="<?php echo JSpaceHelperRoute::getCategoryUrl( $category->getParent()->getId() ); ?>">
 		<?php echo $category->getParent()->getName(); ?>
 	</a>
 <?php endif; ?>
@@ -47,7 +47,7 @@ JLoader::discover('JSpaceHelper', JPATH_BASE . DIRECTORY_SEPARATOR . 'components
 <ul class="jspace-categories">
 	<?php foreach( $category->getChildren() as $subcategory ): ?>
 		<li>
-			<a href="<?php echo JRoute::_( JSpaceHelperRoute::getCategoryUrl( $subcategory->getId() ) ); ?>">
+			<a href="<?php echo JSpaceHelperRoute::getCategoryUrl( $subcategory->getId() ); ?>">
 				<?php echo $subcategory->getName(); ?>
 			</a>
 		</li>
@@ -56,7 +56,7 @@ JLoader::discover('JSpaceHelper', JPATH_BASE . DIRECTORY_SEPARATOR . 'components
 <ul class="jspace-items">
 	<?php foreach( $this->items as $id => $item ): ?>
 		<li>
-			<a href="<?php echo JRoute::_( JSpaceHelperRoute::getItemUrl( $id ) ); ?>">
+			<a href="<?php echo JSpaceHelperRoute::getItemFullRoute( $id ); ?>">
 				<?php echo $item->getMetadata('title'); ?>
 			</a>
 		</li>

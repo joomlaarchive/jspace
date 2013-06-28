@@ -35,7 +35,6 @@ class JSpaceRepositoryDriver {
 	const CLASS_BUNDLE 		= 'Bundle';
 	const CLASS_BITSTREAM 	= 'Bitstream';
 	const CLASS_CATEGORY 	= 'Category';
-	const CLASS_FILTER 		= 'Filter';
 	const CLASS_METADATA 	= 'Metadata';
 	const CLASS_RESTAPI 	= 'RestAPI';
 	const CLASS_CONNECTOR 	= 'Connector';
@@ -107,6 +106,12 @@ class JSpaceRepositoryDriver {
 	 * @var string
 	 */
 	protected $_basePath;
+	
+	/**
+	 * Array of filter objects.
+	 * @var array
+	 */
+	protected $_filters = null;
 	
 	public function __construct( $driver, $options ) {
 		$this->_driver = $driver;
@@ -206,4 +211,100 @@ class JSpaceRepositoryDriver {
 		JSpaceLog::add('JSpaceRepositoryDriver: discover classes', JLog::DEBUG, JSpaceLog::CAT_REPOSITORY);
 		JLoader::discover($this->getClassPrefix(), $this->getBasePath());
 	}
+	
+/*
+ * Filter functionaity.
+ */
+	/**
+	 * Get instance of filter object.
+	 * 
+	 * @param string $type
+	 * @param array $options
+	 */
+	public function getFilter( $type, $options ) {
+		JSpaceLog::add( 'JSpaceRepositoryDriver: getFilter : ' . $type, JLog::DEBUG, JSpaceLog::CAT_REPOSITORY );
+		//test if filters need to be registered
+		if( is_null( $this->_filters ) ) {
+			$this->registerFilters();
+		}
+		
+		$typeLower = strtolower($type);
+		
+		if( isset( $this->_filters[ $typeLower ] ) ) {
+			return $this->_filters[ $typeLower ];
+		}
+		else {
+			$msg = "getFilter $typeLower failed";
+			JSpaceLog::add($msg, JLog::CRITICAL, JSpaceLog::CAT_REPOSITORY);
+			throw new Exception( $msg );
+		}
+	}
+	
+	/**
+	 * Register all filters for this driver. 
+	 * 
+	 */
+	protected function registerFilters() {
+		JSpaceLog::add( 'JSpaceRepositoryDriver: registerFilters', JLog::DEBUG, JSpaceLog::CAT_REPOSITORY );
+		$this->_filters = array();
+		
+		$path = JPATH_LIBRARIES . DIRECTORY_SEPARATOR . 'jspace' . DIRECTORY_SEPARATOR . 'repository' . DIRECTORY_SEPARATOR . 'dspace' . DIRECTORY_SEPARATOR . 'filters' . DIRECTORY_SEPARATOR;
+		$config = array(
+			'classPrefix'	=> 'JSpaceRepositoryDspaceFilters',
+			'basePath'		=> $path,
+			'driver'		=> 'DSpace',
+		);
+		$this->registerFilter('popular', $config);
+		$this->registerFilter('latest', $config);
+		
+		/*
+		 * Trigger event. 
+		 */
+		$filters = JSpaceFactory::getJSpace()->trigger('onJSpaceRegisterFilters');
+		foreach( $filters as $list ) {
+			foreach( $list as $key => $options ) {
+				try {
+					JSpaceLog::add('registerFilters: registering ' . $key, JLog::DEBUG, JSpaceLog::CAT_REPOSITORY);
+					$this->registerFilter($key, $options);
+				}
+				catch( Exception $e ) {
+					JSpaceLog::add('registerFilters: registering ' . $key . ' failed with exception: ' . $e->getMessage(), JLog::ERROR, JSpaceLog::CAT_REPOSITORY);
+				}
+			}
+		}
+		JSpaceLog::add( 'JSpaceRepositoryDriver: registerFilters done', JLog::DEBUG, JSpaceLog::CAT_REPOSITORY );
+	}
+	
+	/**
+	 * Register filter by type.
+	 * 
+	 * @param string $type
+	 * @param array $config
+	 */
+	protected function registerFilter( $type, $config ) {
+		JSpaceLog::add( "JSpaceRepositoryDriver: registerFilter <$type>", JLog::DEBUG, JSpaceLog::CAT_REPOSITORY );
+
+		$driver = JArrayHelper::getValue($config, 'driver');
+		if( $driver != $this->getDriver() ) {
+			JSpaceLog::add( "registerFilter driver for another repository <$driver>, quitting ", JLog::DEBUG, JSpaceLog::CAT_REPOSITORY );
+			return;
+		}
+		$typeLower = strtolower($type);
+		$typeUCfirst = ucfirst($typeLower);
+		
+		if( isset( $this->_filters[ $typeLower ] ) ) {
+			JSpaceLog::add("Filter <$typeLower> already registered.", JLog::ERROR, JSpaceLog::CAT_REPOSITORY);
+			return;
+		}
+		
+		$classPrefix = JArrayHelper::getValue($config, 'classPrefix', '');
+		JLoader::discover($classPrefix, JArrayHelper::getValue($config, 'basePath', '') );
+		$className = $classPrefix . $typeUCfirst;
+		if( !class_exists($className) ) {
+			JSpaceLog::add("Registering filter <$typeLower> failed. Class $className doesn't exist", JLog::ERROR, JSpaceLog::CAT_REPOSITORY);
+			return;
+		}
+		$this->_filters[ $typeLower ] = $className;
+	}
+	
 }

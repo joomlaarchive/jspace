@@ -38,7 +38,7 @@ JLoader::discover('JSpaceHelper', JPATH_BASE . DIRECTORY_SEPARATOR . 'components
 
 <ul class="jspace-community-tree jspace-categories jspace-community-tree<?php echo $category->isRoot() ? '-root ' . $this->class : '-node'; ?>">
 	<li>
-		<a href="<?php echo JRoute::_( JSpaceHelperRoute::getCategoryUrl( $category->getId() ) ); ?>">
+		<a href="<?php echo JSpaceHelperRoute::getCategoryUrl( $category->getId() ); ?>">
 			<?php echo $category->getName(); ?>
 		</a>
 	</li>

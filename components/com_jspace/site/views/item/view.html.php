@@ -37,6 +37,10 @@ class JSpaceViewItem extends JViewLegacy
 {
     function display($tpl = null)
     {
+    	$popular = JSpaceFactory::getRepository()->createFilter('latest',array());
+    	$popular = JSpaceFactory::getRepository()->createFilter('latest',array());
+    	$popular = JSpaceFactory::getRepository()->createFilter('popular',array());
+    	$popular = JSpaceFactory::getRepository()->createFilter('latest',array());
     	$document = JFactory::getDocument();
     	$document->addStyleSheet(JURI::base()."media/com_jspace/css/jspace.css");
     	

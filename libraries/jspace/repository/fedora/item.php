@@ -196,7 +196,7 @@ class JSpaceRepositoryFedoraItem extends JSpaceRepositoryItem
 				$this->_fcDatastreams = new JSpaceRepositoryFedoraDatastreams( $this );
 			}
 			catch( Exception $e ) {
-				JSpaceLogger::log("Creating JSpaceRepositoryFedoraDatastreams object failed.");
+				JSpaceLog::add("Creating JSpaceRepositoryFedoraDatastreams object failed.", JLog::ERROR, JSpaceLog::CAT_REPOSITORY);
 			}
 		}
 		return $this->_fcDatastreams;

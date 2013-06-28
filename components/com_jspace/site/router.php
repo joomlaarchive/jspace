@@ -33,13 +33,14 @@
  */
 function JSpaceBuildRoute(&$query)
 {
+// 	JSpaceLog::dev(print_r($query,true));
 	$segments = array();
 
 	// if no item id specified, try and get it.
 	if (!JArrayHelper::getValue($query, "Itemid")) {
 		$application = JFactory::getApplication("site");
 		$menus = $application->getMenu();
-		$items = $menus->getItems("link", "index.php?option=com_jspace&view=".$query["view"]);
+		$items = $menus->getItems("link", "index.php?option=com_jspace&view=" . JArrayHelper::getValue($query, 'view', '') );
 
 		if (count($items) > 0) {
 			$query["Itemid"] = $items[0]->id;

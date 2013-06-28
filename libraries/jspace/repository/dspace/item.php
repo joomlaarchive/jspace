@@ -246,7 +246,7 @@ class JSpaceRepositoryDspaceItem extends JSpaceRepositoryItem
 			return true;
 		}
 		catch( Exception $e ) {
-			JSpaceLogger::log("Edit item failed: " . $e->getMessage());
+			JSpaceLog::add("Edit item failed: " . $e->getMessage(), JLog::ERROR, JSpaceLog::CAT_REPOSITORY);
 			return false;
 		}
 	}

@@ -224,25 +224,25 @@ abstract class JSpaceRepositoryConnector implements JSpaceConnectable
 	public abstract function execute($endpoint, $action, $useCache = false);
 	
 	protected function _execute($endpoint, $action, $useCache = false) {
-		JSpaceLogger::log('Executing endpoint ' . $endpoint->get('url'));
+		JSpaceLog::add('Executing endpoint ' . $endpoint->get('url'), JLog::DEBUG, JSpaceLog::CAT_CONNECTOR);
 		$response = null;
 		
 		if( $useCache ) {
-			JSpaceLogger::log('Using cache');
+			JSpaceLog::add('Using cache', JLog::DEBUG, JSpaceLog::CAT_CONNECTOR);
 			//create a cache key
 			$repository = JSpaceFactory::getRepository();
 			if( $repository->hasCache() ) {
-				JSpaceLogger::log('Repository uses cache');
+				JSpaceLog::add('Repository uses cache', JLog::DEBUG, JSpaceLog::CAT_CONNECTOR);
 				$cacheKey = JSpaceFactory::getCacheKey($endpoint, JArrayHelper::getValue($this->options, 'url'));
 				$key = (string) $cacheKey;
 				// 				$key = md5( JArrayHelper::getValue($this->options, 'url') . serialize( $endpoint ) );
-				JSpaceLogger::log('Cache key: ' . $key);
+				JSpaceLog::add('Cache key: ' . $key, JLog::DEBUG, JSpaceLog::CAT_CONNECTOR);
 				$cachedResponse = $repository->getCache()->get( $cacheKey );
 				if( !is_null( $cachedResponse ) ) {
-					JSpaceLogger::log('Found in cache. Returning.');
+					JSpaceLog::add('Found in cache. Returning.', JLog::DEBUG, JSpaceLog::CAT_CONNECTOR);
 					return $cachedResponse;
 				}
-				JSpaceLogger::log('Not found in cache.');
+				JSpaceLog::add('Not found in cache.', JLog::DEBUG, JSpaceLog::CAT_CONNECTOR);
 			}
 		}
 		
@@ -255,22 +255,21 @@ abstract class JSpaceRepositoryConnector implements JSpaceConnectable
 				}
 			}
 				
-			JSpaceLogger::log($url);
-// 			JSpaceLogger::log(print_r($endpoint->get('vars'),true));
+			JSpaceLog::add($url, JLog::DEBUG, JSpaceLog::CAT_CONNECTOR);
 				
 			$client = new JRestClient((string)$url, $action);
 				
 				
 			if (!$endpoint->get('anonymous')) {
-				JSpaceLogger::log("Not anonymous");
+				JSpaceLog::add("Not anonymous", JLog::DEBUG, JSpaceLog::CAT_CONNECTOR);
 				$client->setUsername(JArrayHelper::getValue($this->options, 'username'));
 				$client->setPassword(JArrayHelper::getValue($this->options, 'password'));
 			}
 			else {
-				JSpaceLogger::log("Anonymous");
+				JSpaceLog::add("Anonymous", JLog::DEBUG, JSpaceLog::CAT_CONNECTOR);
 			}
 		
-			JSpaceLogger::log("Request data: " . print_r($endpoint->get('data'),true));
+			JSpaceLog::add("Request data: " . print_r($endpoint->get('data'),true), JLog::DEBUG, JSpaceLog::CAT_CONNECTOR);
 			if (!is_null($endpoint->get('data'))) {
 				$client->setRequestBody($endpoint->get('data'));
 			}
@@ -286,9 +285,9 @@ abstract class JSpaceRepositoryConnector implements JSpaceConnectable
 				case 200:
 				case 201:
 					$response = $client->getResponseBody();
-					JSpaceLogger::log($response);
+					JSpaceLog::add($response, JLog::DEBUG, JSpaceLog::CAT_CONNECTOR);
 					if( $useCache && $repository->hasCache() ) {
-						JSpaceLogger::log('Setting cache. Key: ' . $key);
+						JSpaceLog::add('Setting cache. Key: ' . $key, JLog::DEBUG, JSpaceLog::CAT_CONNECTOR);
 						$repository->getCache()->set($cacheKey, $response);
 					}
 					break;
@@ -297,8 +296,9 @@ abstract class JSpaceRepositoryConnector implements JSpaceConnectable
 					break;
 						
 				default:
-					JSpaceLogger::log($response);
+					JSpaceLog::add($response, JLog::DEBUG, JSpaceLog::CAT_CONNECTOR);
 					$msg = JText::_('JLIB_JSPACE_CONNECTION_ERROR_'.$code);
+					JSpaceLog::add($msg, JLog::ERROR, JSpaceLog::CAT_CONNECTOR);
 					throw new Exception($msg, $code);
 					break;
 			}

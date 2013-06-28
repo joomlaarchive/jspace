@@ -279,7 +279,7 @@ abstract class JSpaceRepositoryItem extends JObject
 	 */
 	public function cleanCache() {
 		$ret = false;
-		JSpaceLogger::log('Clear cache for item: ' . $this->getId());
+		JSpaceLog::add('Clear cache for item: ' . $this->getId(), JLog::DEBUG, JSpaceLog::CAT_REPOSITORY);
 		if( $this->getRepository()->hasCache() ) {
 			$endpoint = $this->getRepository()->getRestAPI()->getEndpoint('item',array('id'=>$this->getId()));
 			$baseUrl = $this->getRepository()->getBaseRestUrl();
@@ -289,17 +289,17 @@ abstract class JSpaceRepositoryItem extends JObject
 				$ret = $cache->clean($cacheKey);
 			}
 			catch( Exception $e ) {
-				JSpaceLogger::log('Cleanup request failed: ' . $e->getMessage());
+				JSpaceLog::add('Cleanup request failed: ' . $e->getMessage(), JLog::ERROR, JSpaceLog::CAT_REPOSITORY);
 			}
 			if( $ret ) {
-				JSpaceLogger::log('Cache cleaned.');
+				JSpaceLog::add('Cache cleaned.', JLog::DEBUG, JSpaceLog::CAT_REPOSITORY);
 			}
 			else {
-				JSpaceLogger::log('Cache cleanup failed or not supported. No cleanup done.');
+				JSpaceLog::add('Cache cleanup failed or not supported. No cleanup done.', JLog::DEBUG, JSpaceLog::CAT_REPOSITORY);
 			}
 		}
 		else {
-			JSpaceLogger::log('Cache is disabled in this repository. No cleanup done.');
+			JSpaceLog::add('Cache is disabled in this repository. No cleanup done.', JLog::DEBUG, JSpaceLog::CAT_REPOSITORY);
 		}
 		return $ret;
 	}

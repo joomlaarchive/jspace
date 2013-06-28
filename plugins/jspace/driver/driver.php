@@ -42,5 +42,17 @@ class plgJspaceDriver extends JPlugin
 				),
 		);
 	}
+	
+	public function onJSpaceRegisterFilters() {
+		$path = JPATH_LIBRARIES . DIRECTORY_SEPARATOR . 'jspace' . DIRECTORY_SEPARATOR . 'repository' . DIRECTORY_SEPARATOR . 'dspace' . DIRECTORY_SEPARATOR . 'filters' . DIRECTORY_SEPARATOR;
+		
+		return array (
+			'example' => array(
+				'classPrefix'	=> 'JSpaceRepositoryDspaceFilters',
+				'basePath'		=> $path,
+				'driver'		=> 'DSpace',
+			)
+		);
+	}
 }
 

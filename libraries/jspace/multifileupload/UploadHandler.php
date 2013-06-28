@@ -518,7 +518,7 @@ class UploadHandler
             $file_path = $this->get_upload_path($file->name);
             $append_file = $content_range && is_file($file_path) &&
                 $file->size > $this->get_file_size($file_path);
-            JSpaceLogger::log($uploaded_file);
+            JSpaceLog::add($uploaded_file, JLog::DEBUG, JSpaceLog::CAT_REPOSITORY);
             if ($uploaded_file && is_uploaded_file($uploaded_file)) {
                 // multipart/formdata uploads (POST method uploads)
                 if ($append_file) {
@@ -528,12 +528,12 @@ class UploadHandler
                         FILE_APPEND
                     );
                 } else {
-		            JSpaceLogger::log("moving" . $uploaded_file . " " . $file_path);
+		            JSpaceLog::add("moving" . $uploaded_file . " " . $file_path, JLog::DEBUG, JSpaceLog::CAT_REPOSITORY);
                     if( !move_uploaded_file($uploaded_file, $file_path) ) {
-                    	JSpaceLogger::log("Moving uploaded file failed!");
+                    	JSpaceLog::add("Moving uploaded file failed!", JLog::ERROR, JSpaceLog::CAT_REPOSITORY);
                     }
                     else {
-                    	JSpaceLogger::log("Moving uploaded file OK!");
+                    	JSpaceLog::add("Moving uploaded file OK!", JLog::DEBUG, JSpaceLog::CAT_REPOSITORY);
                     }
                 }
             } else {

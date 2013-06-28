@@ -328,7 +328,7 @@ class JSpaceTableItem extends JTable
      * @author Piotr Dolistowski
 	 */
 	public function validate() {
-		JSpaceLogger::log("Validate item id=" . $this->id);
+		JSpaceLog::add("Validate item id=" . $this->id, JLog::DEBUG, JSpaceLog::CAT_REPOSITORY);
 		$this->_preprocessValidation();
 		
         $finfo = new finfo(FILEINFO_MIME_TYPE);
@@ -349,7 +349,7 @@ class JSpaceTableItem extends JTable
                                 $this->_validationErrors[] = JText::_('COM_JSPACE_TABLE_ITEM_ARCHIVE_FILE_CORRUPTED') ;
                             }
                         } else {
-                        	JSpaceLogger::log("Fatal Error. File not found: " . $filePath, JLog::ERROR);
+                        	JSpaceLog::add("Fatal Error. File not found: " . $filePath, JLog::ERROR, JSpaceLog::CAT_REPOSITORY);
                         	$fix = true;
                             $this->_validationErrors[] = JText::_('COM_JSPACE_TABLE_ITEM_ARCHIVE_FILE_NOT_EXISTS') ;
                         }
@@ -373,7 +373,7 @@ class JSpaceTableItem extends JTable
         	}
         }
         
-        JSpaceLogger::log("Validated item id=" . $this->id . ". Found errors count=" . count($this->_validationErrors) );
+        JSpaceLog::add("Validated item id=" . $this->id . ". Found errors count=" . count($this->_validationErrors), JLog::DEBUG, JSpaceLog::CAT_REPOSITORY);
         return $this->_validationErrors ;
 	}
 	
@@ -382,7 +382,7 @@ class JSpaceTableItem extends JTable
 	 * Removes bitstreams from bundles where files are missing.
 	 */
 	public function fix() {
-		JSpaceLogger::log("Item fix attempt");
+		JSpaceLog::add("Item fix attempt", JLog::DEBUG, JSpaceLog::CAT_REPOSITORY);
 		
 		$ret = array();
 		
@@ -396,19 +396,21 @@ class JSpaceTableItem extends JTable
                     	$filePath = $bitstream->getPath();
                         if ( !file_exists($filePath) || $finfo->file($filePath) == false ) {
                         	$ret[] = $bitstream->file;
-                        	JSpaceLogger::log("File not found or corrupted", JLog::ERROR);
-                        	JSpaceLogger::log("\tBundle=" . $bundle->type, JLog::ERROR);
-                        	JSpaceLogger::log("\tFile=" . $filePath, JLog::ERROR);
-                        	JSpaceLogger::log("\tDeleting bitstream id=" . $bitstream->id, JLog::ERROR);
+                        	$msg  = "File not found or corrupted\n";
+                        	$msg .= "\tBundle=" . $bundle->type;
+                        	$msg .= "\tFile=" . $filePath;
+                        	$msg .= "\tDeleting bitstream id=" . $bitstream->id;
+                        	JSpaceLog::add($msg, JLog::ERROR, JSpaceLog::CAT_REPOSITORY);
+                        	
                         	$bitstream->delete();
-                        	JSpaceLogger::log("\tDeleted bitstream", JLog::ERROR);
+                        	JSpaceLog::add("Bitstream deleted", JLog::ERROR, JSpaceLog::CAT_REPOSITORY);
                         }
                     }
                 }
             }
         }
 
-		JSpaceLogger::log("Item fix attempt DONE");
+		JSpaceLog::add("Item fix attempt DONE", JLog::DEBUG, JSpaceLog::CAT_REPOSITORY);
 		return $ret;
 	}
 
@@ -418,7 +420,7 @@ class JSpaceTableItem extends JTable
      * @author Piotr Dolistowski
 	 */
 	public function archive() {
-		JSpaceLogger::log("Archiving item");
+		JSpaceLog::add("Archiving item", JLog::DEBUG, JSpaceLog::CAT_REPOSITORY);
 		$repository = JSpaceFactory::getRepository();
 		$id = $repository->storeItem( $this );
 		if( !is_null($id) ) {

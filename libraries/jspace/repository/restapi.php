@@ -49,17 +49,17 @@ abstract class JSpaceRepositoryRestAPI
 	 * @return JSpaceRepositoryEndpoint
 	 */
 	public function getEndpoint( $name, $config=array() ) {
-		JSpaceLogger::log("Getting endpoint: $name");
+		JSpaceLog::add("Getting endpoint: $name", JLog::DEBUG, JSpaceLog::CAT_JREST);
 		$api = $this->_getEndpointAPI( $name );
-		JSpaceLogger::log("RestAPI: " . print_r($api, true));
-		JSpaceLogger::log("RestAPI config: " . print_r($config, true));
+		JSpaceLog::add("RestAPI: " . print_r($api, true), JLog::DEBUG, JSpaceLog::CAT_JREST);
+		JSpaceLog::add("RestAPI config: " . print_r($config, true), JLog::DEBUG, JSpaceLog::CAT_JREST);
 		$urlElements = array();
 		foreach( $api['urlElements'] as $key ) {
 			if( isset($config[$key]) ) {
 				$urlElements[] = $config[$key];
 			}
 			else {
-				JSpaceLogger::log("Required for url config element missing: $key", JLog::ERROR);
+				JSpaceLog::add("Required for url config element missing: $key", JLog::ERROR, JSpaceLog::CAT_JREST);
 				throw new Exception(JText::_('LIB_JSPACE_ERROR_RESTAPI_GETENDPOINT_CONFIG_ERROR_URL'));
 			}
 		}
@@ -74,7 +74,7 @@ abstract class JSpaceRepositoryRestAPI
 			}
 			else {
 				if( $required ) {
-					JSpaceLogger::log("Required for url var missing: $key", JLog::ERROR);
+					JSpaceLog::add("Required for url var missing: $key", JLog::ERROR, JSpaceLog::CAT_JREST);
 					throw new Exception(JText::_('LIB_JSPACE_ERROR_RESTAPI_GETENDPOINT_CONFIG_ERROR_VARS'));
 				}
 			}
@@ -92,7 +92,7 @@ abstract class JSpaceRepositoryRestAPI
 			}
 			else {
 				if( $required ) {
-					JSpaceLogger::log("Required data missing: $key", JLog::ERROR);
+					JSpaceLog::add("Required data missing: $key", JLog::ERROR, JSpaceLog::CAT_JREST);
 					throw new Exception(JText::_('LIB_JSPACE_ERROR_RESTAPI_GETENDPOINT_CONFIG_ERROR_DATA'));
 				}
 			}
@@ -105,26 +105,26 @@ abstract class JSpaceRepositoryRestAPI
 		$anonymous = (bool)JArrayHelper::getValue($config, 'anonymous', $api['anonymous']);
 		$data = (count($data)>0) ? $data : null;
 		
-		JSpaceLogger::log("RestAPI anonymous: " . print_r($anonymous, true));
-		JSpaceLogger::log("RestAPI setting data: " . print_r($data, true));
+		JSpaceLog::add("RestAPI anonymous: " . print_r($anonymous, true), JLog::DEBUG, JSpaceLog::CAT_JREST);
+		JSpaceLog::add("RestAPI setting data: " . print_r($data, true), JLog::DEBUG, JSpaceLog::CAT_JREST);
 		
 		//get timeout from $config or $api or set default
 		$timeout = JArrayHelper::getValue($config, 'timeout', JArrayHelper::getValue($api, 'timeout', 10));
-		JSpaceLogger::log("Getting timeout: " . $timeout);
+		JSpaceLog::add("Getting timeout: " . $timeout, JLog::DEBUG, JSpaceLog::CAT_JREST);
 
 		$endpoint = new JSpaceRepositoryEndpoint($url, $vars, $anonymous, $data, $timeout);
 		
 
 		if( JArrayHelper::getValue($api, 'cache', true) ) {
 			$group = $cacheGroup;
-			JSpaceLogger::log("Endpoint cache group: $group");
+			JSpaceLog::add("Endpoint cache group: $group", JLog::DEBUG, JSpaceLog::CAT_JREST);
 			$endpoint->set('group', $group);
 		}
 		else {
 			$endpoint->set('cacheable',false);
 		}
 		
-		JSpaceLogger::log("Returning endpoint: $name");
+		JSpaceLog::add("Returning endpoint: $name", JLog::DEBUG, JSpaceLog::CAT_JREST);
 		return $endpoint;
 	}
 	
@@ -149,7 +149,7 @@ abstract class JSpaceRepositoryRestAPI
 	 */
 	protected function _getEndpointAPI( $name ) {
 		if( !isset($this->_endpoints[ $name ]) ) {
-			JSpaceLogger::log("Requested endpoint not found: $name", JLog::CRITICAL);
+			JSpaceLog::add("Requested endpoint not found: $name", JLog::CRITICAL, JSpaceLog::CAT_JREST);
 			throw new Exception(JText::_('LIB_JSPACE_CRITICAL_ERROR_RESTAPI_GETENDPOINT_NO_ENDPOINT_FOUND'));
 		}
 		return $this->_endpoints[ $name ];
@@ -170,7 +170,7 @@ abstract class JSpaceRepositoryRestAPI
 				$groupElements[] = $config[$key];
 			}
 			else {
-				JSpaceLogger::log("Required for group config element missing: $key", JLog::ERROR);
+				JSpaceLog::add("Required for group config element missing: $key", JLog::ERROR, JSpaceLog::CAT_JREST);
 				throw new Exception(JText::_('LIB_JSPACE_ERROR_RESTAPI_GETENDPOINT_CONFIG_ERROR_GROUP'));
 			}
 		}

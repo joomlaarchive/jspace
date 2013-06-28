@@ -68,7 +68,7 @@ abstract class JSpaceRepositoryError extends JObject
 			$exception = new JException($message, $code);
 		}
 		$obj->setError( $msg );
-		JSpaceLogger::log( $msg );
+		JSpaceLog::add( $msg, JLog::DEBUG, JSpaceLog::CAT_ERROR );
 		
 		return $exception;
 	}

@@ -60,7 +60,6 @@ class JSpaceRepositoryDspaceBundle extends JSpaceRepositoryBundle
 	protected function _hasBitstream( $id = null ){
 		if( is_null( $id ) ) {
 			$id = $this->_dspaceRawBundle->primaryBitstreamId;
-// 			JSpaceLogger::log("Primary bitstream: $id for " . $this->_type);
 		}
 		foreach( $this->_dspaceRawBundle->bitstreams as $rawBitstream ) {
 			if( $rawBitstream->id == $id ) {

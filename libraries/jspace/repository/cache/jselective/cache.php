@@ -54,7 +54,7 @@ class JSpaceRepositoryCacheJselectiveCache extends JSpaceRepositoryCacheJcacheCa
 	 */
 	protected function _getJCache( JSpaceRepositoryCacheKey $key ) {
 		$group = $key->getEndpoint()->get('group');
-		JSpaceLogger::log("Cache [{$this->_driver}]. Fetch JCache group {$group}", JLog::DEBUG);
+		JSpaceLog::add("Cache [{$this->_driver}]. Fetch JCache group {$group}", JLog::DEBUG, JSpaceLog::CAT_CACHE);
 		$cache = JFactory::getCache($group, 'plain');
 		$cache->setCaching( true );
 		return $cache;
@@ -62,7 +62,7 @@ class JSpaceRepositoryCacheJselectiveCache extends JSpaceRepositoryCacheJcacheCa
 	
 	public function clean( JSpaceRepositoryCacheKey $key ) {
 		$group = $key->getEndpoint()->get('group');
-		JSpaceLogger::log("Cache [{$this->_driver}]. Fetch JCache group {$group}", JLog::DEBUG);
+		JSpaceLog::add("Cache [{$this->_driver}]. Fetch JCache group {$group}", JLog::DEBUG, JSpaceLog::CAT_CACHE);
 		$cache = JFactory::getCache($group, 'plain');
 		return $cache->clean();
 	}
