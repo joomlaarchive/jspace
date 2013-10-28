@@ -47,6 +47,16 @@ class JSpaceController extends JControllerLegacy
 		$model = $this->getModel("search");
 		$this->setRedirect($model->buildQueryURL(JRequest::get()));
 	}
+	
+	// @todo this needs to be made more generic, perhaps some kind of handle
+	// manager.
+	public function resolve()
+	{
+		require_once(JPATH_ROOT."/components/com_jspace/helpers/route.php");
+	
+		$id = JFactory::getApplication()->input->getInt('id');
+		$this->setRedirect(JSpaceHelperRoute::getItemFullRoute($id));
+	}
 
 	public function display($cachable = false, $urlparams = false)
 	{
