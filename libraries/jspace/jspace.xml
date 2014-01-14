@@ -15,16 +15,19 @@
 	
     <files folder="libraries">
         <folder>crosswalk</folder>
-        <folder>database</folder>
-        <folder>debug</folder>
+        <folder>database</folder>        
         <folder>fineuploader</folder>
         <folder>form</folder>
         <folder>image</folder>
+        <folder>log</folder>
         <folder>messenger</folder>
         <folder>multifileupload</folder>
         <folder>repository</folder>
-        <filename>factory.php</filename>
-        <filename>dspaceapi.php</filename>
+        <folder>tool</folder>
+        <filename>cachemanager.php</filename>
+        <filename>configuration.php</filename>
+        <filename>factory.php</filename>        
+        <filename>jspace.php</filename>
     </files>
     
 	<languages>

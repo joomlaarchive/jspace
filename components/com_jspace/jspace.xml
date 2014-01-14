@@ -43,6 +43,7 @@
 			<filename>jspace.php</filename>
 			<filename>controller.php</filename>
 			<filename>configuration.php</filename>
+			<filename>config.xml</filename>
 			<folder>helpers</folder>
 			<folder>models</folder>
 			<folder>views</folder>

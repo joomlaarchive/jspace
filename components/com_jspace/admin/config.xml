@@ -48,7 +48,6 @@
 			description="COM_JSPACE_REPOSITORY_UNMAPPED_METADATA_KEYS_DESC"
 			value="1" />
 	</fieldset>
-	<!-- 
 	<fieldset name="DSpace"
         label="COM_JSPACE_FIELDSET_CONFIG_DSPACE_OPTIONS_LABEL"
         description="COM_JSPACE_FIELDSET_CONFIG_DSPACE_OPTIONS_DESC"
@@ -75,11 +74,6 @@
             label="COM_JSPACE_REPOSITORY_PASSWORD_LABEL"
             description="COM_JSPACE_REPOSITORY_PASSWORD_DESC" 
             size="45"/>
-        <field 
-            name="DSpace_defaultcollectionid" 
-            type="JSpace.Collection" 
-            label="COM_JSPACE_REPOSITORY_DEFAULTCOLLECTION_LABEL"
-            description="COM_JSPACE_REPOSITORY_DEFAULTCOLLECTION_DESC"/>
         <field 
             name="DSpace_crosswalk" 
             type="text" 
@@ -114,7 +108,6 @@
             type="text" 
             label="COM_JSPACE_REPOSITORY_CROSSWALK_LABEL"  />
 	</fieldset>
-	 -->
 	<fieldset name="permissions"
 		label="JCONFIG_PERMISSIONS_LABEL"
 		description="JCONFIG_PERMISSIONS_DESC">

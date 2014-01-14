@@ -17,7 +17,7 @@
 			</fileset>
 		</copy>
 	</target>
-<!--
+
 	<target name="package" description="Creates a JSolr Index JSpace plugin package.">
 		<echo message="Packaging JSolr Index JSpace plugin."/>
 		<zip destfile="${package.dest}/plg_jsolrcrawler_jspace.zip"
@@ -25,5 +25,4 @@
 		       update="true"
 		       excludes="build*.xml"/>
 	</target>
-	-->
 </project>

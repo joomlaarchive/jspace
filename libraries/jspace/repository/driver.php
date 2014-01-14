@@ -29,6 +29,9 @@
  *
  */
 defined('JPATH_PLATFORM') or die;
+
+jimport('joomla.filesystem.file');
+
 class JSpaceRepositoryDriver {
 	const CLASS_REPOSITORY 	= 'Repository';
 	const CLASS_ITEM 		= 'Item';
