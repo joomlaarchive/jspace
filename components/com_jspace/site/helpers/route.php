@@ -51,6 +51,14 @@ abstract class JSpaceHelperRoute
 		$link->setVar('Itemid', $Itemid);
 		return (string)$link;
 	}
+	
+	/**
+	 * Get full route to item (with domain name).
+	 * @param mixed $id
+	 */
+	public static function getItemFullRoute( $id ) {
+		return JURI::getInstance()->toString(array('scheme', 'host', 'port')) . JRoute::_( self::getItemRoute($id) );
+	}
 
 	public static function getItemUrl( $id ) {
 		$Itemid = self::_findItem('item');
