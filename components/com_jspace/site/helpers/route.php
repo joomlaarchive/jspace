@@ -57,7 +57,18 @@ abstract class JSpaceHelperRoute
 	 * @param mixed $id
 	 */
 	public static function getItemFullRoute( $id ) {
-		return JURI::getInstance()->toString(array('scheme', 'host', 'port')) . JRoute::_( self::getItemRoute($id) );
+		$Itemid = self::_findItem('item');
+
+		$link = new JURI( 'index.php');
+		$link->setVar('option', 'com_jspace');
+		$link->setVar('view', 'item');
+		$link->setVar('id', $id);
+		if( !is_null( $Itemid) ) {
+			$link->setVar('Itemid', $Itemid);
+		}
+		
+		$routed = is_null($Itemid) ? '/' . (string)$link : JRoute::_( (string)$link );
+		return JURI::getInstance()->toString(array('scheme', 'host', 'port')) . $routed;
 	}
 
 	public static function getItemUrl( $id ) {
