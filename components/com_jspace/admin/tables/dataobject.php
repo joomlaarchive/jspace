@@ -11,6 +11,11 @@ class JSpaceTableDataObject extends JTable
 	public function __construct(&$db)
 	{
 		parent::__construct('#__jspace_dataobjects', 'id', $db);
+		
+		JObserverMapper::addObserverClassToClass(
+				'JTableObserverContenthistory', 
+				get_class($this), 
+				array('typeAlias'=>'com_jspace.dataobject'));
 	}
 	
 	/**

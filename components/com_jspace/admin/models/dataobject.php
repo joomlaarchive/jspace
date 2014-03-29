@@ -169,6 +169,24 @@ class JSpaceModelDataObject extends JModelAdmin
 		return JTable::getInstance($type, $prefix, $config);
 	}
 	
+	public function prepareTable($table)
+	{
+		// Set the publish date to now
+		$db = $this->getDbo();
+		if ($table->state == 1 && (int) $table->publish_up == 0)
+		{
+			$table->publish_up = JFactory::getDate()->toSql();
+		}
+		
+		if ($table->state == 1 && intval($table->publish_down) == 0)
+		{
+			$table->publish_down = $db->getNullDate();
+		}
+		
+		// Increment the content version number.
+		$table->version++;
+	}
+	
 	public function save($data)
 	{	
 		if (parent::save($data))

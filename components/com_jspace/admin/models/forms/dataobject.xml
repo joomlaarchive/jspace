@@ -143,6 +143,14 @@
 			label="COM_JSPACE_DATAOBJECT_VERSION_LABEL" size="6" description="COM_JSPACE_DATAOBJECT_VERSION_DESC"
 			readonly="true" filter="unset" />
 
+		<field 
+			name="version_note"
+			type="text"
+			label="JGLOBAL_FIELD_VERSION_NOTE_LABEL"
+			description="JGLOBAL_FIELD_VERSION_NOTE_DESC"
+			class="inputbox" size="45"
+			labelclass="control-label"/>
+
 		<field name="hits" type="text" label="JGLOBAL_HITS"
 			description="COM_JSPACE_DATAOBJECT_HITS_DESC" class="readonly" size="6"
 			readonly="true" filter="unset" />

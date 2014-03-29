@@ -56,7 +56,7 @@ VALUES
 (NULL, 
 'JSpace Data Object', 
 'com_jspace.dataobject', 
-'{"special":{"dbtable":"#__jspace_dataobjects","key":"jspace_dataobject_id","type":"DataObject","prefix":"JTable","config":"array()"}}', 
+'{"special":{"dbtable":"#__jspace_dataobjects","key":"id","type":"DataObject","prefix":"JSpaceTable","config":"array()"}}', 
 '', 
 '', 
 'JSpaceHelperRoute::getDataObjectRoute', 
