@@ -1,8 +1,9 @@
-<?php
+<?php 
 /**
- * A script for intercepting calls to this component and handling them appropriately.
+ * A form view for adding/editing JSpace configuration.
  * 
  * @author		$LastChangedBy$
+ * @package		JSpace
  * @copyright	Copyright (C) 2011 Wijiti Pty Ltd. All rights reserved.
  * @license     This file is part of the JSpace component for Joomla!.
 
@@ -28,8 +29,18 @@
  * 
  */
 
-defined('_JEXEC') or die();
+defined('_JEXEC') or die;
 
-require_once JPATH_LIBRARIES.'/fof/include.php';
+JHtml::_('behavior.framework');
+JHtml::_('behavior.modal');
+?>
 
-FOFDispatcher::getTmpInstance('com_jspace')->dispatch();
+<div id="cpanel" class="span12">
+	<?php if (!empty($this->sidebar)) : ?>
+	<div id="j-sidebar-container" class="span2"><?php echo $this->sidebar; ?></div>
+	<div id="j-main-container" class="span10">
+	<?php else : ?>
+    <div id="j-main-container">
+	<?php endif;?>
+	</div>
+</div>

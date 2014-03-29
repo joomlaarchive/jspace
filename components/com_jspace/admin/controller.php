@@ -1,44 +1,29 @@
 <?php
-/**
- * A controller for managing the retrieval of items from an OAI compliant archive.
- * 
- * @author		$LastChangedBy$
- * @package		JSpace
- * @copyright	Copyright (C) 2011 Wijiti Pty Ltd. All rights reserved.
- * @license     This file is part of the JSpace component for Joomla!.
+defined('_JEXEC') or die;
 
-   The JSpace component for Joomla! is free software: you can redistribute it 
-   and/or modify it under the terms of the GNU General Public License as 
-   published by the Free Software Foundation, either version 3 of the License, 
-   or (at your option) any later version.
-
-   The JSpace component for Joomla! is distributed in the hope that it will be 
-   useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
-
-   You should have received a copy of the GNU General Public License
-   along with the JSpace component for Joomla!.  If not, see 
-   <http://www.gnu.org/licenses/>.
-
- * Contributors
- * Please feel free to add your name and email (optional) here if you have 
- * contributed any source code changes.
- * Name							Email
- * Hayden Young					<haydenyoung@wijiti.com> 
- * 
- */
-
-defined('_JEXEC') or die('Restricted access');
-
-jimport('joomla.application.component.controllerform');
-
-class JSpaceController extends JControllerForm 
+class JSpaceController extends JControllerLegacy
 {
-	protected $default_view = 'dashboard';
-	
-	function __construct()
+	protected $default_view = 'cpanel';
+
+	public function display($cachable = false, $urlparams = false)
 	{
-		parent::__construct();
+		$view   = $this->input->get('view', $this->default_view);
+		$layout = $this->input->get('layout', $this->default_view);
+		$id     = $this->input->getInt('id');
+
+		// Check for edit form.
+		if ($view == 'dataobject' && $layout == 'edit' && !$this->checkEditId('com_jspace.edit.dataobject', $id))
+		{
+			// Somehow the person just went to the form - we don't allow that.
+			$this->setError(JText::sprintf('JLIB_APPLICATION_ERROR_UNHELD_ID', $id));
+			$this->setMessage($this->getError(), 'error');
+			$this->setRedirect(JRoute::_('index.php?option=com_jspace&view=dataobjects', false));
+
+			return false;
+		}
+
+		parent::display();
+
+		return $this;
 	}
 }

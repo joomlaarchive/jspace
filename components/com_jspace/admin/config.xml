@@ -3,111 +3,7 @@
     <fieldset name="general"
         label="COM_JSPACE_FIELDSET_GENERAL_LABEL"
         description="COM_JSPACE_FIELDSET_GENERAL_DESC">
-        <field 
-            name="admin_email" 
-            type="text" 
-            label="COM_JSPACE_GENERAL_ADMINEMAIL_LABEL"
-            description="COM_JSPACE_GENERAL_ADMINEMAIL_DESC"/>    
-		<field 
-			name="limit_items" 
-			type="text" 
-			label="COM_JSPACE_REPOSITORY_LIMIT_ITEMS_LABEL" 
-			description="COM_JSPACE_REPOSITORY_LIMIT_ITEMS_DESC"
-			value="10" />
     </fieldset>
-	<fieldset name="rest"
-		label="COM_JSPACE_FIELDSET_CONFIG_REPOSITORY_OPTIONS_LABEL"
-		description="COM_JSPACE_FIELDSET_CONFIG_REPOSITORY_OPTIONS_DESC"
-		addfieldpath="/libraries/jspace/form/fields">
-		<field
-		  name="driver" 
-		  type="list"
-		  label="COM_JSPACE_REPOSITORY_DRIVER_SELECT_LABEL"
-		  description="COM_JSPACE_REPOSITORY_DRIVER_SELECT_DESCRIPTION"
-		  default="DSpace">
-		  <option value="DSpace">COM_JSPACE_REPOSITORY_DRIVER_DSPACE</option>
-		  <option value="fedora">COM_JSPACE_REPOSITORY_DRIVER_FC</option>
-		</field>
-		<field 
-			name="storage_directory" 
-			type="text" 
-			label="COM_JSPACE_REPOSITORY_STORAGEDIR_LABEL" 
-			description="COM_JSPACE_REPOSITORY_STORAGEDIR_DESC"
-			default="images.jspace.bundles"
-			size="45" />
-		<field 
-			name="show_translation_keys" 
-			type="checkbox" 
-			label="COM_JSPACE_REPOSITORY_SHOW_TRANSLATION_KEYS_LABEL" 
-			description="COM_JSPACE_REPOSITORY_SHOW_TRANSLATION_KEYS_DESC"
-			value="1" />
-		<field 
-			name="show_unmapped_metadata" 
-			type="checkbox" 
-			label="COM_JSPACE_REPOSITORY_SHOW_UNMAPPED_METADATA_LABEL" 
-			description="COM_JSPACE_REPOSITORY_UNMAPPED_METADATA_KEYS_DESC"
-			value="1" />
-	</fieldset>
-	<fieldset name="DSpace"
-        label="COM_JSPACE_FIELDSET_CONFIG_DSPACE_OPTIONS_LABEL"
-        description="COM_JSPACE_FIELDSET_CONFIG_DSPACE_OPTIONS_DESC"
-        addfieldpath="/libraries/jspace/form/fields">
-        <field 
-            name="DSpace_base_url" 
-            type="text" 
-            label="COM_JSPACE_REPOSITORY_BASE_URL_LABEL" 
-            size="45"/>
-        <field 
-            name="DSpace_rest_url" 
-            type="text" 
-            label="COM_JSPACE_REPOSITORY_REST_URL_LABEL" 
-            size="45"/>
-        <field 
-            name="DSpace_username" 
-            type="text" 
-            label="COM_JSPACE_REPOSITORY_USERNAME_LABEL" 
-            description="COM_JSPACE_REPOSITORY_USERNAME_DESC"
-            size="45"/>
-        <field 
-            name="DSpace_password" 
-            type="text" 
-            label="COM_JSPACE_REPOSITORY_PASSWORD_LABEL"
-            description="COM_JSPACE_REPOSITORY_PASSWORD_DESC" 
-            size="45"/>
-        <field 
-            name="DSpace_crosswalk" 
-            type="text" 
-            label="COM_JSPACE_REPOSITORY_CROSSWALK_LABEL"  />
-	</fieldset>
-	<fieldset name="fedora"
-        label="COM_JSPACE_FIELDSET_CONFIG_FC_OPTIONS_LABEL"
-        description="COM_JSPACE_FIELDSET_CONFIG_FC_OPTIONS_DESC"
-        addfieldpath="/libraries/jspace/form/fields">
-        <field 
-            name="fedora_base_url" 
-            type="text" 
-            label="COM_JSPACE_REPOSITORY_FC_BASE_URL_LABEL" 
-            size="45"/>
-        <field 
-            name="fedora_rest_url" 
-            type="text" 
-            label="COM_JSPACE_REPOSITORY_FC_REST_URL_LABEL" 
-            size="45"/>
-        <field 
-            name="fedora_username" 
-            type="text" 
-            label="COM_JSPACE_REPOSITORY_FC_USERNAME_LABEL" 
-            size="45"/>
-        <field 
-            name="fedora_password" 
-            type="text" 
-            label="COM_JSPACE_REPOSITORY_FC_PASSWORD_LABEL"
-            size="45"/>
-        <field 
-            name="fedora_crosswalk" 
-            type="text" 
-            label="COM_JSPACE_REPOSITORY_CROSSWALK_LABEL"  />
-	</fieldset>
 	<fieldset name="permissions"
 		label="JCONFIG_PERMISSIONS_LABEL"
 		description="JCONFIG_PERMISSIONS_DESC">
@@ -118,22 +14,5 @@
 			filter="rules"
 			component="com_jspace"
 			section="component"/>
-	</fieldset>
-	<fieldset name="notifications"
-		label="COM_JSPACE_FIELDSET_NOTIFICATIONS_LABEL"
-		description="COM_JSPACE_FIELDSET_NOTIFICATIONS_DESC">
-		<field 
-			name="onarchive" 
-			type="Usergroup" 
-			label="COM_JSPACE_NOTIFICATIONS_ARCHIVE_LABEL"
-			description="COM_JSPACE_NOTIFICATIONS_ARCHIVE_DESC"
-			notes="COM_JSPACE_NOTIFICATIONS_ARCHIVE_NOTES"/>	
-		<field 
-			name="onarchiverecursive" 
-			type="Checkbox" 
-			value="1"
-			label="COM_JSPACE_NOTIFICATIONS_ARCHIVERECURSIVE_LABEL"
-			description="COM_JSPACE_NOTIFICATIONS_ARCHIVERECURSIVE_DESC"
-			notes="COM_JSPACE_NOTIFICATIONS_ARCHIVERECURSIVE_NOTES"/>	
 	</fieldset>
 </config>

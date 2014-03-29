@@ -45,44 +45,39 @@ class JSpaceHelper
 	public static function addSubmenu($vName)
 	{
 		JSubMenuHelper::addEntry(
-			JText::_('COM_JSPACE_SUBMENU_CONFIGURATION'),
-			'index.php?option=com_jspace&view=configuration',
-			$vName == 'configuration'
+			JText::_('COM_JSPACE_SUBMENU_CPANEL'),
+			'index.php?option=com_jspace',
+			$vName == 'cpanel'
 		);
 		JSubMenuHelper::addEntry(
-			JText::_('COM_JSPACE_SUBMENU_COMMUNITIES'),
-			'index.php?option=com_jspace&view=communities',
-			$vName == 'communities'
+				JText::_('COM_JSPACE_SUBMENU_DATAOBJECTS'),
+				'index.php?option=com_jspace&view=dataobjects',
+				$vName == 'dataobjects'
 		);
 		JSubMenuHelper::addEntry(
-			JText::_('COM_JSPACE_SUBMENU_COLLECTIONS'),
-			'index.php?option=com_jspace&view=collections',
-			$vName == 'collections'
-		);
-		JSubMenuHelper::addEntry(
-			JText::_('COM_JSPACE_SUBMENU_USERS'),
-			'index.php?option=com_jspace&view=users',
-			$vName == 'users'
+			JText::_('COM_JSPACE_SUBMENU_CATEGORIES'),
+			'index.php?option=com_categories&extension=com_jspace',
+			$vName == 'categories'
 		);
 	}
 	
 	/**
 	 * Gets a list of the actions that can be performed.
 	 *
-	 * @param	int		The community ID.
+	 * @param	int		The category ID.
 	 *
 	 * @return	JObject
 	 * @since	1.6
 	 */
-	public static function getActions($communityId = 0)
+	public static function getActions($categoryId = 0)
 	{
 		$user	= JFactory::getUser();
 		$result	= new JObject();
 
-		if (empty($communityId)) {
+		if (empty($categoryId)) {
 			$assetName = 'com_jspace';
 		} else {
-			$assetName = 'com_jspace.community.'.(int) $communityId;
+			$assetName = 'com_jspace.category.'.(int) $categoryId;
 		}
 
 		$actions = array(
@@ -92,14 +87,11 @@ class JSpaceHelper
 			'core.edit', 
 			'core.edit.own', 
 			'core.edit.state', 
-			'core.delete',
-			'jspace.workflows.view',
-			'jspace.workflow.review',
-			'jspace.workflow.review.global'
+			'core.delete'
 		);
 
 		foreach ($actions as $action) {
-			$result->set($action,	$user->authorise($action, $assetName));
+			$result->set($action, $user->authorise($action, $assetName));
 		}
 
 		return $result;

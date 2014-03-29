@@ -36,23 +36,8 @@
 				<include name="**/**"/>
 			</fileset>
 		</copy>
-		<copy todir="${dest.media}/com_jspace/js">
-			<fileset dir="${src}/js" defaultexcludes="true">
-				<include name="**/**"/>
-			</fileset>
-		</copy>
-		<copy todir="${dest.media}/com_jspace/images">
-			<fileset dir="${src}/images" defaultexcludes="true">
-				<include name="**/**"/>
-			</fileset>
-		</copy>
 		<copy todir="${dest.media}/com_jspace/css">
-			<fileset dir="${src}/css" defaultexcludes="true">
-				<include name="**/**"/>
-			</fileset>
-		</copy>
-		<copy todir="${dest.media}/com_jspace/flowplayer">
-			<fileset dir="${src}/flowplayer" defaultexcludes="true">
+			<fileset dir="${src}/media/css" defaultexcludes="true">
 				<include name="**/**"/>
 			</fileset>
 		</copy>

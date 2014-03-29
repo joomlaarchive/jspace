@@ -2,8 +2,7 @@
 /**
  * A script for intercepting calls to this component and handling them appropriately.
  * 
- * @author		$LastChangedBy$
- * @copyright	Copyright (C) 2011 Wijiti Pty Ltd. All rights reserved.
+ * @copyright	Copyright (C) 2011-2014 KnowledgeARC Ltd. All rights reserved.
  * @license     This file is part of the JSpace component for Joomla!.
 
    The JSpace component for Joomla! is free software: you can redistribute it 
@@ -24,29 +23,19 @@
  * Please feel free to add your name and email (optional) here if you have 
  * contributed any source code changes.
  * Name							Email
- * Hayden Young					<haydenyoung@wijiti.com> 
+ * Hayden Young					<hayden@knowledgearc.com> 
  * 
  */
+defined('_JEXEC') or die;
+JHtml::_('behavior.tabstate');
 
-defined('_JEXEC') or die('Restricted access');
- 
-// Require the base controller
- 
-require_once(JPATH_COMPONENT. DIRECTORY_SEPARATOR .'controller.php');
- 
-// Require specific controller if requested
-if($controller = JRequest::getWord('controller')) {
-    $path = JPATH_COMPONENT. DIRECTORY_SEPARATOR .'controllers'. DIRECTORY_SEPARATOR .$controller.'.php';
-    
-    if (file_exists($path)) {
-        require_once $path;
-    } else {
-        $controller = '';
-    }
-    
+if (!JFactory::getUser()->authorise('core.manage', 'com_jspace'))
+{
+	return JError::raiseWarning(404, JText::_('JERROR_ALERTNOAUTHOR'));
 }
 
-$classname = 'JSpaceController'.$controller;
-$controller = new $classname();
-$controller->execute(JRequest::getVar('task'));
+JLoader::register('JSpaceHelper', __DIR__ . '/helpers/jspace.php');
+
+$controller = JControllerLegacy::getInstance('JSpace');
+$controller->execute(JFactory::getApplication()->input->get('task'));
 $controller->redirect();

@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<metadata>
-	<layout title="COM_JSPACE_TREE_LAYOUT_TITLE" option="com_jspace_categories_view_tree_option">
-		<message>
-			<![CDATA[COM_JSPACE_TREE_LAYOUT_DESC]]>
-		</message>
-	</layout>
-	
-</metadata>
