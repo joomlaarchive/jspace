@@ -24,7 +24,13 @@ $assoc = JLanguageAssociations::isEnabled();
 	}
 </script>
 
-<form action="<?php echo JRoute::_('index.php?option=com_jspace&layout=edit&id=' . (int) $this->item->id); ?>" method="post" name="adminForm" id="dataobject-form" class="form-validate">
+<form 
+	action="<?php echo JRoute::_('index.php?option=com_jspace&layout=edit&id='.(int)$this->item->id); ?>" 
+	method="post" 
+	name="adminForm" 
+	id="dataobject-form" 
+	class="form-validate"
+	enctype="multipart/form-data">
 	<?php echo JLayoutHelper::render('joomla.edit.title_alias', $this); ?>
 	
 	<div class="form-horizontal">
@@ -50,28 +56,20 @@ $assoc = JLanguageAssociations::isEnabled();
 			</div>
 			<?php echo JHtml::_('bootstrap.endTab'); ?>
 			
-			<?php foreach ($this->form->getFieldsets('metadata') as $fieldset) : ?>
-				<?php echo JHtml::_('bootstrap.addTab', 'myTab', $fieldset->name, JText::_($fieldset->label, true)); ?>
-				<div class="row-fluid">
-					<div class="span12">
-						<?php foreach ($this->form->getFieldset($fieldset->name) as $field) : ?>
-							<?php echo $field->getControlGroup(); ?>				
-						<?php endforeach; ?>
+			<?php foreach ($this->form->getFieldsets() as $fieldset) : ?>
+				<?php if (array_search($fieldset->name, array('title','details','publishing','item_associations')) === false) : ?>
+					<?php echo JHtml::_('bootstrap.addTab', 'myTab', $fieldset->name, JText::_($fieldset->label, true)); ?>
+					<div class="row-fluid">
+						<div class="span12">
+							<?php foreach ($this->form->getFieldset($fieldset->name) as $field) : ?>
+								<?php echo $field->getControlGroup(); ?>				
+							<?php endforeach; ?>
+						</div>
 					</div>
-				</div>
-				<?php echo JHtml::_('bootstrap.endTab'); ?>
+					<?php echo JHtml::_('bootstrap.endTab'); ?>
+				<?php endif; ?>				
 			<?php endforeach; ?>
 
-			<?php foreach ($this->form->getFieldsets('files') as $fieldset) : ?>
-				<?php echo JHtml::_('bootstrap.addTab', 'myTab', $fieldset->name, JText::_($fieldset->label, true)); ?>
-				<div>
-					<?php foreach ($this->form->getFieldset($fieldset->name) as $field) : ?>
-						<?php echo $field->getControlGroup(); ?>				
-					<?php endforeach; ?>
-				</div>
-				<?php echo JHtml::_('bootstrap.endTab'); ?>
-			<?php endforeach; ?>
-			
 			<?php if ($assoc) : ?>
 				<?php echo JHtml::_('bootstrap.addTab', 'myTab', 'associations', JText::_('JGLOBAL_FIELDSET_ASSOCIATIONS', true)); ?>
 					<?php echo $this->loadTemplate('associations'); ?>
@@ -83,4 +81,4 @@ $assoc = JLanguageAssociations::isEnabled();
 	<input type="hidden" name="task" value="" />
 	<input type="hidden" name="return" value="<?php echo JFactory::getApplication()->input->getCmd('return'); ?>" />
 	<?php echo JHtml::_('form.token'); ?>
-</form>
+</form>							

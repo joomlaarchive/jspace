@@ -5,21 +5,23 @@
 	description="COM_JSPACE_DATAOBJECT_SCHEMA_DATASTREAMOBJECT_DESC">
 	<fields name="metadata">
 		<fieldset name="jspacemetadata"
-			label="COM_JSPACE_DATABOJECTS_GROUP_METADATA">
-			<field name="list_templates"
-        		type="repeatable"
-        		icon="list"
-        		description="PLG_TINY_FIELD_TEMPLATE_FIELD_ELEMENTS_DESC"
-        		label="PLG_TINY_FIELD_TEMPLATE_FIELD_ELEMENTS_LABEL">        		
-        		<fields name="params">
-        			<fieldset hidden="true" name="list_templates_modal" repeat="true">
-               			<field name="template"
-                      		label="PLG_TINY_FIELD_TEMPLATE_FIELD_NAME_LABEL"
-                      		size="30"
-                      		type="text"/>
-        			</fieldset>
-        		</fields>
-			</field>
+			label="COM_JSPACE_DATASTREAMOBJECT_METADATA_LABEL">
+			<field name="title" id="title"/>
+			<field name="source" id="source" type="jspace.metadatatextarea" readonly="true" rows="6" multiple="true"/>
+		</fieldset>
+	</fields>
+	
+	<fields name="streams">
+		<fieldset name="jspacestream"
+			label="COM_JSPACE_DATASTREAMOBJECT_STREAM_LABEL">
+			<field 
+				name="original" 
+				type="jspace.file" 
+				label="Select a file to archive" 
+				description="Choose an image from your computer with maximum 100KB" 
+				size="10" 
+				accept="image/*"
+				bundle="original"/>
 		</fieldset>
 	</fields>
 </form>

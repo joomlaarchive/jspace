@@ -23,9 +23,9 @@ CREATE TABLE IF NOT EXISTS `#__jspace_dataobjects` (
 	PRIMARY KEY (`id`),
 	KEY `idx_jspace_dataobjects_access` (`access`),
 	KEY `idx_jspace_dataobjects_checkout` (`checked_out`),
-	KEY `idx_jspace_dataobjects_state` (`state`),
+	KEY `idx_jspace_dataobjects_published` (`published`),
 	KEY `idx_jspace_dataobjects_parent_id` (`parent_id`),
-	KEY `idx_jspace_dataobjects_schema_id` (`schema_id`),
+	KEY `idx_jspace_dataobjects_schema` (`schema`),
 	KEY `idx_jspace_dataobjects_createdby` (`created_by`),
 	KEY `idx_jspace_dataobjects_language` (`language`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -33,13 +33,17 @@ CREATE TABLE IF NOT EXISTS `#__jspace_dataobjects` (
 CREATE TABLE IF NOT EXISTS `#__jspace_dataobject_ancestors` (
 	`decendant` int(11) NOT NULL DEFAULT 0,
 	`ancestor` int(11) NOT NULL DEFAULT 0,
-	PRIMARY KEY (`decendant`, `ancestor`)
-);
+	PRIMARY KEY (`decendant`, `ancestor`),
+	KEY `idx_jspace_dataobject_ancestors_decendant` (`decendant`),
+	KEY `idx_jspace_dataobject_ancestors_ancestor` (`ancestor`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `#__jspace_dataobjects_categories` (
 	`catid` int(10) unsigned NOT NULL DEFAULT 0,
 	`dataobject_id` int(10) unsigned NOT NULL DEFAULT 0,
-	PRIMARY KEY(`catid`, `dataobject_id`)
+	PRIMARY KEY(`catid`, `dataobject_id`),
+	KEY `idx_jspace_dataobjects_categories_catid` (`catid`),
+	KEY `idx_jspace_dataobject_categories_dataobject_id` (`dataobject_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 INSERT INTO `#__content_types` (`type_id`, `type_title`, `type_alias`, `table`, `rules`, `field_mappings`, `router`, `content_history_options`) 

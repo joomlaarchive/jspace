@@ -86,9 +86,17 @@ class JSpaceModelDataObjects extends JModelList
 		$user = JFactory::getUser();
 		$app = JFactory::getApplication();
 	
-		// Select the required fields from the table.
-		$query
-			->select('do.*')
+		$table = $this->getTable('DataObject', 'JSpaceTable');
+		$fields = array();
+		
+		foreach ($table->getFields() as $field)
+		{			
+			$fields[] = 'do.'.$db->qn($field->Field);
+		}
+
+		$query->select($this->getState('list.select', $fields));
+		
+		$query			
 			->from('#__jspace_dataobjects AS do')
 			->where("NOT do.alias = 'root'");
 		

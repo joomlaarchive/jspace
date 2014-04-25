@@ -37,8 +37,6 @@ jimport('jspace.configuration');
 jimport('jspace.repository.cache');
 jimport('jspace.repository.connector');
 jimport('jspace.repository.endpoint');
-jimport('jspace.crosswalk.mapper');
-jimport('jspace.crosswalk.crosswalk');
 jimport('jspace.messenger.messenger');
 jimport('jspace.repository.repository');
 jimport('jspace.debug.debug');
@@ -142,13 +140,26 @@ class JSpaceFactory
 	}
 	
 	/**
-	 * Instanciates a JSpaceCrosswalk class.
-	 * Imports it if not already done.
-	 * @param string $type
-	 * @return JSpaceCrosswalk An instance of JSpaceCrosswalk class (singleton for each type).
+	 * Gets an instance of the JSpaceMetadataCrosswalk class. 
+	 *
+	 * @param 	JRegistry	$metadata
+	 * @param	array		$config
+	 * @return	JSpaceMetadataCrosswalk An instance of JSpaceMetadataCrosswalk class.
 	 */
-	public static function getCrosswalk( $type ) {
-		return JSpaceCrosswalk::factory( $type );
+	public static function getCrosswalk($metadata, $config)
+	{
+		if (!($crosswalk = JArrayHelper::getValue($config, 'name', null)))
+		{
+			throw new InvalidArgumentException("LIB_JSPACE_EXCEPTION_NO_NAME");
+		}
+	
+		$crosswalk .= '.'.JArrayHelper::getValue($config, 'type', 'ini');
+		
+		$crosswalk = JPATH_ROOT.'/administrator/components/com_jspace/crosswalks/'.$crosswalk;
+
+		jimport('jspace.metadata.crosswalk');
+		
+		return new JSpaceMetadataCrosswalk($metadata, $crosswalk);
 	}
 	
 	/**

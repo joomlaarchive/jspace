@@ -4,7 +4,7 @@ defined('_JEXEC') or die;
 class JSpaceModelDataObject extends JModelAdmin
 {
 	protected $context;
-	
+
 	public function __construct($config = array())
 	{
 		parent::__construct($config);
@@ -52,6 +52,20 @@ class JSpaceModelDataObject extends JModelAdmin
 			$table->load($parent);
 			$item->parentTitle = $table->title;
 		}
+		
+		// Override the base user data with any data in the session.
+		$data = $app->getUserState('com_jspace.edit.dataobject.data', array());
+		foreach ($data as $k => $v)
+		{
+			$item->$k = $v;
+		}
+		
+		$dispatcher = JEventDispatcher::getInstance();
+		JPluginHelper::importPlugin('jspacestorage');
+		JPluginHelper::importPlugin('jspace');
+		
+		// Trigger the data preparation event.
+		$dispatcher->trigger('onContentPrepareData', array($this->context, $item));
 
 		return $item;
 	}
@@ -87,7 +101,7 @@ class JSpaceModelDataObject extends JModelAdmin
 			$form->removeField('parent_id');
 			$form->removeField('parentTitle');
 		}
-		
+
 		return $form;
 	}
 
@@ -95,12 +109,8 @@ class JSpaceModelDataObject extends JModelAdmin
 	{
 		// Check the session for previously entered form data.
 		$app = JFactory::getApplication();
-		$data = $app->getUserState('com_jspace.edit.dataobject.data', array());
 
-		if (empty($data))
-		{
-			$data = $this->getItem();
-		}
+		$data = $this->getItem();
 
 		$this->preprocessData($this->context, $data);
 
@@ -186,25 +196,111 @@ class JSpaceModelDataObject extends JModelAdmin
 		// Increment the content version number.
 		$table->version++;
 	}
-	
-	public function save($data)
-	{	
-		if (parent::save($data))
-		{
-			if ($id = $this->getState($this->getName().'.id')) 
-			{
-				if ($catid = JArrayHelper::getValue($data, 'catid')) 
-				{
-					$table = $this->getTable('DataObjectCategory');
-					$table->dataobject_id = $id;
-					$table->catid = $catid;					
-					$table->store();
-				}
-			}
 
-			return true;
+	public function save($data)
+	{
+		$dispatcher = JEventDispatcher::getInstance();
+		
+		JPluginHelper::importPlugin('content');
+		JPluginHelper::importPlugin('jspace');
+		JPluginHelper::importPlugin('jspacestorage');
+		
+		$table = $this->getTable();
+	
+		if ((!empty($data['tags']) && $data['tags'][0] != ''))
+		{
+			$table->newTags = $data['tags'];
 		}
 	
-		return false;
+		$key = $table->getKeyName();
+		$pk = (!empty($data[$key])) ? $data[$key] : (int) $this->getState($this->getName() . '.id');
+		$isNew = true;
+	
+		// Allow an exception to be thrown.
+		try
+		{
+			// Load the row if saving an existing record.
+			if ($pk > 0)
+			{
+				$table->load($pk);
+				$isNew = false;
+			}
+	
+			// Bind the data.
+			if (!$table->bind($data))
+			{
+				$this->setError($table->getError());
+	
+				return false;
+			}
+	
+			// Prepare the row for saving
+			$this->prepareTable($table);
+	
+			// Check the data.
+			if (!$table->check())
+			{
+				$this->setError($table->getError());
+				return false;
+			}
+	
+			// Trigger the onContentBeforeSave event.
+			$result = $dispatcher->trigger($this->event_before_save, array($this->option . '.' . $this->name, $table, $isNew));
+	
+			if (in_array(false, $result, true))
+			{
+				$this->setError($table->getError());
+				return false;
+			}
+	
+			// Store the data.
+			if (!$table->store())
+			{
+				$this->setError($table->getError());
+				return false;
+			}
+	
+			// Clean the cache.
+			$this->cleanCache();
+				
+			if ($table->$key)
+			{
+				if ($catid = JArrayHelper::getValue($data, 'catid'))
+				{
+					$dataobjectCategory = $this->getTable('DataObjectCategory');
+					$dataobjectCategory->dataobject_id = $table->$key;
+					$dataobjectCategory->catid = $catid;
+					$dataobjectCategory->store();
+				}
+			}
+	
+			// Trigger the onContentAfterSave event.
+			$dispatcher->trigger($this->event_after_save, array($this->option . '.' . $this->name, $table, $isNew));
+		}
+		catch (Exception $e)
+		{
+			$this->setError($e->getMessage());
+	
+			return false;
+		}
+
+		if (isset($table->$key))
+		{
+			$this->setState($this->getName() . '.id', $table->$key);
+		}
+	
+		$this->setState($this->getName() . '.new', $isNew);
+	
+		return true;
+	}
+	
+	public function delete(&$pks)
+	{
+		$dispatcher = JEventDispatcher::getInstance();
+
+		JPluginHelper::importPlugin('jspace');
+		JPluginHelper::importPlugin('jspacestorage');
+		
+		return parent::delete($pks);
 	}
 }

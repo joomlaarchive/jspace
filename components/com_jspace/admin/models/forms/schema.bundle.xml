@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form
+	name="bundle"
+	label="COM_JSPACE_DATAOBJECT_SCHEMA_BUNDLE_LABEL"
+	description="COM_JSPACE_DATAOBJECT_SCHEMA_BUNDLE_DESC">
+	<fields name="metadata">
+		<fieldset name="jspacemetadata"
+			label="COM_JSPACE_DATAOBJECT_METADATA_LABEL">
+			<field 
+				name="title" 
+				type="text"
+				label="COM_JSPACE_DATAOBJECT_METADATA_TITLE_LABEL"
+				filter="JComponentHelper::filterText" 
+				required="true"/>
+			<field 
+				name="author" 
+				type="text"
+				label="COM_JSPACE_DATAOBJECT_METADATA_AUTHOR_LABEL"
+				filter="JComponentHelper::filterText" 
+				required="true"/>
+			<field 
+				name="description" 
+				type="editor"
+				label="COM_JSPACE_DATAOBJECT_METADATA_DESCRIPTION_LABEL"
+				filter="JComponentHelper::filterText" 
+				buttons="true"
+				required="false"/>
+		</fieldset>
+	</fields>
+</form>
