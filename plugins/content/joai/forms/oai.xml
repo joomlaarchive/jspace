@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+	<fields name="joai">
+		<fieldset name="joai"
+		label="PLG_CONTENT_JOAI_OAI_LABEL">
+			<field
+				name="url"
+				type="url"
+				id="url"
+				description="PLG_CONTENT_JOAI_FIELD_URL_DESC"
+				filter="string"
+				label="PLG_CONTENT_JOAI_FIELD_URL_LABEL"
+				size="30"/>
+		</fieldset>
+	</fields>
+</form>
