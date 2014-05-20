@@ -12,12 +12,12 @@ class JSpaceController extends JControllerLegacy
 		$id     = $this->input->getInt('id');
 
 		// Check for edit form.
-		if ($view == 'dataobject' && $layout == 'edit' && !$this->checkEditId('com_jspace.edit.dataobject', $id))
+		if ($view == 'record' && $layout == 'edit' && !$this->checkEditId('com_jspace.edit.record', $id))
 		{
 			// Somehow the person just went to the form - we don't allow that.
 			$this->setError(JText::sprintf('JLIB_APPLICATION_ERROR_UNHELD_ID', $id));
 			$this->setMessage($this->getError(), 'error');
-			$this->setRedirect(JRoute::_('index.php?option=com_jspace&view=dataobjects', false));
+			$this->setRedirect(JRoute::_('index.php?option=com_jspace&view=records', false));
 
 			return false;
 		}

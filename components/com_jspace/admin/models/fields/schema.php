@@ -22,7 +22,7 @@ class JSpaceFormFieldSchema extends JFormField
 
 		$title = '';
 		
-		$link = 'index.php?option=com_jspace&amp;view=dataobjectschemas&amp;layout=modal'.
+		$link = 'index.php?option=com_jspace&amp;view=recordschemas&amp;layout=modal'.
 				'&amp;tmpl=component&amp;recordId='.$recordId;
 		
 		if ($parentId)
@@ -32,7 +32,7 @@ class JSpaceFormFieldSchema extends JFormField
 
 		if ($this->value) 
 		{
-			$model = JModelLegacy::getInstance('DataObjectSchemas', 'JSpaceModel');
+			$model = JModelLegacy::getInstance('RecordSchemas', 'JSpaceModel');
 			
 			foreach ($model->getItems() as $item)
 			{

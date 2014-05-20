@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <config>
-    <fieldset name="general"
+    <fieldset 
+		name="general"
         label="COM_JSPACE_FIELDSET_GENERAL_LABEL"
         description="COM_JSPACE_FIELDSET_GENERAL_DESC">
 		<field
@@ -23,7 +24,30 @@
 			default="5"/>
     </fieldset>
     
-	<fieldset name="storage">
+	<fieldset 
+		name="storage"
+		label="COM_JSPACE_FIELDSET_STORAGE_LABEL"
+		description="COM_JSPACE_FIELDSET_STORAGE_DESC">
+		<field
+			name="upload_maxsize"
+			type="text"
+			label="COM_JSPACE_STORAGE_UPLOAD_MAXSIZE_LABEL"
+			description="COM_JSPACE_STORAGE_UPLOAD_MAXSIZE_DESC"
+			class="inputbox"
+			default="10"
+			filter="int"/>
+		<field
+			name="upload_mime"
+			type="text"
+			label="COM_JSPACE_STORAGE_UPLOAD_MIME_LABEL"
+			description="COM_JSPACE_STORAGE_UPLOAD_MIME_DESC"
+			class="inputbox"/>
+    </fieldset>
+    
+	<fieldset 
+		name="extraction"
+		label="COM_JSPACE_FIELDSET_EXTRACTION_LABEL"
+		description="COM_JSPACE_FIELDSET_EXTRACTION_DESC">
 		<field
 			name="index"
 			type="radio"
@@ -38,8 +62,8 @@
 		<field
 			name="bundles"
 			type="text"
-			label="COM_JSPACE_STORAGE_BUNDLES_LABEL"
-			description="COM_JSPACE_STORAGE_BUNDLES_DESC"
+			label="COM_JSPACE_EXTRACTION_BUNDLES_LABEL"
+			description="COM_JSPACE_EXTRACTION_BUNDLES_DESC"
 			class="inputbox"
 			value="original"/>
 		

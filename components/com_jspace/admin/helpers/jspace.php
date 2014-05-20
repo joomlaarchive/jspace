@@ -50,9 +50,9 @@ class JSpaceHelper
 			$vName == 'cpanel'
 		);
 		JSubMenuHelper::addEntry(
-				JText::_('COM_JSPACE_SUBMENU_DATAOBJECTS'),
-				'index.php?option=com_jspace&view=dataobjects',
-				$vName == 'dataobjects'
+				JText::_('COM_JSPACE_SUBMENU_RECORDS'),
+				'index.php?option=com_jspace&view=records',
+				$vName == 'records'
 		);
 		JSubMenuHelper::addEntry(
 			JText::_('COM_JSPACE_SUBMENU_CATEGORIES'),

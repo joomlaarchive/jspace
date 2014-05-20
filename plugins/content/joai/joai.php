@@ -30,7 +30,7 @@ class PlgContentJOAI extends JPlugin
 			$query = $database->getQuery(true);
 			
 			$query
-				->select(array($database->qn('url')))
+				->select(array($database->qn('url'), $database->qn('metadataFormat')))
 				->from($database->qn('#__joai_harvests', 'h'))
 				->where($database->qn('catid')."=".(int)$data->id);
 				
@@ -77,6 +77,7 @@ class PlgContentJOAI extends JPlugin
 		{
 			$oai = JArrayHelper::getValue($data, 'joai');
 			$url = JArrayHelper::getValue($oai, 'url');
+			$metadataFormat = JArrayHelper::getValue($oai, 'metadataFormat');
 			
 			$this->onContentAfterDelete($context, $category);
 		
@@ -85,12 +86,13 @@ class PlgContentJOAI extends JPlugin
 			
 			$columns = array(
 				$database->qn('catid'),
-				$database->qn('url'));
+				$database->qn('url'),
+				$database->qn('metadataFormat'));
 			
 			$query
 				->insert($database->qn('#__joai_harvests'))
 				->columns($columns)
-				->values(array((int)$category->id.",".$database->q($url)));
+				->values(array((int)$category->id.",".$database->q($url).",".$database->q($metadataFormat)));
 			
 			$database->setQuery($query);				
 			$database->execute();

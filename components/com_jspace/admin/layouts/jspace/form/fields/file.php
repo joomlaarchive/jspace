@@ -7,16 +7,20 @@ defined('JPATH_BASE') or die;
 	name="<?php echo $displayData->name; ?>" 
 	<?php echo ($displayData->multiple) ? 'multiple="multiple"' : ''; ?>/>
 
+<?php if ($displayData->extractionmap) : ?>
 <input 
 	type="hidden" 
-	name="<?php echo $displayData->formControl."[".$displayData->group."][".$displayData->fieldname."][bundle]"; ?>" 
-	value="<?php echo $displayData->bundle; ?>"/>
-	
+	name="<?php echo $displayData->name."[extractionmap]"; ?>" 
+	value="<?php echo $displayData->extractionmap; ?>"/>
+<?php endif; ?>
+
+<?php if ($displayData->schema) : ?>
 <input 
 	type="hidden" 
-	name="<?php echo $displayData->formControl."[".$displayData->group."][".$displayData->fieldname."][metadataextractionmapping]"; ?>" 
-	value="<?php echo $displayData->metadataextractionmapping; ?>"/>
-	
+	name="<?php echo $displayData->name."[schema]"; ?>" 
+	value="<?php echo $displayData->schema; ?>"/>
+<?php endif; ?>
+
 <ul>
 <?php $i = 0; ?>
 <?php foreach ($displayData->getFileList() as $key=>$value) : ?>	
@@ -24,8 +28,10 @@ defined('JPATH_BASE') or die;
 		<label>
 			<input 
 				type="checkbox" 
-				id="<?php echo $displayData->formControl."_".$displayData->group."_delete_".$displayData->fieldname."_".$i++; ?>"
-				name="<?php echo $displayData->formControl."[".$displayData->group."][".$displayData->fieldname."][delete][]"; ?>" 
+				id="<?php echo 
+$displayData->formControl."_".$displayData->bundle."_delete_".$displayData->fieldname."_".$i++; ?>"
+				name="<?php echo 
+$displayData->formControl."[".$displayData->bundle."][".$displayData->fieldname."][delete][]"; ?>" 
 				value="<?php echo JArrayHelper::getValue($value, 'fileName'); ?>"/><?php echo JArrayHelper::getValue($value, 'fileName'); ?>
 		</label>
 	</li>

@@ -31,6 +31,13 @@
 				<exclude name="**/language/**"/>
 			</fileset>
 		</copy>
+		
+		<copy todir="${dest.cli}">
+			<fileset dir="${src}/admin/cli" defaultexcludes="true">
+				<include name="jspace.php"/>
+			</fileset>
+		</copy>
+		
 		<copy todir="${dest.administrator.languages}">
 			<fileset dir="${src}/admin/language" defaultexcludes="true">
 				<include name="**/**"/>

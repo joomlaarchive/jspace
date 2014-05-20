@@ -2,7 +2,7 @@
 <form>
 	<fields name="joai">
 		<fieldset name="joai"
-		label="PLG_CONTENT_JOAI_OAI_LABEL">
+			label="PLG_CONTENT_JOAI_OAI_LABEL">
 			<field
 				name="url"
 				type="url"
@@ -11,6 +11,17 @@
 				filter="string"
 				label="PLG_CONTENT_JOAI_FIELD_URL_LABEL"
 				size="30"/>
+			
+			<field
+				name="metadataFormat"
+				id="metadataFormat"
+				type="list"
+				class="chzn-color"
+				label="PLG_CONTENT_JOAI_FIELD_METADATAFORMAT_LABEL"
+				description="PLG_CONTENT_JOAI_FIELD_METADATAFORMAT_DESC">
+				<option value="oai_dc">PLG_CONTENT_JOAI_METADATAFORMAT_DC</option>
+				<option value="qdc">PLG_CONTENT_JOAI_METADATAFORMAT_QDC</option>
+			</field>
 		</fieldset>
 	</fields>
 </form>

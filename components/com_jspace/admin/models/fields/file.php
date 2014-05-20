@@ -2,9 +2,9 @@
 defined('JPATH_BASE') or die;
 
 /**
- * A stream manager for a data object.
+ * A stream manager for a record.
  * 
- * Provides the ability to upload, manage and delete one or more files as part of a data object.
+ * Provides the ability to upload, manage and delete one or more files as part of a record.
  */
 class JSpaceFormFieldFile extends JFormField
 {
@@ -12,9 +12,20 @@ class JSpaceFormFieldFile extends JFormField
 	 * The form field type.
 	 *
 	 * @var		string
-	 * @since   1.6
 	 */
 	protected $type = 'JSpace.File';
+	
+	public function getName($fieldName)
+	{
+		if (!$this->bundle)
+		{
+			throw new Exception(JText::sprintf('COM_JSPACE_FATAL_NOBUNDLE', $this->type));
+		}
+	
+		$fieldName = $fieldName.']['.$this->bundle;
+		
+		return parent::getName($fieldName);
+	}
 	
 	/**
 	 * (non-PHPdoc)
@@ -30,7 +41,7 @@ class JSpaceFormFieldFile extends JFormField
 	{
 		$dispatcher = JEventDispatcher::getInstance();
 		
-		JPluginHelper::importPlugin('jspacestorage');
+		JPluginHelper::importPlugin('jspace');
 		return JArrayHelper::getValue($dispatcher->trigger('onJSpaceFilesPrepare', array($this->form->getData()->toObject())), 0, array());
 	}
 	
@@ -38,8 +49,17 @@ class JSpaceFormFieldFile extends JFormField
 	{
 		switch ($name) {
 			case 'bundle':
-			case 'metadataextractionmapping':
+			case 'extractionmap':
 				return JArrayHelper::getValue($this->element, $name, null, 'string');
+				break;
+	
+			case 'schema':
+				$schema = JArrayHelper::getValue($this->element, $name, null, 'string');
+				
+				if (!array_search($schema, array('metadata', 'none', 'source')) === false)
+				{
+					$schema = 'source';
+				}
 				break;
 	
 			default:

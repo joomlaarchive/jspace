@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<form>
-    <fields>
-        <fieldset name="blank" label="COM_JSPACE_FIELDSET_CONFIG_BLANK_LABEL">
-        </fieldset>
-    </fields>
-</form>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="JSpace Asset Store Plugin" default="" basedir=".">
+	<property name="dest.plugins.jspace" value="${dest.plugins}/jspace"/>
+	
+	<target name="update" description="">
+		<echo message="Deploying JSpace Asset Store Plugin to Joomla! environment."/>
+		<copy todir="${dest.plugins.jspace}/assetstore">
+			<fileset dir="${src}" defaultexcludes="true">
+				<include name="**"/>
+				<exclude name="**/language/**"/>
+				<exclude name="**/build*.xml"/>
+			</fileset>
+		</copy>
+		<copy todir="${dest.administrator.languages}">
+			<fileset dir="${src}/language" defaultexcludes="true">
+				<include name="**/**"/>
+			</fileset>
+		</copy>
+	</target>
+
+	<target name="package" description="Creates a Asset Store Plugin package.">
+		<echo message="Packaging JSpace Asset Store plugin."/>
+		<zip destfile="${package.dest}/plg_jspace_assetstore.zip"
+		       basedir="${src}"
+		       update="true"
+		       excludes="build*.xml"/>
+	</target>
+</project>

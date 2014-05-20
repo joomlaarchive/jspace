@@ -51,9 +51,9 @@
 				view="cpanel" img="class:jspace"
 				alt="JSpace/CPanel">com_jspace_cpanel</menu>
 			<menu 
-				link="option=com_jspace&amp;view=dataobjects" 
-				view="dataobjects" img="class:jspace"
-				alt="JSpace/Data Objects">com_jspace_dataobjects</menu>
+				link="option=com_jspace&amp;view=records" 
+				view="records" img="class:jspace"
+				alt="JSpace/Records">com_jspace_records</menu>
 			<menu 
 				link="option=com_categories&amp;extension=com_jspace"
 				view="categories" 
@@ -66,6 +66,7 @@
 			<filename>config.xml</filename>
 			<filename>controller.php</filename>
 			<filename>jspace.php</filename>
+	    	<folder>cli</folder>
 			<folder>controllers</folder>
 			<folder>helpers</folder>
 			<folder>models</folder>
