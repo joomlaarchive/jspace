@@ -109,25 +109,29 @@ class JSpaceRecord extends JObject
 		// separate assets which should be saved with this record vs those which should be stored as a child record.
 		$children = array();
 		
-		foreach ($assets as $akey=>$asset)
+		foreach ($assets as $key=>$asset)
 		{
-			foreach ($asset as $bkey=>$bundle)
+			
+			$assets[$key]['metadata'] = array();
+			
+			foreach ($asset as $bundle)
 			{
-				$extractionMap = JArrayHelper::getValue($bundle, 'extractionMap', null);
+				$extractionMap = JArrayHelper::getValue($bundle, 'extractionmap', null);
 				$schema = JArrayHelper::getValue($bundle, 'schema', null);
+				$files = JArrayHelper::getValue($bundle, 'files');
 				
 				// bundle is a single file. Redefine bundle to centralize file manipulation.
-				if (array_key_exists('tmp_name', $bundle))
+				if (array_key_exists('tmp_name', $files))
 				{
-					$tmp = $bundle;
-					$bundle = array();
-					$bundle[] = $tmp;
+					$tmp = $files;
+					$files = array();
+					$files[] = $tmp;
 				}
 
-				foreach ($bundle as $fkey=>$file)
+				foreach ($files as $file)
 				{
-					$assets[$key]['metadata'] = JSpaceAssetHelper::getMetadata($file, $schema, 
-	$extractionMap)->toString('json');
+					$assets[$key]['metadata'] = 
+array_merge_recursive($assets[$key]['metadata'], JSpaceAssetHelper::getMetadata($file, $schema, $extractionMap));
 				
 					if ($schema && $this->schema != $schema)
 					{
@@ -136,8 +140,10 @@ class JSpaceRecord extends JObject
 				}
 			}
 		}
-		exit();
+		
 		$assets = array_values($assets);
+		print_r($assets);
+		exit();
 		
 		$dispatcher = JEventDispatcher::getInstance();	
 		JPluginHelper::importPlugin('jspace');

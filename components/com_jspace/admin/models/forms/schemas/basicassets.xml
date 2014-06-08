@@ -33,7 +33,8 @@
 				accept="image/*"
 				bundle="original"
 				validate="jspacefiles"
-				multiple="true"/>
+				multiple="true"
+				extractionmap="source"/>
 			
 			<field 
 				name="itemPreview" 

@@ -33,15 +33,17 @@ class JFormRuleJSpaceFiles extends JFormRule
 		
 		foreach ($asset as $key=>$bundle)
 		{
+			$files = JArrayHelper::getValue($bundle, 'files');
+			
 			// bundle is a single file. Redefine bundle to centralize file manipulation.
-			if (array_key_exists('tmp_name', $bundle))
+			if (array_key_exists('tmp_name', $files))
 			{
-				$tmp = $bundle;
-				$bundle = array();
-				$bundle[] = $tmp;
+				$tmp = $files;
+				$files = array();
+				$files[] = $tmp;
 			}
-
-			foreach ($bundle as $file)
+			
+			foreach ($files as $file)
 			{
 				if (JArrayHelper::getValue($file, 'error', 0, 'int') !== 4)
 				{

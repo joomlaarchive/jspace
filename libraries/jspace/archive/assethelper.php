@@ -16,12 +16,26 @@ abstract class JSpaceAssetHelper extends JObject
 {
 	public static function getMetadata($asset, $schema, $extractionMap)
 	{
+		if (!$extractionMap || $extractionMap == 'none')
+		{
+			return array();
+		}
+	
 		$file = JArrayHelper::getValue($asset, 'tmp_name');
 		
-		$metadata = JSpaceFactory::getCrosswalk(
-			JSpaceFile::getMetadata($file), array('name'=>'datastream'))->walk();
+		$metadata = JSpaceFile::getMetadata($file);
+		
+		// set the file name to the original file name (it is using the upload name in the metadata).
+		if ($fileName = JArrayHelper::getValue($asset, 'name'))
+		{
+			$metadata->set('resourceName', $fileName);
+		}
+		
+		$metadata = JSpaceFactory::getCrosswalk($metadata, array('name'=>'datastream'))->walk();
 		
 		$metadata = new JRegistry($metadata);
+		
+		$fileInfo = array();
 		
 		if ($extractionMap == 'metadata')
 		{
@@ -39,7 +53,6 @@ abstract class JSpaceAssetHelper extends JObject
 		}
 		else
 		{
-		print_r($metadata);
 			$fileInfo[$extractionMap][] = $metadata->toString('ini');
 		}
 		

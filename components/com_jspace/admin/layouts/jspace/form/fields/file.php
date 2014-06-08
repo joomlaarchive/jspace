@@ -4,20 +4,20 @@ defined('JPATH_BASE') or die;
 <input 
 	type="file" 
 	id="<?php echo $displayData->id; ?>"
-	name="<?php echo $displayData->name; ?>" 
+	name="<?php echo $displayData->filesName; ?>" 
 	<?php echo ($displayData->multiple) ? 'multiple="multiple"' : ''; ?>/>
 
 <?php if ($displayData->extractionmap) : ?>
 <input 
 	type="hidden" 
-	name="<?php echo $displayData->name."[extractionmap]"; ?>" 
+	name="<?php echo $displayData->extractionMapName; ?>" 
 	value="<?php echo $displayData->extractionmap; ?>"/>
 <?php endif; ?>
 
 <?php if ($displayData->schema) : ?>
 <input 
 	type="hidden" 
-	name="<?php echo $displayData->name."[schema]"; ?>" 
+	name="<?php echo $displayData->schemaName; ?>" 
 	value="<?php echo $displayData->schema; ?>"/>
 <?php endif; ?>
 
