@@ -69,6 +69,7 @@
 	    	<folder>cli</folder>
 			<folder>controllers</folder>
 			<folder>helpers</folder>
+			<folder>layouts</folder>
 			<folder>models</folder>
 			<folder>sql</folder>
 			<folder>tables</folder>		

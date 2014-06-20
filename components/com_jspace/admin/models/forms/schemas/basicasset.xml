@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form
+	name="basicasset">
+	<fields name="metadata">
+		<fieldset name="jspacemetadata">
+			<field 
+				name="title" 
+				type="text"
+				filter="JComponentHelper::filterText" 
+				required="true"/>
+			<field 
+				name="author" 
+				type="text"
+				filter="JComponentHelper::filterText" 
+				required="false"/>
+			<field 
+				name="size" 
+				type="text"
+				filter="int" 
+				required="true"/>
+			<field 
+				name="type" 
+				type="text"
+				filter="JComponentHelper::filterText" 
+				required="true"/>
+		</fieldset>
+	</fields>
+</form>

@@ -40,7 +40,8 @@
 			type="hidden"  
 			description=""
 			class="readonly"
-			readonly="true"/>
+			readonly="true"
+			required="true"/>
 
 		<field
 			name="schema" 
@@ -69,6 +70,7 @@
 			type="category" 
 			extension="com_jspace" 
 			label="JCATEGORY" 
+			required="true"
 			description=""/>
 		
 		<field 

@@ -52,6 +52,7 @@ class JSpaceViewRecords extends JViewLegacy
 		if ($this->getLayout() !== 'modal')
 		{
 			$this->addToolbar();
+			$this->sidebar = JHtmlSidebar::render();
 		}
 
 		parent::display($tpl);

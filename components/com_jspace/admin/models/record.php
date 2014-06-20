@@ -2,6 +2,8 @@
 defined('_JEXEC') or die;
 
 jimport('jspace.archive.record');
+jimport('jspace.archive.asset');
+jimport('jspace.html.assets');
 
 class JSpaceModelRecord extends JModelAdmin
 {
@@ -23,7 +25,7 @@ class JSpaceModelRecord extends JModelAdmin
 			// Convert the metadata field to an array.
 			$registry = new JRegistry;
 			$registry->loadString($item->metadata);
-			$item->metadata = $registry->toArray();	
+			$item->metadata = $registry->toArray();
 		}
 
 		// Load associated content items
@@ -209,20 +211,25 @@ $this->context, $item->id, 'id', null, null);
 			return false;
 		}
 		
-		$assets = JArrayHelper::getValue($data, 'assets', array(), 'array');
-		$files = JArrayHelper::getValue(JFactory::getApplication()->input->files->get('jform', array(), 
-'array'), 'assets');
-
-		$assets = array_merge_recursive($assets, $files);
+		// All assets' files should be an array before being saved.
+		$collection = JSpaceHtmlAssets::getCollection();
 		
-		// Store the data.
-		if (!$record->save($assets))
+		try
 		{
-			$this->setError($record->getError());
-			
+			// Store the data.
+			if (!$record->save($collection))
+			{
+				return false;
+			}
+		}
+		catch (Exception $e)
+		{
+			JLog::addLogger(array());
+			JLog::add($e->getMessage(), JLog::ERROR, 'jspace');
+			$this->setError(JText::_('JERROR_AN_ERROR_HAS_OCCURRED'));
 			return false;
 		}
-
+		
 		$this->setState('record.id', $record->id);
 
 		$this->setState($this->getName() . '.new', ($pk ? false : true));
@@ -232,18 +239,34 @@ $this->context, $item->id, 'id', null, null);
 	
 	public function delete(&$pks)
 	{
-		$dispatcher = JEventDispatcher::getInstance();
-
-		JPluginHelper::importPlugin('jspace');
+		foreach ($pks as $pk)
+		{
+			$record = JSpaceRecord::getInstance($pk);
+			
+			if (!$record->delete())
+			{
+				return false;
+			}
+		}
 		
-		return parent::delete($pks);
+		return true;
 	}
 	
 	public function validate($form, $data, $group = null)
 	{
-		// A general post size check of the incoming form.
+		$dispatcher = JEventDispatcher::getInstance();
+		JPluginHelper::importPlugin('jspace');
+		
+		$result = $dispatcher->trigger('onJSpaceRecordBeforeValidate', array($form, $data, $group));
+		
+		if (in_array(false, $result, true))
+		{
+			return false;
+		}
+		
 		$params = JComponentHelper::getParams('com_jspace');
 		
+		// A general post size check of the incoming form.
 		$contentLength = $_SERVER['CONTENT_LENGTH'];
 		$uploadMaxSize = (int)($params->get('upload_maxsize', 10)) * 1024 * 1024;
 		$maxFileSize = (int)(ini_get('upload_max_filesize')) * 1024 * 1024;
@@ -260,8 +283,51 @@ $this->context, $item->id, 'id', null, null);
 				JFactory::getApplication()->enqueueMessage(JText::_('COM_JSPACE_ERROR_WARNUPLOADTOOLARGE'), 'warning');
 				return false;
 			}
+		}		
+		
+		if ($data = parent::validate($form, $data, $group))
+		{
+			$result = $dispatcher->trigger('onJSpaceRecordAfterValidate', array($form, $data, $group));
+			
+			if (in_array(false, $result, true))
+			{
+				return false;
+			}
 		}
 		
-		return parent::validate($form, $data, $group);
+		return $data;
+	}
+	
+	/**
+	 * Gets an instance of the JSpaceAsset class based on the id parameter.
+	 *
+	 * @param   int $id      The id of the JSpaceAsset to retrieve.
+	 *
+	 * @return  JSpaceAsset  An instance of the JSpaceAsset class based on the id parameter.
+	 */
+	public function getAsset($id)
+	{
+		return JSpaceAsset::getInstance($id);
+	}
+	
+	/**
+	 * Deletes an asset from the record based on the id parameter.
+	 * 
+	 * @param  int  $id  The id of the asset to be deleted.
+	 */
+	public function deleteAsset($id)
+	{
+		$ids = $id;
+	
+		if (!is_array($id))
+		{
+			$ids = array($id);
+		}
+		
+		foreach ($ids as $id)
+		{
+			$asset = $this->getAsset($id);
+			$asset->delete();
+		}
 	}
 }

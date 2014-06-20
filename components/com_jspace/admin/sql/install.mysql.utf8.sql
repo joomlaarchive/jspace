@@ -46,6 +46,19 @@ CREATE TABLE IF NOT EXISTS `#__jspace_record_categories` (
 	KEY `idx_jspace_record_categories_record_id` (`record_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+CREATE TABLE IF NOT EXISTS `#__jspace_assets` (
+	`id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+	`hash` varchar(255) NOT NULL,
+	`metadata` text NOT NULL,
+	`derivative` varchar(255) NOT NULL,
+	`bundle` varchar(255) NOT NULL,
+	`record_id` int(10) unsigned NOT NULL DEFAULT 0,
+	PRIMARY KEY (`id`),
+	UNIQUE INDEX `idx_jspace_assets_uid` (`hash`, `record_id`),
+	KEY `idx_jspace_assets_hash` (`hash`),
+	KEY `idx_jspace_assets_record_id` (`record_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 INSERT INTO `#__content_types` (`type_id`, `type_title`, `type_alias`, `table`, `rules`, `field_mappings`, `router`, 
 `content_history_options`) 
 VALUES 

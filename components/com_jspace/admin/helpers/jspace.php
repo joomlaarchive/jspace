@@ -2,7 +2,6 @@
 /**
  * A general helper for the JSpace component.
  * 
- * @author		$LastChangedBy$
  * @package		JSpace
  * @copyright	Copyright (C) 2012 Wijiti Pty Ltd. All rights reserved.
  * @license     This file is part of the JSpace component for Joomla!.
@@ -44,17 +43,17 @@ class JSpaceHelper
 	 */
 	public static function addSubmenu($vName)
 	{
-		JSubMenuHelper::addEntry(
+		JHtmlSidebar::addEntry(
 			JText::_('COM_JSPACE_SUBMENU_CPANEL'),
 			'index.php?option=com_jspace',
 			$vName == 'cpanel'
 		);
-		JSubMenuHelper::addEntry(
+		JHtmlSidebar::addEntry(
 				JText::_('COM_JSPACE_SUBMENU_RECORDS'),
 				'index.php?option=com_jspace&view=records',
 				$vName == 'records'
 		);
-		JSubMenuHelper::addEntry(
+		JHtmlSidebar::addEntry(
 			JText::_('COM_JSPACE_SUBMENU_CATEGORIES'),
 			'index.php?option=com_categories&extension=com_jspace',
 			$vName == 'categories'
@@ -74,9 +73,12 @@ class JSpaceHelper
 		$user	= JFactory::getUser();
 		$result	= new JObject();
 
-		if (empty($categoryId)) {
+		if (empty($categoryId)) 
+		{
 			$assetName = 'com_jspace';
-		} else {
+		}
+		else 
+		{
 			$assetName = 'com_jspace.category.'.(int) $categoryId;
 		}
 
@@ -90,7 +92,8 @@ class JSpaceHelper
 			'core.delete'
 		);
 
-		foreach ($actions as $action) {
+		foreach ($actions as $action)
+		{
 			$result->set($action, $user->authorise($action, $assetName));
 		}
 

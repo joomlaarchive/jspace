@@ -7,44 +7,45 @@
 		<fieldset name="jspacemetadata"
 			label="COM_JSPACE_METADATA_LABEL">
 			<field name="title" id="title"/>
-			<field name="source" id="source" type="jspace.metadatatextarea" readonly="true" rows="6" multiple="true"/>
+			<field name="fileName" id="fileName"/>
 		</fieldset>
 	</fields>
 	
-	<fields name="assets">
-		<fieldset name="jspacefiles"
+	<fields name="collection">
+		<fieldset name="jspaceassets"
 			label="COM_JSPACE_FILES_LABEL">
 			<field 
 				name="video" 
-				type="jspace.file" 
+				type="jspace.asset" 
 				label="Raw Video" 
 				description="Choose an image from your computer with maximum 100KB" 
 				size="10" 
 				accept="image/*"
-				bundle="original"
-				validate="jspacefiles"/>
+				derivative="original"
+				validate="jspaceassets"
+				bundle="videos"
+				metadata="original"/>
 			
 			<field 
 				name="images" 
-				type="jspace.file" 
+				type="jspace.asset" 
 				label="Raw Images" 
 				description="Choose an image from your computer with maximum 100KB" 
 				size="10" 
 				accept="image/*"
-				bundle="original"
-				validate="jspacefiles"
-				multiple="true"
-				extractionmap="source"/>
+				derivative="original"
+				validate="jspaceassets"
+				multiple="true"/>
 			
 			<field 
 				name="itemPreview" 
-				type="jspace.file" 
+				type="jspace.asset" 
 				label="Item Preview" 
 				description="Choose an image from your computer with maximum 100KB" 
 				size="10" 
 				accept="image/*"
-				bundle="item_previews"
-				validate="jspacefiles"/>
+				derivative="item_previews"
+				validate="jspaceassets"/>
 		</fieldset>
 	</fields>
 </form>

@@ -51,4 +51,40 @@ class JSpaceControllerRecord extends JControllerForm
 		
 		$this->setRedirect(JRoute::_('index.php?option=' . $this->option . '&view=' . $this->view_item . $this->getRedirectToItemAppend($recordId).$this->getRedirectToItemAppend($parentId, 'parent'), false));
 	}
+	
+	/**
+	 * Requests the deletion of a single asset.
+	 */
+	public function deleteAsset()
+	{
+		JSession::checkToken('get') or die(JText::_('JINVALID_TOKEN'));
+		$id = JFactory::getApplication()->input->get('id', 0, 'int');
+		
+		$model = $this->getModel('record');
+		
+		if ($asset = $model->getAsset($id))
+		{
+			try
+			{
+				$model->deleteAsset($id);
+				$message = JText::_('COM_JSPACE_RECORD_ASSET_DELETED');
+				$type = '';
+			} 
+			catch(Exception $e)
+			{
+				$message = JText::_('JERROR_AN_ERROR_HAS_OCCURRED');
+				$type = 'error';
+			}
+
+			$url = JRoute::_('index.php?option='.$this->option.'&view='.$this->view_item.$this->getRedirectToItemAppend($asset->record_id), false);			
+		}
+		else
+		{
+			JRoute::_('index.php?option='.$this->option.'&view='.$this->view_list);
+			$message = JText::_('COM_JSPACE_RECORD_ASSET_DOESNOTEXISTS');
+			$type = 'warning';
+		}
+		
+		$this->setRedirect($url, $message, $type);
+	}
 }

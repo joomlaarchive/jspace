@@ -48,11 +48,16 @@ class JSpaceMetadataCrosswalk extends JObject
 				{
 					if ($reverse)
 					{
-						$this->metadata[JArrayHelper::getValue($citems, 0)] = $svalue;
+						$key = JArrayHelper::getValue($citems, 0);
 					}
 					else
 					{
-						$this->metadata[key($items)] = $svalue;
+						$key = key($items);
+					}
+					
+					if (trim($svalue))
+					{
+						$this->metadata[$key] = $svalue;
 					}
 					
 					$found = true;

@@ -17,7 +17,7 @@ class JSpaceFile extends JFile
 			throw new Exception("LIB_JSPACE_TIKA_NOT_FOUND");
 		}
 
-		ob_start();
+		ob_start();		
 		passthru("java -jar ".$params->get('local_tika_app_path')." -j \"".$file."\" 2> /dev/null");
 		$result = ob_get_contents();
 		ob_end_clean();
