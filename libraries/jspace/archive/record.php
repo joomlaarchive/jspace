@@ -121,13 +121,10 @@ class JSpaceRecord extends JObject
 	 * 
 	 * @return  bool    True on success, false otherwise.
 	 */
-	public function save($collection = null, $updateOnly = false)
+	public function save($collection = array(), $updateOnly = false)
 	{
 		// separate assets which should be saved with this record vs those which should be stored as a child.
 		$children = array();
-		
-		// Get the metadata derivative of the first asset.
-		$metadataDerivative = JArrayHelper::getValue(current($collection), 'metadata', null);
 		
 		foreach ($collection as $bkey=>$bundle)
 		{
@@ -156,28 +153,6 @@ class JSpaceRecord extends JObject
 		
 		$table = $this->getTable();
 		
-		// Set metadata to file info if not already set and if metadataDerivative has been specified.
-		if ($metadataDerivative)
-		{
-			if (!count($this->getAssets(array('derivative'=>$metadataDerivative))))
-			{
-				// get the first asset.
-				$first = JArrayHelper::getValue($collection, current(array_keys($collection)));
-				
-				// get the specified derivative.
-				$first = JArrayHelper::getValue($first, $metadataDerivative, array(), 'array');
-				
-				// get the first file.
-				$first = current(JArrayHelper::getValue($first, 'assets', array(), 'array'));
-				
-				if (JArrayHelper::getValue($first, 'metadata', null))
-				{
-					$metadata = JArrayHelper::getValue($first, 'metadata', array(), 'array');				
-					$this->_metadata = self::_crosswalkSchema($metadata, $this->schema);
-				}
-			}
-		}
-		
 		$this->metadata = (string)$this->_metadata;
 		
 		$table->bind($this->getProperties());
@@ -201,7 +176,7 @@ class JSpaceRecord extends JObject
 		if ($result)
 		{
 			// if record is a parent, store with its category.
-			if ($this->catid)
+			if (isset($this->catid) && (int)$this->catid != 0)
 			{
 				$recordCategory = $this->getTable('RecordCategory');
 				$recordCategory->record_id = $table->id;
@@ -366,5 +341,17 @@ class JSpaceRecord extends JObject
 		$database->setQuery($query);
 		
 		return $database->loadObjectList('id', 'JSpaceAsset');
+	}
+	
+	public function bindAssetMetadata($assetId)
+	{
+		$asset = JSpaceAsset::getInstance($assetId);
+		
+		if ($asset->id)
+		{
+			$this->_metadata = self::_crosswalkSchema($asset->getMetadata()->toArray(), $this->schema);
+			$this->metadata = (string)$this->_metadata;
+			$this->save();
+		}
 	}
 }

@@ -87,4 +87,37 @@ class JSpaceControllerRecord extends JControllerForm
 		
 		$this->setRedirect($url, $message, $type);
 	}
+	
+	public function useAssetMetadata()
+	{
+		JSession::checkToken('get') or die(JText::_('JINVALID_TOKEN'));
+		$id = JFactory::getApplication()->input->get('id', 0, 'int');
+		
+		$model = $this->getModel('record');
+		
+		if ($asset = $model->getAsset($id))
+		{
+			try
+			{
+				$model->useAssetMetadata($id);
+				$message = JText::_('COM_JSPACE_RECORD_ASSET_METADATA_USED');
+				$type = '';
+			}
+			catch (Exception $e)
+			{
+				$message = JText::_('JERROR_AN_ERROR_HAS_OCCURRED');
+				$type = 'error';
+			}
+			
+			$url = JRoute::_('index.php?option='.$this->option.'&view='.$this->view_item.$this->getRedirectToItemAppend($asset->record_id), false);
+		}
+		else
+		{
+			JRoute::_('index.php?option='.$this->option.'&view='.$this->view_list);
+			$message = JText::_('COM_JSPACE_RECORD_ASSET_DOESNOTEXISTS');
+			$type = 'warning';
+		}
+		
+		$this->setRedirect($url, $message, $type);
+	}
 }

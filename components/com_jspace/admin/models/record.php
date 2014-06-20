@@ -313,15 +313,15 @@ $this->context, $item->id, 'id', null, null);
 	/**
 	 * Deletes an asset from the record based on the id parameter.
 	 * 
-	 * @param  int  $id  The id of the asset to be deleted.
+	 * @param  int  $assetId  The id of the asset to be deleted.
 	 */
-	public function deleteAsset($id)
+	public function deleteAsset($assetId)
 	{
-		$ids = $id;
+		$ids = $assetId;
 	
-		if (!is_array($id))
+		if (!is_array($assetId))
 		{
-			$ids = array($id);
+			$ids = array($assetId);
 		}
 		
 		foreach ($ids as $id)
@@ -329,5 +329,13 @@ $this->context, $item->id, 'id', null, null);
 			$asset = $this->getAsset($id);
 			$asset->delete();
 		}
+	}
+	
+	public function useAssetMetadata($assetId)
+	{
+		$asset = JSpaceAsset::getInstance($assetId);
+	
+		$record = JSpaceRecord::getInstance($asset->record_id);
+		$record->bindAssetMetadata($asset->id);
 	}
 }
