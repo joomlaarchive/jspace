@@ -15,6 +15,8 @@ class JSpaceRecord extends JObject
 
 	public function __construct($identifier = 0)
 	{
+		JLog::addLogger(array());
+	
 		$this->_metadata = new JRegistry;
 
 		if (!empty($identifier))
@@ -38,7 +40,7 @@ class JSpaceRecord extends JObject
 	{
 		if (!is_numeric($identifier))
 		{
-			JLog::add(JText::sprintf('JLIB_USER_ERROR_ID_NOT_EXISTS', $identifier), JLog::WARNING, 'jerror');
+			JLog::add(JText::sprintf('JLIB_USER_ERROR_ID_NOT_EXISTS', $identifier), JLog::WARNING, 'jspace');
 
 			return false;
 		}
@@ -61,6 +63,18 @@ class JSpaceRecord extends JObject
 		return self::$instances[$id];
 	}
 	
+	/**
+	 * Gets an instance of JTable.
+	 *
+	 * This function uses a static variable to store the table name of the user table to
+	 * instantiate. You can call this function statically to set the table name if
+	 * needed.
+	 *
+	 * @param   string  $type    The table name to use. Defaults to Record.
+	 * @param   string  $prefix  The table prefix to use. Defaults to JSpaceTable.
+	 *
+	 * @return  JTable  The table specified by type, or a JSpaceTableRecord if no type is specified.
+	 */
 	public static function getTable($type = null, $prefix = 'JSpaceTable')
 	{
 		static $tabletype;
@@ -83,6 +97,15 @@ class JSpaceRecord extends JObject
 		return JTable::getInstance($tabletype['name'], $tabletype['prefix']);
 	}
 	
+	/**
+	 * Bind an associative array of data to this instance of the JSpaceRecord class.
+	 *
+	 * @param   array      $array  The associative array to bind to the object.
+	 *
+	 * @return  boolean    True on success
+	 *
+	 * @throw   Exception  If the $array to be bound is not an object or array.
+	 */
 	public function bind(&$array)
 	{
 		if (array_key_exists('metadata', $array))
@@ -105,7 +128,6 @@ class JSpaceRecord extends JObject
 		if (!$this->setProperties($array))
 		{
 			throw new Exception('Data to be bound is neither an array nor an object');
-			return false;
 		}
 		
 		$this->id = (int)$this->id;
@@ -129,29 +151,29 @@ class JSpaceRecord extends JObject
 		foreach ($collection as $bkey=>$bundle)
 		{
 			$schema = JArrayHelper::getValue($bundle, 'schema', null);
-		
-			foreach ($bundle as $dkey=>$derivative)
+			$assets = JArrayHelper::getValue($bundle, 'assets', array(), 'array');
+			
+			foreach ($assets as $dkey=>$derivative)
 			{
-				$assets = JArrayHelper::getValue($derivative, 'assets', array(), 'array');
-				
-				foreach ($assets as $akey=>$asset)
+				foreach ($derivative as $akey=>$asset)
 				{
 					$metadata = self::_getMetadataCrosswalk($asset)->toArray();
-					$collection[$bkey][$dkey]['assets'][$akey]['metadata'] = $metadata;
-					
-					if ($schema && $this->schema != $schema)
-					{
-						$children[] = $collection[$bkey];
-						unset($collection[$bkey]);
-					}
+					$collection[$bkey]['assets'][$dkey][$akey]['metadata'] = $metadata;
 				}
+			}
+			
+			// if the schema is set, make the asset a child record.
+			if ($schema)
+			{
+				$children[$bkey] = $collection[$bkey];
+				unset($collection[$bkey]);
 			}
 		}
 		
 		$dispatcher = JEventDispatcher::getInstance();	
 		JPluginHelper::importPlugin('jspace');
 		
-		$table = $this->getTable();
+		$table = self::getTable('Record');
 		
 		$this->metadata = (string)$this->_metadata;
 		
@@ -160,13 +182,17 @@ class JSpaceRecord extends JObject
 		$isNew = empty($this->id);
 		
 		$result = $dispatcher->trigger('onJSpaceRecordBeforeSave', array($table, $isNew));
-
+		
 		if (in_array(false, $result, true))
 		{
 			return false;
 		}
 		
-		$result = $table->store();
+		if (!$result = $table->store())
+		{
+			JLog::add(JText::sprintf('JLIB_APPLICATION_ERROR_SAVE_FAILED', $table->getError()), JLog::CRITICAL, 'jspace');
+			return false;
+		}
 		
 		if (empty($this->id))
 		{
@@ -178,20 +204,36 @@ class JSpaceRecord extends JObject
 			// if record is a parent, store with its category.
 			if (isset($this->catid) && (int)$this->catid != 0)
 			{
-				$recordCategory = $this->getTable('RecordCategory');
+				$recordCategory = self::getTable('RecordCategory');
 				$recordCategory->record_id = $table->id;
 				$recordCategory->catid = $this->catid;
 				$recordCategory->store();
 			}
 		}
 		
+		$this->_saveAssets($collection);
+		
+		$dispatcher->trigger('onJSpaceRecordAfterSave', array($table, $isNew));
+		
+		$this->_saveChildren($children);
+		
+		return $result;	
+	}
+	
+	/**
+	 * Saves the record's assets.
+	 *
+	 * @param  array  $collection  An array of assets to save with the record.
+	 */
+	private function _saveAssets($collection)
+	{
 		foreach ($collection as $bkey=>$bundle)
 		{
-			foreach ($bundle as $dkey=>$derivative)
+			$assets = JArrayHelper::getValue($bundle, 'assets', array(), 'array');
+		
+			foreach ($assets as $dkey=>$derivative)
 			{
-				$assets = JArrayHelper::getValue($derivative, 'assets', array(), 'array');
-				
-				foreach ($assets as $akey=>$asset)
+				foreach ($derivative as $akey=>$asset)
 				{					
 					$new = JSpaceAsset::getInstance();
 					$new->bind($asset);
@@ -204,48 +246,83 @@ class JSpaceRecord extends JObject
 				}
 			}
 		}
-		
-		$dispatcher->trigger('onJSpaceRecordAfterSave', array($table, $isNew));
-		/*
-		foreach ($children as $asset)
-		{
-			$record = JSpaceRecord::getInstance();
-			$record->title = 'test';
-			$record->schema = JArrayHelper::getValue($asset, 'schema');
-			$recordCategory->parent_id = $table->id;
-			$record->save(array($asset));
-		}
-		*/
-		return $result;	
 	}
 	
+	/**
+	 * Save children as separate sub records.
+	 * 
+	 * @param  array  $children  An array of children to save a sub records.
+	 */	 
+	private function _saveChildren($children)
+	{
+		$result = true;
+		
+		foreach ($children as $bkey=>$bundle)
+		{
+			$record = JSpaceRecord::getInstance();
+			
+			$array = array();
+			$array['title'] = 'child record';
+			$array['schema'] = JArrayHelper::getValue($bundle, 'schema');
+			
+			// The schema has been set. Remove.
+			if (isset($bundle['schema']))
+			{
+				unset($bundle['schema']);
+			}
+			
+			$array['parent_id'] = $this->id;
+			$array['published'] = $this->published;
+			$array['access'] = $this->access;
+			$array['language'] = $this->language;
+			
+			// Get the first file for retrieving metadata from.
+			$first = JArrayHelper::getValue($bundle, 'assets');
+			$first = JArrayHelper::getValue($first, JArrayHelper::getValue(array_keys($first), 0));
+			$first = JArrayHelper::getValue($first, 0);
+			
+			$metadata = self::_getMetadataCrosswalk($first);
+			
+			$array['title'] = $metadata->get('fileName', 'Untitled');
+			$array['metadata'] = self::_crosswalkSchema($metadata->toArray(), $array['schema'])->toArray();
+			
+			$record->bind($array);
+			$record->save(array($bkey=>$bundle));
+		}
+	}
+	
+	/**
+	 * Deletes a record.
+	 *
+	 * @throw  Exception  When delete fails.
+	 */
 	public function delete()
 	{
 		JPluginHelper::importPlugin('jspace');
 		$dispatcher = JEventDispatcher::getInstance();
 		
-		$table = $this->getTable();
+		$table = self::getTable('Record');
 		$table->load($this->id);
 		
 		$dispatcher->trigger('onJSpaceRecordBeforeDelete', array($table));
 		
-		if (!$result = $table->delete())
+		if (!$table->delete())
 		{
 			throw new Exception($table->getError());
 		}
 		
 		$dispatcher->trigger('onJSpaceRecordAfterDelete', array($table));
 
-		return $result;
+		return true;
 	}
 	
 	public function load($id)
 	{
-		$table = $this->getTable();
+		$table = self::getTable('Record');
 		
 		if (!$table->load($id))
 		{
-			JLog::add(JText::sprintf('COM_JSPACE_ERROR_UNABLETOLOADRECORD', $id), JLog::WARNING, 'jerror');
+			JLog::add(JText::sprintf('COM_JSPACE_ERROR_UNABLETOLOADRECORD', $id), JLog::WARNING, 'jspace');
 
 			return false;
 		}
@@ -287,7 +364,11 @@ class JSpaceRecord extends JObject
 	}
 	
 	/**
-	 * Crosswalks the asset metadata to a metadata schema.
+	 * Crosswalks the asset metadata.
+	 * 
+	 * @param    array     $asset  A record asset expressed as an array.
+	 * 
+	 * @return  JRegistry  The crosswalked asset metadata.
 	 */
 	private static function _getMetadataCrosswalk($asset)
 	{
@@ -331,7 +412,7 @@ class JSpaceRecord extends JObject
 		$query
 			->select(array('id', 'hash', 'metadata', 'derivative', 'bundle', 'record_id'))
 			->from('#__jspace_assets')
-			->where('record_id='.$this->id);
+			->where('record_id='.(int)$this->id);
 			
 		foreach ($filters as $key=>$value)
 		{

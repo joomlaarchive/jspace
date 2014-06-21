@@ -14,7 +14,7 @@ defined('JPATH_BASE') or die;
 		name="<?php echo $displayData->metadataFieldName; ?>" 
 		value="<?php echo $displayData->metadata; ?>"/>
 	<?php endif; ?>
-		
+	
 	<?php if ($displayData->schema) : ?>
 	<input 
 		type="hidden" 

@@ -27,12 +27,11 @@ class JFormRuleJSpaceAssets extends JFormRule
 		
 		$collection = JSpaceHtmlAssets::getCollection();
 		$bundle = JArrayHelper::getValue($collection, (string)$element->attributes()->name, array(), 'array');
+		$assets = JArrayHelper::getValue($bundle, 'assets', array(), 'array');
 		
-		foreach ($bundle as $key=>$derivative)
+		foreach ($assets as $key=>$derivative)
 		{
- 			$assets = JArrayHelper::getValue($derivative, 'assets', array(), 'array');
-						
-			foreach ($assets as $asset)
+			foreach ($derivative as $asset)
 			{
 				$name = JArrayHelper::getValue($asset, 'name');
 				
@@ -50,7 +49,7 @@ class JFormRuleJSpaceAssets extends JFormRule
 					}
 				}
 				
-				if ($error = JArrayHelper::getValue($file, 'error', 0, 'int'))
+				if ($error = JArrayHelper::getValue($asset, 'error', 0, 'int'))
 				{
 					switch ($error)
 					{

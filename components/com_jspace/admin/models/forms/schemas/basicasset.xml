@@ -1,28 +1,50 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <form
-	name="basicasset">
+	name="basicasset"
+	label="COM_JSPACE_RECORD_SCHEMA_BASICASSET_LABEL">
 	<fields name="metadata">
-		<fieldset name="jspacemetadata">
+		<fieldset 
+			name="jspacemetadata"
+			label="COM_JSPACE_METADATA_LABEL">
 			<field 
-				name="title" 
+				name="fileName" 
 				type="text"
 				filter="JComponentHelper::filterText" 
 				required="true"/>
 			<field 
-				name="author" 
+				name="contentLength" 
 				type="text"
 				filter="JComponentHelper::filterText" 
 				required="false"/>
 			<field 
-				name="size" 
+				name="contentType" 
 				type="text"
 				filter="int" 
 				required="true"/>
 			<field 
-				name="type" 
+				name="created" 
 				type="text"
-				filter="JComponentHelper::filterText" 
-				required="true"/>
+				filter="JComponentHelper::filterText"/>
+			<field 
+				name="modified" 
+				type="text"
+				filter="JComponentHelper::filterText"/>
+		</fieldset>
+	</fields>
+	
+	<fields name="collection">
+		<fieldset name="jspaceassets"
+			label="COM_JSPACE_FILES_LABEL">
+			<field 
+				name="video" 
+				type="jspace.asset" 
+				label="Raw Video" 
+				description="Choose an image from your computer with maximum 100KB" 
+				size="10" 
+				accept="image/*"
+				derivative="original"
+				validate="jspaceassets"
+				schema="basicasset"/>
 		</fieldset>
 	</fields>
 </form>

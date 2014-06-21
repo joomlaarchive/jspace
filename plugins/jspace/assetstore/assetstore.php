@@ -10,21 +10,17 @@ jimport('jspace.html.assets');
 /**
  * Uploaded assets takes the form:
  * 
- * jform['collection'][fieldname][derivative]['assets']
+ * jform['collection'][fieldname]['assets'][derivative]
  * 
  * or
  * 
- * jform['collection'][fieldname][derivative]['assets'][]
+ * jform['collection'][fieldname]['assets'][derivative][]
  * 
  * for multiple files.
  * 
  * Additional information such as schemas are defined like so:
  * 
- * jform['collection'][fieldname][derivative][schema]
- * 
- * Files which should be deleted take the form:
- * 
- * jform['collection'][fieldname][derivative][delete][]
+ * jform['collection'][fieldname][schema]
  */
 class PlgJSpaceAssetstore extends JPlugin
 {
@@ -42,37 +38,6 @@ class PlgJSpaceAssetstore extends JPlugin
 		$this->params->loadArray(array('component'=>$params->toArray()));
 	}
 	
-	public function onJSpaceAssetsPrepare($data, $bundle, $derivative = null)
-	{
-		// if there is no id the object hasn't been created yet. Exit cleanly.
-		if (!isset($data->id))
-		{
-			return array();
-		}
-		
-		$database = JFactory::getDbo();
-		$query = $database->getQuery(true);
-		$query
-			->select(array('id', 'hash', 'metadata', 'derivative', 'bundle', 'record_id'))
-			->from('#__jspace_assets')
-			->where(array(
-				$database->qn('bundle')."=".$database->q($bundle),
-				$database->qn('record_id')."=".$data->id));
-		
-		$database->setQuery($query);
-		
-		$assets = $database->loadObjectList('id', 'JObject');
-		
-		foreach (array_keys($assets) as $key)
-		{
-			$metadata = new JRegistry();
-			$metadata->loadString($assets[$key]->metadata);
-			$assets[$key]->metadata = $metadata;
-		}
-		
-		return $assets;
-	}
-	
 	/**
 	 * Checks for the existence of a similar file already archived against the current record.
 	 *
@@ -86,12 +51,12 @@ class PlgJSpaceAssetstore extends JPlugin
 		
 		foreach ($collection as $bkey=>$bundle)
 		{
-			foreach ($bundle as $dkey=>$derivative)
+			$assets = JArrayHelper::getValue($bundle, 'assets', array(), 'array');
+		
+			foreach ($assets as $dkey=>$derivative)
 			{
-				$assets = JArrayHelper::getValue($derivative, 'assets', array(), 'array');
-
-				foreach ($assets as $asset)
-				{				
+				foreach ($derivative as $akey=>$asset)
+				{
 					$hash = sha1_file(JArrayHelper::getValue($asset, 'tmp_name'));
 				
 					$database = JFactory::getDbo();
@@ -193,7 +158,7 @@ class PlgJSpaceAssetstore extends JPlugin
 			$query = $database->getQuery(true);
 			$query
 				->delete('#__jspace_assets')
-				->where($database->qn('record_id').'='.$id);
+				->where($database->qn('record_id').'='.(int)$id);
 			
 			$database->setQuery($query);
 			$database->execute();

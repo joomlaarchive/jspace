@@ -14,7 +14,7 @@ abstract class JSpaceHtmlAssets
 		
 		$assets = JSpaceHtmlAssets::clean($assets);
 		
-		return array_merge_recursive($collection, $assets);
+		return $assets;
 	}
 
 	/**
@@ -29,30 +29,37 @@ abstract class JSpaceHtmlAssets
 		$cleaned = $collection;
 	
 		foreach ($cleaned as $bkey=>$bundle)
-		{			
-			foreach ($bundle as $dkey=>$derivative)
+		{
+			$assets = JArrayHelper::getValue($bundle, 'assets', array(), 'array');
+		
+			foreach ($assets as $dkey=>$derivative)
 			{
-				$assets = JArrayHelper::getValue($derivative, 'assets', array(), 'array');
-				
-				if (array_key_exists('tmp_name', $assets))
+				if (array_key_exists('tmp_name', $derivative))
 				{
-					$tmp = $assets;
-					$assets = array();
-					$assets[] = $tmp;
+					$tmp = $derivative;
+					$derivative = array();
+					$derivative[] = $tmp;
+ 					$cleaned[$bkey]['assets'][$dkey] = $derivative;
 				}
 				
 				// Strip empty uploads.
-				foreach ($assets as $akey=>$asset)
+				foreach ($derivative as $akey=>$asset)
 				{
 					if (JArrayHelper::getValue($asset, 'error') == 4)
 					{
-						unset($assets[$akey]);
+						unset($cleaned[$bkey]['assets'][$dkey][$akey]);
 					}
 				}
-					
-				$assets = array_values($assets);
 				
-				$cleaned[$bkey][$dkey]['assets'] = $assets;
+				if (count($cleaned[$bkey]['assets'][$dkey]) == 0)
+				{
+					unset($cleaned[$bkey]['assets'][$dkey]);
+				}
+			}
+			
+			if (count($cleaned[$bkey]['assets']) == 0)
+			{
+				unset($cleaned[$bkey]);
 			}
 		}
 		

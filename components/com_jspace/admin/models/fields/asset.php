@@ -22,7 +22,7 @@ class JSpaceFormFieldAsset extends JFormField
 			throw new Exception(JText::sprintf('COM_JSPACE_ERROR_NODERIVATIVE', $this->type));
 		}
 	
-		$fieldName = $fieldName.']['.$this->derivative;
+		$fieldName = $fieldName.'][assets';
 		
 		return str_replace('[]', '', parent::getName($fieldName));
 	}
@@ -41,7 +41,7 @@ class JSpaceFormFieldAsset extends JFormField
 	
 	public function getAssetsFieldName()
 	{
-		$name = $this->getName($this->fieldname).'[assets]';
+		$name = $this->getName($this->fieldname).'['.$this->derivative.']';
 		
 		if ($this->multiple)
 		{
@@ -51,24 +51,9 @@ class JSpaceFormFieldAsset extends JFormField
 		return $name;
 	}
 	
-	public function getMetadataFieldName()
-	{
-		return parent::getName($this->fieldname).'[metadata]';
-	}
-	
 	public function getSchemaFieldName()
 	{
-		return parent::getName($this->fieldname).'[schema]';
-	}
-	
-	public function getDeleteFieldName()
-	{
-		return $this->getName($this->fieldname).'[delete]';
-	}
-	
-	public function getDeleteFieldId()
-	{
-		return $this->id."_".$this->derivative."_delete";
+		return str_replace('[]', '', parent::getName($this->fieldname)).'[schema]';
 	}
 	
 	protected function getInput()
@@ -96,16 +81,14 @@ class JSpaceFormFieldAsset extends JFormField
 			case 'bundle':			
 				return $this->fieldname;
 				break;
-			
-			case 'metadataFieldName':
+				
 			case 'schemaFieldName':
 			case 'assetsFieldName':
-			case 'bundleFieldName':
-			case 'deleteFieldName':
-			case 'deleteFieldId':
 				$method = 'get'.ucfirst($name);
 			
 				return $this->__call($method);
+				
+				break;
 				
 			default:
 				return parent::__get($name);

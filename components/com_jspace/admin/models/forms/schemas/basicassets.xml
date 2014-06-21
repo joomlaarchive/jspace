@@ -23,8 +23,7 @@
 				accept="image/*"
 				derivative="original"
 				validate="jspaceassets"
-				bundle="videos"
-				metadata="original"/>
+				schema="basicasset"/>
 			
 			<field 
 				name="images" 
