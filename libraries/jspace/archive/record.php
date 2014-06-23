@@ -78,7 +78,7 @@ class JSpaceRecord extends JObject
 	public static function getTable($type = null, $prefix = 'JSpaceTable')
 	{
 		static $tabletype;
-
+		
 		// Set the default tabletype;
 		if (!isset($tabletype))
 		{
@@ -92,7 +92,7 @@ class JSpaceRecord extends JObject
 			$tabletype['name'] = $type;
 			$tabletype['prefix'] = $prefix;
 		}
-
+		
 		// Create the user table object
 		return JTable::getInstance($tabletype['name'], $tabletype['prefix']);
 	}

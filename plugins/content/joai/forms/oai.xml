@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <form>
-	<fields name="joai">
-		<fieldset name="joai"
+	<fields name="params">
+		<fieldset name="oai"
 			label="PLG_CONTENT_JOAI_OAI_LABEL">
 			<field
-				name="url"
+				name="oai_url"
 				type="url"
-				id="url"
+				id="oai_url"
 				description="PLG_CONTENT_JOAI_FIELD_URL_DESC"
 				filter="string"
 				label="PLG_CONTENT_JOAI_FIELD_URL_LABEL"
 				size="30"/>
 			
 			<field
-				name="metadataFormat"
-				id="metadataFormat"
+				name="oai_metadataFormat"
+				id="oai_metadataFormat"
 				type="list"
 				class="chzn-color"
 				label="PLG_CONTENT_JOAI_FIELD_METADATAFORMAT_LABEL"

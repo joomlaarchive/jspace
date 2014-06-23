@@ -165,6 +165,27 @@ asso.context='.$db->quote('com_jspace.record'))
 			$query->where('(r.published = 0 OR r.published = 1)');
 		}
 		
+		// Filter by a single or group of categories.
+		$baselevel = 1;
+		$categoryId = $this->getState('filter.category_id');
+
+		if (is_numeric($categoryId))
+		{
+				$cat_tbl = JTable::getInstance('Category', 'JTable');
+				$cat_tbl->load($categoryId);
+				$rgt = $cat_tbl->rgt;
+				$lft = $cat_tbl->lft;
+				$baselevel = (int) $cat_tbl->level;
+				$query->where('c.lft >= ' . (int) $lft)
+						->where('c.rgt <= ' . (int) $rgt);
+		}
+		elseif (is_array($categoryId))
+		{
+				JArrayHelper::toInteger($categoryId);
+				$categoryId = implode(',', $categoryId);
+				$query->where('a.catid IN (' . $categoryId . ')');
+		}
+		
 		$query->group('r.id');
 
 		return $query;

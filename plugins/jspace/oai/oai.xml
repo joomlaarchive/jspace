@@ -10,8 +10,27 @@
 	<version>0.1.0</version>
 	<description>PLG_JSPACE_OAI_XML_DESCRIPTION</description>
 	
+    <install>
+    	<sql>
+			<file driver="mysql" charset="utf8">sql/install.mysql.utf8.sql</file>
+		</sql>
+	</install>
+	
+    <uninstall>
+    	<sql>
+    		<file driver="mysql" charset="utf8">sql/uninstall.mysql.utf8.sql</file>
+    	</sql>
+    </uninstall>
+    
+	<update>
+		<schemas>
+			<schemapath type="mysql">sql/updates/mysql</schemapath>
+		</schemas>
+	</update>
+	
 	<files>
 		<filename plugin="oai">oai.php</filename>
+		<folder>sql</folder>
 	</files>
 	<languages>
 		<language tag="en-GB">language/en-GB/en-GB.plg_jspace_oai.ini</language>

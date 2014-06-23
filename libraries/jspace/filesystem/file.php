@@ -1,6 +1,8 @@
 <?php
 defined('_JEXEC') or die;
 
+jimport('joomla.filesystem.file');
+
 class JSpaceFile extends JFile
 {
 	public function getMetadata($file)

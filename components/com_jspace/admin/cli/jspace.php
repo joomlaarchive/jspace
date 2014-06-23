@@ -51,8 +51,10 @@ if (version_compare(JVERSION, "3.0", "l")) {
 	jimport('joomla.event.dispatcher');
 	jimport('joomla.utilities.utility');
 	jimport('joomla.utilities.arrayhelper');
-	
 }
+
+// include relevant tables.
+JTable::addIncludePath(JPATH_ROOT.'/administrator/components/com_jspace/tables/');
 
 // System configuration.
 $config = new JConfig;
@@ -77,38 +79,48 @@ jimport('jspace.factory');
 class JSpaceCli extends JApplicationCli
 {
     public function doExecute()
-    {    
-    	if ($this->input->get('h') || $this->input->get('help')) 
-    	{    		
-    		$this->help();
-    		return;
-    	}
-    	
+    {
     	// fool the system into thinking we are running as JSite with JSpace as the active component
     	$_SERVER['HTTP_HOST'] = 'domain.com';
-		JFactory::getApplication('site');
+		JFactory::getApplication('cli');
 
 		// Disable caching.
 		$config = JFactory::getConfig();
 		$config->set('caching', 0);
 		$config->set('cache_handler', 'file');
 		
-		try 
-		{
-			$plugin = JArrayHelper::getValue($this->input->args, 0);
-			$args = array(JArrayHelper::getValue($this->input->args, 1), $this->input->getArray());
-			
-			$this->_executeCommand($plugin, $args);			
-		} 
-		catch (Exception $e) 
-		{
-			$this->out($e->getMessage());
-			
-			if ($this->_isVerbose())
+		if (($this->input->get('h') || $this->input->get('help')) && count($this->input->args) == 0)
+    	{
+    		$this->help();
+    		return;
+    	}
+    	
+    	$plugin = JArrayHelper::getValue($this->input->args, 0);
+		$action = JArrayHelper::getValue($this->input->args, 1);
+		$args = $this->input->getArray();
+    	
+    	if (array_search($plugin, $this->_getPlugins()) !== false)
+		{	
+			try 
 			{
-				$this->out($e->getTraceAsString());
+				$this->_executeCommand($plugin, $action, $args);			
+			} 
+			catch (Exception $e) 
+			{
+				$this->out($e->getMessage());
+				
+				if ($this->_isVerbose())
+				{
+					$this->out($e->getTraceAsString());
+				}
 			}
 		}
+		else
+		{
+			$this->out('No plugin specified.');
+			$this->help();
+		}
+		
     }
  
     /**
@@ -119,23 +131,7 @@ class JSpaceCli extends JApplicationCli
      */
     protected function help()
     {
-		JPluginHelper::importPlugin('jspacecli');
-		$dispatcher = JEventDispatcher::getInstance();
-		
-		$plugins = array();
-		
-		foreach ($dispatcher->get('_observers') as $observer)
-		{
-			if ($observer->get('_type') == 'jspacecli')
-			{
-				if (JPluginHelper::isEnabled('jspacecli', $observer->get('_name')))
-				{
-					$plugins[] = "- ".$observer->get('_name');
-				}
-			}
-		}
-		
-		$pluginsList = implode("\n", $plugins);
+		$pluginsList = implode("\n", $this->_getPlugins());
     
     	echo <<<EOT
 Usage: jspace [plugin] [action] [OPTIONS]
@@ -151,7 +147,6 @@ Provides tools for executing various JSpace actions.
 Available Plugins:
 {$pluginsList}
 
-
 EOT;
     }
     
@@ -165,11 +160,11 @@ EOT;
     	return $this;
     }
     
-    private function _executeCommand($plugin, $args = array())
+    private function _executeCommand($plugin, $action, $args = array())
     {
     	if ($plugin)
     	{
-    		if (!is_a(JPluginHelper::getPlugin('jspacecli', $plugin), 'stdClass'))
+    		if (!is_a(JPluginHelper::getPlugin('jspace', $plugin), 'stdClass'))
     		{
     			throw new Exception('The specified plugin does not exist or is not enabled.');
     		}
@@ -177,9 +172,9 @@ EOT;
     	
     	$dispatcher = JEventDispatcher::getInstance();
     	
-    	JPluginHelper::importPlugin("jspacecli", $plugin, true, $dispatcher);
-
-    	return $dispatcher->trigger('onJSpaceExecuteCliCommand', $args);
+    	JPluginHelper::importPlugin("jspace", $plugin, true, $dispatcher);
+    	
+    	return $dispatcher->trigger('onJSpaceExecuteCliCommand', array($action, $args));
     }
 
     private function _isVerbose()
@@ -200,6 +195,31 @@ EOT;
     {
     	return $this->input->getString('plugin', $this->input->getString('P', null));
     }
+    
+    private function _getPlugins()
+    {
+		JPluginHelper::importPlugin('jspace');
+		
+		$dispatcher = JEventDispatcher::getInstance();
+		
+		$plugins = array();
+		
+		foreach ($dispatcher->get('_observers') as $observer)
+		{
+			if ($observer->get('_type') == 'jspace')
+			{
+				if (JPluginHelper::isEnabled('jspace', $observer->get('_name')))
+				{
+					if (method_exists($observer, 'onJSpaceExecuteCliCommand'))
+					{
+						$plugins[] = $observer->get('_name');
+					}
+				}
+			}
+		}
+		
+		return $plugins;
+	}
 }
  
 JApplicationCli::getInstance('JSpaceCli')->execute();

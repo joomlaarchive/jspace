@@ -11,38 +11,6 @@ class PlgContentJOAI extends JPlugin
 		parent::__construct($subject, $config);
 		$this->loadLanguage();
 	}
-
-	public function onContentPrepareData($context, $data)
-	{
-		if ($context != 'com_categories.category')
-		{
-			return true;
-		}
-		
-		if (is_object($data))
-		{
-			if ($data->extension != 'com_jspace')
-			{
-				return true;
-			}
-			
-			$database = JFactory::getDbo();
-			$query = $database->getQuery(true);
-			
-			$query
-				->select(array($database->qn('url'), $database->qn('metadataFormat')))
-				->from($database->qn('#__joai_harvests', 'h'))
-				->where($database->qn('catid')."=".(int)$data->id);
-				
-			$database->setQuery($query);
-			
-			$result = $database->loadObject();
-			
-			$data->joai['url'] = $result->url;
-		}
-
-		return true;
-	}
 	
 	public function onContentPrepareForm($form, $data)
 	{
@@ -53,7 +21,7 @@ class PlgContentJOAI extends JPlugin
 		}
 
 		$name = $form->getName();
-
+		
 		if (!in_array($name, array('com_categories.categorycom_jspace')))
 		{
 			return true;
@@ -64,65 +32,31 @@ class PlgContentJOAI extends JPlugin
 		return true;
 	}
 	
-	public function onContentAfterSave($context, $category, $isNew)
+	public function onContentBeforeSave($context, $data, $isNew)
 	{
-		if ($context != 'com_categories.category')
+		if ($context == 'com_categories.category')
 		{
-			return true;
+			if (isset($data->extension) && $data->extension == 'com_jspace')
+			{
+				$old = JTable::getInstance('Category');
+				if ($old->load($data->id))
+				{
+					$oldParams = new JRegistry($old->params);
+					$newParams = new JRegistry($data->params);
+					
+					if ($oldParams->get('oai_url') != $newParams->get('oai_url'))
+					{
+						$database = JFactory::getDbo();
+						$query = $database->getQuery(true);
+						$query
+							->delete($database->qn('#__jspaceoai_harvests'))
+							->where($database->qn('catid').'='.(int)$data->id);
+							
+						$database->setQuery($query);
+						$database->execute();
+					}
+				}
+			}
 		}
-		
-		$data = JFactory::getApplication()->input->post->get('jform', array(), 'array');
-		
-		if ($category->extension == 'com_jspace')
-		{
-			$oai = JArrayHelper::getValue($data, 'joai');
-			$url = JArrayHelper::getValue($oai, 'url');
-			$metadataFormat = JArrayHelper::getValue($oai, 'metadataFormat');
-			
-			$this->onContentAfterDelete($context, $category);
-		
-			$database = JFactory::getDbo();
-			$query = $database->getQuery(true);
-			
-			$columns = array(
-				$database->qn('catid'),
-				$database->qn('url'),
-				$database->qn('metadataFormat'));
-			
-			$query
-				->insert($database->qn('#__joai_harvests'))
-				->columns($columns)
-				->values(array((int)$category->id.",".$database->q($url).",".$database->q($metadataFormat)));
-			
-			$database->setQuery($query);				
-			$database->execute();
-		}
-		
-		return true;
-	}
-	
-	public function onContentAfterDelete($context, $category)
-	{
-		if ($context != 'com_categories.category')
-		{
-			return true;
-		}
-
-		$data = JFactory::getApplication()->input->post->get('jform', array(), 'array');
-	
-		if ($category->extension == 'com_jspace')
-		{
-			$database = JFactory::getDbo();
-			$query = $database->getQuery(true);
-			
-			$query
-				->delete($database->qn('#__joai_harvests'))
-				->where($database->qn('catid').'='.(int)$category->id);
-				
-			$database->setQuery($query);
-			$database->execute();
-		}
-		
-		return true;
 	}
 }

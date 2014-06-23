@@ -1,6 +1,8 @@
 <?php
 defined('_JEXEC') or die;
 
+jimport('joomla.filesystem.file');
+
 class JSpaceMetadataCrosswalk extends JObject
 {
 	protected $source;
@@ -31,6 +33,10 @@ class JSpaceMetadataCrosswalk extends JObject
 	
 	/**
 	 * Gets a list of crosswalked values.
+	 *
+	 * @param   bool   $reverse  True if the crosswalk should be reversed, false otherwise. Defaults to false.
+	 *
+	 * @return  array  An array of metadata values.
 	 */
 	public function walk($reverse = false)
 	{
@@ -55,7 +61,7 @@ class JSpaceMetadataCrosswalk extends JObject
 						$key = key($items);
 					}
 					
-					if (trim($svalue))
+					if ($svalue)
 					{
 						$this->metadata[$key] = $svalue;
 					}
