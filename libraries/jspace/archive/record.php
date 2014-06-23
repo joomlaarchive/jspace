@@ -110,17 +110,17 @@ class JSpaceRecord extends JObject
 	{
 		if (array_key_exists('metadata', $array))
 		{
-			$this->_metadata->loadArray($array['metadata']);
-
 			if (is_array($array['metadata']))
 			{
+				$this->_metadata->loadArray($array['metadata']);
 				$metadata = (string)$this->_metadata;
 			}
 			else
 			{
+				$this->_metadata->loadString($array['metadata']);
 				$metadata = $array['metadata'];
 			}
-
+			
 			$this->metadata = $metadata;
 		}
 

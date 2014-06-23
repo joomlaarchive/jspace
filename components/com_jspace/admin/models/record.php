@@ -70,7 +70,7 @@ $this->context, $item->id, 'id', null, null);
 		
 		// Trigger the data preparation event.
 		$dispatcher->trigger('onContentPrepareData', array($this->context, $item));
-
+		
 		return $item;
 	}
 	

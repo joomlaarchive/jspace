@@ -21,7 +21,7 @@ class PlgJSpaceOAI extends JPlugin
 	{
 		switch ($action)
 		{
-			case 'harvest':
+			case 'harvest': // harvest archives.
 				foreach ($this->_getOAICategories() as $category)
 				{
 					$this->_harvest($category);
@@ -29,7 +29,7 @@ class PlgJSpaceOAI extends JPlugin
 				
 				break;
 				
-			case 'clear':
+			case 'clear': // clear the cache.
 				$id = JArrayHelper::getValue($options, 'category', JArrayHelper::getValue($options, 'c', 0));
 			
 				if (!$id)
@@ -41,6 +41,35 @@ class PlgJSpaceOAI extends JPlugin
 				$category->load($id);
 				
 				$this->_discard($category);
+				
+				break;
+			
+			case 'reset-failures': // reset request failures.
+				$id = JArrayHelper::getValue($options, 'category', JArrayHelper::getValue($options, 'c', 0));
+			
+				if (!$id)
+				{
+					throw new Exception(JText::_("Please specify a category id using -c [id] or --category=[id]."));
+				}
+			
+				if ($harvest = $this->_getOAIHarvest($id, false))
+				{
+					$harvest->request_failures = 0;
+					$this->_updateOAIHarvest($harvest);
+				}
+				
+				break;
+				
+			case 'reset': // reset harvest (forces harvest to start at beginning).
+				$id = JArrayHelper::getValue($options, 'category', JArrayHelper::getValue($options, 'c', 0));
+			
+				if (!$id)
+				{
+					throw new Exception(JText::_("Please specify a category id using -c [id] or --category=[id]."));
+				}
+			
+				$this->onJSpaceExecuteCliCommand('clear', $options);
+				$this->_deleteOAIHarvest($id);
 				
 				break;
 			
@@ -109,8 +138,6 @@ class PlgJSpaceOAI extends JPlugin
 		$harvest = $this->_getOAIHarvest($category->id);
 		$url = $category->params->get('oai_url');
 		$metadataFormat = $category->params->get('oai_metadataFormat');
-	
-		$category->resumptionToken = null;
 	
 		$uri = JUri::getInstance($url);
 		$uri->setVar('verb', 'ListRecords');
@@ -207,7 +234,6 @@ class PlgJSpaceOAI extends JPlugin
 								$registry->loadArray($array);
 								
 								$item->metadata = JSpaceFactory::getCrosswalk($registry, array('name'=>$metadataFormat))->walk();
-								$item->resumptionToken = $harvest->resumptionToken;
 								
 								$this->_cache($item, $category);
 								
@@ -228,19 +254,19 @@ class PlgJSpaceOAI extends JPlugin
 			switch ($e->getCode())
 			{
 				case 500: // something's seriously wrong with the request. Fail immediately.
-					$harvest->attempts = $this->params->get('request_attempts', 3);
+					$harvest->failures = $this->params->get('request_failures', 3);
 					break;
 					
 				default:
-					if ($harvest->attempts < 3)
+					if ($harvest->failures < 3)
 					{
-						$harvest->attempts++;
+						$harvest->failures++;
 					}
 					
 					break;
 			}
 			
-			if ((int)$harvest->attempts == $this->params->get('request_attempts', 3))
+			if ((int)$harvest->failures == $this->params->get('request_failures', 3))
 			{
 				//$this->_rollback($harvest);
 			}
@@ -268,7 +294,6 @@ class PlgJSpaceOAI extends JPlugin
 		$array['id'] = $database->q($item->id);
 		$array['metadata'] = $database->q(json_encode($item->metadata));
 		$array['catid'] = (int)$category->id;
-		$array['resumptionToken'] = $database->q($item->resumptionToken);
 		
 		$query = $database->getQuery(true);
 		
@@ -297,8 +322,7 @@ class PlgJSpaceOAI extends JPlugin
 		$select = array(
 			$database->qn('id'),
 			$database->qn('catid'),
-			$database->qn('metadata'),
-			$database->qn('resumptionToken'));
+			$database->qn('metadata'));
 		
 		$query
 			->select($select)
@@ -335,7 +359,7 @@ class PlgJSpaceOAI extends JPlugin
 		foreach ($items as $item)
 		{
 			$metadata = JArrayHelper::fromObject(json_decode($item->metadata));
-		
+			
 			$array['catid'] = $category->id;
 			$array['metadata'] = $item->metadata;
 			$array['title'] = JArrayHelper::getValue($metadata, 'title');
@@ -367,7 +391,7 @@ class PlgJSpaceOAI extends JPlugin
 	 */
 	private function _updateOAIHarvest($harvest)
 	{
-		$harvest->attempts = 0;
+		$harvest->failures = 0;
 		
 		if ($this->_getOAIHarvest($harvest->catid, false))
 		{
@@ -411,6 +435,24 @@ class PlgJSpaceOAI extends JPlugin
 	}
 	
 	/**
+	 * Delete an existing harvest object.
+	 *
+	 * @param  id  $id  The id of the harvest to delete.
+	 */
+	private function _deleteOAIHarvest($id)
+	{
+		$database = JFactory::getDbo();
+		
+		$query = $database->getQuery(true);
+		$query
+			->delete($database->qn('#__jspaceoai_harvests'))
+			->where($database->qn('catid').'='.(int)$id);
+			
+		$database->setQuery($query);
+		$database->execute();
+	}
+	
+	/**
 	 * Loads the OAI harvest object based on the catid param.
 	 *
 	 * @param    int  $catid         A category id.
@@ -428,7 +470,7 @@ class PlgJSpaceOAI extends JPlugin
 			$database->qn('catid'),
 			$database->qn('harvested'),
 			$database->qn('resumptionToken'),
-			$database->qn('attempts'));
+			$database->qn('failures'));
 		
 		$query
 			->select($select)
@@ -441,7 +483,7 @@ class PlgJSpaceOAI extends JPlugin
 		{
 			$harvest = new JObject();
 			$harvest->catid = (int)$catid;
-			$harvest->attempts = 0;
+			$harvest->failures = 0;
 			$harvest->resumptionToken = null;
 			$harvest->harvested = null;
 		}
@@ -462,10 +504,13 @@ Usage: jspace oai [action] [OPTIONS]
 Provides OAI-based functions within JSpace.
 
 [action]
+  clear               Discards the cached records.
   harvest             Harvest records from another archive. Harvesting 
                       information is configured via JSpace's Category Manager.
-  clear               Discards the cached records.
   help                Prints this help.
+  reset               Reset the harvesting information. Forces the harvester 
+                      to retrieve all records from the source archive.
+  reset-failures      Resets the request failure counter.
 
 [OPTIONS]
   -c, --c=categoryId  Specify a single category to execute an OAI action against.

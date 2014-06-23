@@ -56,6 +56,13 @@
 					description="PLG_JSPACE_OAI_FOLLOWON_DESC"
 					default="30"
 					filter="int"/>
+				<field 
+					name="request_failures" 
+					type="text"
+					label="PLG_JSPACE_OAI_REQUESTFAILURES_LABEL" 
+					description="PLG_JSPACE_OAI_REQUESTFAILURES_DESC"
+					default="3"
+					filter="int"/>
 			</fieldset>
 		</fields>
 	</config>
