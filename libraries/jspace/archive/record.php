@@ -1,7 +1,9 @@
 <?php
+defined('_JEXEC') or die;
+
 /**
  * @package     JSpace
- * @subpackage  Form
+ * @subpackage  Archive
  *
  * @copyright   Copyright (C) 2014 KnowledgeARC Ltd. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE
@@ -66,7 +68,7 @@ class JSpaceRecord extends JObject
 	/**
 	 * Gets an instance of JTable.
 	 *
-	 * This function uses a static variable to store the table name of the user table to
+	 * This function uses a static variable to store the table name of the record table to
 	 * instantiate. You can call this function statically to set the table name if
 	 * needed.
 	 *
@@ -306,6 +308,11 @@ class JSpaceRecord extends JObject
 		
 		$dispatcher->trigger('onJSpaceRecordBeforeDelete', array($table));
 		
+		foreach ($this->getAssets() as $asset)
+		{
+			$asset->delete();
+		}
+		
 		if (!$table->delete())
 		{
 			throw new Exception($table->getError());
@@ -316,14 +323,12 @@ class JSpaceRecord extends JObject
 		return true;
 	}
 	
-	public function load($id)
+	public function load($keys)
 	{
 		$table = self::getTable('Record');
 		
-		if (!$table->load($id))
+		if (!$table->load($keys))
 		{
-			JLog::add(JText::sprintf('COM_JSPACE_ERROR_UNABLETOLOADRECORD', $id), JLog::WARNING, 'jspace');
-
 			return false;
 		}
 		

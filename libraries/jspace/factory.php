@@ -3,7 +3,7 @@
  * A JSpace factory class.
  * 
  * @package		JSpace
- * @copyright	Copyright (C) 2012 Wijiti Pty Ltd. All rights reserved.
+ * @copyright	Copyright (C) 2012-2014 KnowledgeARC. All rights reserved.
  * @license     This file is part of the JSpace library for Joomla!.
 
    The JSpace library for Joomla! is free software: you can redistribute it 

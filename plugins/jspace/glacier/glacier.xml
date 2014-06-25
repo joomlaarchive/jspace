@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<extension version="3.3" type="plugin" group="jspace" method="upgrade">
+	<name>plg_jspace_glacier</name>
+	<author>KnowledgeARC</author>
+	<creationDate>2014/06/24</creationDate>
+	<copyright>Copyright (C) 2014 KnowledgeARC Ltd. All rights reserved.</copyright>
+	<license>GNU General Public License version 2 or later; see LICENSE.txt</license>
+	<authorEmail>development@knowledgearc.com</authorEmail>
+	<authorUrl>www.knowledgearc.org</authorUrl>
+	<version>0.1.0</version>
+	<description>PLG_JSPACE_GLACIER_XML_DESCRIPTION</description>
+	
+	<install>
+    	<sql>
+			<file driver="mysql" charset="utf8">sql/install.mysql.utf8.sql</file>
+		</sql>
+	</install>
+	
+    <uninstall>
+    	<sql>
+    		<file driver="mysql" charset="utf8">sql/uninstall.mysql.utf8.sql</file>
+    	</sql>
+    </uninstall>
+    
+	<update>
+		<schemas>
+			<schemapath type="mysql">sql/updates/mysql</schemapath>
+		</schemas>
+	</update>
+	
+	<files>
+		<filename plugin="glacier">glacier.php</filename>
+		<folder>sql</folder>
+	</files>
+	<languages>
+		<language tag="en-GB">language/en-GB/en-GB.plg_jspace_glacier.ini</language>
+		<language tag="en-GB">language/en-GB/en-GB.plg_jspace_glacier.sys.ini</language>
+	</languages>
+	<config>
+		<fields name="params">
+			<fieldset 
+				name="basic"
+				addFieldPath="/libraries/amazon/form/fields/">
+				<field 
+					name="vault" 
+					type="text"
+					label="PLG_JSPACE_GLACIER_VAULT_LABEL" 
+					description="PLG_JSPACE_GLACIER_VAULT_DESC"/>
+				<field 
+					name="region" 
+					type="text"
+					label="PLG_JSPACE_GLACIER_REGION_LABEL" 
+					description="PLG_JSPACE_GLACIER_REGION_DESC"/>
+				<field 
+					name="access_key_id" 
+					type="text"
+					label="PLG_JSPACE_GLACIER_ACCESS_KEY_ID_LABEL" 
+					description="PLG_JSPACE_GLACIER_ACCESS_KEY_ID_DESC"/>
+				<field 
+					name="secret_access_key" 
+					type="text"
+					label="PLG_JSPACE_GLACIER_SECRET_ACCESS_KEY_LABEL" 
+					description="PLG_JSPACE_GLACIER_SECRET_ACCESS_KEY_DESC"/>
+			</fieldset>
+		</fields>
+	</config>
+</extension>

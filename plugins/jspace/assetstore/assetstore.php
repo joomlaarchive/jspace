@@ -4,6 +4,7 @@ defined('_JEXEC') or die;
 jimport('joomla.filesystem.folder');
 
 jimport('jspace.factory');
+jimport('jspace.archive.assethelper');
 jimport('jspace.filesystem.file');
 jimport('jspace.html.assets');
 
@@ -85,16 +86,17 @@ class PlgJSpaceAssetstore extends JPlugin
 	/**
 	 * Validates asset store location before the record is saved.
 	 *
-	 * @param   JObject    $record      An instance of the saved record.
-	 * @param   bool       $isNew       True if the record has just been created, false otherwise.
+	 * @param   JObject                   $record      An instance of the saved record.
+	 * @param   bool                      $isNew       True if the record has just been created, false
+	 * otherwise.
 	 *
-	 * @return  bool       True if all file store requirements are met, otherwise false.
+	 * @return  bool                      True if all file store requirements are met, otherwise false.
 	 *
-	 * @throws  Exception  Thrown if the file store is not writeable.
+	 * @throws  UnexpectedValueException  Thrown if the file store is not writeable.
 	 */
 	public function onJSpaceRecordBeforeSave($record, $isNew = true)
 	{
-		$path = $this->_getPath();
+		$path = JSpaceArchiveAssetHelper::preparePath($this->params->get('path'));
 		
 		while ($path && !JFolder::exists($path))
 		{
@@ -105,27 +107,27 @@ class PlgJSpaceAssetstore extends JPlugin
 			$path = implode('/', $parts);
 		}
 		
-		if (!is_writeable($path))
-		{
-			throw new Exception(JText::_('PLG_JSPACE_ASSETSTORE_ERROR_SAVE_NOT_WRITEABLE'));
-		}
+		
 		
 		return true;
 	}
 	
 	/**
-	 * Saves an asset to a locally configured file store.
+	 * Saves an asset to a locally configured asset store.
 	 *
 	 * @param   JObject    $asset  An instance of the saved asset.
 	 *
 	 * @return  bool       True if the asset is successfully saved, false otherwise.
 	 *
-	 * @throws  Exception  Thrown if the file cannot be saved for any reason.
+	 * @throws  Exception  Thrown if the asset cannot be saved for any reason.
 	 */
 	public function onJSpaceAssetAfterSave($asset)
 	{
-		$path = $this->_buildStoragePath($asset->record_id).'/';
-					
+		$root = $this->get('params')->get('path', null);
+		$id = $asset->id;
+		
+		$path = JSpaceArchiveAssetHelper::buildStoragePath($asset->record_id, $root);
+		
 		if (!JFolder::create($path))
 		{
 			throw new Exception(JText::_("PLG_JSPACE_ASSETSTORE_ERROR_CREATE_STORAGE_PATH"));
@@ -139,128 +141,52 @@ class PlgJSpaceAssetstore extends JPlugin
 		return true;
 	}
 	
-	/**
-	 * Removes all assets and files on the filesystem before the record is deleted.
-	 * @param   JTable  $record  An instance of the JTableRecord table.
-	 *
-	 * @return  bool  True if the files are removed successfully, false otherwise.
-	 */
-	public function onJSpaceRecordBeforeDelete($record)
+	public function onJSpaceAssetBeforeDelete($asset)
 	{
-		$id = $record->id;
+		$root = $this->get('params')->get('path', null);
 		
-		$storage = $this->_buildStoragePath($id);
+		$storage = JSpaceArchiveAssetHelper::buildStoragePath($asset->record_id, $root);
+		
+		$path = $storage.$asset->hash;
 		
 		try
 		{
-			$database = JFactory::getDbo();
-			
-			$query = $database->getQuery(true);
-			$query
-				->delete('#__jspace_assets')
-				->where($database->qn('record_id').'='.(int)$id);
-			
-			$database->setQuery($query);
-			$database->execute();
-			
-			if ($success = JFolder::delete($storage))
+			if (JFile::exists($path))
 			{
-				$empty = true;
-				
-				do
+				if (!JFile::delete($path))
 				{
-					$array = explode('/', $storage);
-					array_pop($array);
-					$storage = implode('/', $array);
-				
-					// once we hit a directory with files or the configured archive dir, stop.
-					if (JFolder::files($storage) || $storage.'/' == $this->_getPath())
-					{
-						$empty = false;
-					}
-					else
-					{
-						$success = JFolder::delete($storage);
-					}
+					JLog::add(__METHOD__.' '.JText::sprintf('PLG_JSPACE_ASSETSTORE_WARNING_FILEDELETEFAILED', json_encode($asset).", path=".$path), JLog::WARNING, 'jspace');
 				}
-				while ($empty);
 			}
+			else
+			{
+				JLog::add(__METHOD__.' '.JText::sprintf('PLG_JSPACE_ASSETSTORE_WARNING_FILEDOESNOTEXIST', json_encode($asset).", path=".$path), JLog::WARNING, 'jspace');
+			}
+			
+			// Cleanup; try to delete as much of the path as possible.
+			$empty = true;
+			
+			do
+			{
+				$array = explode('/', $storage);
+				array_pop($array);
+				$storage = implode('/', $array);
+				
+				// once we hit a directory with files or the configured archive dir, stop.
+				if (JFolder::files($storage) || $storage.'/' == JSpaceArchiveAssetHelper::preparePath($root))
+				{
+					$empty = false;
+				}
+				else
+				{
+					JFolder::delete($storage);
+				}
+			}
+			while ($empty);
 		}
 		catch (Exception $e)
 		{
 			JLog::add($e->getMessage(), JLog::ERROR, 'jspace');
-			
-			$success = false;
 		}
-		
-		return $success;
-	}
-	
-	public function onJSpaceAssetBeforeDelete($asset)
-	{
-		$storage = $this->_buildStoragePath($asset->record_id);
-		
-		$metadata = new JRegistry($asset->metadata);
-		
-		$path = $storage.'/'.$asset->hash;
-		
-		if (JFile::exists($path))
-		{
-			// only the files are deleted. The path will remain even if there are no files.
-			if (!JFile::delete($path))
-			{
-				throw new Exception(JText::_('PLG_JSPACE_ASSETSTORE_EXCEPTION_FILEDELETEFAILED'));
-			}
-		}
-		else
-		{
-			JLog::add('PlgJSpaceAssetStore::onJSpaceAssetBeforeDelete; '.JText::sprintf('PLG_JSPACE_ASSETSTORE_WARNING_FILEDELETEDOESNOTEXIST', json_encode($asset)), JLog::ERROR, 'jspace');
-		}
-	}
-
-	private function _buildStoragePath($id)
-	{
-		$hashcode = self::_getHashCode((string)$id);
-		
-        $mask = 255;
-        
-        $parts = array();
-
-        $parts[] = str_pad(($hashcode & $mask), 3, '0', STR_PAD_LEFT);
-
-        $parts[] = str_pad((($hashcode >> 8) & $mask), 3, '0', STR_PAD_LEFT);
-
-        $parts[] = str_pad((($hashcode >> 16) & $mask), 3, '0', STR_PAD_LEFT);
-
-		return $this->_getPath().implode("/", $parts);
-	}
-	
-	private function _getPath()
-	{
-		$path = $this->get('params')->get('path', null);
-		
-		if (strpos($path, 'JPATH_ROOT') === 0)
-		{
-			$path = str_replace('JPATH_ROOT', JPATH_ROOT, $path);
-		}
-		
-		if (strpos(strrev($path), '/') !== 0)
-		{
-			$path .= '/';
-		}
-		
-		return $path;
-	}
-
-	private static function _getHashCode($s)
-	{
-		$h = 0;
-		$len = strlen($s);
-		for($i = 0; $i < $len; $i++)
-		{
-			$h = (int)(31 * $h + ord($s[$i])) & 0xffffffff;
-		}
-
-		return $h;
 	}
 }

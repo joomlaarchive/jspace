@@ -12,7 +12,6 @@
 	
 	<files>
 		<filename plugin="assetstore">assetstore.php</filename>
-		<folder>sql</folder>
 	</files>
 	<languages>
 		<language tag="en-GB">language/en-GB/en-GB.plg_jspace_assetstore.ini</language>

@@ -21,6 +21,8 @@ class JFormRuleJSpaceAssets extends JFormRule
 {
     public function test($element, $value, $group = null, $input = null, $form = null)
     {
+		$recordId = JFactory::getApplication()->input->get('id', 0, 'int');
+		
 		$params = JComponentHelper::getParams('com_jspace');
 		
 		$uploadMaxSize = (int)($params->get('upload_maxsize', 10)) * 1024 * 1024;
@@ -97,11 +99,52 @@ class JFormRuleJSpaceAssets extends JFormRule
 					$element->addAttribute('message', JText::_('COM_JSPACE_ERROR_NO_FILENAME'));
 					return false;
 				}
+				
+				$hash = sha1_file(JArrayHelper::getValue($asset, 'tmp_name'));
+				$keys = array('hash'=>$hash,'record_id'=>$recordId);
+				
+				if (JSpaceAsset::getInstance()->load($keys))
+				{
+					JFactory::getApplication()->enqueueMessage(JText::_('COM_JSPACE_ERROR_FILE_EXISTS'), 'error');
+					return false;
+				}
 			}
 		}
 		
+		// check all the assets, making sure there aren't duplicates.
+		if (array_key_exists((string)$element->attributes()->name, $collection))
+		{
+			$keys = array_keys($collection);
+			$hashes = array();
+			
+			do
+			{
+				$bundle = JArrayHelper::getValue($collection, current($keys), array(), 'array');
+				$assets = JArrayHelper::getValue($bundle, 'assets', array(), 'array');
+				
+				foreach ($assets as $dkey=>$derivative)
+				{
+					foreach ($derivative as $akey=>$asset)
+					{
+						$hash = sha1_file(JArrayHelper::getValue($asset, 'tmp_name'));
+
+						if (array_search($hash, $hashes) === false)
+						{
+							$hashes[] = $hash;
+						}
+						else
+						{
+							JFactory::getApplication()->enqueueMessage(JText::sprintf('COM_JSPACE_ERROR_UPLOAD_DUPLICATE', $name), 'warning');
+							return false;
+						}
+					}
+				}
+			}
+			while (current($keys) != (string)$element->attributes()->name && next($keys) !== false);
+		}
+		
 		return true;
-    }
+	}
 	
 	private function _isAllowedContentType($contentType)
 	{

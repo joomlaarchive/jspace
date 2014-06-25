@@ -39,8 +39,8 @@ CREATE TABLE IF NOT EXISTS `#__jspace_record_ancestors` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `#__jspace_record_categories` (
-	`catid` int(10) unsigned NOT NULL DEFAULT 0,
-	`record_id` int(10) unsigned NOT NULL DEFAULT 0,
+	`catid` int(10) unsigned NOT NULL,
+	`record_id` int(10) unsigned NOT NULL,
 	PRIMARY KEY(`catid`, `record_id`),
 	KEY `idx_jspace_record_categories_catid` (`catid`),
 	KEY `idx_jspace_record_categories_record_id` (`record_id`)
@@ -52,7 +52,7 @@ CREATE TABLE IF NOT EXISTS `#__jspace_assets` (
 	`metadata` text NOT NULL,
 	`derivative` varchar(255) NOT NULL,
 	`bundle` varchar(255) NOT NULL,
-	`record_id` int(10) unsigned NOT NULL DEFAULT 0,
+	`record_id` int(10) unsigned NOT NULL,
 	PRIMARY KEY (`id`),
 	UNIQUE INDEX `idx_jspace_assets_uid` (`hash`, `record_id`),
 	KEY `idx_jspace_assets_hash` (`hash`),

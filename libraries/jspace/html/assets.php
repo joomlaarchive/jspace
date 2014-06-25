@@ -3,7 +3,7 @@ defined('_JEXEC') or die;
 
 abstract class JSpaceHtmlAssets
 {
-	public function getCollection()
+	public static function getCollection()
 	{
 		$post = JFactory::getApplication()->input->post->get('jform', array(), 'array');
 		$collection = JArrayHelper::getValue($post, 'collection', array(), 'array');
@@ -12,7 +12,7 @@ abstract class JSpaceHtmlAssets
 		
 		$assets = JArrayHelper::getValue($assets, 'collection', array(), 'array');
 		
-		$assets = JSpaceHtmlAssets::clean($assets);
+		$assets = self::clean($assets);
 		
 		return $assets;
 	}
@@ -24,7 +24,7 @@ abstract class JSpaceHtmlAssets
 	 *
 	 * @return  array  The cleaned array of assets.
 	 */
-	public function clean($collection)
+	public static function clean($collection)
 	{
 		$cleaned = $collection;
 	
@@ -64,5 +64,32 @@ abstract class JSpaceHtmlAssets
 		}
 		
 		return $cleaned;
+	}
+	
+	/**
+	 * Gets a list of uploaded files.
+	 *
+	 * @return  array  A list of uploaded files.
+	 */
+	public static function getFiles()
+	{
+		$collection = self::getCollection();
+		
+		$files = array();
+	
+		foreach ($collection as $bkey=>$bundle)
+		{
+			$assets = JArrayHelper::getValue($bundle, 'assets', array(), 'array');
+			
+			foreach ($assets as $dkey=>$derivative)
+			{
+				foreach ($derivative as $akey=>$asset)
+				{
+					$files[] = $asset;
+				}
+			}
+		}
+		
+		return $files;
 	}
 }

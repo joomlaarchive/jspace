@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit bootstrap="bootstrap.php" colors="true">
+    <php>
+        <env name="SELENIUM_CLIENT_BROWSER" value="firefox"/>
+        <env name="SELENIUM_CLIENT_URL" value="http://localhost/joomla33/"/>
+        <env name="SELENIUM_CLIENT_SINGLE_INSTANCE" value="true"/>
+    </php>
+   <testsuites>
+		<testsuite name="tests">
+			<directory>components</directory>
+		</testsuite>
+	</testsuites>
+    <logging>
+        <log title="PHP-SeleniumClient" highLowerBound="70" lowUpperBound="35" highlight="true" yui="true"
+             charset="UTF-8" target="../build/coverage" type="coverage-html" />
+        <log target="/tmp/build/logs/clover.xml" type="coverage-clover" />
+        <!-- https://github.com/sebastianbergmann/php-jenkins-template/issues/22 -->
+        <log target="/tmp/build/logs/junit.xml" type="junit" logIncompleteSkipped="false" />
+    </logging>
+</phpunit>

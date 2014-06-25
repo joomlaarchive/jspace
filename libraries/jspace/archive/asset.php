@@ -1,4 +1,6 @@
 <?php
+defined('_JEXEC') or die;
+
 /**
  * @package     JSpace
  * @subpackage  Archive
@@ -57,6 +59,18 @@ class JSpaceAsset extends JObject
 		return self::$instances[$id];
 	}
 	
+	/**
+	 * Gets an instance of JTable.
+	 *
+	 * This function uses a static variable to store the table name of the asset table to
+	 * instantiate. You can call this function statically to set the table name if
+	 * needed.
+	 *
+	 * @param   string  $type    The table name to use. Defaults to Asset.
+	 * @param   string  $prefix  The table prefix to use. Defaults to JSpaceTable.
+	 *
+	 * @return  JTable  The table specified by type, or a JSpaceTableAsset if no type is specified.
+	 */
 	public static function getTable($type = null, $prefix = 'JSpaceTable')
 	{
 		static $tabletype;
@@ -114,7 +128,9 @@ class JSpaceAsset extends JObject
 		$dispatcher = JEventDispatcher::getInstance();	
 		JPluginHelper::importPlugin('jspace');
 		
-		$result = $dispatcher->trigger('onJSpaceAssetBeforeSave', array($this));
+		$isNew = empty($this->id);
+		
+		$dispatcher->trigger('onJSpaceAssetBeforeSave', array($this));
 		
 		$this->metadata = (string)$this->_metadata;
 		
@@ -122,17 +138,20 @@ class JSpaceAsset extends JObject
 		$table->bind($this->getProperties());
 		$table->store();
 		
-		$result = $dispatcher->trigger('onJSpaceAssetAfterSave', array($this));
+		if (empty($this->id))
+		{
+			$this->id = $table->get('id');
+		}
+		
+		$dispatcher->trigger('onJSpaceAssetAfterSave', array($this));
 	}
 	
-	public function load($id)
+	public function load($keys)
 	{
 		$table = $this->getTable();
 		
-		if (!$table->load($id))
+		if (!$table->load($keys))
 		{
-			JLog::add(JText::sprintf('COM_JSPACE_ERROR_UNABLETOLOADASSET', $id), JLog::WARNING, 'jerror');
-
 			return false;
 		}
 		
@@ -168,6 +187,11 @@ class JSpaceAsset extends JObject
 		$dispatcher->trigger('onJSpaceAssetAfterDelete', array($this));
 	}
 	
+	/**
+	 * Gets the asset's metadata registry.
+	 * 
+	 * @return  JRegistry  The asset's metadata registry.
+	 */
 	public function getMetadata()
 	{
 		return $this->_metadata;
