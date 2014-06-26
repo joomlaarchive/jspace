@@ -1,4 +1,11 @@
 <?php
+/**
+ * @package    JSpace.Plugin
+ *
+ * @copyright   Copyright (C) 2014 KnowledgeARC Ltd. All rights reserved.
+ * @license     GNU General Public License version 2 or later; see LICENSE
+ */
+ 
 defined('_JEXEC') or die;
 
 jimport('joomla.filesystem.folder');
@@ -9,22 +16,19 @@ jimport('jspace.filesystem.file');
 jimport('jspace.html.assets');
 
 /**
- * Uploaded assets takes the form:
- * 
- * jform['collection'][fieldname]['assets'][derivative]
- * 
- * or
- * 
- * jform['collection'][fieldname]['assets'][derivative][]
- * 
- * for multiple files.
- * 
- * Additional information such as schemas are defined like so:
- * 
- * jform['collection'][fieldname][schema]
+ * Stores assets to the locally configured file system.
+ *
+ * @package  JSpace.Plugin
  */
 class PlgJSpaceAssetstore extends JPlugin
 {
+	/**
+	 * Instatiates an instance of the PlgJSpaceAssetstore class.
+	 * @param   object  &$subject  The object to observe
+	 * @param   array   $config    An optional associative array of configuration settings.
+	 *                             Recognized key values include 'name', 'group', 'params', 'language'
+	 *                             (this list is not meant to be comprehensive).
+	 */
 	public function __construct(&$subject, $config)
 	{
 		parent::__construct($subject, $config);

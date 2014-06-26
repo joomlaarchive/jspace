@@ -1,4 +1,11 @@
 <?php
+/**
+ * @package    JSpace.Plugin
+ *
+ * @copyright   Copyright (C) 2014 KnowledgeARC Ltd. All rights reserved.
+ * @license     GNU General Public License version 2 or later; see LICENSE
+ */
+ 
 defined('_JEXEC') or die;
 
 require_once(JPATH_PLATFORM.'/amazon/aws-autoloader.php');
@@ -6,20 +13,26 @@ require_once(JPATH_PLATFORM.'/amazon/aws-autoloader.php');
 use Aws\Glacier\GlacierClient;
 use Aws\Common\Credentials\Credentials;
 
-jimport('joomla.filesystem.folder');
-
 jimport('jspace.factory');
-jimport('jspace.filesystem.file');
 jimport('jspace.html.assets');
 
 /**
  * Manages assets within an Amazon Web Services Glacier vault.
+ *
+ * @package  JSpace.Plugin
  */
 class PlgJSpaceGlacier extends JPlugin
 {
 	static $partSize = 4194304; //4 * 1024 * 1024
 	static $concurrency = 3; 
 
+	/**
+	 * Instatiates an instance of the PlgJSpaceGlacier class.
+	 * @param   object  &$subject  The object to observe
+	 * @param   array   $config    An optional associative array of configuration settings.
+	 *                             Recognized key values include 'name', 'group', 'params', 'language'
+	 *                             (this list is not meant to be comprehensive).
+	 */
 	public function __construct(&$subject, $config)
 	{
 		parent::__construct($subject, $config);

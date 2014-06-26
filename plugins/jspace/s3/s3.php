@@ -6,19 +6,23 @@ require_once(JPATH_PLATFORM.'/amazon/aws-autoloader.php');
 use Aws\S3\S3Client;
 use Aws\Common\Credentials\Credentials;
 
-defined('_JEXEC') or die;
-
-jimport('joomla.filesystem.folder');
-
 jimport('jspace.factory');
-jimport('jspace.filesystem.file');
 jimport('jspace.html.assets');
 
 /**
  * Manages assets on Amazon Web Services S3.
+ *
+ * @package  JSpace.Plugin
  */
 class PlgJSpaceS3 extends JPlugin
 {
+	/**
+	 * Instatiates an instance of the PlgJSpaceS3 class.
+	 * @param   object  &$subject  The object to observe
+	 * @param   array   $config    An optional associative array of configuration settings.
+	 *                             Recognized key values include 'name', 'group', 'params', 'language'
+	 *                             (this list is not meant to be comprehensive).
+	 */
 	public function __construct(&$subject, $config)
 	{
 		parent::__construct($subject, $config);

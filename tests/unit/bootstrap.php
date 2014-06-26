@@ -39,3 +39,5 @@ define('JSPACEPATH_TESTS', dirname(__FILE__));
 JError::setErrorHandling(E_NOTICE, 'ignore');
 JError::setErrorHandling(E_WARNING, 'ignore');
 JError::setErrorHandling(E_ERROR, 'ignore');
+
+require dirname(dirname(__FILE__)).'/vendor/autoload.php';

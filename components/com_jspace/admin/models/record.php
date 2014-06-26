@@ -4,6 +4,7 @@ defined('_JEXEC') or die;
 jimport('jspace.archive.record');
 jimport('jspace.archive.asset');
 jimport('jspace.html.assets');
+jimport('jspace.clamav.client');
 
 class JSpaceModelRecord extends JModelAdmin
 {
