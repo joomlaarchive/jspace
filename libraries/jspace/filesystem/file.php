@@ -5,7 +5,7 @@ jimport('joomla.filesystem.file');
 
 class JSpaceFile extends JFile
 {
-	public function getMetadata($file)
+	public static function getMetadata($file)
 	{
 		$params = JComponentHelper::getParams('com_jspace', true);
 		

@@ -13,14 +13,15 @@
 				size="30"/>
 			
 			<field
-				name="oai_metadataFormat"
-				id="oai_metadataFormat"
+				name="oai_harvest"
+				id="oai_harvest"
 				type="list"
-				class="chzn-color"
-				label="PLG_CONTENT_JOAI_FIELD_METADATAFORMAT_LABEL"
-				description="PLG_CONTENT_JOAI_FIELD_METADATAFORMAT_DESC">
-				<option value="oai_dc">PLG_CONTENT_JOAI_METADATAFORMAT_DC</option>
-				<option value="qdc">PLG_CONTENT_JOAI_METADATAFORMAT_QDC</option>
+				label="PLG_CONTENT_JOAI_FIELD_HARVEST_LABEL"
+				description="PLG_CONTENT_JOAI_FIELD_HARVEST_DESC"
+				default="0">
+				<option value="0">PLG_CONTENT_JOAI_METADATA</option>
+				<option value="1">PLG_CONTENT_JOAI_METADATA_LINKS</option>
+				<option value="2">PLG_CONTENT_JOAI_METADATA_ASSETS</option>
 			</field>
 		</fieldset>
 	</fields>

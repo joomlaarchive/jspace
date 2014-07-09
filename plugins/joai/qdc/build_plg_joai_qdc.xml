@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="JOAI QDC Plugin" default="" basedir=".">
+	<property name="dest.plugins.joai" value="${dest.plugins}/joai"/>
+	
+	<target name="update" description="">
+		<echo message="Deploying JOAI QDC Plugin to Joomla! environment."/>
+		<copy todir="${dest.plugins.joai}/qdc">
+			<fileset dir="${src}" defaultexcludes="true">
+				<include name="**"/>
+				<exclude name="**/language/**"/>
+				<exclude name="**/build*.xml"/>
+			</fileset>
+		</copy>
+		<copy todir="${dest.administrator.languages}">
+			<fileset dir="${src}/language" defaultexcludes="true">
+				<include name="**/**"/>
+			</fileset>
+		</copy>
+	</target>
+
+	<target name="package" description="Creates a QDC Plugin package.">
+		<echo message="Packaging JOAI QDC plugin."/>
+		<zip destfile="${package.dest}/plg_joai_qdc.zip"
+		       basedir="${src}"
+		       update="true"
+		       excludes="build*.xml"/>
+	</target>
+</project>

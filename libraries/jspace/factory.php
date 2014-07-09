@@ -60,10 +60,6 @@ class JSpaceFactory
 		{
 			throw new InvalidArgumentException("LIB_JSPACE_EXCEPTION_NO_NAME");
 		}
-	
-		$crosswalk .= '.'.JArrayHelper::getValue($config, 'type', 'ini');
-		
-		$crosswalk = JPATH_ROOT.'/administrator/components/com_jspace/crosswalks/'.$crosswalk;
 
 		jimport('jspace.metadata.crosswalk');
 		

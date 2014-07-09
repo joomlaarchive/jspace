@@ -23,12 +23,6 @@ class JSpaceClamAVClientTest extends PHPUnit_Framework_TestCase
 		$this->assertEquals($ping, 'PONG');
     }
     
-    public function testVersion()
-    {
-		$version = $this->clamav->version();
-		$this->assertEquals($version, 'ClamAV 0.98.1/19131/Wed Jun 25 21:55:38 2014');
-    }
-    
 	public function testFileScan()
     {
 		$root = vfsStream::setup();

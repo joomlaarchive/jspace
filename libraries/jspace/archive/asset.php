@@ -1,6 +1,8 @@
 <?php
 defined('_JEXEC') or die;
 
+jimport('jspace.table.asset');
+
 /**
  * @package     JSpace
  * @subpackage  Archive
@@ -59,40 +61,6 @@ class JSpaceAsset extends JObject
 		return self::$instances[$id];
 	}
 	
-	/**
-	 * Gets an instance of JTable.
-	 *
-	 * This function uses a static variable to store the table name of the asset table to
-	 * instantiate. You can call this function statically to set the table name if
-	 * needed.
-	 *
-	 * @param   string  $type    The table name to use. Defaults to Asset.
-	 * @param   string  $prefix  The table prefix to use. Defaults to JSpaceTable.
-	 *
-	 * @return  JTable  The table specified by type, or a JSpaceTableAsset if no type is specified.
-	 */
-	public static function getTable($type = null, $prefix = 'JSpaceTable')
-	{
-		static $tabletype;
-
-		// Set the default tabletype;
-		if (!isset($tabletype))
-		{
-			$tabletype['name'] = 'asset';
-			$tabletype['prefix'] = 'JSpaceTable';
-		}
-
-		// Set a custom table type is defined
-		if (isset($type))
-		{
-			$tabletype['name'] = $type;
-			$tabletype['prefix'] = $prefix;
-		}
-
-		// Create the user table object
-		return JTable::getInstance($tabletype['name'], $tabletype['prefix']);
-	}
-	
 	public function bind(&$array)
 	{
 		if (array_key_exists('metadata', $array))
@@ -134,7 +102,7 @@ class JSpaceAsset extends JObject
 		
 		$this->metadata = (string)$this->_metadata;
 		
-		$table = $this->getTable();
+		$table = JTable::getInstance('Asset', 'JSpaceTable');
 		$table->bind($this->getProperties());
 		$table->store();
 		

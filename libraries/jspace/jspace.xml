@@ -16,6 +16,7 @@
         <folder>form</folder>
         <folder>image</folder>
         <folder>multifileupload</folder>
+		<folder>table</folder>
         <filename>factory.php</filename>
     </files>
     

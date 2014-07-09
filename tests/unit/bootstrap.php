@@ -3,7 +3,6 @@
 * Loads Joomla framework for unit testing.
 *
 */
-echo 'here';
 // Maximise error reporting.
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
@@ -16,6 +15,7 @@ define('DS', DIRECTORY_SEPARATOR);
 define('JPATH_BASE', '/var/www/html/joomla33/');
 require_once JPATH_BASE.'/includes/defines.php';
 require_once JPATH_BASE.'/includes/framework.php';
+
 jimport('joomla.filesystem.path');
 jimport('joomla.log.log');
 jimport('joomla.environment.request');

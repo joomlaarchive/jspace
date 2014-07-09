@@ -1,14 +1,30 @@
 <?php
-defined('JPATH_BASE') or die;
+/**
+ * @package     JSpace.Plugin
+ *
+ * @copyright   Copyright (C) 2014 KnowledgeARC Ltd. All rights reserved.
+ * @license     GNU General Public License version 2 or later; see LICENSE
+ */
+ 
+defined('_JEXEC') or die;
 
 jimport('joomla.registry.registry');
-jimport('jspace.archive.record');
 
+jimport('jspace.factory');
+jimport('jspace.archive.record');
+jimport('jspace.ingestion.oai.client');
+jimport('jspace.ingestion.oai.harvester');
+jimport('jspace.ingestion.oai.assetharvester');
+
+/**
+ * Handles OAI harvesting from the command line.
+ *
+ * @package     JSpace.Plugin
+ */
 class PlgJSpaceOAI extends JPlugin
 {
-	/**
-	 *
-	 */
+	private $identified = false;
+	
 	public function __construct($subject, $config = array())
 	{	
 		parent::__construct($subject, $config);
@@ -17,76 +33,136 @@ class PlgJSpaceOAI extends JPlugin
 		JLog::addLogger(array());
 	}
 	
-	public function onJSpaceExecuteCliCommand($action, $options)
+	public function onJSpaceExecuteCliCommand($action, $options = array())
 	{
-		switch ($action)
+		$application = JFactory::getApplication('cli');
+		
+		$cli = (get_class($application) === 'JApplicationCli');
+		$q = array_key_exists('q', $options);
+		$quiet = array_key_exists('quiet', $options);
+		$help = ($action == 'help');
+		
+		$verbose = !($q && $quiet && $help && !$cli);
+		
+		$start = new JDate('now');
+		
+		if ($verbose)
 		{
-			case 'harvest': // harvest archives.
-				foreach ($this->_getOAICategories() as $category)
-				{
-					$this->_harvest($category);
-				}
+			$application->out($action.' started '.(string)$start);
+		}
+		
+		try
+		{
+			switch ($action)
+			{
+				case 'harvest': // harvest archives.
+					$this->_fireHarvester(array('harvest', 'ingest'));
+					
+					break;
+					
+				case 'clean': // clear the cache.
+					$this->_fireHarvester(array('rollback'));
+					
+					break;
+					
+				case 'reset': // reset harvest (forces harvest to start at beginning).
+					$this->_fireHarvester(array('reset'));
+					
+					break;
 				
+				default:
+					$this->_help();
+					
+					break;
+			}
+		}
+		catch (Exception $e)
+		{
+			$application = JFactory::getApplication('cli');
+		
+			if (get_class($application) !== 'JApplicationCli')
+			{
+				return;
+			}
+			
+			if ($verbose)
+			{
+				$application->out($e->getMessage());
+			}
+		}
+		
+		$end = new JDate('now');
+		
+		if ($verbose)
+		{
+			$application->out($action.' ended '.(string)$end);
+			$application->out($start->diff($end)->format("%H:%I:%S"));
+		}
+	}
+	
+	/**
+	 * Gets the harvester.
+	 * 
+	 * @param   JTable  $category            An instance of the category table.
+	 *
+	 * @return  JSpaceIngestionOAIHarvester  An instance of the harvester class configured in the category's OAI settings.
+	 */
+	private function _getHarvester($category)
+	{
+		switch ($category->params->get('oai_harvest', 0))
+		{
+			case 2:
+				$class = "JSpaceIngestionOAIAssetHarvester";
 				break;
 				
-			case 'clear': // clear the cache.
-				$id = JArrayHelper::getValue($options, 'category', JArrayHelper::getValue($options, 'c', 0));
-			
-				if (!$id)
-				{
-					throw new Exception(JText::_("Please specify a category id using -c [id] or --category=[id]."));
-				}
-				
-				$category = JTable::getInstance('Category');
-				$category->load($id);
-				
-				$this->_discard($category);
-				
-				break;
-			
-			case 'reset-failures': // reset request failures.
-				$id = JArrayHelper::getValue($options, 'category', JArrayHelper::getValue($options, 'c', 0));
-			
-				if (!$id)
-				{
-					throw new Exception(JText::_("Please specify a category id using -c [id] or --category=[id]."));
-				}
-			
-				if ($harvest = $this->_getOAIHarvest($id, false))
-				{
-					$harvest->request_failures = 0;
-					$this->_updateOAIHarvest($harvest);
-				}
-				
-				break;
-				
-			case 'reset': // reset harvest (forces harvest to start at beginning).
-				$id = JArrayHelper::getValue($options, 'category', JArrayHelper::getValue($options, 'c', 0));
-			
-				if (!$id)
-				{
-					throw new Exception(JText::_("Please specify a category id using -c [id] or --category=[id]."));
-				}
-			
-				$this->onJSpaceExecuteCliCommand('clear', $options);
-				$this->_deleteOAIHarvest($id);
-				
-				break;
+			case 1:
 			
 			default:
-				$this->_help();
-			
+				$class = "JSpaceIngestionOAIHarvester";
 				break;
+		}
+		
+		return new $class($category);
+	}
+	
+	/**
+	 * A convenience method for firing methods against the currently configured harvester.
+	 *
+	 * @param  string[]  $methods  An array of methods to fire in sequential order.
+	 */
+	private function _fireHarvester($methods)
+	{
+		foreach ($this->_getOAICategories() as $category)
+		{
+			$harvester = $this->_getHarvester($category);
+			
+			foreach ($methods as $method)
+			{
+				$harvester->$method();
+			}
 		}
 	}
 	
 	/**
 	 * Get a list of categories which are populated via an OAI-PMH endpoint.
 	 *
-	 * @return mixed A list of OAI-enabled categories or null if there is a problem fetching the categories.
+	 * The _getOAICategories() method will retrieve any categories set via the command line args "-c"
+	 * and "--category=". If no category args have been passed, _getOAICategories() will return all 
+	 * OAI-aware JSpace categories.
+	 *
+	 * @return mixed  A list of OAI-enabled categories or null if there is a problem fetching the categories.
 	 */
 	private function _getOAICategories()
 	{
+		$id = JArrayHelper::getValue($options, 'category', JArrayHelper::getValue($options, 'c', 0));
+				
+		$keys = array();
+		
+		if ($id)
+		{
+			$keys[] = $id; 
+		}
+	
 		$database = JFactory::getDbo();
 		
 		$query = $database->getQuery(true);
@@ -104,10 +180,15 @@ class PlgJSpaceOAI extends JPlugin
 			->from($database->qn('#__categories', 'c'))
 			->where($database->qn('c.published').'='.$database->q('1'))
 			->where($database->qn('c.extension').'='.$database->q('com_jspace'));
+			
+		foreach ($keys as $key)
+		{
+			$query->where($database->qn('c.id').'='.(int)$key);
+		}
 		
 		$database->setQuery($query);
 		
-		$categories = $database->loadObjectList();
+		$categories = $database->loadObjectList('id', 'JObject');
 		
 		foreach ($categories as $key=>$value)
 		{
@@ -129,374 +210,16 @@ class PlgJSpaceOAI extends JPlugin
 	}
 	
 	/**
-	 * Harvest a list of records via an OAI-PMH-enabled endpoint.
-	 *
-	 * @param string $url The url to harvest.
-	 */
-	private function _harvest($category)
-	{
-		$harvest = $this->_getOAIHarvest($category->id);
-		$url = $category->params->get('oai_url');
-		$metadataFormat = $category->params->get('oai_metadataFormat');
-	
-		$uri = JUri::getInstance($url);
-		$uri->setVar('verb', 'ListRecords');
-		
-		try 
-		{
-			do
-			{
-				if ($harvest->resumptionToken)
-				{
-					$uri->delVar('metadataPrefix');
-					$uri->setVar('resumptionToken', $harvest->resumptionToken);
-					
-					// take a break to avoid any timeout issues.
-					sleep($this->params->get('follow_on', 30));
-				}
-				else
-				{
-					if ($harvest->harvested)
-					{
-						$uri->setVar('from', JFactory::getDate($harvest->harvested)->toISO8601());
-					}
-					
-					$uri->setVar('metadataPrefix', $metadataFormat);
-				}
-			
-				$reader = new XMLReader;
-				
-				if (!$reader->open((string)$uri))
-				{
-					throw new Exception('Could not read '.$uri, 404);
-				}
-
-				$doc = new DOMDocument;
-				
-				while ($reader->read())
-				{
-					if ($reader->nodeType == XMLReader::ELEMENT)
-					{
-						switch ($reader->name)
-						{
-							case 'responseDate':
-								$node = simplexml_import_dom($doc->importNode($reader->expand(), true));
-								$harvest->harvested = (string)$node;
-								break;
-						
-							case 'error':
-								$node = simplexml_import_dom($doc->importNode($reader->expand(), true));
-								if (JArrayHelper::getValue($node, 'code', null, 'string') !== "noRecordsMatch")
-								{
-									throw new Exception((string)$node, 500);
-								}
-								
-								break;
-						
-							case 'resumptionToken':
-								$node = simplexml_import_dom($doc->importNode($reader->expand(), true));
-								$harvest->resumptionToken = (string)$node;
-								break;
-						
-							case 'record':
-								$item = new JObject();
-								
-								$node = simplexml_import_dom($doc->importNode($reader->expand(), true));
-								
-								$item->id = $node->header->identifier;
-								
-								$array = array();
-								
-								foreach ($node->metadata->children($metadataFormat, true) as $key=>$value)
-								{
-									foreach ($value->getNamespaces(true) as $keyns=>$valuens)
-									{
-										foreach ($value->children($keyns, true) as $key2=>$value2)
-										{
-											if (array_key_exists($keyns.":".$key2, $array))
-											{
-												if (!is_array($array[$keyns.":".$key2]))
-												{
-													$array[$keyns.":".$key2] = array($array[$keyns.":".$key2]);
-												}
-												
-												$array[$keyns.":".$key2][] = (string)$value2;
-											}
-											else
-											{
-												$array[$keyns.":".$key2] = (string)$value2;
-											}
-										}					
-									}
-								}
-								
-								$registry = new JRegistry();
-								$registry->loadArray($array);
-								
-								$item->metadata = JSpaceFactory::getCrosswalk($registry, array('name'=>$metadataFormat))->walk();
-								
-								$this->_cache($item, $category);
-								
-								break;
-								
-							default:
-								break;
-						}
-					}
-				}
-			}
-			while ($harvest->resumptionToken);
-			
-			$this->_save($category);
-		} 
-		catch(Exception $e)
-		{
-			switch ($e->getCode())
-			{
-				case 500: // something's seriously wrong with the request. Fail immediately.
-					$harvest->failures = $this->params->get('request_failures', 3);
-					break;
-					
-				default:
-					if ($harvest->failures < 3)
-					{
-						$harvest->failures++;
-					}
-					
-					break;
-			}
-			
-			if ((int)$harvest->failures == $this->params->get('request_failures', 3))
-			{
-				//$this->_rollback($harvest);
-			}
-			
-			JLog::add($e->getMessage(), JLog::ERROR, 'jspace');
-		}
-		
-		$this->_updateOAIHarvest($harvest);
-	}
-	
-	/**
-	 * Caches all items harvested.
-	 *
-	 * Items should be cached prior to writing to JSpace Records to avoid data corruption and to be able to roll 
-	 * back in case of issues with the origin data source.
-	 *
-	 * @param  JObject  $item      The item to cache.
-	 * @param  JObject  $category  The category being harvested.
-	 */
-	private function _cache($item, $category)
-	{
-		$database = JFactory::getDbo();
-	
-		$record = array();
-		$array['id'] = $database->q($item->id);
-		$array['metadata'] = $database->q(json_encode($item->metadata));
-		$array['catid'] = (int)$category->id;
-		
-		$query = $database->getQuery(true);
-		
-		$query
-			->insert($database->qn('#__jspaceoai_records'))
-			->columns(implode(',', array_keys($array)))
-			->values(implode(',', $array));
-		
-		$database->setQuery($query);
-		$database->execute();
-	}
-	
-	/**
-	 * Gets the cached records for a particular category.
-	 *
-	 * @param   JObject    $category  An category object.
-	 * 
-	 * @return  JObject[]  An array of cached records.
-	 */
-	private function _getCache($category)
-	{
-		$database = JFactory::getDbo();
-		
-		$query = $database->getQuery(true);
-		
-		$select = array(
-			$database->qn('id'),
-			$database->qn('catid'),
-			$database->qn('metadata'));
-		
-		$query
-			->select($select)
-			->from($database->qn('#__jspaceoai_records', 'jr'))
-			->where($database->qn('jr.catid').'='.(int)$category->id);
-		
-		$database->setQuery($query);
-		
-		return $database->loadObjectList('id', 'JObject');
-	}
-	
-	/**
-	 * Discard the cached records.
-	 *
-	 * @param   JObject    $category  An category object.
-	 */
-	private function _discard($category)
-	{
-		$database = JFactory::getDbo();
-		
-		$query = $database->getQuery(true);
-		$query
-			->delete($database->qn('#__jspaceoai_records'))
-			->where($database->qn('catid').'='.(int)$category->id);
-			
-		$database->setQuery($query);
-		$database->execute();
-	}
-	
-	private function _save($category)
-	{
-		$items = $this->_getCache($category);
-		
-		foreach ($items as $item)
-		{
-			$metadata = JArrayHelper::fromObject(json_decode($item->metadata));
-			
-			$array['catid'] = $category->id;
-			$array['metadata'] = $item->metadata;
-			$array['title'] = JArrayHelper::getValue($metadata, 'title');
-			
-			// if title has more than one value, grab the first.
-			if (is_array($array['title']))
-			{
-				$array['title'] = JArrayHelper::getValue($array['title'], 0);
-			}
-			
-			$array['published'] = $category->published;
-			$array['access'] = $category->access;
-			$array['language'] = $category->language;
-			$array['created_by'] = $category->created_user_id;
-			$array['schema'] = 'basic';
-			
-			$record = JSpaceRecord::getInstance();
-			$record->bind($array);
-			$record->save();
-		}
-		
-		$this->_discard($category);
-	}
-	
-	/**
-	 * Update an existing harvest object or create it if it doesn't already exist.
-	 *
-	 * @param  JObject  $harvest  The harvest object to save.
-	 */
-	private function _updateOAIHarvest($harvest)
-	{
-		$harvest->failures = 0;
-		
-		if ($this->_getOAIHarvest($harvest->catid, false))
-		{
-			JFactory::getDbo()->updateObject('#__jspaceoai_harvests', $harvest, 'catid', true);
-		}
-		else
-		{
-			$database = JFactory::getDbo();
-			$query = $database->getQuery(true);
-			
-			$fields = JArrayHelper::fromObject($harvest);
-			
-			if (is_null(JArrayHelper::getValue($fields, 'resumptionToken')))
-			{
-				unset($fields['resumptionToken']);
-			}
-			
-			$columns = array();
-			$values = array();
-			
-			foreach ($fields as $key=>$value)
-			{
-				$columns[] = $database->qn($key);
-				
-				if (!is_numeric($value))
-				{
-					$value = $database->q($value);
-				}
-				
-				$values[] = $value;
-			}
-			
-			$query
-				->insert($database->qn('#__jspaceoai_harvests'))
-				->columns(implode(',', $columns))
-				->values(implode(',', $values));
-			
-			$database->setQuery($query);
-			$database->execute();
-		}
-	}
-	
-	/**
-	 * Delete an existing harvest object.
-	 *
-	 * @param  id  $id  The id of the harvest to delete.
-	 */
-	private function _deleteOAIHarvest($id)
-	{
-		$database = JFactory::getDbo();
-		
-		$query = $database->getQuery(true);
-		$query
-			->delete($database->qn('#__jspaceoai_harvests'))
-			->where($database->qn('catid').'='.(int)$id);
-			
-		$database->setQuery($query);
-		$database->execute();
-	}
-	
-	/**
-	 * Loads the OAI harvest object based on the catid param.
-	 *
-	 * @param    int  $catid         A category id.
-	 * @param    bool  $instantiate  True if the harvest object should be created if it is not found in the 
-	 * database, false otherwise. Defaults to true.
-	 *
-	 * @return  JObject              The OA harvest object.
-	 */
-	private function _getOAIHarvest($catid, $instantiate = true)
-	{
-		$database = JFactory::getDbo();
-		$query = $database->getQuery(true);
-		
-		$select = array(
-			$database->qn('catid'),
-			$database->qn('harvested'),
-			$database->qn('resumptionToken'),
-			$database->qn('failures'));
-		
-		$query
-			->select($select)
-			->from($database->qn('#__jspaceoai_harvests', 'jh'))
-			->where($database->qn('jh.catid').'='.(int)$catid);
-			
-		$database->setQuery($query);
-		
-		if (!($harvest = $database->loadObject('JObject')) && $instantiate)
-		{
-			$harvest = new JObject();
-			$harvest->catid = (int)$catid;
-			$harvest->failures = 0;
-			$harvest->resumptionToken = null;
-			$harvest->harvested = null;
-		}
-		
-		return $harvest;
-	}
-	
-	/**
 	 * Prints out the plugin's help and usage information.
 	 */
 	private function _help()
 	{
 		$application = JFactory::getApplication('cli');
+		
+		if (get_class($application) !== 'JApplicationCli')
+		{
+			return;
+		}
 		
     	$out = <<<EOT
 Usage: jspace oai [action] [OPTIONS]
@@ -504,16 +227,16 @@ Usage: jspace oai [action] [OPTIONS]
 Provides OAI-based functions within JSpace.
 
 [action]
-  clear               Discards the cached records.
+  clean               Discards the cached records.
   harvest             Harvest records from another archive. Harvesting 
                       information is configured via JSpace's Category Manager.
   help                Prints this help.
   reset               Reset the harvesting information. Forces the harvester 
                       to retrieve all records from the source archive.
-  reset-failures      Resets the request failure counter.
 
 [OPTIONS]
   -c, --c=categoryId  Specify a single category to execute an OAI action against.
+  -q, --quiet         Suppress all output including errors.
   
 EOT;
 

@@ -45,6 +45,20 @@
 			<property	name="package.dest"	value="${package.dest}/jspace"/>
         </subant>
 	</target>
+	
+	<target name="test" description="Runs all JSpace unit tests.">
+		<echo message="Testing JSpace."/>
+		
+		<mkdir dir="${oai.dest}/jspace"/>
+		
+		<copy todir="${oai.dest}/jspace">
+			<fileset dir="./tests/unit/suites/libraries/jspace/ingestion/oai/stubs/"/>
+		</copy>
+		
+		<exec executable="phpunit" failonerror="true"/>
+		
+		<delete dir="${oai.dest}/jspace"/>
+	</target>
 
 	<target name="help" description="Help documentation for this build file.">
 		<echo message="Help documentation."/>

@@ -1,6 +1,4 @@
 <?php
-defined('_JEXEC') or die;
-
 /**
  * @package     JSpace
  * @subpackage  Archive
@@ -8,8 +6,13 @@ defined('_JEXEC') or die;
  * @copyright   Copyright (C) 2014 KnowledgeARC Ltd. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE
  */
+ 
+defined('_JEXEC') or die;
 
+jimport('jspace.factory');
 jimport('jspace.archive.asset');
+jimport('jspace.table.record');
+jimport('jspace.filesystem.file');
  
 class JSpaceRecord extends JObject
 {
@@ -27,7 +30,7 @@ class JSpaceRecord extends JObject
 		}
 		else
 		{
-			$this->id = 0;
+			$this->id = null;
 		}
 	}
 
@@ -131,8 +134,6 @@ class JSpaceRecord extends JObject
 		{
 			throw new Exception('Data to be bound is neither an array nor an object');
 		}
-		
-		$this->id = (int)$this->id;
 
 		return true;
 	}
@@ -175,7 +176,7 @@ class JSpaceRecord extends JObject
 		$dispatcher = JEventDispatcher::getInstance();	
 		JPluginHelper::importPlugin('jspace');
 		
-		$table = self::getTable('Record');
+		$table = JTable::getInstance('Record', 'JSpaceTable');
 		
 		$this->metadata = (string)$this->_metadata;
 		
@@ -240,6 +241,7 @@ class JSpaceRecord extends JObject
 					$new = JSpaceAsset::getInstance();
 					$new->bind($asset);
 					
+					$new->set('id', null);
 					$new->set('record_id', $this->id);
 					$new->set('hash', sha1_file(JArrayHelper::getValue($asset, 'tmp_name')));
 					$new->set('bundle', $bkey);

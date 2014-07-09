@@ -1,25 +1,25 @@
 CREATE TABLE IF NOT EXISTS `#__jspace_records` (
-	`id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-	`asset_id` int(10) unsigned NOT NULL DEFAULT 0 COMMENT 'FK to the #__assets table.',
-	`title` varchar(1024) NOT NULL,
-	`alias` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL DEFAULT '',
-	`published` tinyint(4) NOT NULL DEFAULT 0 COMMENT 'The published state of the menu link.',
-	`hits` int(10) unsigned NOT NULL DEFAULT 0,
-	`language` char(7) NOT NULL COMMENT 'The language code for the record.',
-	`created` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
-	`created_by` int(10) unsigned NOT NULL DEFAULT 0,
-	`modified` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
-	`modified_by` int(10) unsigned NOT NULL DEFAULT 0,
-	`checked_out` int(10) unsigned NOT NULL DEFAULT 0,
-	`checked_out_time` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
-	`publish_up` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
-	`publish_down` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
-	`metadata` text NOT NULL,
-	`schema` varchar(255) NOT NULL DEFAULT 'Record' COMMENT 'The schema to load as part of this record.',
-	`parent_id` int(10) unsigned NOT NULL DEFAULT 0,
-	`ordering` int(11) NOT NULL DEFAULT 0,
-	`version` int(10) unsigned NOT NULL DEFAULT 1,
-	`access` int(10) unsigned NOT NULL DEFAULT 0,
+	`id` INTEGER NOT NULL AUTO_INCREMENT,
+	`asset_id` INTEGER NOT NULL DEFAULT 0 COMMENT 'FK to the #__assets table.',
+	`title` VARCHAR(1024) NOT NULL,
+	`alias` VARCHAR(255) NOT NULL DEFAULT '',
+	`published` TINYINT NOT NULL DEFAULT 0 COMMENT 'The published state of the menu link.',
+	`hits` INTEGER NOT NULL DEFAULT 0,
+	`language` CHAR(7) NOT NULL COMMENT 'The language code for the record.',
+	`created` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
+	`created_by` INTEGER NOT NULL DEFAULT 0,
+	`modified` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
+	`modified_by` INTEGER NOT NULL DEFAULT 0,
+	`checked_out` INTEGER NOT NULL DEFAULT 0,
+	`checked_out_time` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
+	`publish_up` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
+	`publish_down` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
+	`metadata` TEXT NOT NULL,
+	`schema` VARCHAR(255) NOT NULL DEFAULT 'Record' COMMENT 'The schema to load as part of this record.',
+	`parent_id` INTEGER NOT NULL DEFAULT 0,
+	`ordering` INTEGER NOT NULL DEFAULT 0,
+	`version` INTEGER NOT NULL DEFAULT 1,
+	`access` INTEGER NOT NULL DEFAULT 0,
 	PRIMARY KEY (`id`),
 	KEY `idx_jspace_records_access` (`access`),
 	KEY `idx_jspace_records_checkout` (`checked_out`),
@@ -31,32 +31,41 @@ CREATE TABLE IF NOT EXISTS `#__jspace_records` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `#__jspace_record_ancestors` (
-	`decendant` int(11) NOT NULL DEFAULT 0,
-	`ancestor` int(11) NOT NULL DEFAULT 0,
+	`decendant` INTEGER NOT NULL DEFAULT 0,
+	`ancestor` INTEGER NOT NULL DEFAULT 0,
 	PRIMARY KEY (`decendant`, `ancestor`),
 	KEY `idx_jspace_record_ancestors_decendant` (`decendant`),
 	KEY `idx_jspace_record_ancestors_ancestor` (`ancestor`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `#__jspace_record_categories` (
-	`catid` int(10) unsigned NOT NULL,
-	`record_id` int(10) unsigned NOT NULL,
+	`catid` INTEGER NOT NULL,
+	`record_id` INTEGER NOT NULL,
 	PRIMARY KEY(`catid`, `record_id`),
 	KEY `idx_jspace_record_categories_catid` (`catid`),
 	KEY `idx_jspace_record_categories_record_id` (`record_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `#__jspace_assets` (
-	`id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-	`hash` varchar(255) NOT NULL,
-	`metadata` text NOT NULL,
-	`derivative` varchar(255) NOT NULL,
-	`bundle` varchar(255) NOT NULL,
-	`record_id` int(10) unsigned NOT NULL,
+	`id` INTEGER NOT NULL AUTO_INCREMENT,
+	`hash` VARCHAR(255) NOT NULL,
+	`metadata` TEXT NOT NULL,
+	`derivative` VARCHAR(255) NOT NULL,
+	`bundle` VARCHAR(255) NOT NULL,
+	`record_id` INTEGER NOT NULL,
 	PRIMARY KEY (`id`),
-	UNIQUE INDEX `idx_jspace_assets_uid` (`hash`, `record_id`),
 	KEY `idx_jspace_assets_hash` (`hash`),
 	KEY `idx_jspace_assets_record_id` (`record_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- A holding table for records harvested.
+
+CREATE TABLE IF NOT EXISTS `#__jspace_cache` (
+	`id` VARCHAR(255) NOT NULL,
+	`metadata` TEXT NULL,
+	`catid` INTEGER NOT NULL DEFAULT 0,
+	PRIMARY KEY(`id`, `catid`),
+	KEY `idx_jspace_cache_catid` (`catid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 INSERT INTO `#__content_types` (`type_id`, `type_title`, `type_alias`, `table`, `rules`, `field_mappings`, `router`, 

@@ -10,7 +10,10 @@
 	backupGlobals="false">
 	<testsuites>
 		<testsuite name="jspace-lib">
-			<directory>tests/unit/suites/libraries/jspace</directory>
+			<directory>tests/unit/suites/libraries/jspace</directory>			
+		</testsuite>
+		<testsuite name="jspace-plugins">
+			<directory>tests/unit/suites/plugins</directory>
 		</testsuite>
 	</testsuites>
 </phpunit>

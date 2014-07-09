@@ -3,6 +3,8 @@ defined('_JEXEC') or die;
 
 jimport('joomla.filesystem.file');
 
+jimport('jspace.metadata.registry');
+
 class JSpaceMetadataCrosswalk extends JObject
 {
 	protected $source;
@@ -10,25 +12,24 @@ class JSpaceMetadataCrosswalk extends JObject
 	protected $metadata;
 
 	/**
-	 * The crosswalk registry.
+	 * The metadata crosswalk.
 	 * @var JRegistry
 	 */
 	protected $crosswalk;
 	
 	/**
-	 * Instantiates an instance of the file metadata crosswalk based on a crosswalk file. 
+	 * Instantiates an instance of the file metadata crosswalk based on a registry file. 
 	 * 
-	 * @param string $source The source metadata to crosswalk.
-	 * @param string $crosswalk The path to the crosswalk file.
+	 * @param  string  $source    The source metadata to crosswalk.
+	 * @param  string  $registry  The name of the registry file.
 	 */
-	public function __construct($source, $crosswalk)
+	public function __construct($source, $registry)
 	{
 		parent::__construct();
-		
-		$this->source = $source;
 
-		$this->crosswalk = new JRegistry();
-		$this->crosswalk->loadFile($crosswalk, JFile::getExt($crosswalk));
+		$this->source = $source;
+		
+		$this->crosswalk = new JSpaceMetadataRegistry($registry);
 	}
 	
 	/**
@@ -44,7 +45,7 @@ class JSpaceMetadataCrosswalk extends JObject
 		{
 			$found = false;
 			
-			$items = $this->crosswalk->toArray();
+			$items = $this->crosswalk->get('crosswalk')->toArray();
 			
 			while (($citem = current($items)) != null && !$found)
 			{
