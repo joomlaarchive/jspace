@@ -41,6 +41,7 @@
  	
     <media folder="media" destination="com_jspace">
     	<folder>css</folder>
+        <folder>js</folder>
     </media>
 
 	<administration>
@@ -72,6 +73,7 @@
 			<folder>layouts</folder>
 			<folder>models</folder>
 			<folder>sql</folder>
+            <folder>tables</folder>
 			<folder>views</folder>
 		</files>
 		

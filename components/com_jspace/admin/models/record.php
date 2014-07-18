@@ -54,9 +54,8 @@ $this->context, $item->id, 'id', null, null);
 		
 		if ($parent)
 		{
-			$table = JTable::getInstance('Record', 'JSpaceTable');
-			$table->load($parent);
-			$item->parentTitle = $table->title;
+			$record = JSpaceRecord::getInstance($parent);
+			$item->parentTitle = $record->title;
 		}
 		
 		// Override the base user data with any data in the session.
@@ -67,7 +66,7 @@ $this->context, $item->id, 'id', null, null);
 		}
 		
 		$dispatcher = JEventDispatcher::getInstance();
-		JPluginHelper::importPlugin('jspace');
+		JPluginHelper::importPlugin('content');
 		
 		// Trigger the data preparation event.
 		$dispatcher->trigger('onContentPrepareData', array($this->context, $item));
@@ -256,7 +255,7 @@ $this->context, $item->id, 'id', null, null);
 	public function validate($form, $data, $group = null)
 	{
 		$dispatcher = JEventDispatcher::getInstance();
-		JPluginHelper::importPlugin('jspace');
+		JPluginHelper::importPlugin('content');
 		
 		$result = $dispatcher->trigger('onJSpaceRecordBeforeValidate', array($form, $data, $group));
 		
@@ -332,6 +331,30 @@ $this->context, $item->id, 'id', null, null);
 		}
 	}
 	
+    /**
+     * Gets an instance of the JSpaceReference class based on the id and context parameter.
+     *
+     * @param   int $id      The id of the JSpaceAsset to retrieve.
+     *
+     * @return  JSpaceReference  An instance of the JSpaceAsset class based on the id parameter.
+     */
+    public function getReference($id)
+    {
+        return JSpaceReference::getInstance($id);
+    }
+    
+    /**
+     * Deletes a reference from the record based on the id and context parameters.
+     * 
+     * @param  int     $id       The id of the reference to be deleted.
+     * @param  string  $context  The context of the reference to be deleted.
+     */
+    public function deleteReference($id, $context)
+    {
+        $asset = $this->getAsset($id);
+        $asset->delete();
+    }
+    
 	public function useAssetMetadata($assetId)
 	{
 		$asset = JSpaceAsset::getInstance($assetId);

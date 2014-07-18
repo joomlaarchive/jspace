@@ -36,11 +36,24 @@ class JFormRuleJSpaceAssets extends JFormRule
 			foreach ($derivative as $asset)
 			{
 				$name = JArrayHelper::getValue($asset, 'name');
+				$tmp = JArrayHelper::getValue($asset, 'tmp_name');
+				
+                $dispatcher = JEventDispatcher::getInstance();
+                JPluginHelper::importPlugin('content');
+                
+                try
+                {
+                    $result = $dispatcher->trigger('onScan', array($tmp));
+				}
+				catch (Exception $e)
+				{
+                    $element->addAttribute('message', JText::sprintf('COM_JSPACE_ERROR_VIRUSDETECTED', $name));
+                    return false;
+				}
 				
 				if (class_exists('finfo'))
 				{
 					$info = new finfo(FILEINFO_MIME);
-					$tmp = JArrayHelper::getValue($asset, 'tmp_name');
 					$type = $info->file($tmp);
 					
 					if (!$this->_isAllowedContentType($type))

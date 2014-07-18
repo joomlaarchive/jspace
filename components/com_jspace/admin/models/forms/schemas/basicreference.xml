@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <form
-	name="basic"
-	label="COM_JSPACE_RECORD_SCHEMA_BASIC_LABEL"
-	description="COM_JSPACE_RECORD_SCHEMA_BASIC_DESC">
+	name="basicreference"
+	label="COM_JSPACE_RECORD_SCHEMA_BASICREFERENCE_LABEL"
+	description="COM_JSPACE_RECORD_SCHEMA_BASICREFERENCE_DESC">
 	<fields name="metadata">
 		<fieldset name="jspacemetadata"
 			label="COM_JSPACE_RECORD_METADATA_LABEL">
@@ -25,6 +25,17 @@
 				filter="JComponentHelper::filterText" 
 				buttons="true"
 				required="false"/>
+		</fieldset>
+	</fields>
+	<fields name="weblinks">
+		<fieldset name="jspaceweblinks"
+			label="COM_JSPACE_LINKS_LABEL">
+			<field 
+				name="links"
+				type="jspace.weblinklist" 
+				label="Web Links" 
+				description="Specify a web link." 
+				size="10"/>
 		</fieldset>
 	</fields>
 </form>

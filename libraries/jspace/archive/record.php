@@ -9,15 +9,30 @@
  
 defined('_JEXEC') or die;
 
+jimport('joomla.table.category');
+
 jimport('jspace.factory');
 jimport('jspace.archive.asset');
-jimport('jspace.table.record');
 jimport('jspace.filesystem.file');
- 
+
+/**
+ * Represents a JSpace record.
+ *
+ * @package     JSpace
+ * @subpackage  Archive
+ */
 class JSpaceRecord extends JObject
 {
+    protected static $context = 'com_jspace.record';
+    
 	protected static $instances = array();
 
+    /**
+     * Instatiates an instance of the PlgJSpaceGlacier class.
+     * 
+     * @param   int  $identifier  A JSpace record identifier if provided, otherwise creates an empty 
+     * JSpace record.
+     */
 	public function __construct($identifier = 0)
 	{
 		JLog::addLogger(array());
@@ -174,7 +189,7 @@ class JSpaceRecord extends JObject
 		}
 		
 		$dispatcher = JEventDispatcher::getInstance();	
-		JPluginHelper::importPlugin('jspace');
+		JPluginHelper::importPlugin('content');
 		
 		$table = JTable::getInstance('Record', 'JSpaceTable');
 		
@@ -184,7 +199,7 @@ class JSpaceRecord extends JObject
 		
 		$isNew = empty($this->id);
 		
-		$result = $dispatcher->trigger('onJSpaceRecordBeforeSave', array($table, $isNew));
+		$result = $dispatcher->trigger('onContentBeforeSave', array(static::$context, $this, $isNew));
 		
 		if (in_array(false, $result, true))
 		{
@@ -216,7 +231,7 @@ class JSpaceRecord extends JObject
 		
 		$this->_saveAssets($collection);
 		
-		$dispatcher->trigger('onJSpaceRecordAfterSave', array($table, $isNew));
+		$dispatcher->trigger('onContentAfterSave', array(static::$context, $this, $isNew));
 		
 		$this->_saveChildren($children);
 		
@@ -302,13 +317,13 @@ class JSpaceRecord extends JObject
 	 */
 	public function delete()
 	{
-		JPluginHelper::importPlugin('jspace');
+		JPluginHelper::importPlugin('content');
 		$dispatcher = JEventDispatcher::getInstance();
 		
 		$table = self::getTable('Record');
 		$table->load($this->id);
 		
-		$dispatcher->trigger('onJSpaceRecordBeforeDelete', array($table));
+		$dispatcher->trigger('onContentBeforeDelete', array(static::$context, $table));
 		
 		foreach ($this->getAssets() as $asset)
 		{
@@ -320,7 +335,7 @@ class JSpaceRecord extends JObject
 			throw new Exception($table->getError());
 		}
 		
-		$dispatcher->trigger('onJSpaceRecordAfterDelete', array($table));
+		$dispatcher->trigger('onContentAfterDelete', array(static::$context, $table));
 
 		return true;
 	}

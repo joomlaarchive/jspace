@@ -12,6 +12,8 @@ jimport('jspace.table.asset');
  */
 class JSpaceAsset extends JObject
 {
+    protected static $context = 'com_jspace.asset';
+    
 	protected static $instances = array();
 	
 	public function __construct($identifier = 0)
@@ -94,11 +96,11 @@ class JSpaceAsset extends JObject
 	public function save($updateOnly = false)
 	{
 		$dispatcher = JEventDispatcher::getInstance();	
-		JPluginHelper::importPlugin('jspace');
+		JPluginHelper::importPlugin('content');
 		
 		$isNew = empty($this->id);
 		
-		$dispatcher->trigger('onJSpaceAssetBeforeSave', array($this));
+		$dispatcher->trigger('onContentBeforeSave', array(static::$context, $this, $isNew));
 		
 		$this->metadata = (string)$this->_metadata;
 		
@@ -111,12 +113,12 @@ class JSpaceAsset extends JObject
 			$this->id = $table->get('id');
 		}
 		
-		$dispatcher->trigger('onJSpaceAssetAfterSave', array($this));
+		$dispatcher->trigger('onContentAfterSave', array(static::$context, $this, $isNew));
 	}
 	
 	public function load($keys)
 	{
-		$table = $this->getTable();
+		$table = JTable::getInstance('Asset', 'JSpaceTable');
 		
 		if (!$table->load($keys))
 		{
@@ -137,14 +139,14 @@ class JSpaceAsset extends JObject
 	 */
 	public function delete()
 	{
-		JPluginHelper::importPlugin('jspace');
+		JPluginHelper::importPlugin('content');
 		
 		// Trigger the onUserBeforeDelete event
 		$dispatcher = JEventDispatcher::getInstance();
-		$dispatcher->trigger('onJSpaceAssetBeforeDelete', array($this));
+		$dispatcher->trigger('onContentBeforeDelete', array(static::$context, $this));
 
 		// Create the user table object
-		$table = $this->getTable();
+		$table = JTable::getInstance('Asset', 'JSpaceTable');
 
 		if (!$result = $table->delete($this->id))
 		{
@@ -152,7 +154,7 @@ class JSpaceAsset extends JObject
 		}
 
 		// Trigger the onUserAfterDelete event
-		$dispatcher->trigger('onJSpaceAssetAfterDelete', array($this));
+		$dispatcher->trigger('onContentAfterDelete', array(static::$context, $this));
 	}
 	
 	/**

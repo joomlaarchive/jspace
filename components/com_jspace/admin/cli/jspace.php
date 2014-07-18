@@ -172,7 +172,7 @@ EOT;
     	
     	$dispatcher = JEventDispatcher::getInstance();
     	
-    	JPluginHelper::importPlugin("jspace", $plugin, true, $dispatcher);
+    	JPluginHelper::importPlugin("content", $plugin, true, $dispatcher);
     	
     	return $dispatcher->trigger('onJSpaceExecuteCliCommand', array($action, $args));
     }
@@ -198,7 +198,7 @@ EOT;
     
     private function _getPlugins()
     {
-		JPluginHelper::importPlugin('jspace');
+		JPluginHelper::importPlugin('content');
 		
 		$dispatcher = JEventDispatcher::getInstance();
 		

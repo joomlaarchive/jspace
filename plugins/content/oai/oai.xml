@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<extension version="3.2" type="plugin" group="content" method="upgrade">
+	<name>plg_content_oai</name>
+	<author>KnowledgeArc</author>
+	<creationDate>2014/04/30</creationDate>
+	<copyright>Copyright (C) 2014 KnowledgeArc Ltd. All rights reserved.</copyright>
+	<license>GNU General Public License version 2 or later; see LICENSE.txt</license>
+	<authorEmail>development@knowledgearc.com</authorEmail>
+	<authorUrl>www.knowledgearc.org</authorUrl>
+	<version>0.1.0</version>
+	<description>PLG_CONTENT_OAI_XML_DESCRIPTION</description>
+    
+	<files>
+		<filename plugin="oai">oai.php</filename>
+        <folder>forms</folder>
+	</files>
+	<languages>
+		<language tag="en-GB">language/en-GB/en-GB.plg_content_oai.ini</language>
+		<language tag="en-GB">language/en-GB/en-GB.plg_content_oai.sys.ini</language>
+	</languages>
+	<config>
+		<fields name="params">
+			<fieldset name="basic">
+				<field 
+					name="path" 
+					type="text"
+					label="PLG_CONTENT_OAI_STORAGE_PATH_LABEL" 
+					description="PLG_CONTENT_OAI_STORAGE_PATH_DESC"
+					default="JPATH_ROOT/tmp"/>
+			</fieldset>
+		</fields>
+		<fields name="params">
+			<fieldset name="advanced">
+				<field 
+					name="follow_on" 
+					type="text"
+					label="PLG_CONTENT_OAI_FOLLOWON_LABEL" 
+					description="PLG_CONTENT_OAI_FOLLOWON_DESC"
+					default="30"
+					filter="int"/>
+				<field 
+					name="request_failures" 
+					type="text"
+					label="PLG_CONTENT_OAI_REQUESTFAILURES_LABEL" 
+					description="PLG_CONTENT_OAI_REQUESTFAILURES_DESC"
+					default="3"
+					filter="int"/>
+			</fieldset>
+		</fields>
+	</config>
+</extension>

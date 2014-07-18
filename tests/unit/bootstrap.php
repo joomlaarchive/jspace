@@ -41,3 +41,5 @@ JError::setErrorHandling(E_WARNING, 'ignore');
 JError::setErrorHandling(E_ERROR, 'ignore');
 
 require dirname(dirname(__FILE__)).'/vendor/autoload.php';
+
+JLoader::register('JSpaceTableRecord', JPATH_BASE.'/administrator/components/com_jspace/tables/record.php');

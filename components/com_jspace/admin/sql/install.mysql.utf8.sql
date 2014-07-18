@@ -46,6 +46,8 @@ CREATE TABLE IF NOT EXISTS `#__jspace_record_categories` (
 	KEY `idx_jspace_record_categories_record_id` (`record_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+-- physical files being archived.
+
 CREATE TABLE IF NOT EXISTS `#__jspace_assets` (
 	`id` INTEGER NOT NULL AUTO_INCREMENT,
 	`hash` VARCHAR(255) NOT NULL,
@@ -56,6 +58,17 @@ CREATE TABLE IF NOT EXISTS `#__jspace_assets` (
 	PRIMARY KEY (`id`),
 	KEY `idx_jspace_assets_hash` (`hash`),
 	KEY `idx_jspace_assets_record_id` (`record_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- references (links) to assets
+
+CREATE TABLE IF NOT EXISTS `#__jspace_references` (
+	`id` INTEGER NOT NULL COMMENT 'The id of the context as it appears in the related component table.',
+	`context` VARCHAR(255) NOT NULL COMMENT 'The component and type name, E.g. com_jspace.ref, com_weblinks.weblink, com_newsfeeds.newsfeed, etc',
+	`bundle` VARCHAR(255) NULL,
+	`record_id` INTEGER NOT NULL,
+	PRIMARY KEY (`id`, `context`),
+	KEY `idx_jspace_reference_record_id` (`record_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- A holding table for records harvested.

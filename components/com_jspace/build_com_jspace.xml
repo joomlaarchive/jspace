@@ -43,8 +43,8 @@
 				<include name="**/**"/>
 			</fileset>
 		</copy>
-		<copy todir="${dest.media}/com_jspace/css">
-			<fileset dir="${src}/media/css" defaultexcludes="true">
+		<copy todir="${dest.media}/com_jspace">
+			<fileset dir="${src}/media" defaultexcludes="true">
 				<include name="**/**"/>
 			</fileset>
 		</copy>

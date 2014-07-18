@@ -65,31 +65,4 @@ abstract class JSpaceHtmlAssets
 		
 		return $cleaned;
 	}
-	
-	/**
-	 * Gets a list of uploaded files.
-	 *
-	 * @return  array  A list of uploaded files.
-	 */
-	public static function getFiles()
-	{
-		$collection = self::getCollection();
-		
-		$files = array();
-	
-		foreach ($collection as $bkey=>$bundle)
-		{
-			$assets = JArrayHelper::getValue($bundle, 'assets', array(), 'array');
-			
-			foreach ($assets as $dkey=>$derivative)
-			{
-				foreach ($derivative as $akey=>$asset)
-				{
-					$files[] = $asset;
-				}
-			}
-		}
-		
-		return $files;
-	}
 }
