@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <extension version="3.2" type="plugin" group="joai" method="upgrade">
 	<name>plg_joai_ore</name>
-	<author>KnowledgeARC</author>
+	<author>KnowledgeArc</author>
 	<creationDate>2014/07/06</creationDate>
-	<copyright>Copyright (C) 2014 KnowledgeARC Ltd. All rights reserved.</copyright>
+	<copyright>Copyright (C) 2014 KnowledgeArc Ltd. All rights reserved.</copyright>
 	<license>GNU General Public License version 2 or later; see LICENSE.txt</license>
 	<authorEmail>development@knowledgearc.com</authorEmail>
 	<authorUrl>www.knowledgearc.org</authorUrl>
