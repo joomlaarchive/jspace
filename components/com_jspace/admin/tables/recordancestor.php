@@ -1,4 +1,20 @@
 <?php
+/**
+ * @package     JSpace
+ * @subpackage  Table
+ *
+ * @copyright   Copyright (C) 2014 KnowledgeArc Ltd. All rights reserved.
+ * @license     GNU General Public License version 2 or later; see LICENSE
+ */
+ 
+defined('_JEXEC') or die;
+ 
+/**
+ * Represents an ancestory between two JSpace records.
+ *
+ * @package     JSpace
+ * @subpackage  Table
+ */
 class JSpaceTableRecordAncestor extends JTable
 {
 	/**

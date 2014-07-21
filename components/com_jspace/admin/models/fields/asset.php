@@ -69,6 +69,15 @@ class JSpaceFormFieldAsset extends JFormField
 		return $record->getAssets(array('bundle'=>$this->bundle));
 	}
 	
+	public function getDownloadLinks($asset)
+	{
+        $dispatcher = JEventDispatcher::getInstance();
+        
+        JPluginHelper::importPlugin("content");
+        
+        return $dispatcher->trigger('onJSpaceAssetPrepareDownload', array($asset));
+	}
+	
 	public function __get($name)
 	{
 		switch ($name) {

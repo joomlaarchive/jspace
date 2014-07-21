@@ -54,7 +54,7 @@ if (version_compare(JVERSION, "3.0", "l")) {
 }
 
 // include relevant tables.
-JTable::addIncludePath(JPATH_ROOT.'/administrator/components/com_jspace/tables/');
+JTable::addIncludePath(JPATH_ROOT.'/administrator/components/com_jspace/tables');
 
 // System configuration.
 $config = new JConfig;

@@ -1,4 +1,20 @@
 <?php
+/**
+ * @package     JSpace
+ * @subpackage  Table
+ *
+ * @copyright   Copyright (C) 2014 KnowledgeArc Ltd. All rights reserved.
+ * @license     GNU General Public License version 2 or later; see LICENSE
+ */
+ 
+defined('_JEXEC') or die;
+ 
+/**
+ * Represents a JSpace asset.
+ *
+ * @package     JSpace
+ * @subpackage  Table
+ */
 class JSpaceTableAsset extends JTable
 {
 	/**

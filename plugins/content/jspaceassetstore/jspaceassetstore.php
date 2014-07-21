@@ -22,6 +22,8 @@ jimport('jspace.html.assets');
  */
 class PlgContentJSpaceAssetstore extends JPlugin
 {
+    protected static $chunksize = 4096;
+
 	/**
 	 * Instatiates an instance of the PlgContentJSpaceAssetstore class.
 	 * @param   object  &$subject  The object to observe
@@ -42,6 +44,60 @@ class PlgContentJSpaceAssetstore extends JPlugin
 		
 		$this->params->loadArray(array('component'=>$params->toArray()));
 	}
+	
+    /**
+     * Returns the HTML to the JSpace Asset Store download mechanism.
+     *
+     * @param   JSpaceAsset  $asset  An instance of the asset being downloaded.
+     * 
+     * @return  string       The html to the JSpace Asset Store download mechanism.
+     */
+	public function onJSpaceAssetPrepareDownload($asset)
+	{
+        $asset->url = JRoute::_('index.php?option=com_jspace&task=asset.stream&type=jspaceassetstore&id='.$asset->id);
+
+        $layout = JPATH_PLUGINS.'/content/jspaceassetstore/layouts';
+        $html = JLayoutHelper::render("jspaceassetstore", $asset, $layout);
+        
+        return $html;
+    }
+
+    /**
+     * Streams a file from the JSpace Asset Store to the client's web browser 
+     * (or other download mechanism).
+     *
+     * @param  JSpaceAsset  $asset  An instance of the asset being downloaded.
+     */
+    public function onJSpaceAssetDownload($asset)
+    {
+        $root = $this->get('params')->get('path', null);
+        $id = $asset->id;
+        
+        $path = JSpaceArchiveAssetHelper::buildStoragePath($asset->record_id, $root);
+    
+        $handle = fopen($path, 'rb');
+        
+        if ($handle === false)
+        {
+            return false;
+        }
+        
+        header("Content-Type: ".$asset->getMetadata()->get('contentType'));
+        header("Content-Disposition: attachment; filename=".$asset->getMetadata()->get('fileName').";");
+        header("Content-Length: ".$asset->getMetadata()->get('contentLength'));
+        
+        while (!feof($handle))
+        {
+            $buffer = fread($handle, static::$chunksize);
+            
+            echo $buffer;
+            
+            ob_flush();
+            flush();
+        }
+        
+        $status = fclose($handle);
+    }
 	
 	/**
 	 * Checks for the existence of a similar file already archived against the current record.
