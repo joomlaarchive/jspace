@@ -1,8 +1,22 @@
 <?php
+/**
+ * @package     JSpace.Component
+ * @subpackage  Model
+ *
+ * @copyright   Copyright (C) 2014 KnowledgeArc Ltd. All rights reserved.
+ * @license     GNU General Public License version 2 or later; see LICENSE
+ */
+ 
 defined('_JEXEC') or die;
 
-jimport('joomla.filesystem.folder');
+jimport('jspace.factory');
 
+/**
+ * Models a list of schemas.
+ *
+ * @package     JSpace.Component
+ * @subpackage  Model
+ */
 class JSpaceModelRecordSchemas extends JModelLegacy
 {
 	public function __construct($config = array())
@@ -10,28 +24,8 @@ class JSpaceModelRecordSchemas extends JModelLegacy
 		parent::__construct($config);
 	}
 	
-	public function getItems()
+	public function getItems($categoryId)
 	{
-		$items = array();
-		
-		$formPath = JPATH_ROOT.'/administrator/components/com_jspace/models/forms/schemas';
-
-		foreach (JFolder::files($formPath, '..*\.xml', false, true) as $file) {
-			$xml = simplexml_load_file($file);
-			
-			$item = new stdClass();
-			$item->name = JArrayHelper::getValue($xml, 'name', null, 'string');
-			
-			if (!$item->name) {
-				throw new Exception('COM_JSPACE_RECORDSCHEMA_NO_NAME_ATTRIBUTE');
-			}
-			
-			$item->label = JArrayHelper::getValue($xml, 'label', null, 'string');
-			$item->description = JArrayHelper::getValue($xml, 'description', null, 'string');
-			
-			$items[] = $item;
-		}
-		
-		return $items;
+		return JSpaceFactory::getSchemas();
 	}
 }

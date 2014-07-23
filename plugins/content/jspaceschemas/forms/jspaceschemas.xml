@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+    <fields name="params">
+        <fieldset name="jspaceschemas"
+            label="PLG_CONTENT_JSPACESCHEMAS_FIELDSET_LABEL"
+            addfieldpath="/administrator/components/com_jspace/models/fields">
+            <field
+                name="jspace_schemas"
+                id="jspace_schemas"
+                type="jspace.schemas"
+                label="PLG_CONTENT_JSPACESCHEMAS_FIELD_SCHEMAS_LABEL"
+                description="PLG_CONTENT_JSPACESCHEMAS_FIELD_SCHEMAS_DESC"
+                default="0">
+            </field>
+        </fieldset>
+    </fields>
+</form>

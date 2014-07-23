@@ -1,4 +1,12 @@
 <?php
+/**
+ * @package     JSpace.Component
+ * @subpackage  Model
+ *
+ * @copyright   Copyright (C) 2014 KnowledgeArc Ltd. All rights reserved.
+ * @license     GNU General Public License version 2 or later; see LICENSE
+ */
+ 
 defined('_JEXEC') or die;
 
 jimport('jspace.archive.record');
@@ -6,6 +14,12 @@ jimport('jspace.archive.asset');
 jimport('jspace.html.assets');
 jimport('jspace.clamav.client');
 
+/**
+ * Models the management of a JSpace record.
+ *
+ * @package     JSpace.Component
+ * @subpackage  Model
+ */
 class JSpaceModelRecord extends JModelAdmin
 {
 	protected $context;

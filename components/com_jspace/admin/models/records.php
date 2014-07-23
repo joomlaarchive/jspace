@@ -1,6 +1,20 @@
 <?php
+/**
+ * @package     JSpace.Component
+ * @subpackage  Model
+ *
+ * @copyright   Copyright (C) 2014 KnowledgeArc Ltd. All rights reserved.
+ * @license     GNU General Public License version 2 or later; see LICENSE
+ */
+ 
 defined('_JEXEC') or die;
 
+/**
+ * Models the display and management of multiple JSpace records.
+ *
+ * @package     JSpace.Component
+ * @subpackage  Model
+ */
 class JSpaceModelRecords extends JModelList
 {
 	public function __construct($config = array())

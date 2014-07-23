@@ -2,33 +2,28 @@
 /**
  * A JSpace factory class.
  * 
- * @package		JSpace
- * @copyright	Copyright (C) 2012-2014 KnowledgeARC. All rights reserved.
- * @license     This file is part of the JSpace library for Joomla!.
-
-   The JSpace library for Joomla! is free software: you can redistribute it 
-   and/or modify it under the terms of the GNU General Public License as 
-   published by the Free Software Foundation, either version 3 of the License, 
-   or (at your option) any later version.
-
-   The JSpace library for Joomla! is distributed in the hope that it will be 
-   useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
-
-   You should have received a copy of the GNU General Public License
-   along with the JSpace library for Joomla!.  If not, see 
-   <http://www.gnu.org/licenses/>.
+ * @package     JSpace
+ * @copyright   Copyright (C) 2012-2014 KnowledgeARC. All rights reserved.
+ * @license     GNU General Public License version 2 or later; see LICENSE
 
  * Contributors
  * Please feel free to add your name and email (optional) here if you have 
  * contributed any source code changes.
- * Name							Email
- * Hayden Young					<haydenyoung@wijiti.com> 
+ * Name                         Email
+ * Hayden Young                 <haydenyoung@wijiti.com> 
  * 
  */
 defined('JPATH_PLATFORM') or die;
 
+jimport('joomla.filesystem.folder');
+
+jimport('jspace.archive.schema');
+
+/**
+ * Provides a factory class for initializing various data in JSpace.
+ *
+ * @package     JSpace
+ */
 class JSpaceFactory
 {
 	const JSPACE_NAME = 'com_jspace';
@@ -64,5 +59,37 @@ class JSpaceFactory
 		jimport('jspace.metadata.crosswalk');
 		
 		return new JSpaceMetadataCrosswalk($metadata, $crosswalk);
+	}
+	
+	/**
+	 * Gets a list of available JSpace schemas.
+	 *
+	 * @return  JSpaceSchema[]  An array of JSpaceSchema objects.
+	 */
+	public static function getSchemas()
+    {
+        $schemas = array();
+        
+        $formPath = JPATH_ROOT.'/administrator/components/com_jspace/models/forms/schemas';
+
+        foreach (JFolder::files($formPath, '..*\.xml', false, true) as $file)
+        {
+            $xml = simplexml_load_file($file);
+            
+            $schema = new JSpaceSchema();
+            $schema->name = JArrayHelper::getValue($xml, 'name', null, 'string');
+            
+            if (!$schema->name)
+            {
+                throw new Exception('COM_JSPACE_RECORDSCHEMA_NO_NAME_ATTRIBUTE');
+            }
+            
+            $schema->label = JArrayHelper::getValue($xml, 'label', null, 'string');
+            $schema->description = JArrayHelper::getValue($xml, 'description', null, 'string');
+            
+            $schemas[] = $schema;
+        }
+        
+        return $schemas;
 	}
 }

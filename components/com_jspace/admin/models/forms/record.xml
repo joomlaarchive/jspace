@@ -21,7 +21,7 @@
 	
 	<fieldset 
 		name="details"
-		addFieldPath="administrator/components/com_jspace/models/fields">
+		addfieldpath="administrator/components/com_jspace/models/fields">
 		<field 
 			name="asset_id" 
 			type="hidden" 
