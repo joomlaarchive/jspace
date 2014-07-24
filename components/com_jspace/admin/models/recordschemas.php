@@ -24,7 +24,7 @@ class JSpaceModelRecordSchemas extends JModelLegacy
 		parent::__construct($config);
 	}
 	
-	public function getItems($categoryId)
+	public function getItems()
 	{
 		return JSpaceFactory::getSchemas();
 	}

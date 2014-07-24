@@ -216,19 +216,7 @@ class JSpaceRecord extends JObject
 		{
 			$this->id = $table->get('id');
 		}
-		
-		if ($result)
-		{
-			// if record is a parent, store with its category.
-			if (isset($this->catid) && (int)$this->catid != 0)
-			{
-				$recordCategory = self::getTable('RecordCategory');
-				$recordCategory->record_id = $table->id;
-				$recordCategory->catid = $this->catid;
-				$recordCategory->store();
-			}
-		}
-		
+
 		$this->_saveAssets($collection);
 		
 		$dispatcher->trigger('onContentAfterSave', array(static::$context, $this, $isNew));

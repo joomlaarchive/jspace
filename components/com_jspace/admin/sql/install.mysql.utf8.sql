@@ -20,6 +20,7 @@ CREATE TABLE IF NOT EXISTS `#__jspace_records` (
 	`ordering` INTEGER NOT NULL DEFAULT 0,
 	`version` INTEGER NOT NULL DEFAULT 1,
 	`access` INTEGER NOT NULL DEFAULT 0,
+	`catid` INTEGER NOT NULL,
 	PRIMARY KEY (`id`),
 	KEY `idx_jspace_records_access` (`access`),
 	KEY `idx_jspace_records_checkout` (`checked_out`),
@@ -28,6 +29,7 @@ CREATE TABLE IF NOT EXISTS `#__jspace_records` (
 	KEY `idx_jspace_records_schema` (`schema`),
 	KEY `idx_jspace_records_createdby` (`created_by`),
 	KEY `idx_jspace_records_language` (`language`)
+	KEY `idx_jspace_record_categories_catid` (`catid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `#__jspace_record_ancestors` (
@@ -36,14 +38,6 @@ CREATE TABLE IF NOT EXISTS `#__jspace_record_ancestors` (
 	PRIMARY KEY (`decendant`, `ancestor`),
 	KEY `idx_jspace_record_ancestors_decendant` (`decendant`),
 	KEY `idx_jspace_record_ancestors_ancestor` (`ancestor`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-CREATE TABLE IF NOT EXISTS `#__jspace_record_categories` (
-	`catid` INTEGER NOT NULL,
-	`record_id` INTEGER NOT NULL,
-	PRIMARY KEY(`catid`, `record_id`),
-	KEY `idx_jspace_record_categories_catid` (`catid`),
-	KEY `idx_jspace_record_categories_record_id` (`record_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- physical files being archived.

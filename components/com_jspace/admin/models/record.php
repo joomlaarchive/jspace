@@ -97,20 +97,24 @@ $this->context, $item->id, 'id', null, null);
 			return false;
 		}
 		
-		if ($loadData) {
+		if ($loadData) 
+		{
 			$data = $form->getData()->toArray();
 		}
 
 		// if the parent id is not in the querystring, try to get it from the submitted data.
-		if (!($parent = JFactory::getApplication()->input->getInt('parent'))) {
-			$parent = JArrayHelper::getValue($data, 'parent_id');
+		if (!($parentId = JFactory::getApplication()->input->getInt('parent')))
+		{
+			$parentId = JArrayHelper::getValue($data, 'parent_id');
 		}
 
 		// show the parent if it is specified, otherwise provide access to the category.
-		if ($parent)
+		if ($parentId)
 		{
-			$form->removeField('catid');
-			$form->setValue('parent_id', null, $parent);
+            $parent = JSpaceRecord::getInstance($parentId);
+			$form->setFieldAttribute('catid', 'type', 'hidden');
+			$form->setValue('catid', null, $parent->catid);
+			$form->setValue('parent_id', null, $parentId);
 		}
 		else
 		{

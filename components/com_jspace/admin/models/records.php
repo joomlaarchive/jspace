@@ -132,8 +132,7 @@ class JSpaceModelRecords extends JModelList
 		if (JLanguageAssociations::isEnabled())
 		{
 			$query->select('COUNT(asso2.id)>1 as association')
-			->join('LEFT', '#__associations AS asso ON asso.id = r.id AND 
-asso.context='.$db->quote('com_jspace.record'))
+			->join('LEFT', '#__associations AS asso ON asso.id = r.id AND asso.context='.$db->quote('com_jspace.record'))
 			->join('LEFT', '#__associations AS asso2 ON asso2.key = asso.key');
 		}
 	
@@ -150,9 +149,8 @@ asso.context='.$db->quote('com_jspace.record'))
 		->join('LEFT', '#__users AS ua ON ua.id = r.created_by');
 	
 		// Join over the categories.
-		$query->select('c.id as catid, c.title AS category_title')		
-		->join('LEFT', '#__jspace_record_categories AS rc ON rc.record_id = r.id')
-		->join('LEFT', '#__categories AS c ON c.id = rc.catid');
+		$query->select('c.id as catid, c.title AS category_title')
+		->join('LEFT', '#__categories AS c ON c.id = r.catid');
 		
 		// Filter by access level.
 		if ($access = $this->getState('filter.access'))
