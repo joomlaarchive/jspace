@@ -108,7 +108,7 @@ $this->context, $item->id, 'id', null, null);
 			$parentId = JArrayHelper::getValue($data, 'parent_id');
 		}
 
-		// show the parent if it is specified, otherwise provide access to the category.
+		// show the parent if it is specified, otherwise make the category selectable.
 		if ($parentId)
 		{
             $parent = JSpaceRecord::getInstance($parentId);

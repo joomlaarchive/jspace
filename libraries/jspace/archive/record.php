@@ -216,6 +216,8 @@ class JSpaceRecord extends JObject
 		{
 			$this->id = $table->get('id');
 		}
+		
+		$this->_updateChildCategories();
 
 		$this->_saveAssets($collection);
 		
@@ -444,5 +446,24 @@ class JSpaceRecord extends JObject
 			$this->metadata = (string)$this->_metadata;
 			$this->save();
 		}
+	}
+	
+	/**
+	 * Updates the category id of this record's children.
+	 */
+	private function _updateChildCategories()
+	{
+        $database = JFactory::getDbo();
+	
+        $rTable = $database->qn(JTable::getInstance('Record', 'JSpaceTable')->getTableName(), 'r');
+        $aTable = $database->qn(JTable::getInstance('RecordAncestor', 'JSpaceTable')->getTableName(), 'a');
+        $join   = $aTable.' ON ('.$database->qn('a.decendant').'='.$database->qn('r.id').')';
+        $set    = $database->qn('r.catid').'='.(int)$this->catid;
+        $where  = $database->qn('a.ancestor').'='.$this->id;
+        
+        $query = $database->getQuery(true);
+        $query->update($rTable)->join('INNER', $join)->set($set)->where($where);
+        
+        $database->setQuery($query)->execute();
 	}
 }
