@@ -212,7 +212,7 @@ class JSpaceIngestionOAIHarvester extends JObject implements JSpaceIngestionOAIH
 	}
 	
 	/** 
-	 * Ingests records, moving them from the cache o the JSpace data store.
+	 * Ingest records, moving them from the cache to the JSpace data store.
 	 */
 	public function ingest()
 	{
@@ -226,6 +226,17 @@ class JSpaceIngestionOAIHarvester extends JObject implements JSpaceIngestionOAIH
 			{
 				$metadata = JArrayHelper::fromObject(json_decode($item->metadata));
 				
+				$identifier = JTable::getInstance('RecordIdentifier', 'JSpaceTable');
+				
+				$id = 0;
+				
+				// see if there is already a record we can update.
+				if ($identifier->load(array('id'=>$item->id)))
+				{
+                    $id = (int)$identifier->record_id;
+				}
+				
+				$array['identifiers'] = array($item->id);
 				$array['catid'] = $this->category->id;
 				$array['metadata'] = $item->metadata;
 				
@@ -243,7 +254,7 @@ class JSpaceIngestionOAIHarvester extends JObject implements JSpaceIngestionOAIH
 				$array['created_by'] = $this->category->created_user_id;
 				$array['schema'] = 'basic';
 				
-				$record = JSpaceRecord::getInstance();
+				$record = JSpaceRecord::getInstance($id);
 				$record->bind($array);
 				$record->save();
 			}

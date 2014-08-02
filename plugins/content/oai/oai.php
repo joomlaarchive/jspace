@@ -38,11 +38,10 @@ class PlgContentOAI extends JPlugin
 		$application = JFactory::getApplication('cli');
 		
 		$cli = (get_class($application) === 'JApplicationCli');
-		$q = array_key_exists('q', $options);
-		$quiet = array_key_exists('quiet', $options);
-		$help = ($action == 'help');
-		
-		$verbose = !($q && $quiet && $help && !$cli);
+		$quiet = (array_key_exists('q', $options) || array_key_exists('quiet', $options));
+		$help = (array_key_exists('h', $options) || array_key_exists('help', $options));
+
+		$verbose = ($cli && !($help || $quiet));
 		
 		$start = new JDate('now');
 		
@@ -270,7 +269,7 @@ class PlgContentOAI extends JPlugin
 		}
 		
     	$out = <<<EOT
-Usage: jspace oai [action] [OPTIONS]
+Usage: jspace oai [OPTIONS] [action]
 
 Provides OAI-based functions within JSpace.
 
@@ -278,13 +277,13 @@ Provides OAI-based functions within JSpace.
   clean               Discards the cached records.
   harvest             Harvest records from another archive. Harvesting 
                       information is configured via JSpace's Category Manager.
-  help                Prints this help.
   reset               Reset the harvesting information. Forces the harvester 
                       to retrieve all records from the source archive.
 
 [OPTIONS]
-  -c, --c=categoryId  Specify a single category to execute an OAI action against.
-  -q, --quiet         Suppress all output including errors.
+  -c, --category=categoryId  Specify a single category to execute an OAI action against.
+  -q, --quiet                Suppress all output including errors.
+  -h, --help                 Prints this help.
   
 EOT;
 

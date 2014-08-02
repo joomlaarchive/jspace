@@ -6,41 +6,30 @@
         $(document).on("click", ".jspace-add-field", function(e) {
             e.preventDefault();
             
-            var template = $(this.parentElement).clone();
+            var prefix = $(this).data('jspace-prefix');
+            var fields = $('[data-jspace-name^="'+prefix+'"]');
+            var length = fields.length;
+            var maximum = $(this).data('jspace-maximum');
             
-            var name = template.data('name');
-            var id = template.data('id');
-            var position = template.data('position');
-            var maximum = template.data('maximum');
-            
-            if (position >= maximum)
+            if (length >= maximum)
                 return;
             
-            template.data('position', parseInt(position)+1);
-            template.attr('data-position', template.data('position'));
+            var template = fields.last().clone();
             
-            template.children().each(function(index) {
-                if ($(this).attr('id')) {
-                    var search = id+'_'+position;
-                    var replace = id+'_'+template.data('position');
-                    
-                    $(this).attr('id', $(this).attr('id').replace(search, replace));
-                }
-                
-                if ($(this).attr('name')) {
-                    var search = name+'['+position+']';
-                    replace = name+'['+template.data('position')+']';
-                    
-                    $(this).attr('name', $(this).attr('name').replace(search, replace));
+            $.each(template.children(":input"), function(i, input) {
+                if ($(input).attr('name')) {
+                    var search = template.data('jspace-name');
+                    var replace = prefix+'['+length+']';               
+                    $(input).attr('name', $(input).attr('name').replace(search, replace));
+                    $(input).val('');
                 }
             });
             
-            remove = $('.jspace-remove-field:first').clone();
+            template.data('jspace-name', prefix+'['+(length)+']');
+            template.attr('data-jspace-name', template.data('jspace-name'));
+            fields.last().after(template);
             
-            $(this.parentElement).append(remove);
-            $(this.parentElement).after(template);
-            
-            this.remove();
+            $(this).data('jspace-length', length+1);
         });
 
         /**
@@ -49,32 +38,30 @@
         $(document).on("click", ".jspace-remove-field", function(e) {
             e.preventDefault();
             
-            var name = $(this.parentElement).data('name');
-            var id = $(this.parentElement).data('id');
+            var prefix = $(".jspace-add-field").data('jspace-prefix');
+            var length = $(".jspace-add-field").data('jspace-length');
             
-            $(this.parentElement).remove();
+            if (length == 1)
+                return;
             
-            $('*[data-id="'+id+'"]').each(function(i, parent) {
-                $(this).children().each(function(j, child) {
-                    if ($(this).attr('id')) {
-                        var search = id+'_'+$(parent).data('position');
-                        var replace = id+'_'+i;
-                        console.log(search);
-                        console.log(replace);
-                        $(this).attr('id', $(this).attr('id').replace(search, replace));
-                    }
-                    
-                    if ($(this).attr('name')) {
-                        var search = name+'['+$(parent).data('position')+']';
-                        var replace = name+'['+i+']';
-                        
-                        $(this).attr('name', $(this).attr('name').replace(search, replace));
+            $(this).parent().remove();
+            
+            var fields = $('[data-jspace-name^="'+prefix+'"]');
+        
+            $.each(fields, function(i, field) {
+                $.each($(field).children(":input"), function(j, input) {                    
+                    if ($(input).attr('name')) {
+                        var search = $(field).data('jspace-name');
+                        var replace = prefix+'['+i+']';
+
+                        $(input).attr('name', $(input).attr('name').replace(search, replace));
                     }
                 });
-                
-                $(parent).data("position", i);
-                $(parent).attr("data-position", $(parent).data("position"));
+
+                $(field).attr('data-jspace-name', prefix+'['+i+']');
             });
+            
+            $(".jspace-add-field").data("jspace-length", length-1);
         });
     })
 })(jQuery);

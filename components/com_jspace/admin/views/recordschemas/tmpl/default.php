@@ -10,13 +10,11 @@ $tmpl = $input->getCmd('tmpl', '');
 <script type="text/javascript">
 	setRecordSchema = function(schema)
 	{
-		<?php if ($tmpl) : ?>
-			window.parent.Joomla.submitbutton('record.setSchema', schema);
-			window.parent.SqueezeBox.close();
-		<?php else : ?>
-			
-window.location="index.php?option=com_jspace&view=record&task=record.setSchema&layout=edit&schema="+('item.setSchema', 
-schema);
+        <?php if ($tmpl) : ?>
+        window.parent.Joomla.submitbutton('record.setSchema', schema);
+        window.parent.SqueezeBox.close();
+        <?php else : ?>
+        window.location="index.php?option=com_jspace&view=record&task=record.setSchema&layout=edit&schema="+('item.setSchema', schema);
 		<?php endif; ?>
 	}
 </script>

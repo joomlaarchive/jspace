@@ -25,7 +25,15 @@ class JSpaceRecord extends JObject
 {
     protected static $context = 'com_jspace.record';
     
-	protected static $instances = array();
+    protected static $instances = array();
+
+    /**
+     * External identifiers ensure JSpace records are unique when used with other systems such as 
+     * Handle.net.
+     * 
+     * @var  string[]  $identifiers  An array of external identifiers.
+     */
+    protected $identifiers = array();
 
     /**
      * Instatiates an instance of the PlgJSpaceGlacier class.
@@ -128,21 +136,32 @@ class JSpaceRecord extends JObject
 	 */
 	public function bind(&$array)
 	{
-		if (array_key_exists('metadata', $array))
-		{
-			if (is_array($array['metadata']))
-			{
-				$this->_metadata->loadArray($array['metadata']);
-				$metadata = (string)$this->_metadata;
-			}
-			else
-			{
-				$this->_metadata->loadString($array['metadata']);
-				$metadata = $array['metadata'];
-			}
-			
-			$this->metadata = $metadata;
-		}
+        if (array_key_exists('identifiers', $array))
+        {
+            if (!is_array(JArrayHelper::getValue($array, 'identifiers')))
+            {
+                $array['identifiers'] = array();
+            }
+            
+            $this->identifiers = array_merge($this->identifiers, $array['identifiers']);
+        }
+        
+        // re-initiate metadata registry, don't merge.
+        $this->_metadata = new JRegistry;
+        
+        if (array_key_exists('metadata', $array))
+        {
+            if (is_array(JArrayHelper::getValue($array, 'metadata')))
+            {
+                $this->_metadata->loadArray($array['metadata']);
+            }
+            else
+            {
+                $this->_metadata->loadString($array['metadata']);
+            }
+        }
+
+		$this->metadata = (string)$this->_metadata;
 
 		// Bind the array
 		if (!$this->setProperties($array))
@@ -219,6 +238,7 @@ class JSpaceRecord extends JObject
 		
 		$this->_updateChildCategories();
 
+		$this->_saveIdentifiers();
 		$this->_saveAssets($collection);
 		
 		$dispatcher->trigger('onContentAfterSave', array(static::$context, $this, $isNew));
@@ -264,8 +284,6 @@ class JSpaceRecord extends JObject
 	 */	 
 	private function _saveChildren($children)
 	{
-		$result = true;
-		
 		foreach ($children as $bkey=>$bundle)
 		{
 			$record = JSpaceRecord::getInstance();
@@ -299,6 +317,20 @@ class JSpaceRecord extends JObject
 			$record->save(array($bkey=>$bundle));
 		}
 	}
+	
+    /**
+     * Saves the alternative identifiers.
+     */
+    private function _saveIdentifiers()
+    {
+        foreach ($this->identifiers as $identifier)
+        {
+            $table = JTable::getInstance('RecordIdentifier', 'JSpaceTable');
+            $table->id = $identifier;
+            $table->record_id = $this->id;
+            $table->store();
+        }
+    }
 	
 	/**
 	 * Deletes a record.

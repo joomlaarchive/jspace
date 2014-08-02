@@ -32,6 +32,15 @@ CREATE TABLE IF NOT EXISTS `#__jspace_records` (
 	KEY `idx_jspace_record_categories_catid` (`catid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+-- Provides a table for storing alternative external identifiers against a record (E.g. handle.net).
+CREATE TABLE IF NOT EXISTS `#__jspace_record_identifiers` (
+    `id` VARCHAR(255) NOT NULL,
+    `record_id` INTEGER NOT NULL,
+    PRIMARY KEY (`id`, `record_id`),
+    KEY `idx_jspace_record_identifiers_id` (`id`),
+    KEY `idx_jspace_record_identifiers_record_id` (`record_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 CREATE TABLE IF NOT EXISTS `#__jspace_record_ancestors` (
 	`decendant` INTEGER NOT NULL DEFAULT 0,
 	`ancestor` INTEGER NOT NULL DEFAULT 0,

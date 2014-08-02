@@ -66,23 +66,32 @@ class PlgContentJSpaceWeblinks extends JPlugin
         {
             return true;
         }
-
-        $database = JFactory::getDbo();
-        $query = $database->getQuery(true);
         
-        $query
-            ->select(array('a.*', 'b.*'))
-            ->from($database->qn('#__jspace_references', 'a'))
-            ->join('INNER', $database->qn('#__weblinks', 'b').' ON '.$database->qn('b.id').'='.$database->qn('a.id'))
-            ->where($database->qn('context'). '='.$database->q('com_weblinks.weblink'));
-        
-        $weblinks = $database->setQuery($query)->loadAssocList();
-        
-        // restructure weblinks in a format the WebLinkList form field will understand.
-        $data->weblinks = array();
-        for ($i=0; $i < count($weblinks); $i++)
+        if (!$data)
         {
-            $data->weblinks[$weblinks[$i]['bundle']][] = $weblinks[$i];
+            return true;
+        }
+
+        if ($data->id)
+        {
+            $database = JFactory::getDbo();
+            $query = $database->getQuery(true);
+            
+            $query
+                ->select(array('a.*', 'b.*'))
+                ->from($database->qn('#__jspace_references', 'a'))
+                ->join('INNER', $database->qn('#__weblinks', 'b').' ON '.$database->qn('b.id').'='.$database->qn('a.id'))
+                ->where($database->qn('context').'='.$database->q('com_weblinks.weblink'))
+                ->where($database->qn('a.record_id').'='.$data->id);
+            
+            $weblinks = $database->setQuery($query)->loadAssocList();
+            
+            // restructure weblinks in a format the WebLinkList form field will understand.
+            $data->weblinks = array();
+            for ($i=0; $i < count($weblinks); $i++)
+            {
+                $data->weblinks[$weblinks[$i]['bundle']][] = $weblinks[$i];
+            }
         }
     }
     

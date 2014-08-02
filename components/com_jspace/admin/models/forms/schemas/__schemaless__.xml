@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form
+    name="__schemaless__"
+    label="COM_JSPACE_RECORD_SCHEMA_SCHEMALESS_LABEL"
+    description="COM_JSPACE_RECORD_SCHEMA_SCHEMALESS_DESC">
+    <fields name="metadata">
+        <fieldset name="jspacemetadata"
+            label="COM_JSPACE_RECORD_METADATA_LABEL">
+            <field 
+                name="title" 
+                type="jspace.metadataschemaless"
+                label="COM_JSPACE_RECORD_METADATA_TITLE_LABEL"
+                filter="JComponentHelper::filterText" 
+                required="true"/>
+        </fieldset>
+    </fields>
+</form>

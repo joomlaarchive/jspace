@@ -26,6 +26,6 @@ class JSpaceModelRecordSchemas extends JModelLegacy
 	
 	public function getItems()
 	{
-		return JSpaceFactory::getSchemas();
+        return JSpaceFactory::getSchemas();
 	}
 }

@@ -24,15 +24,15 @@ if (file_exists(dirname(dirname(__FILE__)) . '/defines.php')) {
 }
 
 if (!defined('_JDEFINES')) {
-	define('JPATH_BASE', dirname(dirname(__FILE__)));
-	require_once JPATH_BASE . '/includes/defines.php';
+    define('JPATH_BASE', dirname(dirname(__FILE__)));
+    require_once JPATH_BASE . '/includes/defines.php';
 }
 
 // Get the framework.
 if (file_exists(JPATH_LIBRARIES . '/import.legacy.php'))
-	require_once JPATH_LIBRARIES . '/import.legacy.php';	
+    require_once JPATH_LIBRARIES . '/import.legacy.php';
 else
-	require_once JPATH_LIBRARIES . '/import.php';
+    require_once JPATH_LIBRARIES . '/import.php';
 
 // Bootstrap the CMS libraries.
 require_once JPATH_LIBRARIES . '/cms.php';
@@ -42,15 +42,15 @@ require_once JPATH_CONFIGURATION . '/configuration.php';
 
 
 if (version_compare(JVERSION, "3.0", "l")) {
-	// Force library to be in JError legacy mode
-	JError::$legacy = true;
-	
-	// Import necessary classes not handled by the autoloaders
-	jimport('joomla.application.menu');
-	jimport('joomla.environment.uri');
-	jimport('joomla.event.dispatcher');
-	jimport('joomla.utilities.utility');
-	jimport('joomla.utilities.arrayhelper');
+    // Force library to be in JError legacy mode
+    JError::$legacy = true;
+    
+    // Import necessary classes not handled by the autoloaders
+    jimport('joomla.application.menu');
+    jimport('joomla.environment.uri');
+    jimport('joomla.event.dispatcher');
+    jimport('joomla.utilities.utility');
+    jimport('joomla.utilities.arrayhelper');
 }
 
 // include relevant tables.
@@ -80,47 +80,47 @@ class JSpaceCli extends JApplicationCli
 {
     public function doExecute()
     {
-    	// fool the system into thinking we are running as JSite with JSpace as the active component
-    	$_SERVER['HTTP_HOST'] = 'domain.com';
-		JFactory::getApplication('cli');
+        // fool the system into thinking we are running as JSite with JSpace as the active component
+        $_SERVER['HTTP_HOST'] = 'domain.com';
+        JFactory::getApplication('cli');
 
-		// Disable caching.
-		$config = JFactory::getConfig();
-		$config->set('caching', 0);
-		$config->set('cache_handler', 'file');
-		
-		if (($this->input->get('h') || $this->input->get('help')) && count($this->input->args) == 0)
-    	{
-    		$this->help();
-    		return;
-    	}
-    	
-    	$plugin = JArrayHelper::getValue($this->input->args, 0);
-		$action = JArrayHelper::getValue($this->input->args, 1);
-		$args = $this->input->getArray();
-    	
-    	if (array_search($plugin, $this->_getPlugins()) !== false)
-		{	
-			try 
-			{
-				$this->_executeCommand($plugin, $action, $args);			
-			} 
-			catch (Exception $e) 
-			{
-				$this->out($e->getMessage());
-				
-				if ($this->_isVerbose())
-				{
-					$this->out($e->getTraceAsString());
-				}
-			}
-		}
-		else
-		{
-			$this->out('No plugin specified.');
-			$this->help();
-		}
-		
+        // Disable caching.
+        $config = JFactory::getConfig();
+        $config->set('caching', 0);
+        $config->set('cache_handler', 'file');
+        
+        if (($this->input->get('h') || $this->input->get('help')) && count($this->input->args) == 0)
+        {
+            $this->help();
+            return;
+        }
+        
+        $plugin = JArrayHelper::getValue($this->input->args, 0);
+        $action = JArrayHelper::getValue($this->input->args, 1);
+        $args = $this->input->getArray();
+        
+        if (array_search($plugin, $this->_getPlugins()) !== false)
+        {    
+            try 
+            {
+                $this->_executeCommand($plugin, $action, $args);
+            } 
+            catch (Exception $e) 
+            {
+                $this->out($e->getMessage());
+                
+                if ($this->_isVerbose())
+                {
+                    $this->out($e->getTraceAsString());
+                }
+            }
+        }
+        else
+        {
+            $this->out('No plugin specified.');
+            $this->help();
+        }
+        
     }
  
     /**
@@ -131,11 +131,11 @@ class JSpaceCli extends JApplicationCli
      */
     protected function help()
     {
-		$pluginsList = implode("\n", $this->_getPlugins());
+        $pluginsList = implode("\n", $this->_getPlugins());
     
-    	echo <<<EOT
+        echo <<<EOT
 Usage: jspace [plugin] [action] [OPTIONS]
-    	
+        
 Provides tools for executing various JSpace actions.
 
 [plugin] is associated with the plugin which needs to be executed.
@@ -152,74 +152,74 @@ EOT;
     
     public function out($text = '', $nl = true)
     {
-    	if (!($this->input->get('q', false) || $this->input->get('quiet', false))) 
-    	{
-    		parent::out($text, $nl);
-    	}
-    	
-    	return $this;
+        if (!($this->input->get('q', false) || $this->input->get('quiet', false))) 
+        {
+            parent::out($text, $nl);
+        }
+        
+        return $this;
     }
     
     private function _executeCommand($plugin, $action, $args = array())
     {
-    	if ($plugin)
-    	{
-    		if (!is_a(JPluginHelper::getPlugin('jspace', $plugin), 'stdClass'))
-    		{
-    			throw new Exception('The specified plugin does not exist or is not enabled.');
-    		}
-    	}
-    	
-    	$dispatcher = JEventDispatcher::getInstance();
-    	
-    	JPluginHelper::importPlugin("content", $plugin, true, $dispatcher);
-    	
-    	return $dispatcher->trigger('onJSpaceExecuteCliCommand', array($action, $args));
+        if ($plugin)
+        {
+            if (!is_a(JPluginHelper::getPlugin('content', $plugin), 'stdClass'))
+            {
+                throw new Exception('The specified plugin does not exist or is not enabled.');
+            }
+        }
+        
+        $dispatcher = JEventDispatcher::getInstance();
+        
+        JPluginHelper::importPlugin("content", $plugin, true, $dispatcher);
+        
+        return $dispatcher->trigger('onJSpaceExecuteCliCommand', array($action, $args));
     }
 
     private function _isVerbose()
     {
-    	// Verbose can only be set if quiet is not set.
-    	if (!($this->input->get('q', false) || $this->input->get('quiet', false))) 
-    	{
-    		if ($this->input->get('v') || $this->input->get('verbose'))
-    		{
-    			return true;
-    		}
-    	}
-    	
-    	return false;
+        // Verbose can only be set if quiet is not set.
+        if (!($this->input->get('q', false) || $this->input->get('quiet', false))) 
+        {
+            if ($this->input->get('v') || $this->input->get('verbose'))
+            {
+                return true;
+            }
+        }
+        
+        return false;
     }
     
     private function _getPlugin()
     {
-    	return $this->input->getString('plugin', $this->input->getString('P', null));
+        return $this->input->getString('plugin', $this->input->getString('P', null));
     }
     
     private function _getPlugins()
     {
-		JPluginHelper::importPlugin('content');
-		
-		$dispatcher = JEventDispatcher::getInstance();
-		
-		$plugins = array();
-		
-		foreach ($dispatcher->get('_observers') as $observer)
-		{
-			if ($observer->get('_type') == 'jspace')
-			{
-				if (JPluginHelper::isEnabled('jspace', $observer->get('_name')))
-				{
-					if (method_exists($observer, 'onJSpaceExecuteCliCommand'))
-					{
-						$plugins[] = $observer->get('_name');
-					}
-				}
-			}
-		}
-		
-		return $plugins;
-	}
+        JPluginHelper::importPlugin('content');
+        
+        $dispatcher = JEventDispatcher::getInstance();
+        
+        $plugins = array();
+        
+        foreach ($dispatcher->get('_observers') as $observer)
+        {
+            if ($observer->get('_type') == 'content')
+            {
+                if (JPluginHelper::isEnabled('content', $observer->get('_name')))
+                {
+                    if (method_exists($observer, 'onJSpaceExecuteCliCommand'))
+                    {
+                        $plugins[] = $observer->get('_name');
+                    }
+                }
+            }
+        }
+        
+        return $plugins;
+    }
 }
  
 JApplicationCli::getInstance('JSpaceCli')->execute();
