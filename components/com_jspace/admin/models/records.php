@@ -151,7 +151,28 @@ class JSpaceModelRecords extends JModelList
 		// Join over the categories.
 		$query->select('c.id as catid, c.title AS category_title')
 		->join('LEFT', '#__categories AS c ON c.id = r.catid');
-		
+
+        // Filter by search in title.
+        $search = $this->getState('filter.search');
+
+        if (!empty($search))
+        {
+            if (stripos($search, 'id:') === 0)
+            {
+                $query->where('r.id = ' . (int) substr($search, 3));
+            }
+            elseif (stripos($search, 'author:') === 0)
+            {
+                $search = $db->quote('%' . $db->escape(substr($search, 7), true) . '%');
+                $query->where('(ua.name LIKE ' . $search . ' OR ua.username LIKE ' . $search . ')');
+            }
+            else
+            {
+                $search = $db->quote('%' . $db->escape($search, true) . '%');
+                $query->where('(r.title LIKE ' . $search . ' OR r.alias LIKE ' . $search . ')');
+            }
+        }
+        
 		// Filter by access level.
 		if ($access = $this->getState('filter.access'))
 		{
