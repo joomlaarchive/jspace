@@ -146,8 +146,11 @@ class JSpaceModelRecord extends JModelAdmin
     protected function preprocessForm(JForm $form, &$data, $group = 'content')
     {
         // force to array (perhaps move to $this->loadFormData())
-        $data = $data->getProperties();
-
+        if (is_a($data, "JObject"))
+        {
+            $data = $data->getProperties();
+        }
+        
         // try to get the schema from the posted data if it isn't in $data.
         if (!($schema = JArrayHelper::getValue($data, 'schema')))
         {

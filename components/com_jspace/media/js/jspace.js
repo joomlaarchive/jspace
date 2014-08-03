@@ -39,7 +39,8 @@
             e.preventDefault();
             
             var prefix = $(".jspace-add-field").data('jspace-prefix');
-            var length = $(".jspace-add-field").data('jspace-length');
+            var fields = $('[data-jspace-name^="'+prefix+'"]');
+            var length = fields.length;
             
             if (length == 1)
                 return;

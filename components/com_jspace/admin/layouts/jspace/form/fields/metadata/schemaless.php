@@ -27,6 +27,7 @@ JFactory::getDocument()->addScript(JUri::root().'media/com_jspace/js/jspace.js')
 </div>
 <?php endforeach; ?>
 
+<?php if (!count($displayData->value)) : ?>
 <div
     data-jspace-name="<?php echo $displayData->name; ?>[<?php echo count($displayData->value); ?>]">
     <input 
@@ -37,3 +38,4 @@ JFactory::getDocument()->addScript(JUri::root().'media/com_jspace/js/jspace.js')
 
     <button class="btn jspace-remove-field" type="button"><span class="icon-minus"></span></button>
 </div>
+<?php endif; ?>

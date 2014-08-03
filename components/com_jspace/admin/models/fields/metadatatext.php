@@ -23,4 +23,24 @@ class JSpaceFormFieldMetadataText extends JFormFieldText
 		$html = JLayoutHelper::render("jspace.form.fields.metadata.text", $this);
 		return $html;
 	}
+	
+    public function __get($name)
+    {
+        switch ($name) 
+        { 
+            case 'value':
+                if (!is_array($this->$name))
+                {
+                    $this->$name = array();
+                }
+                
+                return $this->$name;
+                
+                break;
+            
+            default:
+                return parent::__get($name);
+                break;
+        }
+    }
 }
