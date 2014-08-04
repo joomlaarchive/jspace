@@ -221,21 +221,16 @@ class PlgContentJSpaceWeblinks extends JPlugin
             $database = JFactory::getDbo();
             $query = $database->getQuery(true);
             
-            $query
-                ->delete($database->qn('#__jspace_references'))
-                ->where($database->qn('context'). '='.$database->q('com_weblinks.weblink'))
-                ->where($database->qn('record_id').'='.(int)$record->id);
-                
+            //@TODO Is it safe to delete web links here? What happens to history?
+            $query = 'DELETE r, w FROM '.$database->qn('#__jspace_references', 'r').' '.
+                     'INNER JOIN '.$database->qn('#__weblinks', 'w').' ON r.id = w.id '.
+                     'WHERE '.$database->qn('r.context').'='.$database->q('com_weblinks.weblink').' '.
+                     'AND '.$database->qn('r.record_id').'='.(int)$record->id;
+
             $database->setQuery($query)->execute();
             
-            $query = $database->getQuery(true);
-            
-            $query
-                ->delete($database->qn('#__weblinks'))
-                ->where($database->qn('context'). '='.$database->q('com_weblinks.weblink'))
-                ->where($database->qn('record_id').'='.(int)$record->id);
-                
-            $database->setQuery($query)->execute();
+            $table = new WeblinksTableWeblink();
+            $table->rebuild();
         }
         
         return true;
