@@ -121,7 +121,7 @@ JText::_('JUNDEFINED'); ?>
 							<?php endif;?>
 							
 							<?php if ($canEdit || $canEditOwn) : ?>
-								<?php echo str_repeat('<span class="gi">|&mdash;</span>', (int)$item->level - 1) ?>
+								<?php echo str_repeat('<span class="gi">|&mdash;</span>', (int)$item->level-1) ?>
 								<a href="<?php echo JRoute::_('index.php?option=com_jspace&task=record.edit&id=' . 
 $item->id); ?>" title="<?php echo JText::_('JACTION_EDIT'); ?>">
 									<?php echo $this->escape($item->title); ?></a>

@@ -26,6 +26,8 @@ class JSpaceRecord extends JObject
     protected static $context = 'com_jspace.record';
     
     protected static $instances = array();
+    
+    public $parent_id = 0;
 
     /**
      * External identifiers ensure JSpace records are unique when used with other systems such as 
@@ -212,11 +214,19 @@ class JSpaceRecord extends JObject
 		
 		$table = JTable::getInstance('Record', 'JSpaceTable');
 		
+		if (!($isNew = empty($this->id)))
+        {
+            $table->load($this->id);
+        }
+        
+        if ($isNew || $table->parent_id != $this->parent_id)
+        {
+            $table->setLocation($this->parent_id, 'last-child');
+        }
+		
 		$this->metadata = (string)$this->_metadata;
 		
 		$table->bind($this->getProperties());
-		
-		$isNew = empty($this->id);
 		
 		$result = $dispatcher->trigger('onContentBeforeSave', array(static::$context, $this, $isNew));
 		
@@ -227,17 +237,22 @@ class JSpaceRecord extends JObject
 		
 		if (!$result = $table->store())
 		{
-			JLog::add(JText::sprintf('JLIB_APPLICATION_ERROR_SAVE_FAILED', $table->getError()), JLog::CRITICAL, 'jspace');
+			JLog::add(__METHOD__." ".JText::sprintf('JLIB_APPLICATION_ERROR_SAVE_FAILED', $table->getError()), JLog::CRITICAL, 'jspace');
 			return false;
 		}
+
+        // Rebuild the tree path.
+        if (!$table->rebuildPath($table->id))
+        {
+            JLog::add(__METHOD__." ".JText::sprintf('JLIB_APPLICATION_ERROR_SAVE_FAILED', $table->getError()), JLog::CRITICAL, 'jspace');
+            return false;
+        }
 		
 		if (empty($this->id))
 		{
 			$this->id = $table->get('id');
 		}
 		
-		$this->_updateChildCategories();
-
 		$this->_saveIdentifiers();
 		$this->_saveAssets($collection);
 		
@@ -478,24 +493,5 @@ class JSpaceRecord extends JObject
 			$this->metadata = (string)$this->_metadata;
 			$this->save();
 		}
-	}
-	
-	/**
-	 * Updates the category id of this record's children.
-	 */
-	private function _updateChildCategories()
-	{
-        $database = JFactory::getDbo();
-	
-        $rTable = $database->qn(JTable::getInstance('Record', 'JSpaceTable')->getTableName(), 'r');
-        $aTable = $database->qn(JTable::getInstance('RecordAncestor', 'JSpaceTable')->getTableName(), 'a');
-        $join   = $aTable.' ON ('.$database->qn('a.decendant').'='.$database->qn('r.id').')';
-        $set    = $database->qn('r.catid').'='.(int)$this->catid;
-        $where  = $database->qn('a.ancestor').'='.$this->id;
-        
-        $query = $database->getQuery(true);
-        $query->update($rTable)->join('INNER', $join)->set($set)->where($where);
-        
-        $database->setQuery($query)->execute();
 	}
 }

@@ -15,6 +15,10 @@ CREATE TABLE IF NOT EXISTS `#__jspace_records` (
 	`publish_up` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
 	`publish_down` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
 	`metadata` TEXT NOT NULL,
+    `level` INTEGER NOT NULL DEFAULT 0,
+    `path` VARCHAR(1024) NOT NULL COMMENT 'The computed path of the record based on the alias field.',
+    `lft` INTEGER NOT NULL DEFAULT 0 COMMENT 'Nested set lft.',
+    `rgt` INTEGER NOT NULL DEFAULT 0 COMMENT 'Nested set rgt.',
 	`schema` VARCHAR(255) NOT NULL DEFAULT 'Record' COMMENT 'The schema to load as part of this record.',
 	`parent_id` INTEGER NOT NULL DEFAULT 0,
 	`ordering` INTEGER NOT NULL DEFAULT 0,
@@ -24,12 +28,14 @@ CREATE TABLE IF NOT EXISTS `#__jspace_records` (
 	PRIMARY KEY (`id`),
 	KEY `idx_jspace_records_access` (`access`),
 	KEY `idx_jspace_records_checkout` (`checked_out`),
-	KEY `idx_jspace_records_published` (`published`),
-	KEY `idx_jspace_records_parent_id` (`parent_id`),
-	KEY `idx_jspace_records_schema` (`schema`),
-	KEY `idx_jspace_records_createdby` (`created_by`),
-	KEY `idx_jspace_records_language` (`language`)
-	KEY `idx_jspace_record_categories_catid` (`catid`)
+    KEY `idx_jspace_records_published` (`published`),
+    KEY `idx_jspace_records_parent_id` (`parent_id`),
+    KEY `idx_jspace_records_schema` (`schema`),
+    KEY `idx_jspace_records_createdby` (`created_by`),
+    KEY `idx_jspace_records_language` (`language`)
+    KEY `idx_jspace_record_categories_catid` (`catid`),
+    KEY `idx_jspace_record_left_right` (`lft`,`rgt`),
+    KEY `idx_path` (`path`(255))
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Provides a table for storing alternative external identifiers against a record (E.g. handle.net).
@@ -125,4 +131,4 @@ VALUES
 "displayColumn":"title"},{"sourceColumn":"modified_by","targetTable":"#__users","targetColumn":"id",
 "displayColumn":"name"} ]}');
 
-INSERT INTO `#__jspace_records` (`title`, `alias`) VALUES ('JSPACE_ROOT_RECORD', 'root');
+INSERT INTO `#__jspace_records` (`title`, `alias`) VALUES ('JSpace_Record_Root', 'root');

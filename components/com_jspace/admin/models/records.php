@@ -35,6 +35,10 @@ class JSpaceModelRecords extends JModelList
 					'ordering', 'r.ordering',
 					'language', 'r.language',
 					'hits', 'r.hits',
+                    'level', 'r.level',
+                    'path', 'r.path',
+                    'lft', 'r.lft',
+                    'rgt', 'r.rgt',
 					'publish_up', 'r.publish_up',
 					'publish_down', 'r.publish_down',
 					'published', 'r.published',
@@ -117,13 +121,7 @@ class JSpaceModelRecords extends JModelList
 		// Get the parent title.
 		$query
 			->select('r2.title AS parent_title')
-			->join('LEFT', '#__jspace_records AS r2 ON r.parent_id = r2.id');			
-
-		// Get the ancestry count.
-		$query
-			->select('COUNT(ra.ancestor) AS level')
-			->join('INNER', '#__jspace_record_ancestors AS ra ON r.id = ra.decendant')			
-			->order(array('ra.ancestor'));
+			->join('LEFT', '#__jspace_records AS r2 ON r.parent_id = r2.id');
 		
 		// Join over the language
 		$query->select('l.title AS language_title')
