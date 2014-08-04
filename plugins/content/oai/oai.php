@@ -35,11 +35,13 @@ class PlgContentOAI extends JPlugin
 	
 	public function onJSpaceExecuteCliCommand($action, $options = array())
 	{
+        $this->params->loadArray(array('args'=>$options));
+
 		$application = JFactory::getApplication('cli');
-		
+
 		$cli = (get_class($application) === 'JApplicationCli');
-		$quiet = (array_key_exists('q', $options) || array_key_exists('quiet', $options));
-		$help = (array_key_exists('h', $options) || array_key_exists('help', $options));
+		$quiet = ($this->params->get('args.q') || $this->params->get('args.quiet'));
+		$help = ($this->params->get('args.h') || $this->params->get('args.help'));
 
 		$verbose = ($cli && !($help || $quiet));
 		
@@ -47,7 +49,7 @@ class PlgContentOAI extends JPlugin
 		
 		if ($verbose)
 		{
-			$application->out($action.' started '.(string)$start);
+			$this->out($action.' started '.(string)$start);
 		}
 		
 		try
@@ -86,7 +88,7 @@ class PlgContentOAI extends JPlugin
 			
 			if ($verbose)
 			{
-				$application->out($e->getMessage());
+				$this->out($e->getMessage());
 			}
 		}
 		
@@ -94,8 +96,8 @@ class PlgContentOAI extends JPlugin
 		
 		if ($verbose)
 		{
-			$application->out($action.' ended '.(string)$end);
-			$application->out($start->diff($end)->format("%H:%I:%S"));
+			$this->out($action.' ended '.(string)$end);
+			$this->out($start->diff($end)->format("%H:%I:%S"));
 		}
 	}
 	
@@ -115,7 +117,6 @@ class PlgContentOAI extends JPlugin
 				break;
 				
 			case 1:
-			
 			default:
 				$class = "JSpaceIngestionOAIHarvester";
 				break;
@@ -137,6 +138,7 @@ class PlgContentOAI extends JPlugin
 			
 			foreach ($methods as $method)
 			{
+                $this->out('executing '.$method.' on category '.$category->title);
 				$harvester->$method();
 			}
 		}
@@ -153,21 +155,23 @@ class PlgContentOAI extends JPlugin
 	 */
 	private function _getOAICategories()
 	{
-		$id = JArrayHelper::getValue($options, 'category', JArrayHelper::getValue($options, 'c', 0));
-				
+        $id = $this->params->get('args.c');
+		$id = $this->params->get('args.category', $id);
+
 		$keys = array();
-		
+
 		if ($id)
 		{
 			$keys[] = $id; 
 		}
-	
+
 		$database = JFactory::getDbo();
 		
 		$query = $database->getQuery(true);
 		
 		$select = array(
 			$database->qn('c.id'), 
+            $database->qn('c.title'), 
 			$database->qn('c.language'), 
 			$database->qn('c.access'), 
 			$database->qn('c.published'), 
@@ -261,13 +265,6 @@ class PlgContentOAI extends JPlugin
 	 */
 	private function _help()
 	{
-		$application = JFactory::getApplication('cli');
-		
-		if (get_class($application) !== 'JApplicationCli')
-		{
-			return;
-		}
-		
     	$out = <<<EOT
 Usage: jspace oai [OPTIONS] [action]
 
@@ -287,6 +284,21 @@ Provides OAI-based functions within JSpace.
   
 EOT;
 
-		$application->out($out);
+        $this->out($out);
 	}
+	
+    public function out($out)
+    {
+        $application = JFactory::getApplication('cli');
+        
+        if (get_class($application) !== 'JApplicationCli')
+        {
+            return;
+        }
+ 
+        if (!$this->params->get('args.q') && !$this->params->get('args.quiet'))
+        {
+            $application->out($out);
+        }
+    }
 }

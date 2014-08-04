@@ -57,7 +57,7 @@ class PlgJOAIOAIDC extends JPlugin
 		{
 			return;
 		}
-		
+
 		$metadata = new JRegistry();
 		
 		$registry = new JSpaceMetadataRegistry('oai_dc');
