@@ -74,7 +74,18 @@ class PlgJOAIOAIDC extends JPlugin
 				{
 					if ($key = $registry->getKey($keyns.':'.$key))
 					{
-						$metadata->set($key, (string)$value);
+                        if (is_array($metadata->get($key)))
+                        {
+                            $array = $metadata->get($key);
+                        }
+                        else
+                        {
+                            $array = array();
+                        }
+                        
+                        $array[] = (string)$value;
+                        
+                        $metadata->set($key, $array);
 					}
 				}
 			}
