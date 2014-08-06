@@ -461,24 +461,42 @@ class JSpaceModelRecord extends JModelAdmin
      */
     private function _mapToSchemalessMetadata($metadata, JForm $form)
     {
-        foreach ($metadata as $key=>$array)
+        // first find the metadataschemaless field.
+        $fields = $form->getGroup('metadata'); 
+        $schemaless = null;
+        
+        while (($field = current($fields)) && !$schemaless)
         {
-            if (!$form->getField($key, 'metadata'))
+            if ($field->type == 'jspace.metadataschemaless')
             {
-                if (!JArrayHelper::getValue($metadata, 'title'))
+                $schemaless = $field->fieldname;
+            }
+            
+            next($fields);
+        }
+    
+        // if found, load it with unmapped values.
+        if ($schemaless)
+        {
+            foreach ($metadata as $key=>$array)
+            {
+                if (!$form->getField($key, 'metadata'))
                 {
-                    $metadata['title'] = array();
+                    if (!JArrayHelper::getValue($metadata, $schemaless))
+                    {
+                        $metadata['$schemaless'] = array();
+                    }
+                    
+                    foreach ($array as $value)
+                    {
+                        $metadata['$schemaless'][] = array('name'=>$key,'value'=>$value);
+                    }
+                    
+                    unset($metadata[$key]);
                 }
-                
-                foreach ($array as $value)
-                {
-                    $metadata['title'][] = array('name'=>$key,'value'=>$value);
-                }
-                
-                unset($metadata[$key]);
             }
         }
-
+        
         return $metadata;
     }
 }
