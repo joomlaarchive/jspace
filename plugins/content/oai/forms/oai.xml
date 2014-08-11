@@ -4,6 +4,17 @@
 		<fieldset name="oai"
 			label="PLG_CONTENT_OAI_FIELDSET_LABEL"
             description="PLG_CONTENT_OAI_FIELDSET_DESC">
+            <field 
+                name="oai_status" 
+                type="list" 
+                default="-1" 
+                label="PLG_CONTENT_OAI_FIELD_STATUS_LABEL" 
+                description="PLG_CONTENT_OAI_FIELD_STATUS_DESC"
+                class="chzn-color-state">
+                <option value="-1">PLG_CONTENT_OAI_FIELD_STATUS_NOHARVEST</option>
+                <option value="0">PLG_CONTENT_OAI_FIELD_STATUS_DISABLED</option>
+                <option value="1">PLG_CONTENT_OAI_FIELD_STATUS_ENABLED</option>
+            </field>
 			<field
 				name="oai_url"
 				type="url"

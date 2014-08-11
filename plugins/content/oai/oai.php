@@ -198,7 +198,7 @@ class PlgContentOAI extends JPlugin
 			$params = new JRegistry();
 			$params->loadString($value->params);
 			
-			if ($params->get('oai_url'))
+			if ($params->get('oai_url') && $params->get('oai_status') == '1')
 			{
 				
 				$categories[$key]->params = $params;
@@ -229,6 +229,7 @@ class PlgContentOAI extends JPlugin
 
         JForm::addFormPath(__DIR__.'/forms');
         $form->loadFile('oai', false);
+
         return true;
     }
     
@@ -238,13 +239,13 @@ class PlgContentOAI extends JPlugin
         {
             if (isset($data->extension) && $data->extension == 'com_jspace')
             {
-                $old = JTable::getInstance('Category');
-                if ($old->load($data->id))
+                $category = JTable::getInstance('Category');
+                if ($category->load($data->id))
                 {
-                    $oldParams = new JRegistry($old->params);
+                    $params = new JRegistry($category->params);
                     $newParams = new JRegistry($data->params);
                     
-                    if ($oldParams->get('oai_url') != $newParams->get('oai_url'))
+                    if ($params->get('oai_url') != $newParams->get('oai_url'))
                     {
                         $database = JFactory::getDbo();
                         $query = $database->getQuery(true);
@@ -254,6 +255,33 @@ class PlgContentOAI extends JPlugin
                             
                         $database->setQuery($query);
                         $database->execute();
+                    }
+                }
+            }
+        }
+    }
+    
+    public function onContentAfterSave($context, $data, $isNew)
+    {
+        if ($context == 'com_categories.category')
+        {
+            if (isset($data->extension) && $data->extension == 'com_jspace')
+            {
+                $category = JTable::getInstance('Category');
+                if ($category->load($data->id))
+                {
+                    $params = new JRegistry($category->params);
+                    $newParams = new JRegistry($data->params);
+
+                    if ($params->get('oai_url') && (int)$newParams->get('oai_status') === -1)
+                    {
+                        $newParams->set('oai_url', '');
+                        $newParams->set('oai_harvest', 0);
+                        $newParams->set('oai_set', '');
+                        
+                        $category->params = (string)$newParams;
+
+                        $category->store();
                     }
                 }
             }
