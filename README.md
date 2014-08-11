@@ -3,4 +3,4 @@ jspace
 
 JSpace extensions for Joomla!
 
-http://knoweledgearc.com
+http://knowledgearc.com
