@@ -97,27 +97,32 @@ CREATE INDEX `idx_extensions_folder_client_id` ON `jos_extensions` (`element`,`f
 CREATE INDEX `idx_extensions_lookup` ON `jos_extensions` (`type`,`element`,`folder`,`client_id`);
 
 CREATE TABLE `jos_jspace_records` (
-	`id` INTEGER PRIMARY KEY AUTOINCREMENT,
-	`asset_id` INTEGER NOT NULL DEFAULT 0,
-	`title` varchar(1024) NOT NULL,
-	`alias` VARCHAR(255) NOT NULL DEFAULT '',
-	`published` TINYINT NOT NULL DEFAULT 0,
-	`hits` INTEGER NOT NULL DEFAULT 0,
-	`language` char(7) NOT NULL,
-	`created` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
-	`created_by` INTEGER NOT NULL DEFAULT 0,
-	`modified` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
-	`modified_by` INTEGER NOT NULL DEFAULT 0,
-	`checked_out` INTEGER NOT NULL DEFAULT 0,
-	`checked_out_time` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
-	`publish_up` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
-	`publish_down` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
-	`metadata` TEXT NOT NULL,
-	`schema` VARCHAR(255) NOT NULL DEFAULT 'record',
-	`parent_id` INTEGER NOT NULL DEFAULT 0,
-	`ordering` INTEGER NOT NULL DEFAULT 0,
-	`version` INTEGER NOT NULL DEFAULT 1,
-	`access` INTEGER NOT NULL DEFAULT 0
+    `id` INTEGER PRIMARY KEY AUTOINCREMENT,
+    `asset_id` INTEGER NOT NULL DEFAULT 0,
+    `title` VARCHAR(1024) NOT NULL,
+    `alias` VARCHAR(255) NOT NULL DEFAULT '',
+    `published` TINYINT NOT NULL DEFAULT 0,
+    `hits` INTEGER NOT NULL DEFAULT 0,
+    `language` CHAR(7) NOT NULL,
+    `created` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
+    `created_by` INTEGER NOT NULL DEFAULT 0,
+    `modified` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
+    `modified_by` INTEGER NOT NULL DEFAULT 0,
+    `checked_out` INTEGER NOT NULL DEFAULT 0,
+    `checked_out_time` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
+    `publish_up` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
+    `publish_down` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
+    `metadata` TEXT NOT NULL,
+    `level` INTEGER NOT NULL DEFAULT 0,
+    `path` VARCHAR(1024) NOT NULL,
+    `lft` INTEGER NOT NULL DEFAULT 0,
+    `rgt` INTEGER NOT NULL DEFAULT 0,
+    `schema` VARCHAR(255) NOT NULL DEFAULT '[No Schema]',
+    `parent_id` INTEGER NOT NULL DEFAULT 0,
+    `ordering` INTEGER NOT NULL DEFAULT 0,
+    `version` INTEGER NOT NULL DEFAULT 1,
+    `access` INTEGER NOT NULL DEFAULT 0,
+    `catid` INTEGER NOT NULL
 );
 
 CREATE INDEX `idx_jspace_records_access` ON `jos_jspace_records` (`access`);
@@ -127,24 +132,6 @@ CREATE INDEX `idx_jspace_records_parent_id` ON `jos_jspace_records` (`parent_id`
 CREATE INDEX `idx_jspace_records_schema` ON `jos_jspace_records` (`schema`);
 CREATE INDEX `idx_jspace_records_createdby` ON `jos_jspace_records` (`created_by`);
 CREATE INDEX `idx_jspace_records_language` ON `jos_jspace_records` (`language`);
-
-CREATE TABLE `jos_jspace_record_ancestors` (
-	`decendant` INTEGER NOT NULL DEFAULT 0,
-	`ancestor` INTEGER NOT NULL DEFAULT 0,
-	PRIMARY KEY(`decendant`, `ancestor`)
-);
-
-CREATE INDEX `idx_jspace_record_ancestors_decendant` ON `jos_jspace_record_ancestors` (`decendant`);
-CREATE INDEX `idx_jspace_record_ancestors_ancestor` ON `jos_jspace_record_ancestors` (`ancestor`);
-
-CREATE TABLE `jos_jspace_record_categories` (
-	`catid` INTEGER NOT NULL,
-	`record_id` INTEGER NOT NULL,
-	PRIMARY KEY(`catid`, `record_id`)
-);
-
-CREATE INDEX `idx_jspace_record_categories_catid` ON `jos_jspace_record_categories` (`catid`);
-CREATE INDEX `idx_jspace_record_categories_record_id` ON `jos_jspace_record_categories` (`record_id`);
 
 CREATE TABLE `jos_jspace_assets` (
 	`id` INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -274,3 +261,12 @@ CREATE TABLE `jos_ucm_base` (
 CREATE INDEX `idx_ucm_base_ucm_item_id` ON `jos_ucm_base` (`ucm_item_id`);
 CREATE INDEX `idx_ucm_base_ucm_type_id` ON `jos_ucm_base` (`ucm_type_id`);
 CREATE INDEX `idx_ucm_base_ucm_language_id` ON `jos_ucm_base` (`ucm_language_id`);
+
+CREATE TABLE `jos_jspacedspace_records` (
+    `record_id` INTEGER NOT NULL,
+    `dspace_id` INTEGER NOT NULL,
+    PRIMARY KEY (`record_id`, `dspace_id`)
+);
+
+CREATE INDEX `idx_jspacedspace_records_record_id` ON `jos_jspacedspace_records` (`record_id`);
+CREATE INDEX `idx_jspacedspace_records_dspace_id` ON `jos_jspacedspace_records` (`dspace_id`);

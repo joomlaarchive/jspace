@@ -146,24 +146,9 @@ class JSpaceRecord extends JObject
             }
             
             $this->identifiers = array_merge($this->identifiers, $array['identifiers']);
-        }
+        }        
         
-        // re-initiate metadata registry, don't merge.
-        $this->_metadata = new JRegistry;
-        
-        if (array_key_exists('metadata', $array))
-        {
-            if (is_array(JArrayHelper::getValue($array, 'metadata')))
-            {
-                $this->_metadata->loadArray($array['metadata']);
-            }
-            else
-            {
-                $this->_metadata->loadString($array['metadata']);
-            }
-        }
-
-		$this->metadata = (string)$this->_metadata;
+        $this->metadata = JArrayHelper::getValue($array, 'metadata', array());
 
 		// Bind the array
 		if (!$this->setProperties($array))
@@ -224,8 +209,6 @@ class JSpaceRecord extends JObject
             $table->setLocation($this->parent_id, 'last-child');
         }
 		
-		$this->metadata = (string)$this->_metadata;
-		
 		$table->bind($this->getProperties());
 		
 		$result = $dispatcher->trigger('onContentBeforeSave', array(static::$context, $this, $isNew));
@@ -237,32 +220,32 @@ class JSpaceRecord extends JObject
 		
 		if (!$result = $table->store())
 		{
-			JLog::add(__METHOD__." ".JText::sprintf('JLIB_APPLICATION_ERROR_SAVE_FAILED', $table->getError()), JLog::CRITICAL, 'jspace');
+			JLog::add(__METHOD__." ".$table->getError(), JLog::CRITICAL, 'jspace');
 			return false;
 		}
+
+        if (empty($this->id))
+        {
+            $this->id = $table->get('id');
+        }
 
         // Rebuild the tree path.
         if (!$table->rebuildPath($table->id))
         {
-            JLog::add(__METHOD__." ".JText::sprintf('JLIB_APPLICATION_ERROR_SAVE_FAILED', $table->getError()), JLog::CRITICAL, 'jspace');
+            JLog::add(__METHOD__." ".$table->getError(), JLog::CRITICAL, 'jspace');
             return false;
         }
-		
-		if (empty($this->id))
-		{
-			$this->id = $table->get('id');
-		}
-		
-		$this->_saveIdentifiers();
-		$this->_saveAssets($collection);
-		
-		$dispatcher->trigger('onContentAfterSave', array(static::$context, $this, $isNew));
-		
-		$this->_saveChildren($children);
-		
-		return $result;	
-	}
-	
+
+        $this->_saveIdentifiers();
+        $this->_saveAssets($collection);
+
+        $dispatcher->trigger('onContentAfterSave', array(static::$context, $this, $isNew));
+
+        $this->_saveChildren($children);
+
+        return $result;
+    }
+
 	/**
 	 * Saves the record's assets.
 	 *
@@ -386,7 +369,7 @@ class JSpaceRecord extends JObject
 			return false;
 		}
 		
-		$this->_metadata->loadString($table->metadata);
+		$this->metadata = $table->metadata;
 		
 		$this->setProperties($table->getProperties());
 
@@ -494,4 +477,55 @@ class JSpaceRecord extends JObject
 			$this->save();
 		}
 	}
+
+    // @todo Override until JObject declares __set.
+    public function set($name, $value = null)
+    {
+        switch ($name)
+        {
+            case 'metadata':
+                // reset the registry when metadata set.
+                $this->_metadata = new JRegistry;
+
+                if (is_array($value))
+                {
+                    $this->_metadata->loadArray($value);
+                }
+                else if (is_a($value, 'JRegistry'))
+                {
+                    $this->_metadata = $value;
+                }
+                else if (is_string($value))
+                {
+                    $this->_metadata->loadString($value);
+                }
+                else
+                {
+                    throw new Exception('Invalid metadata format. Not a JRegistry, array or string.');
+                }
+
+                $this->$name = (string)$this->_metadata;
+
+                break;
+                
+            default:
+                return parent::set($name, $value);
+                break;
+        }
+    }
+    
+    // @todo Override until JObject declares __get.
+    public function get($name, $default = null)
+    {
+        switch ($name)
+        {
+            case 'metadata':
+                return $this->_metadata;
+                break;
+                
+            default:
+                return parent::get($name, $default);
+                break;        
+        }
+    }
 }

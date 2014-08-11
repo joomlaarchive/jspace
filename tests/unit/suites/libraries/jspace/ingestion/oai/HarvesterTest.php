@@ -238,8 +238,6 @@ class JSpaceIngestionOAIHarvesterTest extends PHPUnit_Extensions_Database_TestCa
 		$dataSet->addTable('jos_usergroups', JSPACEPATH_TESTS.'/stubs/database/jos_usergroups.csv');
 		$dataSet->addTable('jos_viewlevels', JSPACEPATH_TESTS.'/stubs/database/jos_viewlevels.csv');
 		$dataSet->addTable('jos_jspace_records', JSPACEPATH_TESTS.'/stubs/database/jos_jspace_records.csv');
-		$dataSet->addTable('jos_jspace_record_ancestors', JSPACEPATH_TESTS.'/stubs/database/jos_jspace_record_ancestors.csv');
-		$dataSet->addTable('jos_jspace_record_categories', JSPACEPATH_TESTS.'/stubs/database/jos_jspace_record_categories.csv');
 		$dataSet->addTable('jos_jspace_assets', JSPACEPATH_TESTS.'/stubs/database/jos_jspace_assets.csv');
 		$dataSet->addTable('jos_jspace_cache', JSPACEPATH_TESTS.'/stubs/database/jos_jspace_cache.csv');
 		$dataSet->addTable('jos_assets', JSPACEPATH_TESTS.'/stubs/database/jos_assets.csv');

@@ -228,9 +228,6 @@ class PlgContentJSpaceWeblinks extends JPlugin
                      'AND '.$database->qn('r.record_id').'='.(int)$record->id;
 
             $database->setQuery($query)->execute();
-            
-            $table = new WeblinksTableWeblink();
-            $table->rebuild();
         }
         
         return true;
