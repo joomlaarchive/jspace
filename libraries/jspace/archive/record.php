@@ -138,6 +138,11 @@ class JSpaceRecord extends JObject
 	 */
 	public function bind(&$array)
 	{
+        if ((!empty($array['tags']) && $array['tags'][0] != ''))
+        {
+            $this->newTags = $array['tags'];
+        }
+        
         if (array_key_exists('identifiers', $array))
         {
             if (!is_array(JArrayHelper::getValue($array, 'identifiers')))
@@ -210,6 +215,7 @@ class JSpaceRecord extends JObject
         }
 		
 		$table->bind($this->getProperties());
+		$table->newTags = $this->newTags;
 		
 		$result = $dispatcher->trigger('onContentBeforeSave', array(static::$context, $this, $isNew));
 		

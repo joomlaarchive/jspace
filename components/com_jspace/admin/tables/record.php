@@ -27,7 +27,9 @@ class JSpaceTableRecord extends JTableNested
 	public function __construct(&$db)
 	{
 		parent::__construct('#__jspace_records', 'id', $db);
-		
+
+        JTableObserverTags::createObserver($this, array('typeAlias'=>'com_jspace.record'));
+
 		JObserverMapper::addObserverClassToClass(
 			'JTableObserverContenthistory', 
 			get_class($this), 

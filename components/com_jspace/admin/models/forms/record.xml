@@ -170,5 +170,14 @@
 			size="10" 
 			default="0"
 			readonly="true"/>
+        
+        <field
+            name="tags" 
+            type="tag" 
+            mode="ajax"
+            label="JTAG"
+            description="JTAG_DESC"
+            multiple="true">
+        </field>
 	</fieldset>
 </form>

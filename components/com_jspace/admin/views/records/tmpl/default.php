@@ -1,6 +1,9 @@
 <?php
 defined('_JEXEC') or die;
 
+$document = JFactory::getDocument();
+$document->addScript('https://d1bxh8uas1mnw7.cloudfront.net/assets/embed.js');
+
 JHtml::_('bootstrap.tooltip');
 JHtml::_('behavior.multiselect');
 JHtml::_('formbehavior.chosen', 'select');
@@ -130,6 +133,7 @@ $item->id); ?>" title="<?php echo JText::_('JACTION_EDIT'); ?>">
 								<span title="<?php echo JText::sprintf('JFIELD_ALIAS_LABEL', 
 $this->escape($item->alias)); ?>"><?php echo 'title='.$this->escape($item->title); ?></span>
 							<?php endif; ?>
+							<div class='altmetric-embed' data-badge-type='4' data-handle="10673/5"></div>
 							
 							<div class="small">
 								<?php

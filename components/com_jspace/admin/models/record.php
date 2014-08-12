@@ -78,7 +78,11 @@ class JSpaceModelRecord extends JModelAdmin
             $record = JSpaceRecord::getInstance($parent);
             $item->parentTitle = $record->title;
         }
-
+        
+        // Add tags.
+        $item->tags = new JHelperTags;
+        $item->tags->getTagIds($item->id, $this->context);
+        
         // Override the base user data with any data in the session.
         $data = $app->getUserState('com_jspace.edit.record.data', array());
         foreach ($data as $k => $v)
