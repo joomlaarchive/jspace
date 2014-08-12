@@ -11,10 +11,14 @@
     <description>LIB_JSPACE_XML_DESCRIPTION</description>
 	
     <files folder="libraries">
-        <folder>archive</folder>      
+        <folder>archive</folder>
+        <folder>filesystem</folder>
         <folder>fineuploader</folder>
         <folder>form</folder>
+        <folder>html</folder>
         <folder>image</folder>
+        <folder>ingestion</folder>
+        <folder>metadata</folder>
         <folder>multifileupload</folder>
         <filename>factory.php</filename>
     </files>

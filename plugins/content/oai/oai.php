@@ -250,7 +250,7 @@ class PlgContentOAI extends JPlugin
                         $database = JFactory::getDbo();
                         $query = $database->getQuery(true);
                         $query
-                            ->delete($database->qn('#__jspaceoai_harvests'))
+                            ->delete($database->qn('#__jspace_harvests'))
                             ->where($database->qn('catid').'='.(int)$data->id);
                             
                         $database->setQuery($query);
