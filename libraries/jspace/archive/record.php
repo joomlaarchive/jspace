@@ -215,7 +215,11 @@ class JSpaceRecord extends JObject
         }
 		
 		$table->bind($this->getProperties());
-		$table->newTags = $this->newTags;
+		
+		if (isset($this->newTags))
+		{
+            $table->newTags = $this->newTags;
+		}
 		
 		$result = $dispatcher->trigger('onContentBeforeSave', array(static::$context, $this, $isNew));
 		
@@ -226,7 +230,7 @@ class JSpaceRecord extends JObject
 		
 		if (!$result = $table->store())
 		{
-			JLog::add(__METHOD__." ".$table->getError(), JLog::CRITICAL, 'jspace');
+			JLog::add(__METHOD__." Cannot save. ".$table->getError(), JLog::CRITICAL, 'jspace');
 			return false;
 		}
 
@@ -238,7 +242,7 @@ class JSpaceRecord extends JObject
         // Rebuild the tree path.
         if (!$table->rebuildPath($table->id))
         {
-            JLog::add(__METHOD__." ".$table->getError(), JLog::CRITICAL, 'jspace');
+            JLog::add(__METHOD__." Cannot rebuild path. ".$table->getError(), JLog::CRITICAL, 'jspace');
             return false;
         }
 
@@ -324,6 +328,8 @@ class JSpaceRecord extends JObject
 	
     /**
      * Saves the alternative identifiers.
+     * 
+     * @todo Investigate moving to JSpaceTableRecord.
      */
     private function _saveIdentifiers()
     {
@@ -335,21 +341,37 @@ class JSpaceRecord extends JObject
             $table->store();
         }
     }
-	
-	/**
-	 * Deletes a record.
-	 *
-	 * @throw  Exception  When delete fails.
-	 */
-	public function delete()
-	{
-		JPluginHelper::importPlugin('content');
-		$dispatcher = JEventDispatcher::getInstance();
-		
-		$table = self::getTable('Record');
-		$table->load($this->id);
-		
-		$dispatcher->trigger('onContentBeforeDelete', array(static::$context, $table));
+
+    /**
+     * Deletes a record.
+     *
+     * @throw  Exception  When delete fails.
+     */
+    public function delete()
+    {
+        JPluginHelper::importPlugin('content');
+        $dispatcher = JEventDispatcher::getInstance();
+
+        $table = self::getTable('Record');
+        $table->load($this->id);
+
+        $dispatcher->trigger('onContentBeforeDelete', array(static::$context, $table));
+    
+        $database = JFactory::getDbo();
+        $query = $database->getQuery(true);
+        
+        $query
+            ->select(array($database->qn('id'), $database->qn('record_id')))
+            ->from($database->qn('#__jspace_record_identifiers'))
+            ->where($database->qn('record_id').'='.(int)$this->id);
+
+        $identifiers = $database->setQuery($query)->loadObjectList();
+            
+        foreach ($identifiers as $identifier)
+        {
+            $table = JTable::getInstance('RecordIdentifier', 'JSpaceTable');
+            $table->delete($identifier->id);
+        }
 		
 		foreach ($this->getAssets() as $asset)
 		{

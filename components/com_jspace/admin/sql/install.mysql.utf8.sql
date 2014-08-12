@@ -141,4 +141,4 @@ VALUES
 "displayColumn":"title"},{"sourceColumn":"modified_by","targetTable":"#__users","targetColumn":"id",
 "displayColumn":"name"} ]}');
 
-INSERT INTO `#__jspace_records` (`title`, `alias`) VALUES ('JSpace_Record_Root', 'root');
+INSERT INTO `#__jspace_records` (`asset_id`, `title`, `alias`, `published`, `hits`, `language`, `created`, `created_by`, `metadata`, `path`, `lft`, `rgt`, `catid`) VALUES (0, 'JSpace_Record_Root', 'root', 1, 0, '*', '2011-01-01 00:00:01', 42, '{}', '', 0, 1, 0);
