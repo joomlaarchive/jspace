@@ -15,11 +15,13 @@
         <folder>filesystem</folder>
         <folder>fineuploader</folder>
         <folder>form</folder>
+        <folder>helper</folder>
         <folder>html</folder>
         <folder>image</folder>
         <folder>ingestion</folder>
         <folder>metadata</folder>
         <folder>multifileupload</folder>
+        <folder>table</folder>
         <filename>factory.php</filename>
     </files>
     
