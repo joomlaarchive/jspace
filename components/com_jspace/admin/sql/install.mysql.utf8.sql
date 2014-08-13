@@ -135,11 +135,12 @@ VALUES
 '', 
 '{"common":{"core_content_item_id":"id","core_title":"title","core_state":"state","core_alias":"alias","core_created_time":"created","core_modified_time":"modified","core_body":"description", "core_hits":"hits","core_publish_up":"publish_up","core_publish_down":"publish_down","core_access":"access", "core_params":"params", "core_featured":"featured", "core_language":"language", "core_images":"images", "core_urls":"urls", "core_version":"version", "core_ordering":"ordering", "core_metakey":"metakey", "core_metadesc":"metadesc", "core_catid":"catid", "core_xreference":"xreference", "asset_id":"asset_id"}, "special":{"metadata":"metadata"}}', 
 'JSpaceHelperRoute::getRecordRoute', 
-'{"formFile":"administrator\/components\/com_jspace\/models\/forms\/record.xml", "hideFields":["metadata","asset_id","checked_out","checked_out_time","version"],"ignoreChanges":["modified_by", "modified", "checked_out", "checked_out_time", "version", "hits","lft","rgt","level","path"],"convertToInt":["publish_up", 
+'{"formFile":"administrator\/components\/com_jspace\/models\/forms\/record.xml", "hideFields":["metadata","asset_id","checked_out","checked_out_time","version","hits","lft","rgt","level","path"],"ignoreChanges":["modified_by", "modified", "checked_out", "checked_out_time", "version", "hits","lft","rgt","level","path"],"convertToInt":["publish_up", 
 "publish_down","ordering"],"displayLookup":[{"sourceColumn":"catid","targetTable":"#__categories","targetColumn":"id",
 "displayColumn":"title"},{"sourceColumn":"created_by","targetTable":"#__users","targetColumn":"id",
 "displayColumn":"name"},{"sourceColumn":"access","targetTable":"#__viewlevels","targetColumn":"id",
 "displayColumn":"title"},{"sourceColumn":"modified_by","targetTable":"#__users","targetColumn":"id",
-"displayColumn":"name"} ]}');
+"displayColumn":"name"},{"sourceColumn":"parent_id","targetTable":"#__jspace_records","targetColumn":"id",
+"displayColumn":"title"}]}');
 
 INSERT INTO `#__jspace_records` (`asset_id`, `title`, `alias`, `published`, `hits`, `language`, `created`, `created_by`, `metadata`, `path`, `lft`, `rgt`, `catid`) VALUES (0, 'JSpace_Record_Root', 'root', 1, 0, '*', '2011-01-01 00:00:01', 42, '{}', '', 0, 1, 0);
