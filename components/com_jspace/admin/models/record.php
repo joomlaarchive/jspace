@@ -22,13 +22,13 @@ jimport('jspace.clamav.client');
  */
 class JSpaceModelRecord extends JModelAdmin
 {
-    protected $context;
+    protected $typeAlias;
 
     public function __construct($config = array())
     {
         parent::__construct($config);
         
-        $this->context = $this->get('option').'.'.$this->getName();
+        $this->typeAlias = $this->get('option').'.'.$this->getName();
     }
 
     public function getItem($pk = null)
@@ -55,7 +55,7 @@ class JSpaceModelRecord extends JModelAdmin
                 $associations = JLanguageAssociations::getAssociations(
                     $this->option, 
                     '#__jspace_records', 
-                    $this->context, 
+                    $this->typeAlias, 
                     $item->id, 
                     'id', 
                     null, 
@@ -81,7 +81,7 @@ class JSpaceModelRecord extends JModelAdmin
         
         // Add tags.
         $item->tags = new JHelperTags;
-        $item->tags->getTagIds($item->id, $this->context);
+        $item->tags->getTagIds($item->id, $this->typeAlias);
         
         // Override the base user data with any data in the session.
         $data = $app->getUserState('com_jspace.edit.record.data', array());
@@ -94,14 +94,14 @@ class JSpaceModelRecord extends JModelAdmin
         JPluginHelper::importPlugin('content');
         
         // Trigger the data preparation event.
-        $dispatcher->trigger('onContentPrepareData', array($this->context, $item));
+        $dispatcher->trigger('onContentPrepareData', array($this->typeAlias, $item));
         
         return $item;
     }
 
     public function getForm($data = array(), $loadData = true)
     {
-        $form = $this->loadForm($this->context, $this->getName(), array('control'=>'jform', 'load_data'=>$loadData));
+        $form = $this->loadForm($this->typeAlias, $this->getName(), array('control'=>'jform', 'load_data'=>$loadData));
 
         if (empty($form))
         {
@@ -123,9 +123,13 @@ class JSpaceModelRecord extends JModelAdmin
         if ($parentId)
         {
             $parent = JSpaceRecord::getInstance($parentId);
-            $form->setFieldAttribute('catid', 'type', 'hidden');
-            $form->setValue('catid', null, $parent->catid);
-            $form->setValue('parent_id', null, $parentId);
+            
+            if ($parent->alias != 'root')
+            {
+                $form->setFieldAttribute('catid', 'type', 'hidden');
+                $form->setValue('catid', null, $parent->catid);
+                $form->setValue('parent_id', null, $parentId);
+            }
         }
         else
         {
@@ -142,7 +146,7 @@ class JSpaceModelRecord extends JModelAdmin
 
         $data = $this->getItem();
         
-        $this->preprocessData($this->context, $data);
+        $this->preprocessData($this->typeAlias, $data);
 
         return $data;
     }
@@ -237,7 +241,7 @@ class JSpaceModelRecord extends JModelAdmin
 
     public function save($data)
     {
-        $pk   = (!empty($data['id'])) ? $data['id'] : (int) $this->getState('record.id');
+        $pk = JArrayHelper::getValue($data, 'id', (int)$this->getState('record.id'));
         $record = JSpaceRecord::getInstance($pk);
         
         $metadata = JArrayHelper::getValue($data, 'metadata');

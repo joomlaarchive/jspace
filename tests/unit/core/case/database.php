@@ -69,17 +69,12 @@ abstract class TestCaseDatabase extends PHPUnit_Extensions_Database_TestCase
         parent::setUp();
     }
     
-    protected function getCategoryTable()
-    {
-        return 'jos_categories.csv';
-    }
-    
     protected function getDataSet()
     {
         $dataSet = new PHPUnit_Extensions_Database_DataSet_CsvDataSet(',', "'", '\\');
         
         $dataSet->addTable('jos_extensions', JSPACEPATH_TESTS.'/stubs/database/jos_extensions.csv');
-        $dataSet->addTable('jos_categories', JSPACEPATH_TESTS.'/stubs/database/'.$this->getCategoryTable());
+        $dataSet->addTable('jos_categories', JSPACEPATH_TESTS.'/stubs/database/jos_categories.csv');
         $dataSet->addTable('jos_usergroups', JSPACEPATH_TESTS.'/stubs/database/jos_usergroups.csv');
         $dataSet->addTable('jos_viewlevels', JSPACEPATH_TESTS.'/stubs/database/jos_viewlevels.csv');        
         $dataSet->addTable('jos_jspace_records', JSPACEPATH_TESTS.'/stubs/database/jos_jspace_records.csv');
@@ -92,6 +87,8 @@ abstract class TestCaseDatabase extends PHPUnit_Extensions_Database_TestCase
         $dataSet->addTable('jos_contentitem_tag_map', JSPACEPATH_TESTS.'/stubs/database/jos_contentitem_tag_map.csv');
         $dataSet->addTable('jos_ucm_base', JSPACEPATH_TESTS.'/stubs/database/jos_ucm_base.csv');
         $dataSet->addTable('jos_jspacedspace_records', JSPACEPATH_TESTS.'/stubs/database/jos_jspacedspace_records.csv');
+        $dataSet->addTable('jos_users', JSPACEPATH_TESTS.'/stubs/database/jos_users.csv');
+        $dataSet->addTable('jos_user_usergroup_map', JSPACEPATH_TESTS.'/stubs/database/jos_user_usergroup_map.csv');
 
         return $dataSet;
     }

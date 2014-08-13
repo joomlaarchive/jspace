@@ -8,7 +8,7 @@ if (!class_exists('PHPUnit_Extensions_Database_TestCase'))
 	require_once 'PHPUnit/Extensions/Database/DataSet/QueryDataSet.php';
 	require_once 'PHPUnit/Extensions/Database/DataSet/MysqlXmlDataSet.php';
 }
-
+// @todo Rewrite to implement JSpace database test class.
 class JSpaceIngestionOAIHarvesterTest extends PHPUnit_Extensions_Database_TestCase
 {
 	protected static $driver;

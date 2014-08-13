@@ -1,6 +1,6 @@
 'type_id','type_title','type_alias','table','rules','field_mappings','router','content_history_options'
-'22','JSpace Category','com_jspace.category','{"special":{"dbtable":"bk309_categories","key":"id","type":"Category","prefix":"JTable","config":"array()"},"common":{
-"dbtable":"bk309_ucm_content","key":"ucm_id","type":"Corecontent","prefix":"JTable","config":"array()"}}',,'{"common":{"core_content_item_id":"id","core_title":"title","core_state":"published","core_alias":"alias",
+'22','JSpace Category','com_jspace.category','{"special":{"dbtable":"jos_categories","key":"id","type":"Category","prefix":"JTable","config":"array()"},"common":{
+"dbtable":"jos_ucm_content","key":"ucm_id","type":"Corecontent","prefix":"JTable","config":"array()"}}',,'{"common":{"core_content_item_id":"id","core_title":"title","core_state":"published","core_alias":"alias",
 "core_created_time":"created_time","core_modified_time":"modified_time","core_body":"description", 
 "core_hits":"hits","core_publish_up":"null","core_publish_down":"null","core_access":"access", "core_params":"params", 
 "core_featured":"null", "core_metadata":"metadata", "core_language":"language", "core_images":"null", 
@@ -11,13 +11,8 @@
 "hideFields":["asset_id","checked_out","checked_out_time","version","lft","rgt","level","path","extension"], 
 "ignoreChanges":["modified_user_id", "modified_time", "checked_out", "checked_out_time", "version", "hits", 
 "path"],"convertToInt":["publish_up", "publish_down"], 
-"displayLookup":[{"sourceColumn":"created_user_id","targetTable":"bk309_users","targetColumn":"id","displayColumn":"name"},
-{"sourceColumn":"access","targetTable":"bk309_viewlevels","targetColumn":"id","displayColumn":"title"},{
-"sourceColumn":"modified_user_id","targetTable":"bk309_users","targetColumn":"id","displayColumn":"name"},{
-"sourceColumn":"parent_id","targetTable":"bk309_categories","targetColumn":"id","displayColumn":"title"}]}'
-'23','JSpace Record','com_jspace.record','{"special":{"dbtable":"jos_jspace_records","key":"id","type":"Record","prefix":"JSpaceTable","config":"array()"}}',,,'JSpaceHelperRoute::getRecordRoute','{"hideFields":["asset_id","checked_out","checked_out_time","version"],"ignoreChanges":["modified_by", "modified", "checked_out", "checked_out_time", "version", "hits"],"convertToInt":["publish_up", 
-"publish_down","ordering"],"displayLookup":[{"sourceColumn":"catid","targetTable":"jos_categories","targetColumn":"id",
-"displayColumn":"title"},{"sourceColumn":"created_by","targetTable":"jos_users","targetColumn":"id",
-"displayColumn":"name"},{"sourceColumn":"access","targetTable":"jos_viewlevels","targetColumn":"id",
-"displayColumn":"title"},{"sourceColumn":"modified_by","targetTable":"jos_users","targetColumn":"id",
-"displayColumn":"name"} ]}'
+"displayLookup":[{"sourceColumn":"created_user_id","targetTable":"jos_users","targetColumn":"id","displayColumn":"name"},
+{"sourceColumn":"access","targetTable":"jos_viewlevels","targetColumn":"id","displayColumn":"title"},{
+"sourceColumn":"modified_user_id","targetTable":"jos_users","targetColumn":"id","displayColumn":"name"},{
+"sourceColumn":"parent_id","targetTable":"jos_categories","targetColumn":"id","displayColumn":"title"}]}'
+'23','JSpace Record','com_jspace.record','{"special":{"dbtable":"jos_jspace_records","key":"id","type":"Record","prefix":"JSpaceTable","config":"array()"}}',,,'JSpaceHelperRoute::getRecordRoute','{"formFile":"administrator\/components\/com_jspace\/models\/forms\/record.xml", "hideFields":["asset_id","checked_out","checked_out_time","version"],"ignoreChanges":["modified_by", "modified", "checked_out", "checked_out_time", "version", "hits", "ordering", "parent_id"],"convertToInt":["publish_up", "publish_down","ordering"],"displayLookup":[{"sourceColumn":"catid","targetTable":"jos_categories","targetColumn":"id","displayColumn":"title"},{"sourceColumn":"created_by","targetTable":"jos_users","targetColumn":"id","displayColumn":"name"},{"sourceColumn":"access","targetTable":"jos_viewlevels","targetColumn":"id","displayColumn":"title"},{"sourceColumn":"modified_by","targetTable":"jos_users","targetColumn":"id","displayColumn":"name"} ]}'

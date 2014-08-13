@@ -270,3 +270,44 @@ CREATE TABLE `jos_jspacedspace_records` (
 
 CREATE INDEX `idx_jspacedspace_records_record_id` ON `jos_jspacedspace_records` (`record_id`);
 CREATE INDEX `idx_jspacedspace_records_dspace_id` ON `jos_jspacedspace_records` (`dspace_id`);
+
+CREATE TABLE `jos_users` (
+  `id` INTEGER PRIMARY KEY AUTOINCREMENT,
+  `name` TEXT NOT NULL DEFAULT '',
+  `username` TEXT NOT NULL DEFAULT '',
+  `email` TEXT NOT NULL DEFAULT '',
+  `password` TEXT NOT NULL DEFAULT '',
+  `block` INTEGER NOT NULL DEFAULT '0',
+  `sendEmail` INTEGER DEFAULT '0',
+  `registerDate` TEXT NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `lastvisitDate` TEXT NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `activation` TEXT NOT NULL DEFAULT '',
+  `params` TEXT NOT NULL DEFAULT '',
+    `lastResetTime` TEXT NOT NULL DEFAULT '0000-00-00 00:00:00',
+    `resetCount` INTEGER DEFAULT '0'
+);
+
+CREATE INDEX `idx_users_name` ON `jos_users` (`name`);
+CREATE INDEX `idx_users_block` ON `jos_users` (`block`);
+CREATE INDEX `idx_users_username` ON `jos_users` (`username`);
+CREATE INDEX `idx_users_email` ON `jos_users` (`email`);
+
+CREATE TABLE `jos_user_usergroup_map` (
+  `user_id` INTEGER NOT NULL DEFAULT '0',
+  `group_id` INTEGER NOT NULL DEFAULT '0',
+  CONSTRAINT `idx_user_usergroup_map` PRIMARY KEY (`user_id`,`group_id`)
+);
+
+CREATE TABLE `jos_session` (
+  `session_id` TEXT NOT NULL DEFAULT '',
+  `client_id` INTEGER NOT NULL DEFAULT '0',
+  `guest` INTEGER DEFAULT '1',
+  `time` TEXT DEFAULT '',
+  `data` TEXT DEFAULT NULL,
+  `userid` INTEGER DEFAULT '0',
+  `username` TEXT DEFAULT '',
+  CONSTRAINT `idx_session` PRIMARY KEY (`session_id`)
+);
+
+CREATE INDEX `idx_session_user` ON `jos_session` (`userid`);
+CREATE INDEX `idx_session_time` ON `jos_session` (`time`);

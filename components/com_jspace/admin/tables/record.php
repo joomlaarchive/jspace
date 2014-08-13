@@ -8,7 +8,9 @@
  */
  
 defined('_JEXEC') or die;
- 
+
+jimport('jspace.table.observer.recordhistory');
+
 /**
  * Represents a JSpace record.
  *
@@ -28,12 +30,9 @@ class JSpaceTableRecord extends JTableNested
 	{
 		parent::__construct('#__jspace_records', 'id', $db);
 
-        JTableObserverTags::createObserver($this, array('typeAlias'=>'com_jspace.record'));
-
-		JObserverMapper::addObserverClassToClass(
-			'JTableObserverContenthistory', 
-			get_class($this), 
-			array('typeAlias'=>'com_jspace.record'));
+		$observerParams = array('typeAlias'=>'com_jspace.record');
+        JTableObserverTags::createObserver($this, $observerParams);
+        JTableObserverContenthistory::createObserver($this, $observerParams);
 	}
 	
 	/**
