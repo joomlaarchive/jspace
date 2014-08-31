@@ -48,10 +48,10 @@ class PlgJOAIOAIDC extends JPlugin
 	 * Harvests a single oai_dc metadata item, saving it to the cache.
 	 * 
 	 * @param  string            $context   The current metadata item context.
+     * @param  JObject           $harvest  The harvest settings.
 	 * @param  SimpleXmlElement  $data      The metadata to consume.
-	 * @param  JObject           $category  The category this metadata belongs to.
 	 */
-	public function onJSpaceHarvestMetadata($context, $data, $category)
+	public function onJSpaceHarvestMetadata($context, $harvest, $data)
 	{
 		if ($context != 'joai.oai_dc')
 		{
@@ -64,9 +64,7 @@ class PlgJOAIOAIDC extends JPlugin
 		
 		$identifier = (string)$data->header->identifier;
 		
-		$data = $data->metadata;
-		
-		foreach ($data->children($registry->get('format'), true) as $item)
+		foreach ($data->metadata->children($registry->get('format'), true) as $item)
 		{
 			foreach (array_keys($item->getNamespaces(true)) as $keyns)
 			{
@@ -93,8 +91,8 @@ class PlgJOAIOAIDC extends JPlugin
 		
 		$table = JTable::getInstance('Cache', 'JSpaceTable');
 		$table->set('id', $identifier);
-		$table->set('metadata', $metadata);
-		$table->set('catid', $category->id);
+		$table->set('data', json_encode(array("metadata"=>$metadata)));
+		$table->set('harvest_id', (int)$harvest->id);
 		$table->store();
 	}
 }

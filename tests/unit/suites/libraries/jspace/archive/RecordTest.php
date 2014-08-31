@@ -4,10 +4,14 @@ jimport('jspace.archive.record');
 require_once(JSPACEPATH_TESTS.'/core/case/database.php');
 require_once(JSPACEPATH_TESTS.'/core/mock/session.php');
 
+require_once(JPATH_ROOT.'/administrator/components/com_jspace/tables/recordhistory.php');
+
 class JSpaceRecordTest extends TestCaseDatabase
-{
-    public function testVersioningRequired()
+{    
+    public function setUp()
     {
+        parent::setUp();
+        
         $user = new JUser(525);
         
         $mockSession = $this->getMock('JSession', array('_start', 'get'));
@@ -17,7 +21,10 @@ class JSpaceRecordTest extends TestCaseDatabase
         );
         
         JFactory::$session = $mockSession;
-
+    }
+    
+    public function testVersioningRequired()
+    {
         $registry = new JRegistry;
         $registry->set('title', array('Record Test Case'));
         $registry->set('author', array('Hayden Young'));
@@ -26,9 +33,8 @@ class JSpaceRecordTest extends TestCaseDatabase
         $record->catid = 9;
         $record->set('title', 'Test Record');
         $record->set('language', '*');
-        $record->set('path', 'test-record');
         $record->set('metadata', $registry);
-        $record->set('created_by', 525);
+        $record->set('created_by', JFactory::getUser()->id);
 
         $record->save();
         
@@ -49,16 +55,6 @@ class JSpaceRecordTest extends TestCaseDatabase
     
     public function testVersioningIgnored()
     {
-        $user = new JUser(525);
-        
-        $mockSession = $this->getMock('JSession', array('_start', 'get'));
-        
-        $mockSession->expects($this->any())->method('get')->will(
-            $this->returnValue($user)
-        );
-        
-        JFactory::$session = $mockSession;
-
         $registry = new JRegistry;
         $registry->set('title', array('Record Test Case'));
         $registry->set('author', array('Hayden Young'));
@@ -67,7 +63,6 @@ class JSpaceRecordTest extends TestCaseDatabase
         $record->catid = 9;
         $record->set('title', 'Test Record');
         $record->set('language', '*');
-        $record->set('path', 'test-record');
         $record->set('metadata', $registry);
         $record->set('created_by', 525);
         $record->set('published', 0);

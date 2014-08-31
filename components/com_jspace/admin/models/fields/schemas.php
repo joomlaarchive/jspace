@@ -1,6 +1,7 @@
 <?php
 defined('_JEXEC') or die('Restricted access');
 
+jimport('jspace.factory');
 jimport('jspace.archive.schema');
  
 class JSpaceFormFieldSchemas extends JFormField

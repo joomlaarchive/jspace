@@ -54,14 +54,19 @@
 				view="cpanel" img="class:jspace"
 				alt="JSpace/CPanel">com_jspace_cpanel</menu>
 			<menu 
-				link="option=com_jspace&amp;view=records" 
-				view="records" img="class:jspace"
-				alt="JSpace/Records">com_jspace_records</menu>
-			<menu 
 				link="option=com_categories&amp;extension=com_jspace"
 				view="categories" 
 				img="class:jspace-cat" 
 				alt="JSpace/Categories">com_jspace_categories</menu>
+            <menu 
+                link="option=com_jspace&amp;view=records" 
+                view="records" img="class:jspace"
+                alt="JSpace/Records">com_jspace_records</menu>
+            <menu 
+                link="option=com_jspace&amp;view=harvests"
+                view="harvests" 
+                img="class:jspace-cat" 
+                alt="JSpace/Harvests">com_jspace_harvests</menu>
 		</submenu>
                 
 		<files folder="admin">			

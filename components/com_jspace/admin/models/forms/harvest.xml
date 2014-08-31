@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form 
+    validate="true" 
+    serverside_validate="true"
+    addrulepath="/administrator/components/com_jspace/models/rules">
+    <fieldset 
+        name="details">
+        <field 
+            name="originating_url" 
+            type="text"
+            label="COM_JSPACE_HARVEST_URL_LABEL"
+            description="COM_JSPACE_HARVEST_URL_DESC"
+            class="input-xlarge"
+            required="true"/>
+
+        <field 
+            name="harvester" 
+            type="plugins" 
+            folder="jspace"
+            label="COM_JSPACE_HARVEST_HARVESTER_LABEL"
+            description="COM_JSPACE_HARVEST_HARVESTER_DESC" 
+            class="inputbox">
+            <option value="">[Auto Discover]</option>
+        </field>
+
+        <field 
+            name="state" 
+            type="list" 
+            label="JSTATUS"
+            description="JFIELD_PUBLISHED_DESC" 
+            class="chzn-color-state"
+            filter="intval" 
+            size="1" 
+            default="1">
+            <option value="1">JPUBLISHED</option>
+            <option value="0">JUNPUBLISHED</option>
+            <option value="2">JARCHIVED</option>
+            <option value="-2">JTRASHED</option>
+        </field>
+
+        <field 
+            name="catid" 
+            type="category" 
+            extension="com_jspace" 
+            label="JCATEGORY" 
+            required="true"
+            description=""/>
+    </fieldset>
+    
+    <fields name="params">
+        <fields name="default">
+            <fieldset 
+                name="params"
+                label="COM_JSPACE_HARVEST_FIELDSET_ADDITIONALSETTINGS_LABEL">
+                <field 
+                    name="state" 
+                    type="list" 
+                    label="COM_JSPACE_HARVEST_DEFAULT_STATE_LABEL"
+                    description="COM_JSPACE_HARVEST_DEFAULT_STATE_DESC" 
+                    class="chzn-color-state"
+                    filter="intval" 
+                    size="1" 
+                    default="1">
+                    <option value="1">JPUBLISHED</option>
+                    <option value="0">JUNPUBLISHED</option>
+                    <option value="2">JARCHIVED</option>
+                    <option value="-2">JTRASHED</option>
+                </field>
+                <field 
+                    name="language" 
+                    type="language"
+                    label="COM_JSPACE_HARVEST_DEFAULT_LANGUAGE_LABEL"
+                    description="COM_JSPACE_HARVEST_DEFAULT_LANGUAGE_DESC">
+                    <option value="*">JOPTION_USE_DEFAULT</option>
+                </field>
+                <field 
+                    name="access" 
+                    type="accesslevel"
+                    label="COM_JSPACE_HARVEST_DEFAULT_ACCESS_LABEL"
+                    description="COM_JSPACE_HARVEST_DEFAULT_ACCESS_DESC"/>
+            </fieldset>
+        </fields>
+    </fields>
+    
+    <fieldset 
+        name="publishing">
+        <field 
+            name="created" 
+            type="calendar" 
+            label="COM_JSPACE_RECORD_CREATED_LABEL"
+            description="COM_JSPACE_RECORD_CREATED_DESC" 
+            class="inputbox" 
+            size="22" 
+            readonly="true"
+            format="%Y-%m-%d %H:%M:%S"
+            filter="user_utc"/>
+
+        <field
+            name="created_by"
+            type="user"
+            label="COM_JSPACE_HARVEST_CREATED_BY_LABEL"
+            description="COM_JSPACE_HARVEST_CREATED_BY_DESC"
+            readonly="true"/>
+
+        <field 
+            name="modified"
+            type="calendar"
+            class="readonly"
+            label="JGLOBAL_FIELD_MODIFIED_LABEL"
+            description="COM_JSPACE_RECORD_MODIFIED_DESC"
+            size="22"
+            readonly="true"
+            format="%Y-%m-%d %H:%M:%S"
+            filter="user_utc"/>
+
+        <field
+            name="modified_by" 
+            type="user"
+            label="JGLOBAL_FIELD_MODIFIED_BY_LABEL"
+            filter="unset"
+            readonly="true"/>
+
+        <field 
+            name="id"
+            type="text"
+            class="readonly"
+            label="JGLOBAL_FIELD_ID_LABEL"
+            description ="JGLOBAL_FIELD_ID_DESC" 
+            size="10" 
+            default="0"
+            readonly="true"/>
+    </fieldset>
+    
+    <fields name="params">
+        <fields name="discovery">
+            <fieldset name="discovery">
+                <field 
+                    name="url"
+                    label="COM_JSPACE_HARVEST_DISCOVERY_URL_LABEL"
+                    description="COM_JSPACE_HARVEST_DISCOVERY_URL_DESC"
+                    readonly="true"/>
+                <field 
+                    name="type"
+                    label="COM_JSPACE_HARVEST_DISCOVERY_TYPE_LABEL"
+                    description="COM_JSPACE_HARVEST_DISCOVERY_TYPE_DESC"
+                    readonly="true"/>
+            </fieldset>
+        </fields>
+    </fields>
+</form>

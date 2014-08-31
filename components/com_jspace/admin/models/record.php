@@ -251,8 +251,6 @@ class JSpaceModelRecord extends JModelAdmin
         // Bind the data.
         if (!$record->bind($data))
         {
-            throw new Exception(JText::_('PLG_JSPACE_ASSETSTORE_ERROR_WARNFILETOOLARGE'), 413);
-
             return false;
         }
         

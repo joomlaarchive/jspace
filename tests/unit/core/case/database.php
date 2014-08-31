@@ -89,7 +89,10 @@ abstract class TestCaseDatabase extends PHPUnit_Extensions_Database_TestCase
         $dataSet->addTable('jos_jspacedspace_records', JSPACEPATH_TESTS.'/stubs/database/jos_jspacedspace_records.csv');
         $dataSet->addTable('jos_users', JSPACEPATH_TESTS.'/stubs/database/jos_users.csv');
         $dataSet->addTable('jos_user_usergroup_map', JSPACEPATH_TESTS.'/stubs/database/jos_user_usergroup_map.csv');
-
+        $dataSet->addTable('jos_jspace_record_identifiers', JSPACEPATH_TESTS.'/stubs/database/jos_jspace_record_identifiers.csv');
+        $dataSet->addTable('jos_weblinks', JSPACEPATH_TESTS.'/stubs/database/jos_weblinks.csv');
+        $dataSet->addTable('jos_ucm_content', JSPACEPATH_TESTS.'/stubs/database/jos_ucm_content.csv');
+        
         return $dataSet;
     }
     

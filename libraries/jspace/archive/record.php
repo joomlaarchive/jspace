@@ -38,7 +38,7 @@ class JSpaceRecord extends JObject
     protected $identifiers = array();
 
     /**
-     * Instatiates an instance of the PlgJSpaceGlacier class.
+     * Instatiates an instance of the JSpaceRecord class.
      * 
      * @param   int  $identifier  A JSpace record identifier if provided, otherwise creates an empty 
      * JSpace record.

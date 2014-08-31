@@ -96,14 +96,17 @@ class JSpaceCli extends JApplicationCli
         }
         
         $plugin = JArrayHelper::getValue($this->input->args, 0);
-        $action = JArrayHelper::getValue($this->input->args, 1);
-        $args = $this->input->getArray();
         
+        array_shift($this->input->args);
+        $commands = $this->input->args;
+        
+        $options = $this->input->getArray();
+
         if (array_search($plugin, $this->_getPlugins()) !== false)
         {    
             try 
             {
-                $this->_executeCommand($plugin, $action, $args);
+                $this->_executeCommand($plugin, $commands, $options);
             } 
             catch (Exception $e) 
             {
@@ -160,7 +163,7 @@ EOT;
         return $this;
     }
     
-    private function _executeCommand($plugin, $action, $args = array())
+    private function _executeCommand($plugin, $commands = array(), $options = array())
     {
         if ($plugin)
         {
@@ -174,7 +177,7 @@ EOT;
         
         JPluginHelper::importPlugin("content", $plugin, true, $dispatcher);
         
-        return $dispatcher->trigger('onJSpaceExecuteCliCommand', array($action, $args));
+        return $dispatcher->trigger('onJSpaceExecuteCliCommand', array($commands, $options));
     }
 
     private function _isVerbose()

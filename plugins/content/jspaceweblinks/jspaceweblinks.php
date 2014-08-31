@@ -139,7 +139,8 @@ class PlgContentJSpaceWeblinks extends JPlugin
             ->select(array('a.id'))
             ->from($database->qn('#__jspace_references', 'a'))
             ->join('INNER', $database->qn('#__weblinks', 'b').' ON '.$database->qn('b.id').'='.$database->qn('a.id'))
-            ->where($database->qn('context'). '='.$database->q('com_weblinks.weblink'));
+            ->where($database->qn('context').'='.$database->q('com_weblinks.weblink'))
+            ->where($database->qn('record_id').'='.$record->id);
         
         $ids = $database->setQuery($query)->loadColumn();
         

@@ -46,137 +46,67 @@ class PlgJOAIORE extends JPlugin
 	/**
 	 * Harvests a single record's assets if available in ore format.
 	 * 
-	 * @param  string            $context   The current record context.
-	 * @param  SimpleXmlElement  $data      The metadata to parse for associate assets.
+	 * @param  string            $context  The current record context.
+     * @param  JObject           $harvest  The harvest settings.
+	 * @param  SimpleXmlElement  $data     The metadata to parse for associate assets.
 	 */
-	public function onJSpaceHarvestAssets($context, $data)
+	public function onJSpaceHarvestAssets($context, $harvest, $data)
 	{
 		if ($context != 'joai.ore')
 		{
 			return;
 		}
-		
-		$bundle = 'oai';
-		
-		$metadata = new JRegistry();
-		
-		$identifier = (string)$data->header->identifier;
-		
-		$data = $data->metadata;
-		
-		$collection = array();
-		
-		$namespaces = array(
-			'http://www.w3.org/2005/Atom', 
-			'http://www.openarchives.org/ore/atom/',
-			'http://purl.org/dc/terms/',
-			'http://www.w3.org/1999/02/22-rdf-syntax-ns#');
-		
-		$entry = $data->children('http://www.w3.org/2005/Atom')->entry;
-		// set up an array of assets for each entry.
-		$assets = array();
-		
-		// set up a bundle of assets for each entry.
-		$collection = array();
-		$collection[$bundle] = array();
-		$collection[$bundle]['assets'] = array();
-		
-		foreach ($namespaces as $ns)
-		{
-			foreach ($entry->children($ns) as $tag=>$node)
-			{
-				if ($tag == 'link')
-				{
-					$attributes = $node->attributes();
-					$rel = JArrayHelper::getvalue($attributes, 'rel', null, 'string');
-					
-					if ($rel == 'http://www.openarchives.org/ore/terms/aggregates')
-					{
-						$href = JArrayHelper::getvalue($attributes, 'href', null, 'string');
 
-						$asset = array();
-						$asset['tmp_name'] = urldecode($href);
-						$asset['name'] = JArrayHelper::getvalue($attributes, 'title', null, 'string');
-						$asset['type'] = JArrayHelper::getvalue($attributes, 'type', null, 'string');
-						$asset['size'] = JArrayHelper::getvalue($attributes, 'length', null, 'string');
-						$asset['derivative'] = 'original';
-						
-						$assets[$href] = $asset;
-					}
-				}
-				
-				if ($tag == 'triples')
-				{
-					foreach ($namespaces as $triplesns)
-					{
-						$descriptions = $node->children('http://www.w3.org/1999/02/22-rdf-syntax-ns#');
-						
-						foreach ($descriptions as $description)
-						{
-							$attributes = $description->attributes('http://www.w3.org/1999/02/22-rdf-syntax-ns#');
-							
-							$href = JArrayHelper::getValue($attributes, 'about', null, 'string');
-							
-							if (array_key_exists($href, $assets))
-							{
-								foreach ($description->children($triplesns) as $dtag=>$dnode)
-								{
-									if ($dtag == 'description')
-									{
-										$assets[$href]['derivative'] = (string)$dnode;
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-		}
+		// set up an array of files for each entry.
+		$files = array();
 		
-		foreach ($assets as $asset)
-		{
-			$asset['tmp_name'] = $this->_download($asset['tmp_name']);
-			
-			$derivative = strtolower($asset['derivative']);
-			
-			unset($asset['derivative']);
-			
-			$collection[$bundle]['assets'][$derivative][] = $asset;
-		}
-		
-		$metadata->set('collection', $collection);
+		$data->registerXPathNamespace('default', 'http://www.openarchives.org/OAI/2.0/');
+        $data->registerXPathNamespace('atom', 'http://www.w3.org/2005/Atom');
+        $data->registerXPathNamespace('oreatom', 'http://www.openarchives.org/ore/atom/');
+        $data->registerXPathNamespace('rdf', 'http://www.w3.org/1999/02/22-rdf-syntax-ns#');
+        $data->registerXPathNamespace('dcterms', 'http://purl.org/dc/terms/');
 
+        $ids = $data->xpath('//default:identifier');
+        $identifier = JArrayHelper::getValue($ids, 0, null, 'string');
+        
+        $links = $data->xpath('//atom:link[@rel="http://www.openarchives.org/ore/terms/aggregates"]');
+		
+		foreach ($links as $link)
+		{
+            $attributes = $link->attributes();
+            
+            $href = JArrayHelper::getvalue($attributes, 'href', null, 'string');
+            $name = JArrayHelper::getValue($attributes, 'title', null, 'string');
+            $type = JArrayHelper::getValue($attributes, 'type', null, 'string');
+            $size = JArrayHelper::getValue($attributes, 'length', null, 'string');
+            
+            $file = new JRegistry;
+            $file->set('url', urldecode($href));
+            $file->set('name', $name);
+            $file->set('type', $type);
+            $file->set('size', $size);
+            
+            $derivatives = $data->xpath('//oreatom:triples/rdf:Description[@rdf:about="'.$file->get('url').'"]/dcterms:description');
+            $derivative = strtolower(JArrayHelper::getValue($derivatives, 0, 'original', 'string'));
+            
+            $file->set('derivative', $derivative);
+            
+            $files[] = $file;
+        }
+        
 		$table = JTable::getInstance('Cache', 'JSpaceTable');
-		
+
 		if ($table->load($identifier))
 		{
-			$merged = new JRegistry();
-			$merged->loadString($table->metadata);
-			$merged->merge($metadata);
-			
-			$table->metadata = $merged;
-			$table->store();
+            $cachedData = json_decode($table->data);
+         
+            if (isset($cachedData))
+            {
+                $cachedData->files = $files;
+                $table->data = json_encode($cachedData);
+
+                $table->store();
+            }
 		}
-	}
-	
-	public function _download($asset)
-	{
-		$tmp = tempnam(sys_get_temp_dir(), '');
-		
-		if ($source = @fopen($asset, 'r'))
-		{
-			$dest = fopen($tmp, 'w');
-			
-			while (!feof($source))
-			{
-				$chunk = fread($source, 1024);
-				fwrite($dest, $chunk);
-			}
-			
-			fclose($dest);
-			fclose($source);
-		}
-		
-		return $tmp;
 	}
 }

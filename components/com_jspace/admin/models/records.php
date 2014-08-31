@@ -98,11 +98,9 @@ class JSpaceModelRecords extends JModelList
 	
 	protected function getListQuery()
 	{
-		// Create a new query object.
 		$db = $this->getDbo();
 		$query = $db->getQuery(true);
 		$user = JFactory::getUser();
-		$app = JFactory::getApplication();
 	
 		$table = $this->getTable('Record', 'JSpaceTable');
 		$fields = array();
@@ -202,7 +200,7 @@ class JSpaceModelRecords extends JModelList
 
 		if (is_numeric($categoryId))
 		{
-				$cat_tbl = JTable::getInstance('Category', 'JTable');
+				$cat_tbl = $this->getTable('Category', 'JTable');
 				$cat_tbl->load($categoryId);
 				$rgt = $cat_tbl->rgt;
 				$lft = $cat_tbl->lft;
@@ -212,9 +210,9 @@ class JSpaceModelRecords extends JModelList
 		}
 		elseif (is_array($categoryId))
 		{
-				JArrayHelper::toInteger($categoryId);
-				$categoryId = implode(',', $categoryId);
-				$query->where('a.catid IN (' . $categoryId . ')');
+            JArrayHelper::toInteger($categoryId);
+            $categoryId = implode(',', $categoryId);
+            $query->where('a.catid IN (' . $categoryId . ')');
 		}
 		
 		$query->group('r.id');

@@ -1,9 +1,9 @@
 CREATE TABLE IF NOT EXISTS `#__jspace_records` (
-	`id` INTEGER NOT NULL AUTO_INCREMENT,
+	`id` INTEGER PRIMARY KEY NOT NULL AUTO_INCREMENT,
 	`asset_id` INTEGER NOT NULL DEFAULT 0 COMMENT 'FK to the #__assets table.',
 	`title` VARCHAR(1024) NOT NULL,
 	`alias` VARCHAR(255) NOT NULL DEFAULT '',
-	`published` TINYINT NOT NULL DEFAULT 0 COMMENT 'The published state of the menu link.',
+	`published` TINYINT NOT NULL DEFAULT 0 COMMENT 'The published state of the record.',
 	`hits` INTEGER NOT NULL DEFAULT 0,
 	`language` CHAR(7) NOT NULL COMMENT 'The language code for the record.',
 	`created` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
@@ -25,7 +25,6 @@ CREATE TABLE IF NOT EXISTS `#__jspace_records` (
 	`version` INTEGER NOT NULL DEFAULT 1,
 	`access` INTEGER NOT NULL DEFAULT 0,
 	`catid` INTEGER NOT NULL,
-	PRIMARY KEY (`id`),
 	KEY `idx_jspace_records_access` (`access`),
 	KEY `idx_jspace_records_checkout` (`checked_out`),
     KEY `idx_jspace_records_published` (`published`),
@@ -84,20 +83,35 @@ CREATE TABLE IF NOT EXISTS `#__jspace_references` (
 -- A generic harvesting table. @todo Perhaps this should be more generalized, I.e. jspace_imports.
 
 CREATE TABLE IF NOT EXISTS `#__jspace_harvests` (
-  `catid` INTEGER PRIMARY KEY NOT NULL DEFAULT '0' COMMENT 'Primary key matching associated Category table id.',
-  `harvested` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
-  `resumptionToken` VARCHAR(255) DEFAULT NULL,
-  `failures` INTEGER NOT NULL DEFAULT '0'
+    `id` INTEGER PRIMARY KEY AUTO_INCREMENT,
+    `originating_url` VARCHAR(255) NOT NULL,
+    `harvester` VARCHAR(255) NOT NULL COMMENT 'The harvester to use for this harvest.',
+    `frequency` INTEGER NOT NULL DEFAULT 0 COMMENT 'The number of times the harvester should run.',
+    `total` INTEGER NOT NULL DEFAULT 0 COMMENT 'The number of times the harvester has run.',
+    `harvested` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
+    `params` TEXT NOT NULL,
+    `state` TINYINT NOT NULL DEFAULT 0 COMMENT 'The published state of the harvest.',
+    `created` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
+    `created_by` INTEGER NOT NULL DEFAULT 0,
+    `modified` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
+    `modified_by` INTEGER NOT NULL DEFAULT 0,
+    `checked_out` INTEGER NOT NULL DEFAULT 0,
+    `checked_out_time` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
+    `catid` INTEGER NOT NULL DEFAULT '0' COMMENT 'Harvest into this category.',
+    KEY `idx_jspace_harvests_checkout` (`checked_out`),
+    KEY `idx_jspace_harvests_published` (`state`),
+    KEY `idx_jspace_harvests_createdby` (`created_by`),
+    KEY `idx_jspace_record_categories_catid` (`catid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- A holding table for records harvested.
 
-CREATE TABLE IF NOT EXISTS `#__jspace_cache` (
-	`id` VARCHAR(255) NOT NULL,
-	`metadata` TEXT NULL,
-	`catid` INTEGER NOT NULL DEFAULT 0,
-	PRIMARY KEY(`id`, `catid`),
-	KEY `idx_jspace_cache_catid` (`catid`)
+CREATE TABLE `#__jspace_cache` (
+    `id` VARCHAR(255), 
+    `data` TEXT NULL, 
+    `harvest_id` INTEGER NOT NULL DEFAULT 0, 
+    PRIMARY KEY(`id`, `harvest_id`),
+    KEY `idx_jspace_cache_harvest_id` (`harvest_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 INSERT INTO `#__content_types` (`type_id`, `type_title`, `type_alias`, `table`, `rules`, `field_mappings`, `router`, 

@@ -47,10 +47,10 @@ class PlgJOAIQDC extends JPlugin
 	 * Harvests a single qdc metadata item, saving it to the cache.
 	 * 
 	 * @param  string            $context   The current metadata item context.
+     * @param  JObject           $harvest  The harvest settings.
 	 * @param  SimpleXmlElement  $data      The metadata to consume.
-	 * @param  JObject           $category  The category this metadata belongs to.
 	 */
-	public function onJSpaceHarvestMetadata($context, $data, $category)
+	public function onJSpaceHarvestMetadata($context, $harvest, $data)
 	{
 		if ($context != 'joai.qdc')
 		{
@@ -63,11 +63,9 @@ class PlgJOAIQDC extends JPlugin
 		
 		$identifier = (string)$data->header->identifier;
 		
-		$data = $data->metadata;
-		
-		foreach ($data->getNamespaces(true) as $keyns=>$valuens)
+		foreach ($data->metadata->getNamespaces(true) as $keyns=>$valuens)
 		{
-			foreach ($data->children($valuens) as $key=>$value)
+			foreach ($data->metadata->children($valuens) as $key=>$value)
 			{
 				if ($key = $registry->getKey($keyns.':'.$key))
 				{
@@ -89,8 +87,8 @@ class PlgJOAIQDC extends JPlugin
 		
 		$table = JTable::getInstance('Cache', 'JSpaceTable');
 		$table->set('id', $identifier);
-		$table->set('metadata', $metadata);
-		$table->set('catid', $category->id);
+		$table->set('data', json_encode(array("metadata"=>$metadata)));
+		$table->set('harvest_id', (int)$harvest->id);
 		$table->store();
 	}
 }

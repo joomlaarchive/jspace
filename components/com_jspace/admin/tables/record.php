@@ -108,6 +108,8 @@ class JSpaceTableRecord extends JTableNested
 			$this->alias = JFactory::getDate()->format('Y-m-d-H-i-s');
 		}
 		
+		$this->path = $this->alias;
+		
 		$this->version++;
 
 		$result = parent::store($updateNulls);

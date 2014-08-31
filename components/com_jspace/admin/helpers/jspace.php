@@ -48,16 +48,21 @@ class JSpaceHelper
 			'index.php?option=com_jspace',
 			$vName == 'cpanel'
 		);
+        JHtmlSidebar::addEntry(
+            JText::_('COM_JSPACE_SUBMENU_CATEGORIES'),
+            'index.php?option=com_categories&extension=com_jspace',
+            $vName == 'categories'
+        );
 		JHtmlSidebar::addEntry(
 				JText::_('COM_JSPACE_SUBMENU_RECORDS'),
 				'index.php?option=com_jspace&view=records',
 				$vName == 'records'
 		);
-		JHtmlSidebar::addEntry(
-			JText::_('COM_JSPACE_SUBMENU_CATEGORIES'),
-			'index.php?option=com_categories&extension=com_jspace',
-			$vName == 'categories'
-		);
+        JHtmlSidebar::addEntry(
+            JText::_('COM_JSPACE_SUBMENU_HARVESTS'),
+            'index.php?option=com_jspace&view=harvests',
+            $vName == 'harvests'
+        );
 	}
 	
 	/**

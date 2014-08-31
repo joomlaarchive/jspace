@@ -147,22 +147,38 @@ CREATE INDEX `idx_jspace_assets_record_id` ON `jos_jspace_assets` (`record_id`);
 
 
 CREATE TABLE `jos_jspace_harvests` (
-	`catid` INTEGER PRIMARY KEY NOT NULL DEFAULT 0,
-	`harvested` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
-	`resumptionToken` VARCHAR(255) NULL DEFAULT null,
-	`failures` INTEGER NOT NULL DEFAULT 0
+    `id` INTEGER PRIMARY KEY AUTOINCREMENT,
+    `originating_url` VARCHAR(255) NOT NULL,
+    `harvester` VARCHAR(255) NOT NULL,
+    `frequency` INTEGER NOT NULL DEFAULT 0,
+    `total` INTEGER NOT NULL DEFAULT 0,
+    `harvested` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
+    `params` TEXT NOT NULL,
+    `state` TINYINT NOT NULL DEFAULT 0,
+    `created` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
+    `created_by` INTEGER NOT NULL DEFAULT 0,
+    `modified` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
+    `modified_by` INTEGER NOT NULL DEFAULT 0,
+    `checked_out` INTEGER NOT NULL DEFAULT 0,
+    `checked_out_time` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
+    `catid` INTEGER NOT NULL DEFAULT '0'
 );
+
+CREATE INDEX `idx_jspace_harvests_checkout` ON `jos_jspace_harvests` (`checked_out`);
+CREATE INDEX `idx_jspace_harvests_state` ON `jos_jspace_harvests` (`state`);
+CREATE INDEX `idx_jspace_harvests_createdby` ON `jos_jspace_harvests` (`created_by`);
+CREATE INDEX `idx_jspace_record_categories_catid` ON `jos_jspace_harvests` (`catid`);
 
 -- A holding table for records harvested.
 
 CREATE TABLE `jos_jspace_cache` (
-	`id` VARCHAR(255) NOT NULL,
-	`metadata` TEXT NULL,
-	`catid` INTEGER NOT NULL DEFAULT 0,
-	PRIMARY KEY(`id`, `catid`)
+    `id` VARCHAR(255) NOT NULL,
+    `data` TEXT NULL,
+    `harvest_id` INTEGER NOT NULL DEFAULT 0,
+    PRIMARY KEY(`id`, `harvest_id`)
 );
 
-CREATE INDEX `idx_jspace_cache_catid` ON `jos_jspace_cache` (`catid`);
+CREATE INDEX `idx_jspace_cache_harvest_id` ON `jos_jspace_cache` (`harvest_id`);
 
 CREATE TABLE `jos_content_types` (
   `type_id` INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -311,3 +327,101 @@ CREATE TABLE `jos_session` (
 
 CREATE INDEX `idx_session_user` ON `jos_session` (`userid`);
 CREATE INDEX `idx_session_time` ON `jos_session` (`time`);
+
+CREATE TABLE IF NOT EXISTS `jos_jspace_record_identifiers` (
+    `id` VARCHAR(255) NOT NULL,
+    `record_id` INTEGER NOT NULL,
+    PRIMARY KEY (`id`, `record_id`)
+);
+
+CREATE INDEX `idx_jspace_record_identifiers_id` ON `jos_jspace_record_identifiers` (`id`);
+CREATE INDEX `idx_jspace_record_identifiers_record_id` ON `jos_jspace_record_identifiers` (`record_id`);
+
+CREATE TABLE IF NOT EXISTS `jos_weblinks` (
+  `id` INTEGER PRIMARY KEY AUTOINCREMENT,
+  `catid` INTEGER NOT NULL DEFAULT '0',
+  `sid` INTEGER NOT NULL DEFAULT '0',
+  `title` VARCHAR(250) NOT NULL DEFAULT '',
+  `alias` VARCHAR(255) NOT NULL DEFAULT '',
+  `url` VARCHAR(250) NOT NULL DEFAULT '',
+  `description` TEXT NOT NULL DEFAULT '',
+  `date` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `hits` INTEGER NOT NULL DEFAULT '0',
+  `state` TINYINT NOT NULL DEFAULT '0',
+  `checked_out` INTEGER NOT NULL DEFAULT '0',
+  `checked_out_time` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `ordering` INTEGER NOT NULL DEFAULT '0',
+  `archived` TINYINT NOT NULL DEFAULT '0',
+  `approved` TINYINT NOT NULL DEFAULT '1',
+  `access` INTEGER NOT NULL DEFAULT '1',
+  `params` TEXT NOT NULL DEFAULT '',
+  `language` CHAR(7) NOT NULL DEFAULT '',
+  `created` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `created_by` INTEGER NOT NULL DEFAULT '0',
+  `created_by_alias` VARCHAR(255) NOT NULL DEFAULT '',
+  `modified` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `modified_by` INTEGER NOT NULL DEFAULT '0',
+  `metakey` TEXT NOT NULL DEFAULT '',
+  `metadesc` TEXT NOT NULL DEFAULT '',
+  `metadata` TEXT NOT NULL DEFAULT '',
+  `featured` TINYINT NOT NULL DEFAULT '0',
+  `xreference` VARCHAR(50) NOT NULL DEFAULT '',
+  `publish_up` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `publish_down` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00'
+);
+
+CREATE TABLE IF NOT EXISTS `jos_jspace_references` (
+    `id` INTEGER NOT NULL,
+    `context` VARCHAR(255) NOT NULL,
+    `bundle` VARCHAR(255) NULL,
+    `record_id` INTEGER NOT NULL,
+    PRIMARY KEY (`id`, `context`)
+);
+
+CREATE TABLE `jos_ucm_content` (
+  `core_content_id` INTEGER PRIMARY KEY AUTOINCREMENT,
+  `core_type_alias` TEXT NOT NULL DEFAULT '',
+  `core_title` TEXT NOT NULL DEFAULT '',
+  `core_alias` TEXT NOT NULL DEFAULT '',
+  `core_body` TEXT NOT NULL DEFAULT '',
+  `core_state` INTEGER NOT NULL DEFAULT '0',
+  `core_checked_out_time` TEXT NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `core_checked_out_user_id` INTEGER NOT NULL DEFAULT '0',
+  `core_access` INTEGER NOT NULL DEFAULT '0',
+  `core_params` TEXT NOT NULL DEFAULT '',
+  `core_featured` INTEGER NOT NULL DEFAULT '0',
+  `core_metadata` TEXT NOT NULL DEFAULT '',
+  `core_created_user_id` INTEGER NOT NULL DEFAULT '0',
+  `core_created_by_alias` TEXT NOT NULL DEFAULT '',
+  `core_created_time` TEXT NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `core_modified_user_id` INTEGER NOT NULL DEFAULT '0',
+  `core_modified_time` TEXT NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `core_language` TEXT NOT NULL DEFAULT '',
+  `core_publish_up` TEXT NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `core_publish_down` TEXT NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `core_content_item_id` INTEGER NOT NULL DEFAULT '0',
+  `asset_id` INTEGER NOT NULL DEFAULT '0',
+  `core_images` TEXT NOT NULL DEFAULT '',
+  `core_urls` TEXT NOT NULL DEFAULT '',
+  `core_hits` INTEGER NOT NULL DEFAULT '0',
+  `core_version` INTEGER NOT NULL DEFAULT '1',
+  `core_ordering` INTEGER NOT NULL DEFAULT '0',
+  `core_metakey` TEXT NOT NULL DEFAULT '',
+  `core_metadesc` TEXT NOT NULL DEFAULT '',
+  `core_catid` INTEGER NOT NULL DEFAULT '0',
+  `core_xreference` TEXT NOT NULL DEFAULT '',
+  `core_type_id` INTEGER NOT NULL DEFAULT '0'
+);
+
+CREATE INDEX `tag_idx` ON `jos_ucm_content` (`core_state`,`core_access`);
+CREATE INDEX `idx_ucm_content_access` ON `jos_ucm_content` (`core_access`);
+CREATE INDEX `idx_ucm_content_alias` ON `jos_ucm_content` (`core_alias`);
+CREATE INDEX `idx_ucm_content_language` ON `jos_ucm_content` (`core_language`);
+CREATE INDEX `idx_ucm_content_title` ON `jos_ucm_content` (`core_title`);
+CREATE INDEX `idx_ucm_content_modified_time` ON `jos_ucm_content` (`core_modified_time`);
+CREATE INDEX `idx_ucm_content_created_time` ON `jos_ucm_content` (`core_created_time`);
+CREATE INDEX `idx_ucm_content_content_type` ON `jos_ucm_content` (`core_type_alias`);
+CREATE INDEX `idx_ucm_content_core_modified_user_id` ON `jos_ucm_content` (`core_modified_user_id`);
+CREATE INDEX `idx_ucm_content_core_checked_out_user_id` ON `jos_ucm_content` (`core_checked_out_user_id`);
+CREATE INDEX `idx_ucm_content_core_created_user_id` ON `jos_ucm_content` (`core_created_user_id`);
+CREATE INDEX `idx_ucm_content_core_type_id` ON `jos_ucm_content` (`core_type_id`);

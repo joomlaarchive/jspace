@@ -17,8 +17,6 @@ defined('_JEXEC') or die;
  */
 class JSpaceTableCache extends JTable
 {
-	public $metadata;
-	
 	/**
 	 * Instantiates an instance of the JSpaceTableCache table.
 	 *
@@ -28,15 +26,5 @@ class JSpaceTableCache extends JTable
 	{
 		parent::__construct('#__jspace_cache', 'id', $db);
 		$this->_autoincrement = false;
-	}
-	
-	public function store($updateNulls = false)
-	{
-		if ($this->metadata instanceof JRegistry)
-		{
-			$this->metadata = (string)$this->metadata;
-		}
-		
-		return parent::store($updateNulls);
 	}
 }
