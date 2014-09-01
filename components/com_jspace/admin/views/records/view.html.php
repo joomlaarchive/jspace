@@ -111,6 +111,7 @@ $user->authorise('core.edit.state', $this->option))
 		
 		if ($user->authorise('core.admin', $this->option))
 		{
+            JToolbarHelper::custom('records.rebuild', 'refresh.png', 'refresh_f2.png', 'JTOOLBAR_REBUILD', false);
 			JToolbarHelper::preferences($this->option);
 		}
 

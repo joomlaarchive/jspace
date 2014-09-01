@@ -84,7 +84,7 @@ class JSpaceModelRecords extends JModelList
 		$this->setState('filter.language', $language);
 
 		// List state information.
-		parent::populateState('r.title', 'asc');
+		parent::populateState('r.lft', 'asc');
 	
 		// Force a language
 		$forcedLanguage = $app->input->get('forcedLanguage');
@@ -215,7 +215,7 @@ class JSpaceModelRecords extends JModelList
             $query->where('a.catid IN (' . $categoryId . ')');
 		}
 		
-		$query->group('r.id');
+		$query->order($db->escape($this->getState('list.ordering', 'r.lft')) . ' ' . $db->escape($this->getState('list.direction', 'ASC')));
 
 		return $query;
 	}
