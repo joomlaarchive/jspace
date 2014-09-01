@@ -86,6 +86,65 @@ class JSpaceRecordTest extends TestCaseDatabase
         $this->assertEquals(1, count($model->getItems()));   
     }
     
+    public function testGetTree()
+    {
+        $registry = new JRegistry;
+        $registry->set('title', array('Level 1'));
+        $registry->set('author', array('Hayden Young'));
+    
+        // Level 1
+        $record = new JSpaceRecord();
+        $record->catid = 9;
+        $record->set('title', 'Level 1');
+        $record->set('language', '*');
+        $record->set('metadata', $registry);
+        $record->set('created_by', JFactory::getUser()->id);
+
+        $record->save();
+        
+        $id = $record->id;
+        $parent_id = $id;
+        
+        // Level 2
+        $record->set('title', 'Level 2a');
+        $record->set('parent_id', $parent_id);
+        $record->set('id', null);
+
+        $record->save();
+        
+        $id = $record->id;
+        
+        // Level 3
+        $record->set('title', 'Level 3');
+        $record->set('parent_id', $id);
+        $record->set('id', null);
+        
+        $record->save();
+        
+        // Level 2
+        $record->set('title', 'Level 2b');
+        $record->set('parent_id', $parent_id);
+        $record->set('id', null);
+
+        $record->save();
+        
+        $record = JSpaceRecord::getInstance($parent_id);
+
+        $tree = JSpaceRecord::getTree($parent_id);
+        
+        // @todo Better testing required.
+        $this->assertNotNull($tree);
+    }
+
+    /**
+     * @expectedException        Exception
+     * @expectedExceptionMessage Direct access to root node not allowed
+     */
+    public function testGetJSpaceRoot()
+    {
+        var_dump(JSpaceRecord::getTree(1));
+    }
+    
     protected function getDataSet()
     {
         $dataset = parent::getDataSet();

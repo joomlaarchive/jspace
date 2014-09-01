@@ -45,6 +45,8 @@ class JSpaceRecord extends JObject
      */
 	public function __construct($identifier = 0)
 	{
+        JTable::addIncludePath(JPATH_BASE.'/administrator/components/com_jspace/tables/');
+        
 		JLog::addLogger(array());
 	
 		$this->_metadata = new JRegistry;
@@ -92,41 +94,7 @@ class JSpaceRecord extends JObject
 
 		return self::$instances[$id];
 	}
-	
-	/**
-	 * Gets an instance of JTable.
-	 *
-	 * This function uses a static variable to store the table name of the record table to
-	 * instantiate. You can call this function statically to set the table name if
-	 * needed.
-	 *
-	 * @param   string  $type    The table name to use. Defaults to Record.
-	 * @param   string  $prefix  The table prefix to use. Defaults to JSpaceTable.
-	 *
-	 * @return  JTable  The table specified by type, or a JSpaceTableRecord if no type is specified.
-	 */
-	public static function getTable($type = null, $prefix = 'JSpaceTable')
-	{
-		static $tabletype;
-		
-		// Set the default tabletype;
-		if (!isset($tabletype))
-		{
-			$tabletype['name'] = 'record';
-			$tabletype['prefix'] = 'JSpaceTable';
-		}
 
-		// Set a custom table type is defined
-		if (isset($type))
-		{
-			$tabletype['name'] = $type;
-			$tabletype['prefix'] = $prefix;
-		}
-		
-		// Create the user table object
-		return JTable::getInstance($tabletype['name'], $tabletype['prefix']);
-	}
-	
 	/**
 	 * Bind an associative array of data to this instance of the JSpaceRecord class.
 	 *
@@ -352,7 +320,7 @@ class JSpaceRecord extends JObject
         JPluginHelper::importPlugin('content');
         $dispatcher = JEventDispatcher::getInstance();
 
-        $table = self::getTable('Record');
+        $table = JTable::getInstance('Record', 'JSpaceTable');
         $table->load($this->id);
 
         $dispatcher->trigger('onContentBeforeDelete', array(static::$context, $table));
@@ -390,7 +358,7 @@ class JSpaceRecord extends JObject
 	
 	public function load($keys)
 	{
-		$table = self::getTable('Record');
+		$table = JTable::getInstance('Record', 'JSpaceTable');
 		
 		if (!$table->load($keys))
 		{
@@ -505,6 +473,62 @@ class JSpaceRecord extends JObject
 			$this->save();
 		}
 	}
+	
+	/**
+	 * Get JSpace record, its children and assets as a tree structure.
+	 */
+	public static function getTree($id)
+	{
+        JTable::addIncludePath(JPATH_BASE.'/administrator/components/com_jspace/tables/');
+        
+        $table = JTable::getInstance('Record', 'JSpaceTable');
+        
+        if (!$table->load($id))
+        {
+            throw new Exception('The record cannot be found.', 404);
+        }
+        
+        if ($table->title == 'JSpace_Record_Root')
+        {
+            throw new Exception('Direct access to root node not allowed', 403);
+        }
+
+        $items = $table->getTree();
+        return self::_buildTree($items);
+	}
+	
+	private static function _buildTree($items, $parent = 0, $level = 0)
+	{
+        if ($level > 1000) return ''; // Make sure not to have an endless recursion
+        
+        $tree = array();
+        
+        if ($parent == 0 && $level == 0)
+        {
+            $tree = null;
+        }
+        
+        foreach ($items as $key=>$value)
+        {
+            if(is_null($tree) || (int)$value->parent_id == $parent)
+            {
+                $item = $value;
+                unset($items[$key]);
+                $item->children = self::_buildTree($items, $value->id, $value->level);
+                
+                if (is_array($tree))
+                {
+                    $tree[] = $item;
+                }
+                else
+                {
+                    $tree = $item;
+                }
+            }
+        }
+        
+        return $tree;
+    }
 
     // @todo Override until JObject declares __set.
     public function set($name, $value = null)
@@ -553,7 +577,7 @@ class JSpaceRecord extends JObject
                 
             default:
                 return parent::get($name, $default);
-                break;        
+                break;
         }
     }
 }
