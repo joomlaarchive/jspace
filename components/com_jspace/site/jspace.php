@@ -2,8 +2,7 @@
 /**
  * A script for intercepting calls to this component and handling them appropriately.
  * 
- * @author		$LastChangedBy$
- * @copyright	Copyright (C) 2011 Wijiti Pty Ltd. All rights reserved.
+ * @copyright	Copyright (C) 2011-2014 Wijiti Pty Ltd. All rights reserved.
  * @license     This file is part of the JSpace component for Joomla!.
 
    The JSpace component for Joomla! is free software: you can redistribute it 
@@ -24,12 +23,13 @@
  * Please feel free to add your name and email (optional) here if you have 
  * contributed any source code changes.
  * Name							Email
- * Hayden Young					<haydenyoung@wijiti.com> 
- * 
+ * Hayden Young					<haydenyoung@wijiti.com>
  */
 
 defined('_JEXEC') or die();
 
-require_once JPATH_LIBRARIES.'/fof/include.php';
+require_once JPATH_COMPONENT.'/helpers/route.php';
 
-FOFDispatcher::getTmpInstance('com_jspace')->dispatch();
+$controller = JControllerLegacy::getInstance('JSpace');
+$controller->execute(JFactory::getApplication()->input->get('task'));
+$controller->redirect();

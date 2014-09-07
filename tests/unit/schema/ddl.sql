@@ -102,7 +102,6 @@ CREATE TABLE `jos_jspace_records` (
     `title` VARCHAR(1024) NOT NULL,
     `alias` VARCHAR(255) NOT NULL DEFAULT '',
     `published` TINYINT NOT NULL DEFAULT 0,
-    `hits` INTEGER NOT NULL DEFAULT 0,
     `language` CHAR(7) NOT NULL,
     `created` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
     `created_by` INTEGER NOT NULL DEFAULT 0,

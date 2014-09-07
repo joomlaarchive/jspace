@@ -1,65 +1,81 @@
 <?php
 /**
- * HTML View class for displaying details about a category.
- * 
- * @author		$LastChangedBy$
- * @package		JSpace
- * @copyright	Copyright (C) 2011 Wijiti Pty Ltd. All rights reserved.
- * @license     This file is part of the JSpace component for Joomla!.
-
-   The JSpace component for Joomla! is free software: you can redistribute it 
-   and/or modify it under the terms of the GNU General Public License as 
-   published by the Free Software Foundation, either version 3 of the License, 
-   or (at your option) any later version.
-
-   The JSpace component for Joomla! is distributed in the hope that it will be 
-   useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
-
-   You should have received a copy of the GNU General Public License
-   along with the JSpace component for Joomla!.  If not, see 
-   <http://www.gnu.org/licenses/>.
-
+ * @package     JSpace.Component
+ * @subpackage  View
+ * @copyright   Copyright (C) 2014 Wijiti Pty Ltd. All rights reserved.
+ * @license     GNU General Public License version 2 or later; see LICENSE
+ *
  * Contributors
  * Please feel free to add your name and email (optional) here if you have 
  * contributed any source code changes.
- * Name							Email
- * Hayden Young					<haydenyoung@wijiti.com> 
- * Michał Kocztorz				<michalkocztorz@wijiti.com> 
- * 
+ * Name                         Email
+ * Hayden Young                 <haydenyoung@wijiti.com> 
+ * Michał Kocztorz              <michalkocztorz@wijiti.com>
  */
  
-defined( '_JEXEC' ) or die( 'Restricted access' );
+defined('_JEXEC') or die('Restricted access');
  
-jimport( 'joomla.application.component.view');
-jimport( 'jspace.factory' );
-jimport('joomla.html.pagination');
- 
-class JSpaceViewCategories extends JViewLegacy
+jimport('joomla.application.component.view');
+
+/**
+ * A view for listing JSpace categories.
+ *
+ * @package     JSpace.Component
+ * @subpackage  View
+ */
+class JSpaceViewCategories extends JViewCategories
 {
-    function display($tpl = null)
+    protected $item = null;
+
+    public function __construct($config = array())
     {
-    	$document = JFactory::getDocument();
-    	$document->addStyleSheet(JURI::base()."media/com_jspace/css/jspace.css");
-    	
-    	$input = JFactory::getApplication()->input;
-    	$id = $input->get('id', 0);
-    	$id = (empty($id) || $id == '') ? 0 : $id;
-    	$model = $this->getModel();
-    	$category = $model->getCategory($id);
-    	
-    	$config = JSpaceFactory::getConfiguration();
-    	$start = $input->get('start', 0);
-    	$pagination = new JPagination($category->getItemsCount(), $start, $config->get(JSpaceConfiguration::LIMIT_ITEMS));
-    	$items = $category->getItems( $start ); 
-    	
-    	$this->assignRef('model', $model);
-    	$this->assignRef('category', $category);
-    	$this->assignRef('pagination', $pagination);
-    	$this->assignRef('items', $items);
-    	
-    	
-        parent::display($tpl);
+        parent::__construct($config);
+        
+        $this->pageHeading = 'COM_JSPACE_DEFAULT_PAGE_TITLE';
+    }
+    
+    /**
+     * Execute and display a template script.
+     *
+     * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
+     *
+     * @return  mixed  A string if successful, otherwise a Error object.
+     */
+    public function display($tpl = null)
+    {
+        $state      = $this->get('State');
+        $items      = $this->get('Items');
+        $parent     = $this->get('Parent');
+
+        // Check for errors.
+        if (count($errors = $this->get('Errors')))
+        {
+            JError::raiseWarning(500, implode("\n", $errors));
+            return false;
+        }
+
+        if ($items === false)
+        {
+            return JError::raiseError(404, JText::_('JGLOBAL_CATEGORY_NOT_FOUND'));
+        }
+
+        if ($parent == false)
+        {
+            return JError::raiseError(404, JText::_('JGLOBAL_CATEGORY_NOT_FOUND'));
+        }
+
+        $params = &$state->params;
+
+        $items = array($parent->id => $items);
+
+        // Escape strings for HTML output
+        $this->pageclass_sfx = htmlspecialchars($params->get('pageclass_sfx'));
+
+        $this->maxLevelcat = $params->get('maxLevelcat', -1);
+        $this->params = &$params;
+        $this->parent = &$parent;
+        $this->items  = &$items;
+
+        return parent::display($tpl);
     }
 }

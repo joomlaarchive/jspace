@@ -41,89 +41,192 @@ abstract class JSpaceHelperRoute
 {
 	protected static $lookup = array();
 	
-	public static function getCategoryUrl( $id ) {
-		$Itemid = self::_findItem('categories');
-		
-		$link = new JURI('index.php');
-		$link->setVar('option', 'com_jspace');
-		$link->setVar('view', 'categories');
-		$link->setVar('id', $id);
-		if( !is_null( $Itemid ) ) {
-			$link->setVar('Itemid', $Itemid);
-		}
-		$link = is_null($Itemid) ? '/' . (string)$link : JRoute::_( (string)$link );
-		return $link;
-	}
+    public static function getCategoryRoute($catid, $language = 0)
+    {
+        if ($catid instanceof JCategoryNode)
+        {
+            $id = $catid->id;
+            $category = $catid;
+        }
+        else
+        {
+            $id = (int) $catid;
+            $category = JCategories::getInstance('JSpace')->get($id);
+        }
+
+        if ($id < 1 || !($category instanceof JCategoryNode))
+        {
+            $link = '';
+        }
+        else
+        {
+            $needles = array();
+
+            // Create the link
+            $link = 'index.php?option=com_jspace&view=category&id='.$id;
+
+            $catids = array_reverse($category->getPath());
+            $needles['category'] = $catids;
+            $needles['categories'] = $catids;
+
+            if ($language && $language != "*" && JLanguageMultilang::isEnabled())
+            {
+                self::buildLanguageLookup();
+
+                if (isset(self::$lang_lookup[$language]))
+                {
+                    $link .= '&lang=' . self::$lang_lookup[$language];
+                    $needles['language'] = $language;
+                }
+            }
+
+            if ($item = self::_findItem($needles))
+            {
+                $link .= '&Itemid='.$item;
+            }
+        }
+
+        return $link;
+    }
+
+    public static function getRecordRoute($id, $catid = 0, $language = 0)
+    {
+        $needles = array(
+            'record'  => array((int) $id)
+        );
+
+        // Create the link
+        $link = 'index.php?option=com_jspace&view=record&id=' . $id;
+
+        if ((int) $catid > 1)
+        {
+            $categories = JCategories::getInstance('JSpace');
+            $category   = $categories->get((int) $catid);
+
+            if ($category)
+            {
+                $needles['category']   = array_reverse($category->getPath());
+                $needles['categories'] = $needles['category'];
+                $link .= '&catid=' . $catid;
+            }
+        }
+
+        if ($language && $language != "*" && JLanguageMultilang::isEnabled())
+        {
+            self::buildLanguageLookup();
+
+            if (isset(self::$lang_lookup[$language]))
+            {
+                $link .= '&lang=' . self::$lang_lookup[$language];
+                $needles['language'] = $language;
+            }
+        }
+
+        if ($item = self::_findItem($needles))
+        {
+            $link .= '&Itemid=' . $item;
+        }
+
+        return $link;
+    }
 	
+    protected static function buildLanguageLookup()
+    {
+        if (count(self::$lang_lookup) == 0)
+        {
+            $db    = JFactory::getDbo();
+            $query = $db->getQuery(true)
+                ->select('a.sef AS sef')
+                ->select('a.lang_code AS lang_code')
+                ->from('#__languages AS a');
 
-	/**
-	 * Get full route to item (with domain name).
-	 * @param mixed $id
-	 */
-	public static function getItemFullRoute( $id ) {
-		$Itemid = self::_findItem('item');
+            $db->setQuery($query);
+            $langs = $db->loadObjectList();
 
-		$link = new JURI( 'index.php');
-		$link->setVar('option', 'com_jspace');
-		$link->setVar('view', 'item');
-		$link->setVar('id', $id);
-		if( !is_null( $Itemid) ) {
-			$link->setVar('Itemid', $Itemid);
-		}
-		
-		$routed = is_null($Itemid) ? '/' . (string)$link : JRoute::_( (string)$link );
-		return JURI::getInstance()->toString(array('scheme', 'host', 'port')) . $routed;
-	}
+            foreach ($langs as $lang)
+            {
+                self::$lang_lookup[$lang->lang_code] = $lang->sef;
+            }
+        }
+    }
 
-	public static function getItemUrl( $id ) {
-		$Itemid = self::_findItem('item');
-// 		JSpaceLog::dev($Itemid);
-		
-		$link = new JURI( 'index.php');
-		$link->setVar('option', 'com_jspace');
-		$link->setVar('view', 'item');
-		$link->setVar('id', $id);
-		if( !is_null( $Itemid) ) {
-			$link->setVar('Itemid', $Itemid);
-		}
-// 		JSpaceLog::dev((string)$link);
-		return (string)$link; 
-	}
-	
-	protected static function _findItem($view = 'basic')
- 	{
-		$app = JFactory::getApplication();
-		$menus = $app->getMenu('site');
-		$found = false;
-		$itemId = 0;
-		
+    protected static function _findItem($needles = null)
+    {
+        $app        = JFactory::getApplication();
+        $menus      = $app->getMenu('site');
+        $language   = isset($needles['language']) ? $needles['language'] : '*';
 
-		if( !isset(self::$lookup[$view]) ) {
-			$component = JComponentHelper::getComponent('com_jspace');
-			$items = $menus->getItems('component_id', $component->id);
+        // Prepare the reverse lookup array.
+        if (!isset(self::$lookup[$language]))
+        {
+            self::$lookup[$language] = array();
 
-			while (($item = current($items)) && !$found) {
-				if (isset($item->query) && isset($item->query['view'])) {
-					if ($view == $item->query['view']) {
-						$found = true;
-						self::$lookup[$view] = $item->id;					
-					}
-				}
-				
-				next($items);
-			}
-		}
+            $component  = JComponentHelper::getComponent('com_jspace');
 
-		if ($itemId = JArrayHelper::getValue(self::$lookup, $view, null)) {
-			return $itemId;
-		} 
-// 		else {
-// 			$active = $menus->getActive();
-// 			if ($active) {
-// 				return $active->id;
-// 			}
-// 		}
+            $attributes = array('component_id');
+            $values = array($component->id);
 
-		return null;
-	}
+            if ($language != '*')
+            {
+                $attributes[] = 'language';
+                $values[] = array($needles['language'], '*');
+            }
+
+            $items = $menus->getItems($attributes, $values);
+
+            if ($items)
+            {
+                foreach ($items as $item)
+                {
+                    if (isset($item->query) && isset($item->query['view']))
+                    {
+                        $view = $item->query['view'];
+                        if (!isset(self::$lookup[$language][$view]))
+                        {
+                            self::$lookup[$language][$view] = array();
+                        }
+                        if (isset($item->query['id']))
+                        {
+
+                            // here it will become a bit tricky
+                            // language != * can override existing entries
+                            // language == * cannot override existing entries
+                            if (!isset(self::$lookup[$language][$view][$item->query['id']]) || $item->language != '*')
+                            {
+                                self::$lookup[$language][$view][$item->query['id']] = $item->id;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        if ($needles)
+        {
+            foreach ($needles as $view => $ids)
+            {
+                if (isset(self::$lookup[$language][$view]))
+                {
+                    foreach ($ids as $id)
+                    {
+                        if (isset(self::$lookup[$language][$view][(int) $id]))
+                        {
+                            return self::$lookup[$language][$view][(int) $id];
+                        }
+                    }
+                }
+            }
+        }
+
+        // Check if the active menuitem matches the requested language
+        $active = $menus->getActive();
+        if ($active && ($language == '*' || in_array($active->language, array('*', $language)) || !JLanguageMultilang::isEnabled()))
+        {
+            return $active->id;
+        }
+
+        // If not found, return language specific home link
+        $default = $menus->getDefault($language);
+        return !empty($default->id) ? $default->id : null;
+    }
 }

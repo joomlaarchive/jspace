@@ -66,7 +66,6 @@ class JSpaceRecordTest extends TestCaseDatabase
         $record->set('metadata', $registry);
         $record->set('created_by', 525);
         $record->set('published', 0);
-        $record->set('hits', 0);
         $record->set('schema', '[No Schema]');
 
         $record->save();
@@ -134,6 +133,61 @@ class JSpaceRecordTest extends TestCaseDatabase
         
         // @todo Better testing required.
         $this->assertNotNull($tree);
+    }
+    
+    public function testLazyLoading()
+    {
+        $registry = new JRegistry;
+        $registry->set('title', array('Level 1'));
+        $registry->set('author', array('Hayden Young'));
+    
+        // Level 1
+        $record = new JSpaceRecord();
+        $record->catid = 9;
+        $record->set('title', 'Level 1');
+        $record->set('language', '*');
+        $record->set('metadata', $registry);
+        $record->set('created_by', JFactory::getUser()->id);
+
+        $record->save();
+        
+        $id = $record->id;
+        $parent_id = $id;
+        
+        // Level 2
+        $record->set('title', 'Level 2a');
+        $record->set('parent_id', $parent_id);
+        $record->set('id', null);
+
+        $record->save();
+        
+        $id = $record->id;
+        
+        // Level 3
+        $record->set('title', 'Level 3');
+        $record->set('parent_id', $id);
+        $record->set('id', null);
+        
+        $record->save();
+        
+        // Level 2
+        $record->set('title', 'Level 2b');
+        $record->set('parent_id', $parent_id);
+        $record->set('id', null);
+
+        $record->save();
+        
+        $record = JSpaceRecord::getInstance($parent_id);
+        
+        $children = $record->getChildren();
+        
+        $this->assertEquals(2, count($children));
+        
+        $children = current($children)->getChildren();
+        
+        $this->assertEquals(1, count($children));
+        
+        $this->assertEquals(1, count($record->getCategory()));
     }
 
     /**

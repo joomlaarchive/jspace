@@ -158,10 +158,6 @@
 			class="inputbox" size="45"
 			labelclass="control-label"/>
 
-		<field name="hits" type="text" label="JGLOBAL_HITS"
-			description="COM_JSPACE_RECORD_HITS_DESC" class="readonly" size="6"
-			readonly="true" filter="unset" />
-
 		<field 
 			name="id"
 			type="text"

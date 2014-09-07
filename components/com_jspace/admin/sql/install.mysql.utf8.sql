@@ -4,7 +4,6 @@ CREATE TABLE IF NOT EXISTS `#__jspace_records` (
 	`title` VARCHAR(1024) NOT NULL,
 	`alias` VARCHAR(255) NOT NULL DEFAULT '',
 	`published` TINYINT NOT NULL DEFAULT 0 COMMENT 'The published state of the record.',
-	`hits` INTEGER NOT NULL DEFAULT 0,
 	`language` CHAR(7) NOT NULL COMMENT 'The language code for the record.',
 	`created` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
 	`created_by` INTEGER NOT NULL DEFAULT 0,
@@ -125,7 +124,7 @@ VALUES
 '',
 '{"common":{"core_content_item_id":"id","core_title":"title","core_state":"published","core_alias":"alias",
 "core_created_time":"created_time","core_modified_time":"modified_time","core_body":"description", 
-"core_hits":"hits","core_publish_up":"null","core_publish_down":"null","core_access":"access", "core_params":"params", 
+"core_publish_up":"null","core_publish_down":"null","core_access":"access", "core_params":"params", 
 "core_featured":"null", "core_metadata":"metadata", "core_language":"language", "core_images":"null", 
 "core_urls":"null", "core_version":"version", "core_ordering":"null", "core_metakey":"metakey", 
 "core_metadesc":"metadesc", "core_catid":"parent_id", "core_xreference":"null", "asset_id":"asset_id"}, 
@@ -134,7 +133,7 @@ VALUES
 'JSpaceHelperRoute::getCategoryRoute',
 '{"formFile":"administrator\/components\/com_categories\/models\/forms\/category.xml", 
 "hideFields":["asset_id","checked_out","checked_out_time","version","lft","rgt","level","path","extension"], 
-"ignoreChanges":["modified_user_id", "modified_time", "checked_out", "checked_out_time", "version", "hits", 
+"ignoreChanges":["modified_user_id", "modified_time", "checked_out", "checked_out_time", "version", 
 "path"],"convertToInt":["publish_up", "publish_down"], 
 "displayLookup":[{"sourceColumn":"created_user_id","targetTable":"#__users","targetColumn":"id","displayColumn":"name"},
 {"sourceColumn":"access","targetTable":"#__viewlevels","targetColumn":"id","displayColumn":"title"},{
@@ -147,9 +146,9 @@ VALUES
 '{"special":{"dbtable":"#__jspace_records","key":"id","type":"Record","prefix":"JSpaceTable","config":"array()"},"common":{
 "dbtable":"#__ucm_content","key":"ucm_id","type":"Corecontent","prefix":"JTable","config":"array()"}}', 
 '', 
-'{"common":{"core_content_item_id":"id","core_title":"title","core_state":"state","core_alias":"alias","core_created_time":"created","core_modified_time":"modified","core_body":"description", "core_hits":"hits","core_publish_up":"publish_up","core_publish_down":"publish_down","core_access":"access", "core_params":"params", "core_featured":"featured", "core_language":"language", "core_images":"images", "core_urls":"urls", "core_version":"version", "core_ordering":"ordering", "core_metakey":"metakey", "core_metadesc":"metadesc", "core_catid":"catid", "core_xreference":"xreference", "asset_id":"asset_id"}, "special":{"metadata":"metadata"}}', 
+'{"common":{"core_content_item_id":"id","core_title":"title","core_state":"state","core_alias":"alias","core_created_time":"created","core_modified_time":"modified","core_body":"description", "core_publish_up":"publish_up","core_publish_down":"publish_down","core_access":"access", "core_params":"params", "core_featured":"featured", "core_language":"language", "core_images":"images", "core_urls":"urls", "core_version":"version", "core_ordering":"ordering", "core_metakey":"metakey", "core_metadesc":"metadesc", "core_catid":"catid", "core_xreference":"xreference", "asset_id":"asset_id"}, "special":{"metadata":"metadata"}}', 
 'JSpaceHelperRoute::getRecordRoute', 
-'{"formFile":"administrator\/components\/com_jspace\/models\/forms\/record.xml", "hideFields":["metadata","asset_id","checked_out","checked_out_time","version","hits","lft","rgt","level","path"],"ignoreChanges":["modified_by", "modified", "checked_out", "checked_out_time", "version", "hits","lft","rgt","level","path"],"convertToInt":["publish_up", 
+'{"formFile":"administrator\/components\/com_jspace\/models\/forms\/record.xml", "hideFields":["metadata","asset_id","checked_out","checked_out_time","version","lft","rgt","level","path"],"ignoreChanges":["modified_by", "modified", "checked_out", "checked_out_time", "version", "lft","rgt","level","path"],"convertToInt":["publish_up", 
 "publish_down","ordering"],"displayLookup":[{"sourceColumn":"catid","targetTable":"#__categories","targetColumn":"id",
 "displayColumn":"title"},{"sourceColumn":"created_by","targetTable":"#__users","targetColumn":"id",
 "displayColumn":"name"},{"sourceColumn":"access","targetTable":"#__viewlevels","targetColumn":"id",
@@ -157,4 +156,4 @@ VALUES
 "displayColumn":"name"},{"sourceColumn":"parent_id","targetTable":"#__jspace_records","targetColumn":"id",
 "displayColumn":"title"}]}');
 
-INSERT INTO `#__jspace_records` (`asset_id`, `title`, `alias`, `published`, `hits`, `language`, `created`, `created_by`, `metadata`, `path`, `lft`, `rgt`, `catid`) VALUES (0, 'JSpace_Record_Root', 'root', 1, 0, '*', '2011-01-01 00:00:01', 42, '{}', '', 0, 1, 0);
+INSERT INTO `#__jspace_records` (`asset_id`, `title`, `alias`, `published`, `language`, `created`, `created_by`, `metadata`, `path`, `lft`, `rgt`, `catid`) VALUES (0, 'JSpace_Record_Root', 'root', 1, '*', '2011-01-01 00:00:01', 42, '{}', '', 0, 1, 0);

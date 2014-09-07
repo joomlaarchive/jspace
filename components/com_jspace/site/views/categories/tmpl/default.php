@@ -2,69 +2,46 @@
 /**
  * Default display for details about a single category.
  * 
- * @author		$LastChangedBy$
- * @copyright	Copyright (C) 2011 Wijiti Pty Ltd. All rights reserved.
- * @license     This file is part of the JSpace component for Joomla!.
-
-   The JSpace component for Joomla! is free software: you can redistribute it 
-   and/or modify it under the terms of the GNU General Public License as 
-   published by the Free Software Foundation, either version 3 of the License, 
-   or (at your option) any later version.
-
-   The JSpace component for Joomla! is distributed in the hope that it will be 
-   useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
-
-   You should have received a copy of the GNU General Public License
-   along with the JSpace component for Joomla!.  If not, see 
-   <http://www.gnu.org/licenses/>.
-
+ * @copyright   Copyright (C) 2014 KnowledgeArc Ltd. All rights reserved.
+ * @license     GNU General Public License version 2 or later; see LICENSE
+ *
  * Contributors
  * Please feel free to add your name and email (optional) here if you have 
  * contributed any source code changes.
+ *
  * Name							Email
  * Michał Kocztorz				<michalkocztorz@wijiti.com> 
- * 
+ * Hayden Young                 <haydenyoung@wijiti.com>
  */
 
-defined( '_JEXEC' ) or die( 'Restricted access' );
-/* @var $category JSpaceRepositoryCategory */
-$category = $this->category;
+defined('_JEXEC') or die;
 
-/* @var $pagination JPagination */
-$pagination = $this->pagination;
+JHtml::addIncludePath(JPATH_COMPONENT . '/helpers');
+JHtml::_('behavior.caption');
 
-JLoader::discover('JSpaceHelper', JPATH_BASE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_jspace' . DIRECTORY_SEPARATOR . 'helpers' );
-
-?> 
-<?php if( !$category->isRoot() ): ?>
-	<a href="<?php echo JSpaceHelperRoute::getCategoryUrl( $category->getParent()->getId() ); ?>">
-		<?php echo $category->getParent()->getName(); ?>
-	</a>
+?>
+<div class="categories-list<?php echo $this->pageclass_sfx;?>">
+<?php if ($this->params->get('show_page_heading')) : ?>
+<h1>
+    <?php echo $this->escape($this->params->get('page_heading')); ?>
+</h1>
 <?php endif; ?>
-<h2><?php echo $category->getName(); ?></h2>
-<ul class="jspace-categories">
-	<?php foreach( $category->getChildren() as $subcategory ): ?>
-		<li>
-			<a href="<?php echo JSpaceHelperRoute::getCategoryUrl( $subcategory->getId() ); ?>">
-				<?php echo $subcategory->getName(); ?>
-			</a>
-		</li>
-	<?php endforeach; ?>
-</ul>
-<ul class="jspace-items">
-	<?php foreach( $this->items as $id => $item ): ?>
-		<li>
-			<a href="<?php echo JSpaceHelperRoute::getItemFullRoute( $id ); ?>">
-				<?php echo $item->getMetadata('title'); ?>
-			</a>
-		</li>
-	<?php endforeach; ?>
-</ul>
 
-<div class="jspace-pagination">
-	<?php echo $pagination->getPagesLinks(); ?>
+<?php if ($this->params->get('show_base_description')) : ?>
+    <?php //If there is a description in the menu parameters use that; ?>
+        <?php if($this->params->get('categories_description')) : ?>
+            <div class="category-desc base-desc">
+            <?php echo JHtml::_('content.prepare', $this->params->get('categories_description'), '',  $this->get('extension') . '.categories'); ?>
+            </div>
+        <?php else : ?>
+            <?php //Otherwise get one from the database if it exists. ?>
+            <?php  if ($this->parent->description) : ?>
+                <div class="category-desc base-desc">
+                    <?php echo JHtml::_('content.prepare', $this->parent->description, '', $this->parent->extension . '.categories'); ?>
+                </div>
+            <?php endif; ?>
+        <?php endif; ?>
+    <?php endif; ?>
+    
+    <?php echo $this->loadTemplate('items'); ?>
 </div>
-
-

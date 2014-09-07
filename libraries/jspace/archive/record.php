@@ -43,69 +43,71 @@ class JSpaceRecord extends JObject
      * @param   int  $identifier  A JSpace record identifier if provided, otherwise creates an empty 
      * JSpace record.
      */
-	public function __construct($identifier = 0)
-	{
+    public function __construct($identifier = 0)
+    {
         JTable::addIncludePath(JPATH_BASE.'/administrator/components/com_jspace/tables/');
         
-		JLog::addLogger(array());
-	
-		$this->_metadata = new JRegistry;
+        JLog::addLogger(array());
+    
+        $this->_metadata = new JRegistry;
 
-		if (!empty($identifier))
-		{
-			$this->load($identifier);
-		}
-		else
-		{
-			$this->id = null;
-		}
-	}
+        if (!empty($identifier))
+        {
+            $this->load($identifier);
+        }
+        else
+        {
+            $this->id = (isset($this->id)) ? $this->id : null;
+        }
+        
+        $this->set('metadata', $this->metadata);
+    }
 
-	/**
-	 * Gets an instance of the JSpaceRecord class, creating it if it doesn't exist.
-	 *
-	 * @param   int  $identifier  The record id to retrieve.
-	 * 
-	 * @return  JSpaceRecord      An instance of the JSpaceRecord class.
-	 */
-	public static function getInstance($identifier = 0)
-	{
-		if (!is_numeric($identifier))
-		{
-			JLog::add(JText::sprintf('JLIB_USER_ERROR_ID_NOT_EXISTS', $identifier), JLog::WARNING, 'jspace');
+    /**
+     * Gets an instance of the JSpaceRecord class, creating it if it doesn't exist.
+     *
+     * @param   int  $identifier  The record id to retrieve.
+     * 
+     * @return  JSpaceRecord      An instance of the JSpaceRecord class.
+     */
+    public static function getInstance($identifier = 0)
+    {
+        if (!is_numeric($identifier))
+        {
+            JLog::add(JText::sprintf('JLIB_USER_ERROR_ID_NOT_EXISTS', $identifier), JLog::WARNING, 'jspace');
 
-			return false;
-		}
-		else
-		{
-			$id = $identifier;
-		}
+            return false;
+        }
+        else
+        {
+            $id = $identifier;
+        }
 
-		if ($id === 0)
-		{
-			return new JSpaceRecord;
-		}
+        if ($id === 0)
+        {
+            return new JSpaceRecord;
+        }
 
-		if (empty(self::$instances[$id]))
-		{
-			$record = new JSpaceRecord($id);
-			self::$instances[$id] = $record;
-		}
+        if (empty(self::$instances[$id]))
+        {
+            $record = new JSpaceRecord($id);
+            self::$instances[$id] = $record;
+        }
 
-		return self::$instances[$id];
-	}
+        return self::$instances[$id];
+    }
 
-	/**
-	 * Bind an associative array of data to this instance of the JSpaceRecord class.
-	 *
-	 * @param   array      $array  The associative array to bind to the object.
-	 *
-	 * @return  boolean    True on success
-	 *
-	 * @throw   Exception  If the $array to be bound is not an object or array.
-	 */
-	public function bind(&$array)
-	{
+    /**
+     * Bind an associative array of data to this instance of the JSpaceRecord class.
+     *
+     * @param   array      $array  The associative array to bind to the object.
+     *
+     * @return  boolean    True on success
+     *
+     * @throw   Exception  If the $array to be bound is not an object or array.
+     */
+    public function bind(&$array)
+    {
         if ((!empty($array['tags']) && $array['tags'][0] != ''))
         {
             $this->newTags = $array['tags'];
@@ -123,56 +125,56 @@ class JSpaceRecord extends JObject
         
         $this->metadata = JArrayHelper::getValue($array, 'metadata', array());
 
-		// Bind the array
-		if (!$this->setProperties($array))
-		{
-			throw new Exception('Data to be bound is neither an array nor an object');
-		}
+        // Bind the array
+        if (!$this->setProperties($array))
+        {
+            throw new Exception('Data to be bound is neither an array nor an object');
+        }
 
-		return true;
-	}
+        return true;
+    }
 
-	/**
-	 * Saves the current record.
-	 *
-	 * @param   array   $collection An array of assets and other asset-related information.
-	 * @param   string  $updateOnly
-	 * 
-	 * @return  bool    True on success, false otherwise.
-	 */
-	public function save($collection = array(), $updateOnly = false)
-	{
-		// separate assets which should be saved with this record vs those which should be stored as a child.
-		$children = array();
-		
-		foreach ($collection as $bkey=>$bundle)
-		{
-			$schema = JArrayHelper::getValue($bundle, 'schema', null);
-			$assets = JArrayHelper::getValue($bundle, 'assets', array(), 'array');
-			
-			foreach ($assets as $dkey=>$derivative)
-			{
-				foreach ($derivative as $akey=>$asset)
-				{
-					$metadata = self::_getMetadataCrosswalk($asset)->toArray();
-					$collection[$bkey]['assets'][$dkey][$akey]['metadata'] = $metadata;
-				}
-			}
-			
-			// if the schema is set, make the asset a child record.
-			if ($schema)
-			{
-				$children[$bkey] = $collection[$bkey];
-				unset($collection[$bkey]);
-			}
-		}
-		
-		$dispatcher = JEventDispatcher::getInstance();	
-		JPluginHelper::importPlugin('content');
-		
-		$table = JTable::getInstance('Record', 'JSpaceTable');
-		
-		if (!($isNew = empty($this->id)))
+    /**
+     * Saves the current record.
+     *
+     * @param   array   $collection An array of assets and other asset-related information.
+     * @param   string  $updateOnly
+     * 
+     * @return  bool    True on success, false otherwise.
+     */
+    public function save($collection = array(), $updateOnly = false)
+    {
+        // separate assets which should be saved with this record vs those which should be stored as a child.
+        $children = array();
+        
+        foreach ($collection as $bkey=>$bundle)
+        {
+            $schema = JArrayHelper::getValue($bundle, 'schema', null);
+            $assets = JArrayHelper::getValue($bundle, 'assets', array(), 'array');
+            
+            foreach ($assets as $dkey=>$derivative)
+            {
+                foreach ($derivative as $akey=>$asset)
+                {
+                    $metadata = self::_getMetadataCrosswalk($asset)->toArray();
+                    $collection[$bkey]['assets'][$dkey][$akey]['metadata'] = $metadata;
+                }
+            }
+            
+            // if the schema is set, make the asset a child record.
+            if ($schema)
+            {
+                $children[$bkey] = $collection[$bkey];
+                unset($collection[$bkey]);
+            }
+        }
+        
+        $dispatcher = JEventDispatcher::getInstance();    
+        JPluginHelper::importPlugin('content');
+        
+        $table = JTable::getInstance('Record', 'JSpaceTable');
+        
+        if (!($isNew = empty($this->id)))
         {
             $table->load($this->id);
         }
@@ -181,26 +183,26 @@ class JSpaceRecord extends JObject
         {
             $table->setLocation($this->parent_id, 'last-child');
         }
-		
-		$table->bind($this->getProperties());
-		
-		if (isset($this->newTags))
-		{
+        
+        $table->bind($this->getProperties());
+        
+        if (isset($this->newTags))
+        {
             $table->newTags = $this->newTags;
-		}
-		
-		$result = $dispatcher->trigger('onContentBeforeSave', array(static::$context, $this, $isNew));
-		
-		if (in_array(false, $result, true))
-		{
-			return false;
-		}
-		
-		if (!$result = $table->store())
-		{
-			JLog::add(__METHOD__." Cannot save. ".$table->getError(), JLog::CRITICAL, 'jspace');
-			return false;
-		}
+        }
+        
+        $result = $dispatcher->trigger('onContentBeforeSave', array(static::$context, $this, $isNew));
+        
+        if (in_array(false, $result, true))
+        {
+            return false;
+        }
+        
+        if (!$result = $table->store())
+        {
+            JLog::add(__METHOD__." Cannot save. ".$table->getError(), JLog::CRITICAL, 'jspace');
+            return false;
+        }
 
         if (empty($this->id))
         {
@@ -224,76 +226,76 @@ class JSpaceRecord extends JObject
         return $result;
     }
 
-	/**
-	 * Saves the record's assets.
-	 *
-	 * @param  array  $collection  An array of assets to save with the record.
-	 */
-	private function _saveAssets($collection)
-	{
-		foreach ($collection as $bkey=>$bundle)
-		{
-			$assets = JArrayHelper::getValue($bundle, 'assets', array(), 'array');
-		
-			foreach ($assets as $dkey=>$derivative)
-			{
-				foreach ($derivative as $akey=>$asset)
-				{					
-					$new = JSpaceAsset::getInstance();
-					$new->bind($asset);
-					
-					$new->set('id', null);
-					$new->set('record_id', $this->id);
-					$new->set('hash', sha1_file(JArrayHelper::getValue($asset, 'tmp_name')));
-					$new->set('bundle', $bkey);
-					$new->set('derivative', $dkey);
-					$new->save();
-				}
-			}
-		}
-	}
-	
-	/**
-	 * Save children as separate sub records.
-	 * 
-	 * @param  array  $children  An array of children to save a sub records.
-	 */	 
-	private function _saveChildren($children)
-	{
-		foreach ($children as $bkey=>$bundle)
-		{
-			$record = JSpaceRecord::getInstance();
-			
-			$array = array();
-			$array['title'] = 'child record';
-			$array['schema'] = JArrayHelper::getValue($bundle, 'schema');
-			
-			// The schema has been set. Remove.
-			if (isset($bundle['schema']))
-			{
-				unset($bundle['schema']);
-			}
-			
-			$array['parent_id'] = $this->id;
-			$array['published'] = $this->published;
-			$array['access'] = $this->access;
-			$array['language'] = $this->language;
-			
-			// Get the first file for retrieving metadata from.
-			$first = JArrayHelper::getValue($bundle, 'assets');
-			$first = JArrayHelper::getValue($first, JArrayHelper::getValue(array_keys($first), 0));
-			$first = JArrayHelper::getValue($first, 0);
-			
-			$metadata = self::_getMetadataCrosswalk($first);
-			
-			$array['title'] = $metadata->get('fileName', 'Untitled');
-			$array['metadata'] = self::_crosswalkSchema($metadata->toArray(), $array['schema'])->toArray();
-			
-			$record->bind($array);
-			$record->save(array($bkey=>$bundle));
-		}
-	}
-	
+    /**
+     * Saves the record's assets.
+     *
+     * @param  array  $collection  An array of assets to save with the record.
+     */
+    private function _saveAssets($collection)
+    {
+        foreach ($collection as $bkey=>$bundle)
+        {
+            $assets = JArrayHelper::getValue($bundle, 'assets', array(), 'array');
+        
+            foreach ($assets as $dkey=>$derivative)
+            {
+                foreach ($derivative as $akey=>$asset)
+                {                    
+                    $new = JSpaceAsset::getInstance();
+                    $new->bind($asset);
+                    
+                    $new->set('id', null);
+                    $new->set('record_id', $this->id);
+                    $new->set('hash', sha1_file(JArrayHelper::getValue($asset, 'tmp_name')));
+                    $new->set('bundle', $bkey);
+                    $new->set('derivative', $dkey);
+                    $new->save();
+                }
+            }
+        }
+    }
+    
+    /**
+     * Save children as separate sub records.
+     * 
+     * @param  array  $children  An array of children to save a sub records.
+     */     
+    private function _saveChildren($children)
+    {
+        foreach ($children as $bkey=>$bundle)
+        {
+            $record = JSpaceRecord::getInstance();
+            
+            $array = array();
+            $array['title'] = 'child record';
+            $array['schema'] = JArrayHelper::getValue($bundle, 'schema');
+            
+            // The schema has been set. Remove.
+            if (isset($bundle['schema']))
+            {
+                unset($bundle['schema']);
+            }
+            
+            $array['parent_id'] = $this->id;
+            $array['published'] = $this->published;
+            $array['access'] = $this->access;
+            $array['language'] = $this->language;
+            
+            // Get the first file for retrieving metadata from.
+            $first = JArrayHelper::getValue($bundle, 'assets');
+            $first = JArrayHelper::getValue($first, JArrayHelper::getValue(array_keys($first), 0));
+            $first = JArrayHelper::getValue($first, 0);
+            
+            $metadata = self::_getMetadataCrosswalk($first);
+            
+            $array['title'] = $metadata->get('fileName', 'Untitled');
+            $array['metadata'] = self::_crosswalkSchema($metadata->toArray(), $array['schema'])->toArray();
+            
+            $record->bind($array);
+            $record->save(array($bkey=>$bundle));
+        }
+    }
+    
     /**
      * Saves the alternative identifiers.
      * 
@@ -340,145 +342,160 @@ class JSpaceRecord extends JObject
             $table = JTable::getInstance('RecordIdentifier', 'JSpaceTable');
             $table->delete($identifier->id);
         }
-		
-		foreach ($this->getAssets() as $asset)
-		{
-			$asset->delete();
-		}
-		
-		if (!$table->delete())
-		{
-			throw new Exception($table->getError());
-		}
-		
-		$dispatcher->trigger('onContentAfterDelete', array(static::$context, $table));
+        
+        foreach ($this->getAssets() as $asset)
+        {
+            $asset->delete();
+        }
+        
+        if (!$table->delete())
+        {
+            throw new Exception($table->getError());
+        }
+        
+        $dispatcher->trigger('onContentAfterDelete', array(static::$context, $table));
 
-		return true;
-	}
-	
-	public function load($keys)
-	{
-		$table = JTable::getInstance('Record', 'JSpaceTable');
-		
-		if (!$table->load($keys))
-		{
-			return false;
-		}
-		
-		$this->metadata = $table->metadata;
-		
-		$this->setProperties($table->getProperties());
+        return true;
+    }
+    
+    public function load($keys)
+    {
+        $table = JTable::getInstance('Record', 'JSpaceTable');
+        
+        if (!$table->load($keys))
+        {
+            return false;
+        }
+        
+        $this->metadata = $table->metadata;
+        
+        $this->setProperties($table->getProperties());
 
-		return true;
-	}
-	
-	/**
-	 * Walks a schema, copying values from the source to a new metadata registry.
-	 *
-	 * @params  array      $source  An array of metadata values to crosswalk.
-	 * @params  string     $schema  The schema against which to crosswalk the metadata.
-	 *
-	 * @return  JRegistry  A new metadata registry of values found in the schema.
-	 */
-	private static function _crosswalkSchema($source, $schema)
-	{
-		$metadata = new JRegistry();
-	
-		$schemaPath = JPATH_ROOT."/administrator/components/com_jspace/models/forms/schemas/".$schema.".xml";
-		
-		$form = new JForm('jform');
-		$form->loadFile($schemaPath);
+        return true;
+    }
+    
+    /**
+     * Walks a schema, copying values from the source to a new metadata registry.
+     *
+     * @params  array      $source  An array of metadata values to crosswalk.
+     * @params  string     $schema  The schema against which to crosswalk the metadata.
+     *
+     * @return  JRegistry  A new metadata registry of values found in the schema.
+     */
+    private static function _crosswalkSchema($source, $schema)
+    {
+        $metadata = new JRegistry();
+    
+        $schemaPath = JPATH_ROOT."/administrator/components/com_jspace/models/forms/schemas/".$schema.".xml";
+        
+        $form = new JForm('jform');
+        $form->loadFile($schemaPath);
 
-		// try to match form fields to retrieved file metadata.
-		foreach ($source as $key=>$value)
-		{
-			if ($form->getField($key, 'metadata'))
-			{
-				$metadata->set($key, $value);
-			}
-		}
-		
-		return $metadata;
-	}
-	
-	/**
-	 * Crosswalks the asset metadata.
-	 * 
-	 * @param    array     $asset  A record asset expressed as an array.
-	 * 
-	 * @return  JRegistry  The crosswalked asset metadata.
-	 */
-	private static function _getMetadataCrosswalk($asset)
-	{
-		$metadata = JSpaceFile::getMetadata(JArrayHelper::getValue($asset, 'tmp_name'));
-		
-		// set the file name to the original file name (it is using the upload name in the metadata).
-		if ($fileName = JArrayHelper::getValue($asset, 'name'))
-		{
-			$metadata->set('resourceName', $fileName);
-		}
-		
-		$metadata = JSpaceFactory::getCrosswalk($metadata, array('name'=>'datastream'))->walk();
-		
-		$metadata = new JRegistry($metadata);
-		
-		$metadata->set('checksumSHA1', sha1_file(JArrayHelper::getValue($asset, 'tmp_name')));
-		$metadata->set('checksumMD5', md5_file(JArrayHelper::getValue($asset, 'tmp_name')));
-		
-		return $metadata;
-	}
-	
-	/**
-	 * Gets a list of assets associated with this record.
-	 *
-	 * The list of assets can be filtered by passing an array of key, value pairs:
-	 * 
-	 * E.g.
-	 * 
-	 * $filters = array('bundle'=>'videos','derivative'=>'original');
-	 * $record->getAssets($filters);
-	 * 
-	 * @param   array  $filters  An array of filters.
-	 *
-	 * @return  JSpaceAsset[]  An array of JSpaceAsset objects.
-	 */
-	public function getAssets($filters = array())
-	{
-		$database = JFactory::getDbo();
-		$query = $database->getQuery(true);
-		
-		$query
-			->select(array('id', 'hash', 'metadata', 'derivative', 'bundle', 'record_id'))
-			->from('#__jspace_assets')
-			->where('record_id='.(int)$this->id);
-			
-		foreach ($filters as $key=>$value)
-		{
-			$query->where($database->qn($key).'='.$database->q($value));
-		}
-		
-		$database->setQuery($query);
-		
-		return $database->loadObjectList('id', 'JSpaceAsset');
-	}
-	
-	public function bindAssetMetadata($assetId)
-	{
-		$asset = JSpaceAsset::getInstance($assetId);
-		
-		if ($asset->id)
-		{
-			$this->_metadata = self::_crosswalkSchema($asset->getMetadata()->toArray(), $this->schema);
-			$this->metadata = (string)$this->_metadata;
-			$this->save();
-		}
-	}
-	
-	/**
-	 * Get JSpace record, its children and assets as a tree structure.
-	 */
-	public static function getTree($id)
-	{
+        // try to match form fields to retrieved file metadata.
+        foreach ($source as $key=>$value)
+        {
+            if ($form->getField($key, 'metadata'))
+            {
+                $metadata->set($key, $value);
+            }
+        }
+        
+        return $metadata;
+    }
+    
+    /**
+     * Crosswalks the asset metadata.
+     * 
+     * @param    array     $asset  A record asset expressed as an array.
+     * 
+     * @return  JRegistry  The crosswalked asset metadata.
+     */
+    private static function _getMetadataCrosswalk($asset)
+    {
+        $metadata = JSpaceFile::getMetadata(JArrayHelper::getValue($asset, 'tmp_name'));
+        
+        // set the file name to the original file name (it is using the upload name in the metadata).
+        if ($fileName = JArrayHelper::getValue($asset, 'name'))
+        {
+            $metadata->set('resourceName', $fileName);
+        }
+        
+        $metadata = JSpaceFactory::getCrosswalk($metadata, array('name'=>'datastream'))->walk();
+        
+        $metadata = new JRegistry($metadata);
+        
+        $metadata->set('checksumSHA1', sha1_file(JArrayHelper::getValue($asset, 'tmp_name')));
+        $metadata->set('checksumMD5', md5_file(JArrayHelper::getValue($asset, 'tmp_name')));
+        
+        return $metadata;
+    }
+    
+    /**
+     * Gets a list of assets associated with this record.
+     *
+     * The list of assets can be filtered by passing an array of key, value pairs:
+     * 
+     * E.g.
+     * 
+     * $filters = array('bundle'=>'videos','derivative'=>'original');
+     * $record->getAssets($filters);
+     * 
+     * @param   array  $filters  An array of filters.
+     *
+     * @return  JSpaceAsset[]  An array of JSpaceAsset objects.
+     */
+    public function getAssets($filters = array())
+    {
+        $database = JFactory::getDbo();
+        $query = $database->getQuery(true);
+        
+        $query
+            ->select(array('id', 'hash', 'metadata', 'derivative', 'bundle', 'record_id'))
+            ->from('#__jspace_assets')
+            ->where('record_id='.(int)$this->id);
+        
+        foreach ($filters as $key=>$value)
+        {
+            $query->where($database->qn($key).'='.$database->q($value));
+        }
+        
+        $database->setQuery($query);
+
+        return $database->loadObjectList('id', 'JSpaceAsset');
+    }
+    
+    public function getTags()
+    {
+        $tags = new JHelperTags;
+        $tags->getItemTags('com_jspace.record', $this->id);
+        
+        return $tags;
+    }
+    
+    public function bindAssetMetadata($assetId)
+    {
+        $asset = JSpaceAsset::getInstance($assetId);
+        
+        if ($asset->id)
+        {
+            $this->_metadata = self::_crosswalkSchema($asset->getMetadata()->toArray(), $this->schema);
+            $this->metadata = (string)$this->_metadata;
+            $this->save();
+        }
+    }
+    
+    /**
+     * Get JSpace record, its children and assets as a tree structure.
+     * @param   int        $id  The id of the root record to fetch.
+     *
+     * @return  stdClass   The top record node along with all children.
+     * The record contains its children as an array within a children property with each child 
+     * node having its own children and so on until the leaf node is reached.
+     *
+     * @throw   Exception  If a record cannot be found or if the $id parameter equals the root node.
+     */
+    public static function getTree($id)
+    {
         JTable::addIncludePath(JPATH_BASE.'/administrator/components/com_jspace/tables/');
         
         $table = JTable::getInstance('Record', 'JSpaceTable');
@@ -495,10 +512,10 @@ class JSpaceRecord extends JObject
 
         $items = $table->getTree();
         return self::_buildTree($items);
-	}
-	
-	private static function _buildTree($items, $parent = 0, $level = 0)
-	{
+    }
+    
+    private static function _buildTree($items, $parent = 0, $level = 0)
+    {
         if ($level > 1000) return ''; // Make sure not to have an endless recursion
         
         $tree = array();
@@ -528,6 +545,91 @@ class JSpaceRecord extends JObject
         }
         
         return $tree;
+    }
+    
+    /**
+     * Gets the parent record this record belongs to.
+     *
+     * @return  JSpaceRecord  The parent record this record belongs to.
+     * If the current user does not have access to this parent, null is returned.
+     */
+    public function getParent()
+    {
+        $viewLevels = JFactory::getUser()->getAuthorisedViewLevels();
+        
+        $parent = JSpaceRecord::getInstance($this->parent_id);
+        
+        if ($parent->access && !in_array($parent->access, $viewLevels))
+        {
+            $parent = null;
+        }
+        
+        return $parent; 
+    }
+    
+    /**
+     * Gets the category the current record belongs to.
+     *
+     * @return  JCategory  The category the current record belongs to.
+     * If the current user does not have access to this category, null is returned.
+     */
+    public function getCategory()
+    {
+         return JCategories::getInstance('JSpace')->get($this->catid);
+    }
+    
+    /**
+     * Loads and returns the children of the current JSpaceRecord.
+     *
+     * @return  JSpaceRecord[]  An array of JSpaceRecord objects which are children of the current node.
+     */
+    public function getChildren()
+    {
+        JTable::addIncludePath(JPATH_BASE.'/administrator/components/com_jspace/tables/');
+        
+        $database = JFactory::getDbo();
+        $table = JTable::getInstance('Record', 'JSpaceTable');
+        $query = $database->getQuery(true);
+        
+        $fields = array();
+        foreach ($table->getFields() as $field)
+        {
+            $fields[] = $database->qn($field->Field);
+        }
+
+        $query
+            ->select($fields)
+            ->from($table->getTableName())
+            ->where($database->qn('parent_id').'='.(int)$this->id);
+
+        return $database->setQuery($query)->loadObjectList('id', 'JSpaceRecord');
+    }
+    
+    public function getIdentifiers()
+    {
+        JTable::addIncludePath(JPATH_BASE.'/administrator/components/com_jspace/tables/');
+        
+        $database = JFactory::getDbo();
+        $table = JTable::getInstance('RecordIdentifier', 'JSpaceTable');
+        $query = $database->getQuery(true);
+        
+        $fields = array();
+        foreach ($table->getFields() as $field)
+        {
+            $fields[] = $database->qn($field->Field);
+        }
+
+        $query
+            ->select($fields)
+            ->from($table->getTableName())
+            ->where($database->qn('record_id').'='.(int)$this->id);
+
+        return $database->setQuery($query)->loadObjectList('id', 'JObject');    
+    }
+    
+    public function getCreatedBy()
+    {
+        return JUser::getInstance($this->created_by);
     }
 
     // @todo Override until JObject declares __set.

@@ -1,124 +1,466 @@
 <?php
 /**
- * @copyright	Copyright (C) 2011-2013 Wijiti Pty Ltd. All rights reserved.
- * @license     This file is part of the JSpace component for Joomla!.
-
-   The JSpace component for Joomla! is free software: you can redistribute it 
-   and/or modify it under the terms of the GNU General Public License as 
-   published by the Free Software Foundation, either version 3 of the License, 
-   or (at your option) any later version.
-
-   The JSpace component for Joomla! is distributed in the hope that it will be 
-   useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
-
-   You should have received a copy of the GNU General Public License
-   along with the JSpace component for Joomla!.  If not, see 
-   <http://www.gnu.org/licenses/>.
-
- * Contributors
- * Please feel free to add your name and email (optional) here if you have 
- * contributed any source code changes.
- * Name							Email
- * Hayden Young					<haydenyoung@wijiti.com> 
- * 
+ * @package     Joomla.Site
+ * @subpackage  com_jspace
+ *
+ * @copyright   Copyright (C) 2005 - 2014 Open Source Matters, Inc. All rights reserved.
+ * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
+
+defined('_JEXEC') or die;
 
 /**
- * @param	array
- * @return	array
+ * Routing class from com_jspace
+ *
+ * @package     Joomla.Site
+ * @subpackage  com_jspace
+ * @since       3.3
  */
-function JSpaceBuildRoute(&$query)
+class JSpaceRouter extends JComponentRouterBase
 {
+    /**
+     * Build the route for the com_jspace component
+     *
+     * @param   array  &$query  An array of URL arguments
+     *
+     * @return  array  The URL arguments to use to assemble the subsequent URL.
+     *
+     * @since   3.3
+     */
+    public function build(&$query)
+    {
         $segments = array();
 
-        // if no item id specified, try and get it.
-        $app    = JFactory::getApplication();
-        $menu   = $app->getMenu();
-        $view = JArrayHelper::getValue($query, 'view');
+        // Get a menu item based on Itemid or currently active
+        $app = JFactory::getApplication();
+        $menu = $app->getMenu();
+        $params = JComponentHelper::getParams('com_jspace');
+        $advanced = $params->get('sef_advanced_link', 0);
 
-        if (!JArrayHelper::getValue($query, "Itemid")) {
-                $menuItem = $menu->getActive();
-        } else {
-                $menuItem = $menu->getItem(JArrayHelper::getValue($query, 'Itemid'));
+        // We need a menu item.  Either the one specified in the query, or the current active one if none specified
+        if (empty($query['Itemid']))
+        {
+            $menuItem = $menu->getActive();
+            $menuItemGiven = false;
+        }
+        else
+        {
+            $menuItem = $menu->getItem($query['Itemid']);
+            $menuItemGiven = true;
         }
 
-        $mView = JArrayHelper::getValue($menuItem->query, 'view', null);
-        $mId = JArrayHelper::getValue($menuItem->query, 'id', null);
+        // Check again
+        if ($menuItemGiven && isset($menuItem) && $menuItem->component != 'com_jspace')
+        {
+            $menuItemGiven = false;
+            unset($query['Itemid']);
+        }
 
-        if ($view) {
-                if (!JArrayHelper::getValue($query, 'Itemid') || $view != $mView) {
-                        $segments[] = JArrayHelper::getValue($query, 'view');
+        if (isset($query['view']))
+        {
+            $view = $query['view'];
+        }
+        else
+        {
+            // We need to have a view in the query or it is an invalid URL
+            return $segments;
+        }
+
+        // Are we dealing with an record or category that is attached to a menu item?
+        if (($menuItem instanceof stdClass) && $menuItem->query['view'] == $query['view'] && isset($query['id']) && $menuItem->query['id'] == (int) $query['id'])
+        {
+            unset($query['view']);
+
+            if (isset($query['catid']))
+            {
+                unset($query['catid']);
+            }
+
+            if (isset($query['layout']))
+            {
+                unset($query['layout']);
+            }
+
+            unset($query['id']);
+
+            return $segments;
+        }
+
+        if ($view == 'category' || $view == 'record')
+        {
+            if (!$menuItemGiven)
+            {
+                $segments[] = $view;
+            }
+
+            unset($query['view']);
+
+            if ($view == 'record')
+            {
+                if (isset($query['id']) && isset($query['catid']) && $query['catid'])
+                {
+                    $catid = $query['catid'];
+
+                    // Make sure we have the id and the alias
+                    if (strpos($query['id'], ':') === false)
+                    {
+                        $db = JFactory::getDbo();
+                        $dbQuery = $db->getQuery(true)
+                            ->select('alias')
+                            ->from('#__jspace_records')
+                            ->where('id=' . (int) $query['id']);
+                        $db->setQuery($dbQuery);
+                        $alias = $db->loadResult();
+                        $query['id'] = $query['id'] . ':' . $alias;
+                    }
+                }
+                else
+                {
+                    // We should have these two set for this view.  If we don't, it is an error
+                    return $segments;
+                }
+            }
+            else
+            {
+                if (isset($query['id']))
+                {
+                    $catid = $query['id'];
+                }
+                else
+                {
+                    // We should have id set for this view.  If we don't, it is an error
+                    return $segments;
+                }
+            }
+
+            if ($menuItemGiven && isset($menuItem->query['id']))
+            {
+                $mCatid = $menuItem->query['id'];
+            }
+            else
+            {
+                $mCatid = 0;
+            }
+
+            $categories = JCategories::getInstance('JSpace');
+            $category = $categories->get($catid);
+
+            if (!$category)
+            {
+                // We couldn't find the category we were given.  Bail.
+                return $segments;
+            }
+
+            $path = array_reverse($category->getPath());
+
+            $array = array();
+
+            foreach ($path as $id)
+            {
+                if ((int) $id == (int) $mCatid)
+                {
+                    break;
                 }
 
+                list($tmp, $id) = explode(':', $id, 2);
+
+                $array[] = $id;
+            }
+
+            $array = array_reverse($array);
+
+            if (!$advanced && count($array))
+            {
+                $array[0] = (int) $catid . ':' . $array[0];
+            }
+
+            $segments = array_merge($segments, $array);
+
+            if ($view == 'record')
+            {
+                if ($advanced)
+                {
+                    list($tmp, $id) = explode(':', $query['id'], 2);
+                }
+                else
+                {
+                    $id = $query['id'];
+                }
+
+                $segments[] = $id;
+            }
+
+            unset($query['id']);
+            unset($query['catid']);
+        }
+
+        if ($view == 'archive')
+        {
+            if (!$menuItemGiven)
+            {
+                $segments[] = $view;
                 unset($query['view']);
+            }
+
+            if (isset($query['year']))
+            {
+                if ($menuItemGiven)
+                {
+                    $segments[] = $query['year'];
+                    unset($query['year']);
+                }
+            }
+
+            if (isset($query['year']) && isset($query['month']))
+            {
+                if ($menuItemGiven)
+                {
+                    $segments[] = $query['month'];
+                    unset($query['month']);
+                }
+            }
         }
 
-        if ($view && $mView == $view) {
-                if ($mId == JArrayHelper::getValue($query, 'id', 0, 'int')) {
-                        unset($query['view']);
-                        unset($query['id']);
-
-                        return $segments;
-                } else {
-                        $segments[] = $query['id'];
-
-                        unset($query['id']);
+        /*
+         * If the layout is specified and it is the same as the layout in the menu item, we
+         * unset it so it doesn't go into the query string.
+         */
+        if (isset($query['layout']))
+        {
+            if ($menuItemGiven && isset($menuItem->query['layout']))
+            {
+                if ($query['layout'] == $menuItem->query['layout'])
+                {
+                    unset($query['layout']);
                 }
-        } else {
-                // check the querystring. If the current view matches the querystring, set the querystring id (if it exists).
-                if ($mView == $app->input->get('view', null) && $mView == 'item') {
-                        $segments[] = $app->input->get('id', null);
+            }
+            else
+            {
+                if ($query['layout'] == 'default')
+                {
+                    unset($query['layout']);
                 }
+            }
+        }
+
+        $total = count($segments);
+
+        for ($i = 0; $i < $total; $i++)
+        {
+            $segments[$i] = str_replace(':', '-', $segments[$i]);
         }
 
         return $segments;
-}
+    }
 
-/**
- * @param	array
- * @return	array
- */
-function JSpaceParseRoute($segments)
-{
+    /**
+     * Parse the segments of a URL.
+     *
+     * @param   array  &$segments  The segments of the URL to parse.
+     *
+     * @return  array  The URL attributes to be used by the application.
+     *
+     * @since   3.3
+     */
+    public function parse(&$segments)
+    {
+        $total = count($segments);
         $vars = array();
 
-        $app    = JFactory::getApplication();
-        $menu   = $app->getMenu();
-        $item   = $menu->getActive();
+        for ($i = 0; $i < $total; $i++)
+        {
+            $segments[$i] = preg_replace('/-/', ':', $segments[$i], 1);
+        }
+
+        // Get the active menu item.
+        $app = JFactory::getApplication();
+        $menu = $app->getMenu();
+        $item = $menu->getActive();
+        $params = JComponentHelper::getParams('com_jspace');
+        $advanced = $params->get('sef_advanced_link', 0);
+        $db = JFactory::getDbo();
 
         // Count route segments
         $count = count($segments);
-        if (!isset($item)) {
-                $vars['view'] = JArrayHelper::getValue($segments, 0);
 
-                if ($count > 1) {
-                        $vars['id'] = JArrayHelper::getValue($segments, $count - 1);
-                }
+        /*
+         * Standard routing for records.  If we don't pick up an Itemid then we get the view from the segments
+         * the first segment is the view and the last segment is the id of the record or category.
+         */
+        if (!isset($item))
+        {
+            $vars['view'] = $segments[0];
+            $vars['id'] = $segments[$count - 1];
+
+            return $vars;
+        }
+
+        /*
+         * If there is only one segment, then it points to either an record or a category.
+         * We test it first to see if it is a category.  If the id and alias match a category,
+         * then we assume it is a category.  If they don't we assume it is an record
+         */
+        if ($count == 1)
+        {
+            // We check to see if an alias is given.  If not, we assume it is an record
+            if (strpos($segments[0], ':') === false)
+            {
+                $vars['view'] = 'record';
+                $vars['id'] = (int) $segments[0];
 
                 return $vars;
+            }
+
+            list($id, $alias) = explode(':', $segments[0], 2);
+
+            // First we check if it is a category
+            $category = JCategories::getInstance('JSpace')->get($id);
+
+            if ($category && $category->alias == $alias)
+            {
+                $vars['view'] = 'category';
+                $vars['id'] = $id;
+
+                return $vars;
+            }
+            else
+            {
+                $query = $db->getQuery(true)
+                    ->select($db->quoteName(array('alias', 'catid')))
+                    ->from($db->quoteName('#__jspace_records'))
+                    ->where($db->quoteName('id') . ' = ' . (int) $id);
+                $db->setQuery($query);
+                $record = $db->loadObject();
+
+                if ($record)
+                {
+                    if ($record->alias == $alias)
+                    {
+                        $vars['view'] = 'record';
+                        $vars['catid'] = (int) $record->catid;
+                        $vars['id'] = (int) $id;
+
+                        return $vars;
+                    }
+                }
+            }
         }
 
-        // if count is 2 then we have all the vars we require to parse the route.
-        if (count($segments) == 2) {
-                if ($var = array_shift($segments)) {
-                        $vars['view'] = $var;
-                }
+        /*
+         * If there was more than one segment, then we can determine where the URL points to
+         * because the first segment will have the target category id prepended to it.  If the
+         * last segment has a number prepended, it is an record, otherwise, it is a category.
+         */
+        if (!$advanced)
+        {
+            $cat_id = (int) $segments[0];
 
-                if ($var = array_shift($segments)) {
-                        $vars['id'] = $var;
-                }
+            $record_id = (int) $segments[$count - 1];
+
+            if ($record_id > 0)
+            {
+                $vars['view'] = 'record';
+                $vars['catid'] = $cat_id;
+                $vars['id'] = $record_id;
+            }
+            else
+            {
+                $vars['view'] = 'category';
+                $vars['id'] = $cat_id;
+            }
+
+            return $vars;
         }
 
-        // if the count is 1 then we need to check whether we need to pull the view,
-        // or whether the view is already available as part of the active menu.
-        if (count($segments) == 1) {
-                $vars['view'] = JArrayHelper::getValue($item->query, 'view');
+        // We get the category id from the menu item and search from there
+        $id = $item->query['id'];
+        $category = JCategories::getInstance('JSpace')->get($id);
 
-                $var = array_shift($segments);
-                $vars['id'] = $var;
+        if (!$category)
+        {
+            JError::raiseError(404, JText::_('COM_JSPACE_ERROR_PARENT_CATEGORY_NOT_FOUND'));
+            return $vars;
+        }
+
+        $categories = $category->getChildren();
+        $vars['catid'] = $id;
+        $vars['id'] = $id;
+        $found = 0;
+
+        foreach ($segments as $segment)
+        {
+            $segment = str_replace(':', '-', $segment);
+
+            foreach ($categories as $category)
+            {
+                if ($category->alias == $segment)
+                {
+                    $vars['id'] = $category->id;
+                    $vars['catid'] = $category->id;
+                    $vars['view'] = 'category';
+                    $categories = $category->getChildren();
+                    $found = 1;
+                    break;
+                }
+            }
+
+            if ($found == 0)
+            {
+                if ($advanced)
+                {
+                    $db = JFactory::getDbo();
+                    $query = $db->getQuery(true)
+                        ->select($db->quoteName('id'))
+                        ->from('#__content')
+                        ->where($db->quoteName('catid') . ' = ' . (int) $vars['catid'])
+                        ->where($db->quoteName('alias') . ' = ' . $db->quote($db->quote($segment)));
+                    $db->setQuery($query);
+                    $cid = $db->loadResult();
+                }
+                else
+                {
+                    $cid = $segment;
+                }
+
+                $vars['id'] = $cid;
+
+                if ($item->query['view'] == 'archive' && $count != 1)
+                {
+                    $vars['year'] = $count >= 2 ? $segments[$count - 2] : null;
+                    $vars['month'] = $segments[$count - 1];
+                    $vars['view'] = 'archive';
+                }
+                else
+                {
+                    $vars['view'] = 'record';
+                }
+            }
+
+            $found = 0;
         }
 
         return $vars;
+    }
+}
+
+/**
+ * Content router functions
+ *
+ * These functions are proxys for the new router interface
+ * for old SEF extensions.
+ *
+ * @deprecated  4.0  Use Class based routers instead
+ */
+function JSpaceBuildRoute(&$query)
+{
+    $router = new JSpaceRouter;
+
+    return $router->build($query);
+}
+
+function JSpaceParseRoute($segments)
+{
+    $router = new JSpaceRouter;
+
+    return $router->parse($segments);
 }
