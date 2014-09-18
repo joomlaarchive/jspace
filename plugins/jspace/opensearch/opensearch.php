@@ -56,7 +56,7 @@ class PlgJSpaceOpenSearch extends JSpaceIngestionPlugin
         {
             $contentType = JArrayHelper::getValue($response->headers, 'Content-Type');
             $contentType = $this->parseContentType($contentType);
-            
+         
             if ($contentType === 'text/html')
             {
                 $dom = new DomDocument();
@@ -124,7 +124,7 @@ class PlgJSpaceOpenSearch extends JSpaceIngestionPlugin
                     }
                 }
             }
-            else if (array_search($contentType, array('application/atom+xml', 'application/rss+xml')) !== false)
+            else if (array_search($contentType, array('text/xml', 'application/atom+xml', 'application/rss+xml')) !== false)
             {
                 //@todo JUri not updating url via setVar. May need more testing.
                 $discovered = new JRegistry;
@@ -189,25 +189,28 @@ class PlgJSpaceOpenSearch extends JSpaceIngestionPlugin
             
                 while($reader->read())
                 {
-                    if ($reader->localName == 'entry')
+                    if ($reader->nodeType == XmlReader::ELEMENT)
                     {
-                        $entry = simplexml_import_dom($dom->importNode($reader->expand(), true));
-                        $this->cache($harvest, $entry);
-                    }
-                    
-                    if ($reader->localName == 'item')
-                    {
-                        $entry = simplexml_import_dom($dom->importNode($reader->expand(), true));
-                        $this->cache($harvest, $entry);
-                    }
-                    
-                    if ($reader->localName == 'totalResults')
-                    {
-                        $totalResults = simplexml_import_dom($dom->importNode($reader->expand(), true));
-                        
-                        if (!$count)
+                        if ($reader->localName == 'entry')
                         {
-                            $count = (int)$totalResults;
+                            $entry = simplexml_import_dom($dom->importNode($reader->expand(), true));
+                            $this->cache($harvest, $entry);
+                        }
+                        
+                        if ($reader->localName == 'item')
+                        {
+                            $entry = simplexml_import_dom($dom->importNode($reader->expand(), true));
+                            $this->cache($harvest, $entry);
+                        }
+                        
+                        if ($reader->localName == 'totalResults')
+                        {
+                            $totalResults = simplexml_import_dom($dom->importNode($reader->expand(), true));
+                            
+                            if (!$count)
+                            {
+                                $count = (int)$totalResults;
+                            }
                         }
                     }
                 }
@@ -220,8 +223,10 @@ class PlgJSpaceOpenSearch extends JSpaceIngestionPlugin
     }
     
     protected function cache($harvest, $data)
-    {    
-        if ($harvest->get('params')->get('discovery.plugin.type') == 'application/atom+xml')
+    {
+        $contentType = $harvest->get('params')->get('discovery.plugin.type');
+   
+        if (isset($data->id))
         {
             $identifier = (string)$data->id;
         }
@@ -229,22 +234,30 @@ class PlgJSpaceOpenSearch extends JSpaceIngestionPlugin
         {
             $identifier = (string)$data->link;
         }
-    
+
         if ($identifier)
         {
-            $tags = get_meta_tags($identifier);
-            $metadata = new JRegistry;
+            $metadata = new JRegistry();
             
-            foreach ($tags as $key=>$value)
+            // suppress duplicate attribute errors.
+            libxml_use_internal_errors(true);
+
+            $dom = new DOMDocument;
+            $dom->loadHTMLFile($identifier);
+            $xpath = new DOMXPath($dom);
+            
+            $tags = $xpath->query('//head/meta');
+            
+            foreach ($tags as $tag)
             {
-                $metadata->set($key, $value);
+                $metadata->set(JString::strtolower($tag->getAttribute('name')), $tag->getAttribute('content'));
             }
             
-            $metadata = JSpaceFactory::getCrosswalk($metadata, array('name'=>'dc'))->walk();
-            
+            $cache = array("metadata"=>$metadata);
+        
             $table = JTable::getInstance('Cache', 'JSpaceTable');
             $table->set('id', $identifier);
-            $table->set('data', json_encode(array("metadata"=>$metadata)));
+            $table->set('data', json_encode($cache));
             $table->set('harvest_id', (int)$harvest->id);
             $table->store();
         }

@@ -39,10 +39,15 @@ $assoc = JLanguageAssociations::isEnabled();
 			<?php echo JHtml::_('bootstrap.addTab', 'myTab', 'details', JText::_('COM_JSPACE_RECORD_DETAILS_LABEL', 
 true)); ?>
 			<div class="row-fluid">
-				<div class="span12">
+				<div class="span12">hhhhhh
 					<?php foreach ($this->form->getFieldset('details') as $field) : ?>
 						<?php echo $field->getControlGroup(); ?>				
 					<?php endforeach; ?>
+				</div>
+
+				<div class="span12">
+                    <label><?php echo JText::_('COM_JSPACE_HARVEST_HARVESTED_LABEL'); ?></label>
+                    <div><?php echo $this->item->harvested; ?></div>
 				</div>
 			</div>
 			<?php echo JHtml::_('bootstrap.endTab'); ?>

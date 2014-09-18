@@ -1,0 +1,888 @@
+<?xml version="1.0" encoding="UTF-8"?><?xml-stylesheet type="text/xsl" href="static/style.xsl"?><OAI-PMH xmlns="http://www.openarchives.org/OAI/2.0/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/ http://www.openarchives.org/OAI/2.0/OAI-PMH.xsd"><responseDate>2014-09-08T14:24:08Z</responseDate>
+    <request verb="ListRecords" metadataPrefix="oai_dc" set="com_10049_24">http://archive.bora.knowledgearc.net/oai/request</request>
+    <ListRecords>
+        <record>
+            <header>
+                <identifier>oai:archive.bora.wijiti.net:10049/74</identifier>
+                <datestamp>2014-01-02T08:39:06Z</datestamp>
+                <setSpec>com_10049_24</setSpec>
+                <setSpec>col_10049_70</setSpec>
+            </header>
+            <metadata><oai_dc:dc xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/" xmlns:doc="http://www.lyncode.com/xoai" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dc="http://purl.org/dc/elements/1.1/" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd">
+<dc:title>Bridging gaps - pedagogical investment</dc:title>
+<dc:creator>Rafste, Elisabeth T</dc:creator>
+<dc:creator>Sætre, Tove Pemmer</dc:creator>
+<dc:description>This paper has four main parts. In part 1 we look into the broad perspectives pedagogy can give to library and information science. In the following parts we limit the presentation to our main focus for this paper: pedagogy for school librarians. In part 2 we give a very short description of the role of the school library in the 13 school years of the Norwegian national curriculum. In part 3, we go deeper into crucial and basic fundamentalsin didactics: learning theories. Part 4 gives examples on how two University Colleges in Norway, Agder and Bergen have invested in their education of school liibrarians and librarians and how these investments are meant to bridge gaps between institutions, professionals , professionals and users.</dc:description>
+<dc:date>2006-09-21T09:40:29Z</dc:date>
+<dc:date>2006-09-21T09:40:29Z</dc:date>
+<dc:date>2004-02</dc:date>
+<dc:type>Article</dc:type>
+<dc:identifier>http://www.Emeraldinsight.com/10.1108/00242530410522596</dc:identifier>
+<dc:identifier>0-86176-939-2</dc:identifier>
+<dc:identifier>0024-2535</dc:identifier>
+<dc:identifier>http://hdl.handle.net/10049/74</dc:identifier>
+<dc:language>eng</dc:language>
+<dc:relation>Library Review Vol.53 No 2</dc:relation>
+<dc:publisher>Emerald Group Publishing Ltd.</dc:publisher>
+</oai_dc:dc>
+</metadata>
+        </record>
+        <record>
+            <header>
+                <identifier>oai:archive.bora.wijiti.net:10049/76</identifier>
+                <datestamp>2013-06-13T16:42:25Z</datestamp>
+                <setSpec>com_10049_24</setSpec>
+                <setSpec>col_10049_70</setSpec>
+            </header>
+            <metadata><oai_dc:dc xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/" xmlns:doc="http://www.lyncode.com/xoai" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dc="http://purl.org/dc/elements/1.1/" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd">
+<dc:title>Norwegian Policy for Empowering School Libraries</dc:title>
+<dc:creator>Rafste, Elisabeth Tallaksen</dc:creator>
+<dc:creator>Sætre, Tove Pemmer</dc:creator>
+<dc:description>The first part of this paper presents a general picture of school libraries in Norway, reviewing statistics, outlining legislation on schools and libraies and highlighting aspects of the national curriculum for primary and secondary schools. It illustrates the complex and integrated systems in which school libraries are to be found and looks at obstacles to successfully maintaining and edeveloping school libraies in Norway,bridges to cross and measures to be taken. The second part uses the plan "Make Space for Reading! Norwegian strategy for Stimulating a Love of Reading and Reading Skills, 2003-2007(2003,2005)</dc:description>
+<dc:date>2006-10-03T08:12:50Z</dc:date>
+<dc:date>2006-10-03T08:12:50Z</dc:date>
+<dc:date>2006</dc:date>
+<dc:type>Article</dc:type>
+<dc:identifier>0340-0352</dc:identifier>
+<dc:identifier>http://hdl.handle.net/10049/76</dc:identifier>
+<dc:language>eng</dc:language>
+<dc:relation>IFLA Journal  Vol 32 No 1</dc:relation>
+<dc:publisher>International Federation of Library Associations and Institutions</dc:publisher>
+</oai_dc:dc>
+</metadata>
+        </record>
+        <record>
+            <header>
+                <identifier>oai:archive.bora.wijiti.net:10049/78</identifier>
+                <datestamp>2014-01-21T09:18:22Z</datestamp>
+                <setSpec>com_10049_24</setSpec>
+                <setSpec>col_10049_69</setSpec>
+            </header>
+            <metadata><oai_dc:dc xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/" xmlns:doc="http://www.lyncode.com/xoai" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dc="http://purl.org/dc/elements/1.1/" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd">
+<dc:title>Samfunnsansvar eller personlig prosjekt? Vernepleierstudenters yrkesvalg utforsket gjennom narrativer. Rapport fra en forløpsstudie midtveis i undersøkelsen</dc:title>
+<dc:creator>Pettersen, Marit</dc:creator>
+<dc:date>2006-10-03T08:36:40Z</dc:date>
+<dc:date>2006-10-03T08:36:40Z</dc:date>
+<dc:date>2005</dc:date>
+<dc:type>Book</dc:type>
+<dc:identifier>82-7709-087-0</dc:identifier>
+<dc:identifier>http://hdl.handle.net/10049/78</dc:identifier>
+<dc:language>nob</dc:language>
+<dc:relation>Høgskolen i Bergen skriftserien No 6</dc:relation>
+<dc:publisher>Høgskolen i Bergen</dc:publisher>
+</oai_dc:dc>
+</metadata>
+        </record>
+        <record>
+            <header>
+                <identifier>oai:archive.bora.wijiti.net:10049/81</identifier>
+                <datestamp>2013-06-13T16:42:25Z</datestamp>
+                <setSpec>com_10049_24</setSpec>
+                <setSpec>col_10049_70</setSpec>
+            </header>
+            <metadata><oai_dc:dc xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/" xmlns:doc="http://www.lyncode.com/xoai" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dc="http://purl.org/dc/elements/1.1/" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd">
+<dc:title>Openness in communication</dc:title>
+<dc:creator>Hoem, Jon</dc:creator>
+<dc:description>This paper introduces three existing models that give different perspectives on openness in communication systems. The first focuses strictly on how content is presented in digital media. The second model distinguishes between a content layer, a logical layer, and a physical layer where all may be open or restricted in various degrees. Finally a model with nine ideal communication patterns is presented in more detail and used to discuss the different power relations between producers and consumers and users of media content. The model provides an analytical framework to describe some characteristics unique to digital networked media.</dc:description>
+<dc:date>2006-10-04T12:39:56Z</dc:date>
+<dc:date>2006-10-04T12:39:56Z</dc:date>
+<dc:date>2006-07</dc:date>
+<dc:type>Article</dc:type>
+<dc:identifier>http://firstmonday.org/issues/issue11_7/hoem/index.html</dc:identifier>
+<dc:identifier>1396-0466</dc:identifier>
+<dc:identifier>http://hdl.handle.net/10049/81</dc:identifier>
+<dc:language>eng</dc:language>
+<dc:relation>First Monday Nr 7 2006</dc:relation>
+<dc:publisher>First Monday</dc:publisher>
+</oai_dc:dc>
+</metadata>
+        </record>
+        <record>
+            <header>
+                <identifier>oai:archive.bora.wijiti.net:10049/106</identifier>
+                <datestamp>2013-06-13T16:42:26Z</datestamp>
+                <setSpec>com_10049_24</setSpec>
+                <setSpec>col_10049_69</setSpec>
+            </header>
+            <metadata><oai_dc:dc xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/" xmlns:doc="http://www.lyncode.com/xoai" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dc="http://purl.org/dc/elements/1.1/" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd">
+<dc:title>Samfunnsansvar eller personlig prosjekt? Vernepleierstudenters yrkesvalg utforsket gjennom narrativer. Rapport fra en forløpsstudie midtveis i undersøkelsen</dc:title>
+<dc:creator>Pettersen, Marit</dc:creator>
+<dc:date>2006-11-28T10:42:06Z</dc:date>
+<dc:date>2006-11-28T10:42:06Z</dc:date>
+<dc:date>2005</dc:date>
+<dc:type>Book</dc:type>
+<dc:identifier>82-7709-087-0</dc:identifier>
+<dc:identifier>http://hdl.handle.net/10049/106</dc:identifier>
+<dc:language>nob</dc:language>
+<dc:relation>Høgskolen i Bergen. Skriftserien No 6 2005</dc:relation>
+<dc:publisher>Høgskolen i Bergen</dc:publisher>
+</oai_dc:dc>
+</metadata>
+        </record>
+        <record>
+            <header>
+                <identifier>oai:archive.bora.wijiti.net:10049/144</identifier>
+                <datestamp>2013-06-13T16:42:25Z</datestamp>
+                <setSpec>com_10049_24</setSpec>
+                <setSpec>col_10049_70</setSpec>
+            </header>
+            <metadata><oai_dc:dc xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/" xmlns:doc="http://www.lyncode.com/xoai" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dc="http://purl.org/dc/elements/1.1/" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd">
+<dc:title>Søk &amp; Skriv for kursholdere : bibliotekundervisning i høyere utdanning</dc:title>
+<dc:creator>Hafstad, Sissel</dc:creator>
+<dc:creator>Hunskår, Irene</dc:creator>
+<dc:creator>Kavli, Solveig</dc:creator>
+<dc:creator>Mekki, Susanne</dc:creator>
+<dc:creator>Skagen, Therese</dc:creator>
+<dc:creator>Torras, Maria-Carme</dc:creator>
+<dc:description>Søk &amp; Skriv for kursholdere gir bakgrunnsmateriale for brukerundervisning i fagbibliotek. Det er et praktisk hjelpemiddel for bibliotekarer i kontakten med studenter som er, eller skal i gang med et større prosjektarbeid eller oppgave. Kurset er et nyttig redskap både i klasseromsundervising i bibliotek og som nettkurs for fjernstudenter. Søk &amp; Skriv gir også nyttig informasjon til brukere og bibliotekarer knyttet til informasjonssøk og kildebruk ved oppgaveskriving.</dc:description>
+<dc:date>2007-04-19T13:59:22Z</dc:date>
+<dc:date>2007-04-19T13:59:22Z</dc:date>
+<dc:date>2007-03</dc:date>
+<dc:type>Learning Object</dc:type>
+<dc:identifier>http://hdl.handle.net/10049/144</dc:identifier>
+<dc:language>nob</dc:language>
+<dc:publisher>Prosjektgruppen for Digital kompetanse gjennom fleksibel læring: Informasjonssøk og kildebruk ved oppgaveskriving.</dc:publisher>
+</oai_dc:dc>
+</metadata>
+        </record>
+        <record>
+            <header>
+                <identifier>oai:archive.bora.wijiti.net:10049/152</identifier>
+                <datestamp>2014-02-17T13:16:30Z</datestamp>
+                <setSpec>com_10049_24</setSpec>
+                <setSpec>col_10049_69</setSpec>
+            </header>
+            <metadata><oai_dc:dc xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/" xmlns:doc="http://www.lyncode.com/xoai" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dc="http://purl.org/dc/elements/1.1/" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd">
+<dc:title>Sentrale venekatetre</dc:title>
+<dc:creator>Johnsgaard, Tone</dc:creator>
+<dc:creator>Reime, Marit Hegg</dc:creator>
+<dc:description>Dette er Windows Media File (.wmv) Du må ha&#13;
+mediespiller tilgj.på maskinen!&#13;
+Samarbeidspartner: Trine Herud, hygienesykepleier, Senter for smittevern, Haukeland universitetssykehus. Tove Dyrdal Intensivmedisinsk seksjon, Kirurgisk serviceklinikk, Haukeland universitetssykehus.</dc:description>
+<dc:description>Sentrale venekatetre med tilhørende koblinger er helt nødvendige hjelpemidler i moderne medisinsk praksis. Centre of Disease Control(CDC) påpeker at helsepersonell må undervises i forhold til indikajsoner for bruk av sentrale venekatetre, riktig prosedyre ved innleggelse og stell, og riktige infeksjons-&#13;
+forebyggende tiltak.&#13;
+Innhold:Kap.1: Forkunnskaper. Kap.2:Bruk og stell. Kap.3: Fjerning. Kap.4: Komplikasjoner</dc:description>
+<dc:date>2007-08-28T07:26:27Z</dc:date>
+<dc:date>2007-08-28T07:26:27Z</dc:date>
+<dc:date>2007-08-28T07:26:27Z</dc:date>
+<dc:type>Video</dc:type>
+<dc:identifier>9788277090955</dc:identifier>
+<dc:identifier>http://hdl.handle.net/10049/152</dc:identifier>
+<dc:language>nob</dc:language>
+<dc:relation>Høgskolen i Bergen. Skriftserien. Rapport  2007 No 5</dc:relation>
+</oai_dc:dc>
+</metadata>
+        </record>
+        <record>
+            <header>
+                <identifier>oai:archive.bora.wijiti.net:10049/158</identifier>
+                <datestamp>2013-06-13T16:42:25Z</datestamp>
+                <setSpec>com_10049_24</setSpec>
+                <setSpec>col_10049_70</setSpec>
+            </header>
+            <metadata><oai_dc:dc xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/" xmlns:doc="http://www.lyncode.com/xoai" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dc="http://purl.org/dc/elements/1.1/" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd">
+<dc:title>Different E-learning Paradigms - a Survey</dc:title>
+<dc:creator>Kristensen, Terje</dc:creator>
+<dc:creator>Lamo, Yngve</dc:creator>
+<dc:creator>Hole, Grete Oline</dc:creator>
+<dc:creator>Hinna, Kristin</dc:creator>
+<dc:description>Presentation at the MIT LINC Conference, Amman, Jordan October 28-30 2007: Technology-Enabled Education : a Catalyst for Positive Change.&#13;
+http://linc.mit.edu</dc:description>
+<dc:description>At the beginning of this decade a new Learning Management System(LMS)was developed at Bergen University College as a continuation of its for-runners. This system has been a great commercial succcessw with the foundation of a company. Their learning system "it's learning" is now being used in many universities, high schools and primary schools in our country.&#13;
+New e-learning paradigms are ow introduced at our university. The "Dynamic Presentation Generator"(DPG) and "Dynamic Content Manager"(DCM)systems,are two such systems. One very important aspect of the DPG system is the decoupling from the formatting. This means for instance that in an educational context the system offers reuse of content and presentatio patterns for developing continuallyonline courses. The system uses the concept of a presentation pattern as a mechanism to capture the key aspects of a web presentation: layout, navigation and data structure.&#13;
+In the DMC project thes ideas are further developed. On focuses on removing the thight association between learning material to specific courses. In this system one defines aconceptual atomic unit of knowledge and builds up courses by the organization of these knowledge elements from the repository.The Systems allows the educator to create an arbitrary collection of knowldge elements, tag them with metainformation as a single unit and link the unit with previously saved and similar aggregations.The DCM systemuses the ides of Concept Maps to model the relationships between the knowledge elements thet can be created by the intructor or the author.</dc:description>
+<dc:date>2007-11-20T07:45:52Z</dc:date>
+<dc:date>2007-11-20T07:45:52Z</dc:date>
+<dc:date>2007-10-28</dc:date>
+<dc:type>Conference paper</dc:type>
+<dc:identifier>http://hdl.handle.net/10049/158</dc:identifier>
+<dc:language>eng</dc:language>
+</oai_dc:dc>
+</metadata>
+        </record>
+        <record>
+            <header>
+                <identifier>oai:archive.bora.wijiti.net:10049/180</identifier>
+                <datestamp>2013-12-02T16:32:41Z</datestamp>
+                <setSpec>com_10049_24</setSpec>
+                <setSpec>col_10049_70</setSpec>
+            </header>
+            <metadata><oai_dc:dc xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/" xmlns:doc="http://www.lyncode.com/xoai" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dc="http://purl.org/dc/elements/1.1/" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd">
+<dc:title>Jordmorutdanning i Bergen : et historisk tilbakeblikk på jordmoryrket</dc:title>
+<dc:creator>Hamre, Britt</dc:creator>
+<dc:date>2008-04-23T11:48:32Z</dc:date>
+<dc:date>2008-04-23T11:48:32Z</dc:date>
+<dc:date>2007</dc:date>
+<dc:type>Report</dc:type>
+<dc:identifier>978-82-77-09091-7</dc:identifier>
+<dc:identifier>http://hdl.handle.net/10049/180</dc:identifier>
+<dc:language>nob</dc:language>
+<dc:relation>Høgskolen i Bergen. Skriftserien Rapport</dc:relation>
+<dc:relation>1/2007</dc:relation>
+<dc:publisher>Høgskolen i Bergen</dc:publisher>
+</oai_dc:dc>
+</metadata>
+        </record>
+        <record>
+            <header>
+                <identifier>oai:archive.bora.wijiti.net:10049/197</identifier>
+                <datestamp>2013-10-08T08:36:27Z</datestamp>
+                <setSpec>com_10049_24</setSpec>
+                <setSpec>col_10049_69</setSpec>
+            </header>
+            <metadata><oai_dc:dc xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/" xmlns:doc="http://www.lyncode.com/xoai" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dc="http://purl.org/dc/elements/1.1/" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd">
+<dc:title>Mat i barnehagen. Barnehagen som arena for folkehelsearbeid. 2.rev.utg.</dc:title>
+<dc:creator>Landro, Margun</dc:creator>
+<dc:creator>Wilhelmsen, Britt Unni</dc:creator>
+<dc:creator>Holthe, Asle</dc:creator>
+<dc:creator>Dankel, Simon</dc:creator>
+<dc:creator>Adland, Eli K</dc:creator>
+<dc:creator>Lund, Nina Kristine</dc:creator>
+<dc:creator>Nilsen, Anja Duesund</dc:creator>
+<dc:creator>Solbakken, Ingrid Helene</dc:creator>
+<dc:creator>Heggebø, Sissel</dc:creator>
+<dc:date>2008-09-02T11:29:16Z</dc:date>
+<dc:date>2008-09-02T11:29:16Z</dc:date>
+<dc:date>2008</dc:date>
+<dc:type>Report</dc:type>
+<dc:identifier>978-82-77-09100-6</dc:identifier>
+<dc:identifier>http://hdl.handle.net/10049/197</dc:identifier>
+<dc:language>nob</dc:language>
+<dc:relation>Høgskolen i Bergen. Skriftserien. Rapport</dc:relation>
+<dc:relation>7 2007 Rev.utg.2008</dc:relation>
+<dc:publisher>Høgskolen i Bergen</dc:publisher>
+</oai_dc:dc>
+</metadata>
+        </record>
+        <record>
+            <header>
+                <identifier>oai:archive.bora.wijiti.net:10049/203</identifier>
+                <datestamp>2014-01-21T11:27:39Z</datestamp>
+                <setSpec>com_10049_24</setSpec>
+                <setSpec>col_10049_69</setSpec>
+            </header>
+            <metadata><oai_dc:dc xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/" xmlns:doc="http://www.lyncode.com/xoai" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dc="http://purl.org/dc/elements/1.1/" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd">
+<dc:title>Praksisrettet, studentvirksom læring med temaet mat i barnehagen</dc:title>
+<dc:creator>Wilhelmsen, Britt Unni</dc:creator>
+<dc:date>2008-09-08T11:02:13Z</dc:date>
+<dc:date>2008-09-08T11:02:13Z</dc:date>
+<dc:date>2008</dc:date>
+<dc:type>Report</dc:type>
+<dc:identifier>978-82-77-09100-6</dc:identifier>
+<dc:identifier>http://hdl.handle.net/10049/203</dc:identifier>
+<dc:language>nob</dc:language>
+<dc:relation>Høgskolen i Bergen. Skriftserien Rapport</dc:relation>
+<dc:relation>7 2007 Rev.utg. 2008</dc:relation>
+<dc:publisher>Høgskolen i Bergen</dc:publisher>
+</oai_dc:dc>
+</metadata>
+        </record>
+        <record>
+            <header>
+                <identifier>oai:archive.bora.wijiti.net:10049/208</identifier>
+                <datestamp>2013-06-13T16:42:25Z</datestamp>
+                <setSpec>com_10049_24</setSpec>
+                <setSpec>col_10049_70</setSpec>
+            </header>
+            <metadata><oai_dc:dc xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/" xmlns:doc="http://www.lyncode.com/xoai" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dc="http://purl.org/dc/elements/1.1/" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd">
+<dc:title>Open access : en forfatters dilemma</dc:title>
+<dc:creator>Rekdal, Ole Bjørn</dc:creator>
+<dc:date>2008-10-06T07:28:58Z</dc:date>
+<dc:date>2008-10-06T07:28:58Z</dc:date>
+<dc:date>2008-09-30</dc:date>
+<dc:type>Others</dc:type>
+<dc:identifier>http://www.saih.no/noop/page.php?p=Artikler/6286.html&amp;print=1</dc:identifier>
+<dc:identifier>http://hdl.handle.net/10049/208</dc:identifier>
+<dc:language>nob</dc:language>
+<dc:publisher>SAIH</dc:publisher>
+</oai_dc:dc>
+</metadata>
+        </record>
+        <record>
+            <header>
+                <identifier>oai:archive.bora.wijiti.net:10049/332</identifier>
+                <datestamp>2014-01-21T09:48:31Z</datestamp>
+                <setSpec>com_10049_24</setSpec>
+                <setSpec>col_10049_69</setSpec>
+            </header>
+            <metadata><oai_dc:dc xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/" xmlns:doc="http://www.lyncode.com/xoai" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dc="http://purl.org/dc/elements/1.1/" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd">
+<dc:title>Barnehagen i parnerskap for folkehelse</dc:title>
+<dc:creator>Holthe, Asle</dc:creator>
+<dc:description>De nasjonale retningslinjene for mat og måltider i barnehagen er et viktig element i den nasjonale folkehelsepolitikken. For å styrke implementeringen av retningslinjene kan barnehagene inngå forpliktende samarbeid gjennom partnerskap.</dc:description>
+<dc:date>2011-12-22T08:39:45Z</dc:date>
+<dc:date>2011-12-22T08:39:45Z</dc:date>
+<dc:date>2011</dc:date>
+<dc:type>Book chapter</dc:type>
+<dc:identifier>978-82-77-09113-6</dc:identifier>
+<dc:identifier>http://hdl.handle.net/10049/332</dc:identifier>
+<dc:language>nob</dc:language>
+<dc:relation>Høgskolen i Bergen. Skriftserien.</dc:relation>
+<dc:relation>Fagrapport 2011 No 2</dc:relation>
+<dc:publisher>Høgskolen i Bergen</dc:publisher>
+</oai_dc:dc>
+</metadata>
+        </record>
+        <record>
+            <header>
+                <identifier>oai:archive.bora.wijiti.net:10049/388</identifier>
+                <datestamp>2013-12-03T11:22:39Z</datestamp>
+                <setSpec>com_10049_24</setSpec>
+                <setSpec>col_10049_70</setSpec>
+            </header>
+            <metadata><oai_dc:dc xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/" xmlns:doc="http://www.lyncode.com/xoai" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dc="http://purl.org/dc/elements/1.1/" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd">
+<dc:title>Ph.d.-kandidater og  forskningsprosessen. Bibliotekets bidrag</dc:title>
+<dc:creator>Gullbekk, Eystein</dc:creator>
+<dc:creator>Rullestad, Tove</dc:creator>
+<dc:creator>Torras i Calvo, Maria Carme</dc:creator>
+<dc:description>Denne rapporten presenterer resultater fra en litteraturstudie og en fokusgruppestudie om Phd.-kadidaters forhold til informasjonsbehandling og bibliotekets tjenester innenfor høyere utdanning. Undersøkelsen er gjennomført som en del av det pågående prosjektet "information management for Knowledge Cration" (2010 - 2013). I siste fase av prosjektet skal det utvikles nettbaserte veiledningsmoduler rettet mot Phd.-kandidater.&#13;
+Prosjektet er et sammarbeid mellom Universitetsbibliotekene i Bergen, Oslo og Ålborg, Norges Handelshøgskoles bibliotek, biblioteket ved høgskolen i Bergen.</dc:description>
+<dc:date>2013-12-03T11:22:39Z</dc:date>
+<dc:date>2013-12-03T11:22:39Z</dc:date>
+<dc:date>2012-06</dc:date>
+<dc:type>Report</dc:type>
+<dc:identifier>Skrifter fra Universitetsbiblioteket i Oslo 7.</dc:identifier>
+<dc:identifier>978-82-8037-022-8</dc:identifier>
+<dc:identifier>http://hdl.handle.net/10049/388</dc:identifier>
+<dc:language>nob</dc:language>
+<dc:publisher>Universitetsbiblioteket i Oslo</dc:publisher>
+</oai_dc:dc>
+</metadata>
+        </record>
+        <record>
+            <header>
+                <identifier>oai:archive.bora.wijiti.net:10049/403</identifier>
+                <datestamp>2014-03-07T09:41:14Z</datestamp>
+                <setSpec>com_10049_24</setSpec>
+                <setSpec>col_10049_69</setSpec>
+            </header>
+            <metadata><oai_dc:dc xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/" xmlns:doc="http://www.lyncode.com/xoai" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dc="http://purl.org/dc/elements/1.1/" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd">
+<dc:title>Profesjonsutdanninger i Bergen</dc:title>
+<dc:creator>Blom, Kari</dc:creator>
+<dc:creator>Hamre, Britt</dc:creator>
+<dc:creator>Ertresvaag, Egil</dc:creator>
+<dc:creator>Larsen, Johanne Louise</dc:creator>
+<dc:contributor/>
+<dc:contributor/>
+<dc:contributor/>
+<dc:subject>Profesjonsutdanning</dc:subject>
+<dc:subject>sykepleierutdanning</dc:subject>
+<dc:subject>ingeniørutdanning</dc:subject>
+<dc:subject>lærerutdanning</dc:subject>
+<dc:description>Boken gir en historisk oversikt over våre fire eldste profesjonsutdanninger: jordmorutdanningen, ingeniørutdanningen, sykepleierutdanningen og lærerutdanningen. I tillegg har vi en artikkel som på et mer generelt nivå drøfter det viktige og aktuelle spørsmålet om hva som kjennetegner en profesjon og dermed også en profesjonsutdanning</dc:description>
+<dc:description/>
+<dc:date>2014-02-18T11:42:51Z</dc:date>
+<dc:date>2014-02-18T11:42:51Z</dc:date>
+<dc:date>2007-03</dc:date>
+<dc:type>Book</dc:type>
+<dc:type>Report</dc:type>
+<dc:identifier>9788277090917</dc:identifier>
+<dc:identifier>http://hdl.handle.net/10049/403</dc:identifier>
+<dc:language>nob</dc:language>
+<dc:relation>Skriftserien nr. 1 2007 - Fagrapport - artikkelsamling</dc:relation>
+<dc:publisher>Høgskolen i Bergen</dc:publisher>
+</oai_dc:dc>
+</metadata>
+        </record>
+        <record>
+            <header>
+                <identifier>oai:archive.bora.wijiti.net:10049/404</identifier>
+                <datestamp>2014-03-06T08:35:50Z</datestamp>
+                <setSpec>com_10049_24</setSpec>
+                <setSpec>col_10049_69</setSpec>
+            </header>
+            <metadata><oai_dc:dc xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/" xmlns:doc="http://www.lyncode.com/xoai" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dc="http://purl.org/dc/elements/1.1/" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd">
+<dc:title>Læring for profesjonskompetanse</dc:title>
+<dc:creator>Wilhelmsen, Britt Unni</dc:creator>
+<dc:creator>Hole, Grete Oline</dc:creator>
+<dc:creator>Hove, Synnøve</dc:creator>
+<dc:creator>Jensen, Per Ivar</dc:creator>
+<dc:creator>Aarstad, Jarle</dc:creator>
+<dc:creator>Haugen, Gry Karin</dc:creator>
+<dc:creator>Olsen, Nina Rydland</dc:creator>
+<dc:creator>Sætre, Tove Pemmer</dc:creator>
+<dc:creator>Waage, Jan Fredrik</dc:creator>
+<dc:creator>Bland, Hanna</dc:creator>
+<dc:creator>Wahlquist, Ole Henrik</dc:creator>
+<dc:creator>Fykse, Øystein</dc:creator>
+<dc:contributor/>
+<dc:subject>undervisning</dc:subject>
+<dc:subject>sosiale rammer</dc:subject>
+<dc:subject>autonomistøtte</dc:subject>
+<dc:subject>trippelkvalifisering</dc:subject>
+<dc:subject>markedsorientering</dc:subject>
+<dc:subject>kompetanseutvikling</dc:subject>
+<dc:subject>profesjonskompetanse</dc:subject>
+<dc:subject>handlingsrefleksjon</dc:subject>
+<dc:subject>didaktisk relasjonstenking</dc:subject>
+<dc:subject>studentevalueringer</dc:subject>
+<dc:subject>høyere utdanning</dc:subject>
+<dc:subject>litteraturstudium</dc:subject>
+<dc:subject>faktoranalyse</dc:subject>
+<dc:subject>korrelasjonsanalyser</dc:subject>
+<dc:subject>kunnskapsbasert praksis</dc:subject>
+<dc:subject>informasjonskompetanse</dc:subject>
+<dc:subject>yrkesutøvelse</dc:subject>
+<dc:subject>bibliotek</dc:subject>
+<dc:subject>studentaktive læringsmiljø</dc:subject>
+<dc:subject>elektroniske informasjonskilder</dc:subject>
+<dc:subject>teknologiutvikling</dc:subject>
+<dc:subject>multimodal literacy</dc:subject>
+<dc:description>Dette nummeret i skriftserien til Høgskolen i Bergen har sitt utspring i en FoU-gruppe på tvers av avdelinger i "FOU-prosjektet Læring ved Høgskolen i Bergen". Representanter fra de ulike miljøene ved høgskolens tre avdelinger ble utfordret til å belyse ulike tilnærminger til læring. FoU-gruppen på tvers av avdelinger søkte og ble tildelt midler til sitt prosjekt om læring i et kompetanseperspektiv.&#13;
+&#13;
+Vi valgte å ta utgangspunkt i kompetansebegrepet fordi begrepet rommer både et læringsperspektiv av teoretisk art og et perspektiv der praksis og erfaring er viktig. Personlige forutsetninger, kunnskaper, ferdigheter, holdninger, erfaringsbasert innsikt og bruk av andres kompetanse er viktige elementer i kompetansebegrepet. Utfordringer for alle profesjonsutdanningene er å bygge bro mellom en teoretisk opplæring og praksis i et profesjonsfelt. Innenfor kompetansebegrepet er det rom for en teoretisk dimensjon, en praktisk dimensjon og den innbyrdes relasjonen mellom disse dimensjonene.&#13;
+&#13;
+Flere av artiklene i denne utgaven er opptatt av praksistenking og sammenhengen mellom teori og praksis i utdanningen.</dc:description>
+<dc:date>2014-02-19T09:51:26Z</dc:date>
+<dc:date>2014-02-19T09:51:26Z</dc:date>
+<dc:date>2007-04</dc:date>
+<dc:type>Book</dc:type>
+<dc:type>Report</dc:type>
+<dc:identifier>9788277090924</dc:identifier>
+<dc:identifier>http://hdl.handle.net/10049/404</dc:identifier>
+<dc:language>nob</dc:language>
+<dc:relation>Skriftserein nr 2 - 2007 - Forskningsrapport - artikkelsamling</dc:relation>
+<dc:publisher>Høgskolen i Bergen</dc:publisher>
+</oai_dc:dc>
+</metadata>
+        </record>
+        <record>
+            <header>
+                <identifier>oai:archive.bora.wijiti.net:10049/407</identifier>
+                <datestamp>2014-06-04T12:54:35Z</datestamp>
+                <setSpec>com_10049_24</setSpec>
+                <setSpec>col_10049_69</setSpec>
+            </header>
+            <metadata><oai_dc:dc xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/" xmlns:doc="http://www.lyncode.com/xoai" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dc="http://purl.org/dc/elements/1.1/" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd">
+<dc:title>Sunn mat i små kropper</dc:title>
+<dc:creator>Landro, Margun</dc:creator>
+<dc:description>Prosjektet har vore eit samarbeid mellom fagmiljøet og studentar ved Høgskolen&#13;
+i Bergen, avdeling for lærarutdanning, seksjon Mat og helse og barnehagesektoren&#13;
+i Fjell kommune. Artikkelen skildrar bakgrunnen for prosjektet og korleis&#13;
+ein gjennom samarbeid med fagmiljøet ved Høgskolen og andre eksterne og&#13;
+interne samarbeidspartar kan leggje til rette for endringsarbeid og sunn mat i&#13;
+barnehagane.&#13;
+Prosjektet kan også framstå som ein arbeidsmodell for varig samarbeid mellom&#13;
+barnehageeigar og høgskule.</dc:description>
+<dc:date>2014-06-04T12:45:10Z</dc:date>
+<dc:date>2014-06-04T12:45:10Z</dc:date>
+<dc:date>2011-04</dc:date>
+<dc:type>Book chapter</dc:type>
+<dc:identifier>978-82-77-09113-6</dc:identifier>
+<dc:identifier>http://hdl.handle.net/10049/407</dc:identifier>
+<dc:language>nno</dc:language>
+<dc:relation>Skriftserien 2011 nr. 2</dc:relation>
+<dc:publisher>Høgskolen i Bergen</dc:publisher>
+</oai_dc:dc>
+</metadata>
+        </record>
+        <record>
+            <header>
+                <identifier>oai:archive.bora.wijiti.net:10049/408</identifier>
+                <datestamp>2014-06-06T10:39:40Z</datestamp>
+                <setSpec>com_10049_24</setSpec>
+                <setSpec>col_10049_69</setSpec>
+            </header>
+            <metadata><oai_dc:dc xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/" xmlns:doc="http://www.lyncode.com/xoai" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dc="http://purl.org/dc/elements/1.1/" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd">
+<dc:title>Hva gjør fokus på utvilkingshemming viktig?</dc:title>
+<dc:creator>Pettersen, Marit</dc:creator>
+<dc:description>Vernepleie som fag og profesjon ble opprettet på begynnelsen av 60-tallet fordi andre yrkesgrupper ikke ønsket å jobbe med utviklingshemmede. Men undersøkelser i de seneste år om vernepleiers yrkesvalg konkludere med at interessen for arbeidet med utvilkingshemmede taper terreng under utdanningens løp, i stedet øker studenters interesse for arbeidsfelt som psykiatri og rus.&#13;
+Hvordan kan et engasjement for å arbeide med utvilkingshemmede vekkes og næres under studiet i dag som studenter flest ikke har forpraksis med arbeid med gruppen utviklingshemmede før studiet? Hvordan formidler de sitt engasjement, de som fremdeles velger det som tradisjonelt har vært vernepleierens samfunnsoppdrag, og hvilke utfordringer ligger i slik formidling? Denne artikkelen er et forsøk på å sette fokus på arbeidet med utviklingshemmede ved å formidle studenters, gryende eller tydelige, interesse for arbeid med utviklingshemmede og hvordan de muntlig og tekstlig formidler sitt etiske og politiske engasjement.</dc:description>
+<dc:date>2014-06-06T10:37:54Z</dc:date>
+<dc:date>2014-06-06T10:37:54Z</dc:date>
+<dc:date>2009-03-20</dc:date>
+<dc:type>Book chapter</dc:type>
+<dc:identifier>9788277091037</dc:identifier>
+<dc:identifier>http://hdl.handle.net/10049/408</dc:identifier>
+<dc:language>nob</dc:language>
+<dc:relation>Skriftserein nr. 1 2009, Forskningsrapport</dc:relation>
+<dc:publisher>Høgskolen i Bergen</dc:publisher>
+</oai_dc:dc>
+</metadata>
+        </record>
+        <record>
+            <header>
+                <identifier>oai:archive.bora.wijiti.net:10049/410</identifier>
+                <datestamp>2014-08-14T10:35:06Z</datestamp>
+                <setSpec>com_10049_24</setSpec>
+                <setSpec>col_10049_69</setSpec>
+            </header>
+            <metadata><oai_dc:dc xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/" xmlns:doc="http://www.lyncode.com/xoai" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dc="http://purl.org/dc/elements/1.1/" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd">
+<dc:title>Computer Aided Design of components for energy transfer. Local LNG Station</dc:title>
+<dc:creator>Lisowski, Edward</dc:creator>
+<dc:creator>Czyżycki, Wojciech</dc:creator>
+<dc:creator>Filo, Grzegorz</dc:creator>
+<dc:creator>Łazarczyk, Katarzyna</dc:creator>
+<dc:description>Høgskolen i Bergen Skriftserien nr. 3 - 2014</dc:description>
+<dc:date>2014-08-14T08:11:29Z</dc:date>
+<dc:date>2014-08-14T08:11:29Z</dc:date>
+<dc:date>2014</dc:date>
+<dc:type>Book</dc:type>
+<dc:identifier>978-82-77-09779-8</dc:identifier>
+<dc:identifier>http://hdl.handle.net/10049/410</dc:identifier>
+<dc:language>eng</dc:language>
+<dc:relation>Skriftserien, no.3/2014</dc:relation>
+<dc:publisher>Bergen University College</dc:publisher>
+</oai_dc:dc>
+</metadata>
+        </record>
+        <record>
+            <header>
+                <identifier>oai:archive.bora.wijiti.net:10049/411</identifier>
+                <datestamp>2014-08-14T10:35:45Z</datestamp>
+                <setSpec>com_10049_24</setSpec>
+                <setSpec>col_10049_69</setSpec>
+            </header>
+            <metadata><oai_dc:dc xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/" xmlns:doc="http://www.lyncode.com/xoai" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dc="http://purl.org/dc/elements/1.1/" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd">
+<dc:title>Computer Aided Design of components for energy transfer. Modelling of Devices for Energy Transfer and Converson</dc:title>
+<dc:creator>Domagała, Mariusz</dc:creator>
+<dc:creator>Momeni, Hassan</dc:creator>
+<dc:creator>Stacharska-Targosz, Jolanta</dc:creator>
+<dc:date>2014-08-14T08:18:47Z</dc:date>
+<dc:date>2014-08-14T08:18:47Z</dc:date>
+<dc:date>2014</dc:date>
+<dc:type>Book</dc:type>
+<dc:identifier>978-82-77-09120-4</dc:identifier>
+<dc:identifier>http://hdl.handle.net/10049/411</dc:identifier>
+<dc:language>eng</dc:language>
+<dc:relation>Skriftserien, no, 4/2014</dc:relation>
+</oai_dc:dc>
+</metadata>
+        </record>
+        <record>
+            <header>
+                <identifier>oai:archive.bora.wijiti.net:10049/412</identifier>
+                <datestamp>2014-08-18T05:50:30Z</datestamp>
+                <setSpec>com_10049_24</setSpec>
+                <setSpec>col_10049_69</setSpec>
+            </header>
+            <metadata><oai_dc:dc xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/" xmlns:doc="http://www.lyncode.com/xoai" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dc="http://purl.org/dc/elements/1.1/" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd">
+<dc:title>Humor og livsglede i arbeid med utviklingshemmede mennesker</dc:title>
+<dc:creator>Knudsen, Bente Torget</dc:creator>
+<dc:date>2014-08-18T05:48:25Z</dc:date>
+<dc:date>2014-08-18T05:48:25Z</dc:date>
+<dc:date>2009-04-20</dc:date>
+<dc:type>Book chapter</dc:type>
+<dc:identifier>9788277091037</dc:identifier>
+<dc:identifier>http://hdl.handle.net/10049/412</dc:identifier>
+<dc:language>nob</dc:language>
+<dc:relation>Skriftserien nr. 1 2009 Forskningsrapport</dc:relation>
+<dc:publisher>Høgskolen i Bergen</dc:publisher>
+</oai_dc:dc>
+</metadata>
+        </record>
+        <record>
+            <header>
+                <identifier>oai:archive.bora.wijiti.net:10049/413</identifier>
+                <datestamp>2014-08-21T08:40:49Z</datestamp>
+                <setSpec>com_10049_24</setSpec>
+                <setSpec>col_10049_69</setSpec>
+            </header>
+            <metadata><oai_dc:dc xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/" xmlns:doc="http://www.lyncode.com/xoai" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dc="http://purl.org/dc/elements/1.1/" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd">
+<dc:title>Arbeidsliv for mennesker med utviklingshemming</dc:title>
+<dc:creator>Haugland, Mona</dc:creator>
+<dc:description>Skriftserien nr. 1 2009</dc:description>
+<dc:description>Å arbeide er en viktig og verdsatt del av våre liv. Arbeid er en del av livet vi ofte tar&#13;
+for gitt dersom vi har arbeid, og føler oss sikre på vår egen arbeidskapasitet og våre&#13;
+arbeidsmuligheter. Arbeid er viktig for oss av ulike grunner: økonomiske, personlige, sosiale&#13;
+og etiske. Vi trenger penger for å bo og leve og av den grunn er arbeid naturlig som middel&#13;
+til å oppnå dette. For ulike grupper i samfunnet er likevel ikke personlig økonomi avgjørende&#13;
+for å ønske å arbeide, fordi de har sin inntekt fra offentlige trygde- og sosialordninger.&#13;
+Utviklingshemmede voksne er gjerne i denne gruppen som ikke trenger å arbeide for å bo&#13;
+og leve. Hvilken verdi har da arbeidet for dem? Mona Haugland belyser ulike måter å&#13;
+forstå arbeid og arbeidets verdi for utviklingshemmede i Norge og Danmark. I møte med&#13;
+mennesker som grunnleggende sett forstår og forholder seg til arbeid ut fra andre premisser&#13;
+enn produktivitet og penger, blir etiske og menneskelige aspekter ved arbeid utfordret. På&#13;
+sett og vis stiller mennesker med utviklingshemning ved sine personlige utgangspunkt for&#13;
+arbeid og sin konkrete arbeidspraksis, spørsmål som vi kanskje ikke vanligvis stiller, og som&#13;
+vedrører meningen med arbeid både som personlig og samfunnsmessig virksomhet. Hvilken&#13;
+sammenheng er det mellom utdanning og arbeid for unge med utviklingshemning? I hvilken&#13;
+grad skal mennesker og mennesker med utviklingshemning spesielt, kunne velge arbeid og&#13;
+yrke? Er det slik at mennesker med utviklingshemning bare trenger et arbeid, uavhengig av&#13;
+hva de selv er interessert i å arbeide med, slik forfatteren av teksten under peker på? Hva&#13;
+er sammenhengen mellom interesser, utdanning, arbeid, og noen av de honnørordene vi&#13;
+ofte anvender i møte med utviklingshemmede arbeidstakere: ord som brukermedvirkning,&#13;
+empowerment, livskvalitet og verdsatte roller? Hva vi arbeider med, hvem vi arbeider&#13;
+sammen med, hvor vi arbeider og hvordan vi opplever oss selv i vårt arbeid, taler til oss om&#13;
+hvem vi er og hvem andre er i forhold til oss selv. Arbeid er samarbeid, tilhørighet, relasjoner&#13;
+med andre og forståelse av identitet – ikke først og fremst i form av oppnådde og etablerte&#13;
+roller som for eksempel arbeidstaker eller arbeidsgiver, men som eksistensiell opplevelse av&#13;
+personlig mening i livet, og som menneskelig samarbeid og gjensidig avhengighet i konkret&#13;
+handling i hverdagen.</dc:description>
+<dc:date>2014-08-20T07:44:53Z</dc:date>
+<dc:date>2014-08-20T07:44:53Z</dc:date>
+<dc:date>2009-04-20</dc:date>
+<dc:type>Book chapter</dc:type>
+<dc:identifier>9788277091037</dc:identifier>
+<dc:identifier>http://hdl.handle.net/10049/413</dc:identifier>
+<dc:language>nno</dc:language>
+<dc:relation>Skriftserien 2009 nr. 1 Forskningsrapport</dc:relation>
+<dc:publisher>Høgskolen i Bergen</dc:publisher>
+</oai_dc:dc>
+</metadata>
+        </record>
+        <record>
+            <header>
+                <identifier>oai:archive.bora.wijiti.net:10049/415</identifier>
+                <datestamp>2014-08-20T08:14:32Z</datestamp>
+                <setSpec>com_10049_24</setSpec>
+                <setSpec>col_10049_69</setSpec>
+            </header>
+            <metadata><oai_dc:dc xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/" xmlns:doc="http://www.lyncode.com/xoai" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dc="http://purl.org/dc/elements/1.1/" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd">
+<dc:title>Mer enn studenten har bedt om</dc:title>
+<dc:creator>Sævi, Tone</dc:creator>
+<dc:date>2014-08-20T08:12:07Z</dc:date>
+<dc:date>2014-08-20T08:12:07Z</dc:date>
+<dc:date>2009-04-20</dc:date>
+<dc:type>Book chapter</dc:type>
+<dc:identifier>9788277091037</dc:identifier>
+<dc:identifier>http://hdl.handle.net/10049/415</dc:identifier>
+<dc:language>nob</dc:language>
+<dc:relation>Skriftserien 2009 nr. 1 Forskningsrapport</dc:relation>
+<dc:publisher>Høgskolen i Bergen</dc:publisher>
+</oai_dc:dc>
+</metadata>
+        </record>
+        <record>
+            <header>
+                <identifier>oai:archive.bora.wijiti.net:10049/416</identifier>
+                <datestamp>2014-08-22T07:41:22Z</datestamp>
+                <setSpec>com_10049_24</setSpec>
+                <setSpec>col_10049_69</setSpec>
+            </header>
+            <metadata><oai_dc:dc xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/" xmlns:doc="http://www.lyncode.com/xoai" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dc="http://purl.org/dc/elements/1.1/" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd">
+<dc:title>Trøytt mann speglar seg</dc:title>
+<dc:creator>Foss, Gunnar</dc:creator>
+<dc:description>Artikkel i skriftserien nr. 3 2007 "Festskrift til Sveinung Time på 61-årsdagen"</dc:description>
+<dc:date>2014-08-22T07:08:12Z</dc:date>
+<dc:date>2014-08-22T07:08:12Z</dc:date>
+<dc:date>2007-05-10</dc:date>
+<dc:type>Article</dc:type>
+<dc:identifier>9788277090931</dc:identifier>
+<dc:identifier>http://hdl.handle.net/10049/416</dc:identifier>
+<dc:language>nno</dc:language>
+<dc:relation>Skriftserien nr. 3 2007 - Jubileumsskrift</dc:relation>
+<dc:publisher>Høgskolen i Bergen</dc:publisher>
+</oai_dc:dc>
+</metadata>
+        </record>
+        <record>
+            <header>
+                <identifier>oai:archive.bora.wijiti.net:10049/417</identifier>
+                <datestamp>2014-08-22T07:36:09Z</datestamp>
+                <setSpec>com_10049_24</setSpec>
+                <setSpec>col_10049_69</setSpec>
+            </header>
+            <metadata><oai_dc:dc xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/" xmlns:doc="http://www.lyncode.com/xoai" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dc="http://purl.org/dc/elements/1.1/" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd">
+<dc:title>Null: 12 tekstbrudd om tall</dc:title>
+<dc:creator>Goga, Nina</dc:creator>
+<dc:description>Artikkel i skriftserien nr. 3 2007 "Festskrift til Sveinung Time på 61-årsdagen"</dc:description>
+<dc:date>2014-08-22T07:36:09Z</dc:date>
+<dc:date>2014-08-22T07:36:09Z</dc:date>
+<dc:date>2007-05-10</dc:date>
+<dc:type>Article</dc:type>
+<dc:identifier>9788277090931</dc:identifier>
+<dc:identifier>http://hdl.handle.net/10049/417</dc:identifier>
+<dc:language>nob</dc:language>
+<dc:relation>Skriftserien nr. 3 2007 - Jubileumsskrift</dc:relation>
+<dc:publisher>Høgskolen i Bergen</dc:publisher>
+</oai_dc:dc>
+</metadata>
+        </record>
+        <record>
+            <header>
+                <identifier>oai:archive.bora.wijiti.net:10049/418</identifier>
+                <datestamp>2014-08-22T08:21:30Z</datestamp>
+                <setSpec>com_10049_24</setSpec>
+                <setSpec>col_10049_69</setSpec>
+            </header>
+            <metadata><oai_dc:dc xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/" xmlns:doc="http://www.lyncode.com/xoai" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dc="http://purl.org/dc/elements/1.1/" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd">
+<dc:title>Opprørets time: Språk og identitet i Lewis Carrolls Alice i Eventyrland</dc:title>
+<dc:creator>Lund-Iversen, Carl Lauritz</dc:creator>
+<dc:description>Artikkel i skriftserien nr. 3 2007 "Festskrift til Sveinung Time på 61-årsdagen"</dc:description>
+<dc:date>2014-08-22T07:56:08Z</dc:date>
+<dc:date>2014-08-22T07:56:08Z</dc:date>
+<dc:date>2007-05-10</dc:date>
+<dc:type>Article</dc:type>
+<dc:identifier>9788277090931</dc:identifier>
+<dc:identifier>http://hdl.handle.net/10049/418</dc:identifier>
+<dc:language>nob</dc:language>
+<dc:relation>Skriftserien nr. 3 2007 - Jubileumsskrift</dc:relation>
+<dc:publisher>Høgskolen i Bergen</dc:publisher>
+</oai_dc:dc>
+</metadata>
+        </record>
+        <record>
+            <header>
+                <identifier>oai:archive.bora.wijiti.net:10049/419</identifier>
+                <datestamp>2014-08-22T08:23:06Z</datestamp>
+                <setSpec>com_10049_24</setSpec>
+                <setSpec>col_10049_69</setSpec>
+            </header>
+            <metadata><oai_dc:dc xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/" xmlns:doc="http://www.lyncode.com/xoai" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dc="http://purl.org/dc/elements/1.1/" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd">
+<dc:title>Det vi egentlig trenger er kanskje ny bemanning: Et narratologisk problem i Harry Potter og fangen i Azkaban</dc:title>
+<dc:creator>Orseth, Dag</dc:creator>
+<dc:description>Artikikel i skriftserien nr. 3 2007 "Festskrift til Sveinung Time på 61-årsdagen"</dc:description>
+<dc:date>2014-08-22T08:21:03Z</dc:date>
+<dc:date>2014-08-22T08:21:03Z</dc:date>
+<dc:date>2007-05-10</dc:date>
+<dc:type>Article</dc:type>
+<dc:identifier>9788277090931</dc:identifier>
+<dc:identifier>http://hdl.handle.net/10049/419</dc:identifier>
+<dc:language>nob</dc:language>
+<dc:relation>Skriftserien nr. 3 2007 - Jubileumsskrift</dc:relation>
+<dc:publisher>Høgskolen i Bergen</dc:publisher>
+</oai_dc:dc>
+</metadata>
+        </record>
+        <record>
+            <header>
+                <identifier>oai:archive.bora.wijiti.net:10049/420</identifier>
+                <datestamp>2014-08-22T08:43:25Z</datestamp>
+                <setSpec>com_10049_24</setSpec>
+                <setSpec>col_10049_69</setSpec>
+            </header>
+            <metadata><oai_dc:dc xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/" xmlns:doc="http://www.lyncode.com/xoai" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dc="http://purl.org/dc/elements/1.1/" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd">
+<dc:title>Fromme freistingar</dc:title>
+<dc:creator>Økland, Einar</dc:creator>
+<dc:description>Artikkel i skriftserien nr. 3 2007 "Festskrift til Sveinung Time på 61-årsdagen"</dc:description>
+<dc:date>2014-08-22T08:42:11Z</dc:date>
+<dc:date>2014-08-22T08:42:11Z</dc:date>
+<dc:date>2007-05-10</dc:date>
+<dc:type>Article</dc:type>
+<dc:identifier>9788277090931</dc:identifier>
+<dc:identifier>http://hdl.handle.net/10049/420</dc:identifier>
+<dc:language>nno</dc:language>
+<dc:relation>Skriftserien nr. 3 2007 - Jubileumsskrift</dc:relation>
+<dc:publisher>Høgskolen i Bergen</dc:publisher>
+</oai_dc:dc>
+</metadata>
+        </record>
+        <record>
+            <header>
+                <identifier>oai:archive.bora.wijiti.net:10049/421</identifier>
+                <datestamp>2014-08-22T09:00:00Z</datestamp>
+                <setSpec>com_10049_24</setSpec>
+                <setSpec>col_10049_69</setSpec>
+            </header>
+            <metadata><oai_dc:dc xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/" xmlns:doc="http://www.lyncode.com/xoai" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dc="http://purl.org/dc/elements/1.1/" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd">
+<dc:title>Rapport om forskning i romanteori</dc:title>
+<dc:creator>Andersen, Anders M.</dc:creator>
+<dc:description>Artikkel i skriftserien nr. 3 2007 "Festskrift til Sveinung Time på 61-årsdagen"</dc:description>
+<dc:date>2014-08-22T08:59:05Z</dc:date>
+<dc:date>2014-08-22T08:59:05Z</dc:date>
+<dc:date>2007-05-10</dc:date>
+<dc:type>Article</dc:type>
+<dc:identifier>9788277090931</dc:identifier>
+<dc:identifier>http://hdl.handle.net/10049/421</dc:identifier>
+<dc:language>nno</dc:language>
+<dc:relation>Skriftserien nr. 3 2007 - Jubileumsskrift</dc:relation>
+<dc:publisher>Høgskolen i Bergen</dc:publisher>
+</oai_dc:dc>
+</metadata>
+        </record>
+        <record>
+            <header>
+                <identifier>oai:archive.bora.wijiti.net:10049/422</identifier>
+                <datestamp>2014-08-22T10:12:47Z</datestamp>
+                <setSpec>com_10049_24</setSpec>
+                <setSpec>col_10049_69</setSpec>
+            </header>
+            <metadata><oai_dc:dc xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/" xmlns:doc="http://www.lyncode.com/xoai" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dc="http://purl.org/dc/elements/1.1/" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd">
+<dc:title>Homo viator - ferdesmannen - i dikt og salmar: Refleksjon kring eit Vesaas-dikt</dc:title>
+<dc:creator>Gimnes, Steinar</dc:creator>
+<dc:description>Artikkel i skriftserien nr. 3 2007 "Festskrift til Sveinung Time på 61-årsdagen"</dc:description>
+<dc:date>2014-08-22T09:20:16Z</dc:date>
+<dc:date>2014-08-22T09:20:16Z</dc:date>
+<dc:date>2007-05-10</dc:date>
+<dc:type>Article</dc:type>
+<dc:identifier>9788277090931</dc:identifier>
+<dc:identifier>http://hdl.handle.net/10049/422</dc:identifier>
+<dc:language>nno</dc:language>
+<dc:relation>Skriftserien nr. 3 2007 - Jubileumsskrift</dc:relation>
+<dc:publisher>Høgskolen i Bergen</dc:publisher>
+</oai_dc:dc>
+</metadata>
+        </record>
+        <record>
+            <header>
+                <identifier>oai:archive.bora.wijiti.net:10049/423</identifier>
+                <datestamp>2014-08-22T10:25:32Z</datestamp>
+                <setSpec>com_10049_24</setSpec>
+                <setSpec>col_10049_69</setSpec>
+            </header>
+            <metadata><oai_dc:dc xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/" xmlns:doc="http://www.lyncode.com/xoai" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dc="http://purl.org/dc/elements/1.1/" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd">
+<dc:title>"I lankene til ei lensa prinsesse" - om grunn og avgrunn i Øvind Bergs poesi</dc:title>
+<dc:creator>Michelsen, Per Arne</dc:creator>
+<dc:description>Artikkel i skriftserien nr. 3 2007 "Festskrift til Sveinung Time på 61-årsdagen"</dc:description>
+<dc:date>2014-08-22T10:24:32Z</dc:date>
+<dc:date>2014-08-22T10:24:32Z</dc:date>
+<dc:date>2007-05-10</dc:date>
+<dc:type>Article</dc:type>
+<dc:identifier>9788277090931</dc:identifier>
+<dc:identifier>http://hdl.handle.net/10049/423</dc:identifier>
+<dc:language>nob</dc:language>
+<dc:relation>Skriftserien nr. 3 2007 - Jubileumsskrift</dc:relation>
+<dc:publisher>Høgskolen i Bergen</dc:publisher>
+</oai_dc:dc>
+</metadata>
+        </record>
+        <record>
+            <header>
+                <identifier>oai:archive.bora.wijiti.net:10049/424</identifier>
+                <datestamp>2014-08-22T10:43:58Z</datestamp>
+                <setSpec>com_10049_24</setSpec>
+                <setSpec>col_10049_69</setSpec>
+            </header>
+            <metadata><oai_dc:dc xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/" xmlns:doc="http://www.lyncode.com/xoai" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dc="http://purl.org/dc/elements/1.1/" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd">
+<dc:title>Den impliserte forfatteren og intensjonsaliteten</dc:title>
+<dc:creator>Larsen, Leif Johan</dc:creator>
+<dc:description>Artikkel i skriftserien nr. 3 2007 " Festskrift til Sveinung Time på 61-årsdagen"</dc:description>
+<dc:date>2014-08-22T10:42:45Z</dc:date>
+<dc:date>2014-08-22T10:42:45Z</dc:date>
+<dc:date>2007-05-10</dc:date>
+<dc:type>Article</dc:type>
+<dc:identifier>9788277090931</dc:identifier>
+<dc:identifier>http://hdl.handle.net/10049/424</dc:identifier>
+<dc:language>nob</dc:language>
+<dc:relation>Skrifterien nr. 3 2007 - Jubileumsskrift</dc:relation>
+<dc:publisher>Høgskolen i Bergen</dc:publisher>
+</oai_dc:dc>
+</metadata>
+        </record>
+        <record>
+            <header>
+                <identifier>oai:archive.bora.wijiti.net:10049/425</identifier>
+                <datestamp>2014-08-22T11:13:02Z</datestamp>
+                <setSpec>com_10049_24</setSpec>
+                <setSpec>col_10049_69</setSpec>
+            </header>
+            <metadata><oai_dc:dc xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/" xmlns:doc="http://www.lyncode.com/xoai" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dc="http://purl.org/dc/elements/1.1/" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd">
+<dc:title>Kunsten å sammensette en tekst</dc:title>
+<dc:creator>Schwebs, Ture</dc:creator>
+<dc:description>Artikkel i skiftserien nr. 3 2007 " Festskrift til Sveinung Time på 61-årsdagen"</dc:description>
+<dc:description>Hvordan kan blogger og wikier brukes til læringsformål? Forfatteren av denne (sammensatte)&#13;
+teksten deltok i et prosjekt som bygget og testet en prototyp på et online-publiseringsverktøy,&#13;
+kalt eLogg2.&#13;
+Grunnforholdene&#13;
+Prosjektmedarbeiderne ønsket å konstruere en læringsplattform som skulle gjøre det enkelt for&#13;
+både elever og lærere å skrive og utveksle sammensatte tekster. Det skulle skje ved å kombinere&#13;
+egenskaper ved to sentrale internettsjangrer: weblogger og wikier. En blogg er, som de fleste&#13;
+vil vite, en (hyppig) oppdatert nettside med korte innlegg, «poster», kronologisk ordnet. Den&#13;
+har gjerne pekere til andre nettsteder og gir rom for kommentarer. En wiki er en tekstsamling&#13;
+skrevet av flere forfattere i fellesskap, som nettleksikonet Wikipedia. Den første er altså en&#13;
+personlig publiseringsform, den andre en kollektiv. Begge er skriveformer som mange unge er&#13;
+fortrolige med.</dc:description>
+<dc:date>2014-08-22T11:11:52Z</dc:date>
+<dc:date>2014-08-22T11:11:52Z</dc:date>
+<dc:date>2007-05-10</dc:date>
+<dc:type>Article</dc:type>
+<dc:identifier>9788277090931</dc:identifier>
+<dc:identifier>http://hdl.handle.net/10049/425</dc:identifier>
+<dc:language>nob</dc:language>
+<dc:relation>Skriftserien nr. 3 2007</dc:relation>
+<dc:publisher>Høgskolen i Bergen</dc:publisher>
+</oai_dc:dc>
+</metadata>
+        </record>
+    </ListRecords>
+</OAI-PMH>

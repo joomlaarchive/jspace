@@ -17,38 +17,20 @@ defined('JPATH_PLATFORM') or die;
  */
 class JSpaceTableRecordhistory extends JTableContenthistory
 {
+    protected $hierarchicalVersionData = null;
+
     /**
-     * Overrides JTable::store to set modified hash, user id, and save date.
+     * Adds flattened metadata to the content history.
      *
      * @param   boolean  $updateNulls  True to update fields even if they are null.
      *
      * @return  boolean  True on success.
-     *
-     * @since   3.2
      */
     public function store($updateNulls = false)
     {
-        $this->set('character_count', strlen($this->get('version_data')));
-
-        $this->_addCSVMetadata();
-        
-        $typeTable = JTable::getInstance('Contenttype');
-        $typeTable->load($this->ucm_type_id);
-
-        if (!isset($this->sha1_hash))
-        {
-            $this->set('sha1_hash', $this->getSha1($this->get('version_data'), $typeTable));
-        }
-
-        $this->set('editor_user_id', JFactory::getUser()->id);
-        $this->set('save_date', JFactory::getDate()->toSql());
-
-        return parent::store($updateNulls);
-    }
+        $this->set('hierarchicalVersionData', $this->get('version_data'));
     
-    private function _addCSVMetadata()
-    {
-        $data = json_decode($this->get('version_data'));
+        $data = json_decode($this->get('hierarchicalVersionData'));
         
         $metadata = json_decode($data->metadata);
         $registry = new JRegistry();
@@ -65,8 +47,20 @@ class JSpaceTableRecordhistory extends JTableContenthistory
 
         $registry = new JRegistry();
         $registry->loadArray($metadata);
-        $data->csvmetadata = json_encode($registry);
-        
+        $data->metadatapairs = json_encode($registry);
+
         $this->set('version_data', json_encode($data));
+
+        return parent::store($updateNulls);
+    }
+    
+    public function get($property, $default = null)
+    {
+        if ($property == 'version_data' && $this->hierarchicalVersionData != null)
+        {
+            return $this->hierarchicalVersionData;
+        }
+        
+        return parent::get($property, $default);
     }
 }

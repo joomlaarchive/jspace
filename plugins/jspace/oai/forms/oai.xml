@@ -1,5 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <form>
+    <fieldset name="params">
+        <field 
+            name="frequency" 
+            type="list"
+            label="PLG_JSPACE_HARVEST_FREQUENCY_LABEL"
+            description="PLG_JSPACE_HARVEST_FREQUENCY_DESC"
+            default="0">
+            <option value="0">PLG_JSPACE_HARVEST_FREQUENCY_OPTION_FOREVER</option>
+            <option value="1">PLG_JSPACE_HARVEST_FREQUENCY_OPTION_ONCE</option>
+        </field>
+    </fieldset>
+    
     <fields name="params">
         <fieldset name="params">
             <field 
@@ -7,6 +19,7 @@
                 type="text"
                 label="PLG_JSPACE_OAI_SETS_LABEL"
                 description="PLG_JSPACE_OAI_SETS_DESC"/>
+            
             <field 
                 name="harvest_type" 
                 type="list" 

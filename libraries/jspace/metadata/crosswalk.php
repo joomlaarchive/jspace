@@ -1,10 +1,24 @@
 <?php
+/**
+ * @package     JSpace
+ * @subpackage  Metadata
+ *
+ * @copyright   Copyright (C) 2014 KnowledgeArc Ltd. All rights reserved.
+ * @license     GNU General Public License version 2 or later; see LICENSE
+ */
+ 
 defined('_JEXEC') or die;
 
 jimport('joomla.filesystem.file');
 
 jimport('jspace.metadata.registry');
 
+/**
+ * Provides crosswalks based on a preconfigured crosswalk ruleset.
+ *
+ * @package     JSpace
+ * @subpackage  Metadata
+ */
 class JSpaceMetadataCrosswalk extends JObject
 {
     protected $source;
@@ -12,24 +26,33 @@ class JSpaceMetadataCrosswalk extends JObject
     protected $metadata;
 
     /**
-     * The metadata crosswalk.
-     * @var JRegistry
+     * The crosswalk registry;
+     * @var array
      */
-    protected $crosswalk;
+    protected $registry;
     
     /**
      * Instantiates an instance of the file metadata crosswalk based on a registry file. 
      * 
      * @param  string  $source    The source metadata to crosswalk.
-     * @param  string  $registry  The name of the registry file.
+     * @param  string  $registry  The name of the crosswalk registry.
      */
-    public function __construct($source, $registry)
+    public function __construct($source, $registry = 'crosswalk')
     {
         parent::__construct();
 
         $this->source = $source;
         
-        $this->crosswalk = new JSpaceMetadataRegistry($registry);
+        $path = JPATH_ROOT.'/administrator/components/com_jspace/crosswalks/'.$registry.'.json';
+
+        if (!JFile::exists($path))
+        {
+            throw new Exception('No crosswalk file found.');
+        }
+        
+        $crosswalk = json_decode(file_get_contents($path), true);
+
+        $this->registry = $crosswalk;
     }
     
     /**
@@ -37,45 +60,184 @@ class JSpaceMetadataCrosswalk extends JObject
      * different metadata key name as defined in the crosswalk registry file.
      *
      * @param   bool   $reverse  True if the crosswalk should be reversed, false otherwise. 
-     * Defaults to false.
+     * Defaults to false
      *
-     * @return  array  An array of metadata values.
+     * @return  JRegistry  A registry of metadata values.
      */
     public function walk($reverse = false)
     {
-        foreach ($this->source->toArray() as $skey=>$svalue)
+        $metadata = new JRegistry();
+        $metadata->merge($this->getSpecialMetadata($reverse));
+        $metadata->merge($this->getCommonMetadata($reverse));
+        
+        return $metadata;
+    }
+
+    /**
+     * Gets metadata based on "special" crosswalk settings.
+     *
+     * Use this method when crosswalking from a named schema such as Dublin Core to JSpace's
+     * internal metadata schema.
+     *
+     * @return  JRegistry  A registry of metadata based on "special" crosswalk settings.
+     */
+    public function getSpecialMetadata($reverse = false)
+    {        
+        $metadata = JArrayHelper::getValue($this->registry, 'metadata', array());
+        $schemas = JArrayHelper::getValue($metadata, 'special', array());
+        
+        $data = new JRegistry();
+        
+        foreach ($schemas as $key=>$schema)
         {
-            $found = false;
+            $source = new JRegistry;
+            $source->loadObject($this->source->get($key));
 
-            $pairs = $this->crosswalk->get('crosswalk')->toArray();
+            $data->merge($this->_mapMetadata($source, $schema, $reverse));
+        }
+        
+        return $data;
+    }
+
+    /**
+     * Gets metadata based on "common" crosswalk settings.
+     *
+     * Use this method when crosswalking from internal metadata to an external metadata schema 
+     * such as Dublin Core.
+     *
+     * @return  JRegistry  A registry of metadata based on "common" crosswalk settings.
+     */
+    public function getCommonMetadata($reverse = false)
+    {
+        $metadata = JArrayHelper::getValue($this->registry, 'metadata', array());
+        $schema = JArrayHelper::getValue($metadata, 'common', array());
+        
+        return $this->_mapMetadata($this->source, $schema, $reverse);
+    }
+    
+    /**
+     * Gets tags based on specified metadata.
+     *
+     * @return  string[]  An array of tags based on specific metadata. 
+     */
+    public function getTags()
+    {
+        $tags = array();
+        
+        foreach (JArrayHelper::getValue($this->registry, 'tags', array()) as $tag)
+        {
+            $field = $this->source->get($tag);
+   
+            if (is_array($field))
+            {
+                $tags = array_merge($tags, $field);
+            }
+            else if (!is_null($field))
+            {
+                $tags[] = $field;
+            }
             
-            while ((list($key, $value) = each($pairs)) != null && !$found)
-            {            
-                $values = explode(',', $value);
-                
-                if ($reverse)
-                {
-                    $keys = array($key);                    
-                    // swap the key with the first value.
-                    $key = current($values);
-                }
-                else 
-                {
-                    $keys = $values;
-                }                
-                
-                if (array_search($skey, $keys) !== false)
-                {
-                    if ($svalue)
-                    {
-                        $this->metadata[$key] = $svalue;
-                    }
+        }
+        
+        return $tags;
+    }
+    
+    /**
+     * Gets a list of identifiers based on identifiers settings.
+     *
+     * @return  string[]  A list of identifiers based on identifiers settings.
+     */
+    public function getIdentifiers()
+    {
+        $identifiers = array();
 
-                    $found = true;
+        foreach (JArrayHelper::getValue($this->registry, 'identifiers', array()) as $key=>$config)
+        {
+            $field = $this->source->get($key);
+            
+            if (is_array($field))
+            {
+                $identifiers = array_merge($identifiers, $field);
+            }
+            else if (!is_null($field))
+            {
+                $identifiers[] = $field;
+            }
+            
+            // clean up identifiers based on prefix settings.
+            foreach (JArrayHelper::getValue($config, 'prefix', array()) as $prefix)
+            {
+                while (current($identifiers))
+                {
+                    if (JString::strpos(current($identifiers), $prefix) === false)
+                    {
+                        unset($identifiers[key($identifiers)]);
+                    }
+                    
+                    next($identifiers);
                 }
+                
+                reset($identifiers);
+            }
+        }
+
+        return $identifiers;
+    }
+    
+    /**
+     * Maps a schema's metadata.
+     *
+     * @param   JRegistry  $registry  A registry of metadata keys and values.
+     * @param   array      $schema    The schema section of the crosswalk configuration.
+     * @param   bool       $reverse   True to map targets to sources, false otherwise. Defaults to 
+     * false.
+     *
+     * @return  JRegistry  A registry of mapped metadata keys and values.
+     */
+    private function _mapMetadata($registry, $schema, $reverse = false)
+    {
+        if ($reverse)
+        {
+            $skey = 'target';
+            $tkey = 'source';
+        }
+        else
+        {
+            $skey = 'source';
+            $tkey = 'target';
+        }
+        
+        $metadata = new JRegistry();
+        
+        foreach (JArrayHelper::getValue($schema, 'map', array()) as $mappable)
+        {
+            // sometimes the key needs to be lower case to avoid poorly marked up HTML.
+            $source = $registry->get($mappable[$skey], $registry->get(JString::strtolower($mappable[$skey])));
+            
+            if ($source)
+            {
+                if ((bool)$mappable['multiple'])
+                {
+                    $target = $metadata->get($mappable[$tkey]);
+                    
+                    if (!is_array($target))
+                    {
+                        $array = array();
+                        $array[] = $source;
+                        $source = $array;
+                    }
+                    else
+                    {
+                        $target[] = $source;
+                        $source = target;
+                    }
+                    
+                }
+                
+                $metadata->set($mappable[$tkey], $source);
             }
         }
         
-        return $this->metadata;
+        return $metadata;
     }
 }

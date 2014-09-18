@@ -42,24 +42,26 @@ class JSpaceFactory
 		return $config;
 	}
 	
-	/**
-	 * Gets an instance of the JSpaceMetadataCrosswalk class. 
-	 *
-	 * @param 	JRegistry	$metadata
-	 * @param	array		$config
-	 * @return	JSpaceMetadataCrosswalk An instance of JSpaceMetadataCrosswalk class.
-	 */
-	public static function getCrosswalk($metadata, $config)
-	{
-		if (!($crosswalk = JArrayHelper::getValue($config, 'name', null)))
-		{
-			throw new InvalidArgumentException("LIB_JSPACE_EXCEPTION_NO_NAME");
-		}
+    /**
+     * Gets an instance of the JSpaceMetadataCrosswalk class. 
+     *
+     * @param   JRegistry               $metadata
+     * @param   array                   $config
+     * @return  JSpaceMetadataCrosswalk An instance of JSpaceMetadataCrosswalk class.
+     */
+    public static function getCrosswalk($metadata, $config = array())
+    {
+        jimport('jspace.metadata.crosswalk');
 
-		jimport('jspace.metadata.crosswalk');
-		
-		return new JSpaceMetadataCrosswalk($metadata, $crosswalk);
-	}
+        if ($registry = JArrayHelper::getValue($config, 'name'))
+        {
+            return new JSpaceMetadataCrosswalk($metadata, $registry);
+        }
+        else
+        {
+            return new JSpaceMetadataCrosswalk($metadata);
+        }
+    }
 	
 	/**
 	 * Gets a list of available JSpace schemas.

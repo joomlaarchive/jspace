@@ -178,8 +178,8 @@
         </field>
         
         <field
-            name="csvmetadata"
+            name="metadatapairs"
             type="hidden"
-            label="COM_JSPACE_RECORD_CSVMETADATA_LABEL"/>
+            label="COM_JSPACE_RECORD_METADATAPAIRS_LABEL"/>
 	</fieldset>
 </form>

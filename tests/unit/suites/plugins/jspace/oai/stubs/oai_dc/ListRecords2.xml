@@ -2918,7 +2918,7 @@ Konklusjon. Undersøkelsen viser noen årsaker til ujevn hjemmebesøksdekning og
                 <setSpec>com_10049_29</setSpec>
                 <setSpec>col_10049_53</setSpec>
             </header>
-            <metadata><oai_dc:dc xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/" xmlns:doc="http://www.lyncode.com/xoai" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dc="http://purl.org/dc/elements/1.1/" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd">
+            <metadata><oai_dc:dc xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/" xmlns:doc="http://www.lyncode.com/xoai" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cristin="http://www.cristin.no/techdoc/xsd/resultater/1.0/" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd">
 <dc:title>”Problembasert læring” (PBL) i pedagogikkundervisningen ved allmennlærerutdanningen : et fou-arbeid</dc:title>
 <dc:creator>Danielsen, Anne Grete</dc:creator>
 <dc:creator>Isachsen, Eva</dc:creator>
@@ -2936,9 +2936,10 @@ Rapporten inneholder en fremstilling av oppstarten, planleggingen, gjennomførin
 <dc:type>Others</dc:type>
 <dc:identifier>http://hdl.handle.net/10049/287</dc:identifier>
 <dc:language>nob</dc:language>
+<cristin:funding>$10000</cristin:funding>
 </oai_dc:dc>
 </metadata>
         </record>
-        <resumptionToken completeListSize="306" cursor="1">MToyMDB8Mjp8Mzp8NDp8NTpvYWlfZGM=</resumptionToken>
+        <resumptionToken completeListSize="200" cursor="1"></resumptionToken>
     </ListRecords>
 </OAI-PMH>

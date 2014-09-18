@@ -3,52 +3,109 @@ jimport('jspace.metadata.crosswalk');
 
 class JSpaceMetadataCrosswalkTest extends PHPUnit_Framework_TestCase
 {
-	public function testOAIDC()
-	{
-		$registry = new JRegistry();
-		$registry->set('dc:title', 'Title');
-		$registry->set('dc:creator', 'Author');
-		$registry->set('dc:subject', array('Keyword 1', 'Keyword 2'));
-		
-		$equals = new JRegistry();
-		$equals->set('title', 'Title');
-		$equals->set('author', 'Author');
-		$equals->set('keyword', array('Keyword 1', 'Keyword 2'));		
-		
-		$crosswalk = new JSpaceMetadataCrosswalk($registry, 'oai_dc');
-		$this->assertEquals($equals->toArray(), $crosswalk->walk());
-	}
-
-    public function testQDC()
+    public function testCommonMetadata()
     {
-        $registry = new JRegistry();
-        $registry->set('dc:title', array('Title'));
-        $registry->set('dc:creator', array('Author'));
-        $registry->set('dc:subject', array('Keyword 1', 'Keyword 2'));
+        $metadata = new JRegistry();
+        $metadata->set('resourceName', 'file.name');
         
-        $equals = new JRegistry();
-        $equals->set('title', array('Title'));
-        $equals->set('author', array('Author'));
-        $equals->set('keyword', array('Keyword 1', 'Keyword 2'));
+        $crosswalk = new JSpaceMetadataCrosswalk($metadata);
+        $data = $crosswalk->getCommonMetadata();
         
-        $crosswalk = new JSpaceMetadataCrosswalk($registry, 'qdc');
-        $this->assertEquals($equals->toArray(), $crosswalk->walk());
+        $this->assertEquals('file.name', $data->get('name'));
+    }
+    
+    public function testCommonMetadataReversed()
+    {
+        $metadata = new JRegistry();
+        $metadata->set('name', 'file.name');
+        
+        $crosswalk = new JSpaceMetadataCrosswalk($metadata);
+        $data = $crosswalk->getCommonMetadata(true);
+        
+        $this->assertEquals('file.name', $data->get('resourceName'));
     }
 
-    public function testDSpace()
+    public function testSpecialMetadata()
     {
-        $equals = array();
-        $equals['dc.title']='Title';
-        $equals['dc.contributor.author']='Author';
-        $equals['dc.subject']=array('Keyword 1', 'Keyword 2');
+        $file = dirname(__FILE__).'/stubs/dc_and_citation.html';
         
-        $registry = new JRegistry();
-        $registry->set('title', 'Title');
-        $registry->set('author', 'Author');
-        $registry->set('keyword', array('Keyword 1', 'Keyword 2'));       
+        $metadata = new JRegistry();
+        
+        // suppress duplicate attribute errors.
+        libxml_use_internal_errors(true);
+        
+        $dom = new DOMDocument;
+        $dom->loadHTMLFile($file);
+        $xpath = new DOMXPath($dom);
+        
+        $metas = $xpath->query('//head/meta');
+        
+        foreach ($metas as $meta)
+        {
+             $metadata->set(JString::strtolower($meta->getAttribute('name')), JString::strtolower($meta->getAttribute('content')));
+        }
+        
+        $crosswalk = new JSpaceMetadataCrosswalk($metadata);
+        $data = $crosswalk->getSpecialMetadata();
+        
+        $this->assertEquals('purifying selection can obscure the ancient age of viral lineages', $data->get('title'));
+        $this->assertEquals(array('10.1093/molbev/msr170'), $data->get('identifier'));
+        $this->assertEquals(array(), $crosswalk->getTags());
+    }
+    
+    public function testMultipleNamespaces()
+    {
+        $file = dirname(__FILE__).'/stubs/dc_and_dcterms.html';
+        
+        $metadata = new JRegistry();
+        
+        $dom = new DOMDocument;
+        $dom->loadHTMLFile($file);
+        $xpath = new DOMXPath($dom);
+        
+        $metas = $xpath->query('//head/meta');
+        
+        foreach ($metas as $meta)
+        {
+            $metadata->set(JString::strtolower($meta->getAttribute('name')), $meta->getAttribute('content'));
+        }
+        
+        $metadata->set('resourceName', 'file.name');
+        
+        $crosswalk = new JSpaceMetadataCrosswalk($metadata);
+        $data = $crosswalk->walk();
 
-        $crosswalk = new JSpaceMetadataCrosswalk($registry, 'dspace');
+        $this->assertEquals('Ebola hemorrhagic fever', $data->get('title'));
+        $this->assertEquals(array('epidemiology'), $data->get('keyword'));        
+        $this->assertEquals(array('epidemiology'), $crosswalk->getTags());
+        $this->assertEquals('file.name', $data->get('name'));
+    }
+    
+    public function testCrosswalkFile()
+    {
+        // need a local file but stream_get_meta_data must use file metadata provided by server.
+        $fp = fopen('http://cdn.joomla.org/template/menu/joomla.jpg', 'r');
+        
+        $metadata = stream_get_meta_data($fp);
+        
+        $registry = new JRegistry;
+        
+        foreach ($metadata['wrapper_data'] as $meta)
+        {
+            $parts = explode(':', $meta, 2);
+            
+            if (count($parts) == 2)
+            {
+                list($key, $value) = $parts;
 
-        $this->assertEquals($equals, $crosswalk->walk(true));
+                $registry->set($key, JString::trim($value));
+            }
+        }
+        
+        $crosswalk = new JSpaceMetadataCrosswalk($registry);
+        
+        $this->assertEquals('5181', $crosswalk->walk()->get('contentLength'));
+        $this->assertEquals('image/jpeg', $crosswalk->walk()->get('contentType'));
+        $this->assertEquals('Tue, 19 Nov 2013 21:08:57 GMT', $crosswalk->walk()->get('modified'));
     }
 }

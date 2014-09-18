@@ -42,7 +42,7 @@ class JSpaceModelHarvest extends JModelAdmin
         }
 
         // provide a quick way to detect if discovery has occurred.
-        if (JArrayHelper::getvalue($item->params, 'discovery'))
+        if (JArrayHelper::getValue(JArrayHelper::getValue($item->params, 'discovery'), 'url'))
         {
             $item->discovered = true;
         }
@@ -94,7 +94,7 @@ class JSpaceModelHarvest extends JModelAdmin
 
         $params = new JRegistry;
         $params->loadArray($data->params);
-        
+
         if ($params->get('discovery.url'))
         {
             $plugin = $params->get('discovery.type');
@@ -187,7 +187,7 @@ class JSpaceModelHarvest extends JModelAdmin
             JLog::add($e->getMessage(), JLog::ERROR, 'jspace');
             $this->setError(JText::_('JERROR_AN_ERROR_HAS_OCCURRED'));
         }
-        
+
         return false;
     }
 }

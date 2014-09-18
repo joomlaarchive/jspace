@@ -2357,6 +2357,6 @@
 <dc:language xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:doc="http://www.lyncode.com/xoai" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://purl.org/dc/terms/ http://dublincore.org/schemas/xmls/qdc/2006/01/06/dcterms.xsd http://purl.org/dc/elements/1.1/ http://dublincore.org/schemas/xmls/qdc/2006/01/06/dc.xsd">nob</dc:language>
 </metadata>
         </record>
-        <resumptionToken completeListSize="306" cursor="1">MToyMDB8Mjp8Mzp8NDp8NTpxZGM=</resumptionToken>
+        <resumptionToken completeListSize="200" cursor="1"></resumptionToken>
     </ListRecords>
 </OAI-PMH>

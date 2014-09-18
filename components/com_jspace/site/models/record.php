@@ -26,7 +26,7 @@ class JSpaceModelRecord extends JModelItem
         // Guess the context as Option.ModelName.
         if (empty($this->context))
         {
-            $this->context = strtolower($this->option . '.' . $this->getName());
+            $this->context = JString::strtolower($this->option . '.' . $this->getName());
         }
         
         $this->typeAlias = $this->context;

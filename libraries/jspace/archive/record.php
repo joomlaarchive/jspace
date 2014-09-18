@@ -60,7 +60,10 @@ class JSpaceRecord extends JObject
             $this->id = (isset($this->id)) ? $this->id : null;
         }
         
-        $this->set('metadata', $this->metadata);
+        if (isset($this->metadata))
+        {
+            $this->set('metadata', $this->metadata);
+        }
     }
 
     /**
@@ -112,7 +115,7 @@ class JSpaceRecord extends JObject
         {
             $this->newTags = $array['tags'];
         }
-        
+
         if (array_key_exists('identifiers', $array))
         {
             if (!is_array(JArrayHelper::getValue($array, 'identifiers')))
@@ -178,7 +181,7 @@ class JSpaceRecord extends JObject
         {
             $table->load($this->id);
         }
-        
+
         if ($isNew || $table->parent_id != $this->parent_id)
         {
             $table->setLocation($this->parent_id, 'last-child');
@@ -208,6 +211,9 @@ class JSpaceRecord extends JObject
         {
             $this->id = $table->get('id');
         }
+        
+        // update $this fields with internally changed table fields.
+        $this->parent_id = $table->get('parent_id');
 
         // Rebuild the tree path.
         if (!$table->rebuildPath($table->id))
@@ -420,7 +426,7 @@ class JSpaceRecord extends JObject
             $metadata->set('resourceName', $fileName);
         }
         
-        $metadata = JSpaceFactory::getCrosswalk($metadata, array('name'=>'datastream'))->walk();
+        $metadata = JSpaceFactory::getCrosswalk($metadata)->walk();
         
         $metadata = new JRegistry($metadata);
         

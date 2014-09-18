@@ -45,54 +45,37 @@ class PlgJOAIOAIDC extends JPlugin
 	}
 	
 	/**
-	 * Harvests a single oai_dc metadata item, saving it to the cache.
+	 * Harvests a single oai_dc metadata item.
 	 * 
-	 * @param  string            $context   The current metadata item context.
-     * @param  JObject           $harvest  The harvest settings.
-	 * @param  SimpleXmlElement  $data      The metadata to consume.
+	 * @param   string            $context   The current metadata item context.
+	 * @param   SimpleXmlElement  $data      The metadata to consume.
+	 * 
+	 * @return  JRegistry         A registry of metadata.
 	 */
-	public function onJSpaceHarvestMetadata($context, $harvest, $data)
-	{
-		if ($context != 'joai.oai_dc')
-		{
-			return;
-		}
+    public function onJSpaceHarvestMetadata($context, $data)
+    {
+        if ($context != 'joai.oai_dc')
+        {
+            return;
+        }
 
-		$metadata = new JRegistry();
-		
-		$registry = new JSpaceMetadataRegistry('oai_dc');
-		
-		$identifier = (string)$data->header->identifier;
-		
-		foreach ($data->metadata->children($registry->get('format'), true) as $item)
-		{
-			foreach (array_keys($item->getNamespaces(true)) as $keyns)
-			{
-				foreach ($item->children($keyns, true) as $key=>$value)
-				{
-					if ($key = $registry->getKey($keyns.':'.$key))
-					{
-                        if (is_array($metadata->get($key)))
-                        {
-                            $array = $metadata->get($key);
-                        }
-                        else
-                        {
-                            $array = array();
-                        }
-                        
-                        $array[] = (string)$value;
-                        
-                        $metadata->set($key, $array);
-					}
-				}
-			}
-		}
-		
-		$table = JTable::getInstance('Cache', 'JSpaceTable');
-		$table->set('id', $identifier);
-		$table->set('data', json_encode(array("metadata"=>$metadata)));
-		$table->set('harvest_id', (int)$harvest->id);
-		$table->store();
-	}
+        $metadata = new JRegistry();
+        $namespaces = $data->getDocNamespaces(true);
+
+        foreach ($namespaces as $prefix=>$namespace)
+        {
+            if ($prefix)
+            {
+                $data->registerXPathNamespace($prefix, $namespace);
+                $tags = $data->xpath('//oai_dc:dc/'.$prefix.':*');
+            
+                foreach ($tags as $tag)
+                {
+                    $metadata->set($prefix.'.'.(string)$tag->getName(), (string)$tag);
+                }
+            }
+        }
+
+        return $metadata;
+    }
 }

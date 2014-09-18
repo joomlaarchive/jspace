@@ -63,7 +63,7 @@ class JSpaceViewHarvest extends JViewLegacy
                 JToolbarHelper::apply('harvest.apply');
                 JToolbarHelper::save('harvest.save');
                 JToolbarHelper::save2new('harvest.save2new');
-                JToolbarHelper::custom('harvest.discover', 'refresh', '', 'COM_JSPACE_HARVEST_BUTTON_REDISCOVER');
+                JToolbarHelper::custom('harvest.discover', 'refresh', '', 'COM_JSPACE_HARVEST_BUTTON_REDISCOVER', false);
             }
             else
             {
@@ -88,7 +88,7 @@ class JSpaceViewHarvest extends JViewLegacy
                             JToolbarHelper::save2new('harvest.save2new');
                         }
                         
-                        JToolbarHelper::custom('harvest.discover', 'refresh', '', 'COM_JSPACE_HARVEST_BUTTON_REDISCOVER');
+                        JToolbarHelper::custom('harvest.discover', 'refresh', '', 'COM_JSPACE_HARVEST_BUTTON_REDISCOVER', false);
                     }
                     else
                     {

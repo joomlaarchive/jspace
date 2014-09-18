@@ -41,6 +41,14 @@ true)); ?>
                         echo $field->renderField();
                     endforeach;
                     ?>
+                    <?php if ($this->item->harvested) : ?>
+                    <div class="control-group">
+                        <div class="control-label">
+                            <label><?php echo JText::_('COM_JSPACE_HARVEST_HARVESTED_LABEL'); ?></label>
+                        </div>
+                        <div class="controls"><?php echo $this->item->harvested; ?></div>
+                    </div>
+                    <?php endif; ?>
                 </div>
                 <div class="span3">
                     <fieldset class="form-vertical">

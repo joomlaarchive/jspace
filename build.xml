@@ -54,7 +54,7 @@
 		<mkdir dir="${oai.dest}/jspace"/>
 		
 		<copy todir="${oai.dest}/jspace">
-			<fileset dir="./tests/unit/suites/libraries/jspace/ingestion/oai/stubs/"/>
+			<fileset dir="./tests/unit/suites/plugins/jspace/oai/stubs/"/>
 		</copy>
 		
 		<exec executable="phpunit" failonerror="true"/>

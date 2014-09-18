@@ -112,7 +112,7 @@ class JSpaceModelHarvests extends JModelList
         
         // Filter by published state
         $state = $this->getState('filter.state');
-        
+
         if (is_numeric($state))
         {
             $query->where('h.state = ' . (int)$state);

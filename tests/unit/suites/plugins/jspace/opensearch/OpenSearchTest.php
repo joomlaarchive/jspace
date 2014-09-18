@@ -75,7 +75,7 @@ class OpenSearchTest extends TestCaseDatabase
     public function testOnJSpaceHarvestDiscoverInvalidUrl()
     {
         $data = $this->data;
-        $data['originating_url'] = 'http://demo.dspace.org/oai/';
+        $data['originating_url'] = 'http://archive.demo2.knowledgearc.net/opensearch/?query=test';
     
         $harvest = JSpaceIngestionHarvest::getInstance();
         $harvest->bind($data);
@@ -93,60 +93,60 @@ class OpenSearchTest extends TestCaseDatabase
     {
         $harvest = JSpaceIngestionHarvest::getInstance();
         $harvest->bind($this->data);
+        $harvest->originating_url = 'http://archive.demo2.knowledgearc.net/open-search/?query=joomla';
+        $harvest->get('params')->set('discovery.type', 'opensearch');
+        $harvest->get('params')->set('discovery.url', 'http://archive.demo2.knowledgearc.net/open-search/?query=joomla');
+        $harvest->get('params')->set('discovery.plugin.type', 'application/atom+xml');
     
         $dispatcher = JEventDispatcher::getInstance();
 
         JPluginHelper::importPlugin('jspace', 'opensearch', true, $dispatcher);
-        
-        $result = $dispatcher->trigger('onJSpaceHarvestDiscover', array($harvest->originating_url));
-
-        $harvest->get('params')->loadArray($result[0]->toArray());
 
         $dispatcher->trigger('onJSpaceHarvestRetrieve', array($harvest));
         
         $query = JFactory::getDbo()->getQuery(true);
         $query->select("COUNT(*)")->from('#__jspace_cache')->where('harvest_id='.$this->data['id']);
         
-        $this->assertEquals(737, (int)JFactory::getDbo()->setQuery($query)->loadResult());
+        $this->assertEquals(1, (int)JFactory::getDbo()->setQuery($query)->loadResult());
     }
     
     public function testOnJSpaceHarvestRetrieveRSS()
     {
         $data = $this->data;
-        $data['originating_url'] = 'http://apps.who.int//iris/open-search/?query=Ebola&start={startIndex?}&rpp={count?}&format=rss';
+        $data['originating_url'] = 'http://apps.who.int/iris/open-search/?query=Ebola&start={startIndex?}&rpp={count?}&format=rss';
         
         $harvest = JSpaceIngestionHarvest::getInstance();
         $harvest->bind($data);
+        $harvest->get('params')->set('discovery.type', 'opensearch');
+        $harvest->get('params')->set('discovery.url', 'http://apps.who.int/iris/open-search/?query=Ebola&start={startIndex?}&rpp={count?}&format=rss');
+        $harvest->get('params')->set('discovery.plugin.type', 'application/rss+xml');
+        
     
         $dispatcher = JEventDispatcher::getInstance();
 
         JPluginHelper::importPlugin('jspace', 'opensearch', true, $dispatcher);
-        
-        $result = $dispatcher->trigger('onJSpaceHarvestDiscover', array($harvest->originating_url));
-
-        $harvest->get('params')->loadArray($result[0]->toArray());
 
         $dispatcher->trigger('onJSpaceHarvestRetrieve', array($harvest));
         
         $query = JFactory::getDbo()->getQuery(true);
         $query->select("COUNT(*)")->from('#__jspace_cache')->where('harvest_id='.$data['id']);
         
-        $this->assertEquals(737, (int)JFactory::getDbo()->setQuery($query)->loadResult());
+        $this->assertEquals(752, (int)JFactory::getDbo()->setQuery($query)->loadResult());
     }
     
     public function testOnJSpaceHarvestIngest()
     {
         $harvest = JSpaceIngestionHarvest::getInstance();
         $harvest->bind($this->data);
-    
+        $harvest->originating_url = 'http://archive.demo2.knowledgearc.net/open-search/?query=joomla';
+        $harvest->get('params')->set('discovery.type', 'opensearch');
+        $harvest->get('params')->set('discovery.url', 'http://archive.demo2.knowledgearc.net/open-search/?query=joomla');
+        $harvest->get('params')->set('discovery.plugin.type', 'application/atom+xml');
+        
         $dispatcher = JEventDispatcher::getInstance();
 
         JPluginHelper::importPlugin('jspace', 'opensearch', true, $dispatcher);
         
-        $result = $dispatcher->trigger('onJSpaceHarvestDiscover', array($harvest->originating_url));
-
-        $harvest->get('params')->loadArray($result[0]->toArray());
-
         $dispatcher->trigger('onJSpaceHarvestRetrieve', array($harvest));
         
         $dispatcher->trigger('onJSpaceHarvestIngest', array($harvest));
@@ -154,7 +154,7 @@ class OpenSearchTest extends TestCaseDatabase
         $query = JFactory::getDbo()->getQuery(true);
         $query->select("COUNT(*)")->from('#__jspace_records')->where('alias <> \'root\';');
         
-        $this->assertEquals(737, (int)JFactory::getDbo()->setQuery($query)->loadResult());
+        $this->assertEquals(1, (int)JFactory::getDbo()->setQuery($query)->loadResult());
     }
     
     protected function getDataSet()

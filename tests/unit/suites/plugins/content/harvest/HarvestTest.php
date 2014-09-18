@@ -8,7 +8,7 @@ class HarvestTest extends TestCaseDatabase
 {
     public function testDiscoveryOAI()
     {
-        $url = 'http://demo.dspace.org/oai/request';
+        $url = 'http://localhost/jspace/request.php';
     
         $dispatcher = JEventDispatcher::getInstance();
         JPluginHelper::importPlugin('jspace');
@@ -16,7 +16,7 @@ class HarvestTest extends TestCaseDatabase
 
         $expected = new JRegistry;
         $expected->set('discovery.type', 'oai');
-        $expected->set('discovery.url', 'http://demo.dspace.org/oai/request');
+        $expected->set('discovery.url', 'http://localhost/jspace/request.php');
         $expected->set('discovery.plugin.metadata', 'qdc');
         $expected->set('discovery.plugin.assets', 'ore');
         
@@ -43,11 +43,11 @@ class HarvestTest extends TestCaseDatabase
     {
         $params = new JRegistry;
         $params->set('discovery.type', 'opensearch');
-        $params->set('discovery.url', 'http://apps.who.int//iris/open-search/?query=Ebola&start={startIndex?}&rpp={count?}&format=atom');
+        $params->set('discovery.url', 'http://archive.demo2.knowledgearc.net/open-search/?query=joomla');
         $params->set('discovery.plugin.type', 'application/atom+xml');
     
         $data = array(
-            'originating_url'=>'http://apps.who.int/iris/simple-search?query=Ebola',
+            'originating_url'=>'http://archive.demo2.knowledgearc.net/open-search/?query=joomla',
             'harvester'=>0,
             'harvested'=>'0000-00-00 00:00:00',
             'frequency'=>1,
@@ -71,23 +71,39 @@ class HarvestTest extends TestCaseDatabase
         JPluginHelper::importPlugin('content', 'harvest', true);
         $dispatcher->trigger('onJSpaceExecuteCliCommand');
         
+        $harvest->load($harvest->id);
+        
+        $this->assertEquals(2, $harvest->state);
+        
         $query = JFactory::getDbo()->getQuery(true);
         $query->select("COUNT(*)")->from('#__jspace_records')->where('alias <> \'root\'');
 
-        $results = JFactory::getDbo()->setQuery($query)->loadObjectList();
+        $this->assertEquals(1, (int)JFactory::getDbo()->setQuery($query)->loadResult());  
+    }
+    
+    public function testDiscoverOpenSearchInvalidUrl()
+    {
+        $url = "http://archive.demo2.knowledgearc.net/opensearch/?query=joomla";
+        
+        $dispatcher = JEventDispatcher::getInstance();
+        JPluginHelper::importPlugin('jspace', 'opensearch');
+        
+        $result = $dispatcher->trigger('onJSpaceHarvestDiscover', array($url));
+        
+        $this->assertFalse($result[0]);
     }
     
     public function testHarvestMultipleTimes()
     {
         $params = new JRegistry;
         $params->set('discovery.type', 'oai');
-        $params->set('discovery.url', 'http://demo.dspace.org/oai/request');
+        $params->set('discovery.url', 'http://localhost/jspace/request.php');
         $params->set('discovery.plugin.metadata', 'qdc');
         $params->set('discovery.plugin.assets', 'ore');
         $params->set('set', 'com_10673_1');
     
         $data = array(
-            'originating_url'=>'http://demo.dspace.org/oai/request',
+            'originating_url'=>'http://localhost/jspace/request.php',
             'harvester'=>0,
             'harvested'=>'0000-00-00 00:00:00',
             'frequency'=>0,
@@ -111,7 +127,7 @@ class HarvestTest extends TestCaseDatabase
         $query = JFactory::getDbo()->getQuery(true);
         $query->select("COUNT(*)")->from('#__jspace_records')->where('alias <> \'root\'');
 
-        $this->assertEquals(5, (int)JFactory::getDbo()->setQuery($query)->loadResult());
+        $this->assertEquals(33, (int)JFactory::getDbo()->setQuery($query)->loadResult());
         
         $dispatcher = JEventDispatcher::getInstance();
         JPluginHelper::importPlugin('content', 'harvest', true);
@@ -120,7 +136,7 @@ class HarvestTest extends TestCaseDatabase
         $query = JFactory::getDbo()->getQuery(true);
         $query->select("COUNT(*)")->from('#__jspace_records')->where('alias <> \'root\'');
         
-        $this->assertEquals(5, (int)JFactory::getDbo()->setQuery($query)->loadResult());
+        $this->assertEquals(33, (int)JFactory::getDbo()->setQuery($query)->loadResult());
     }
        
     protected function getDataSet()

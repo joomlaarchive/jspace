@@ -22,9 +22,8 @@ jimport('jspace.ingestion.plugin');
  */
 class PlgJSpaceOAI extends JSpaceIngestionPlugin
 {
-    const METADATA  = 0;
-    const LINKS     = 1;
-    const ASSETS    = 2;
+    const FOLLOW_ON = 0;
+
     /**
      * Attempts to discover whether the harvest configuration points to an OAI-enabled url.
      * 
@@ -46,7 +45,9 @@ class PlgJSpaceOAI extends JSpaceIngestionPlugin
         $contentType = JArrayHelper::getValue($response->headers, 'Content-Type');
         $contentType = $this->parseContentType($contentType);
         
-        if ((int)$response->code === 200 && $contentType == 'application/xml')
+        $validContentType = (in_array($contentType, array('text/xml', 'application/xml')) !== false);
+        
+        if ((int)$response->code === 200 && $validContentType)
         {
             $url->setVar('verb', 'ListMetadataFormats');
 
@@ -165,8 +166,6 @@ class PlgJSpaceOAI extends JSpaceIngestionPlugin
             $reader = new XMLReader;
             $reader->xml($response->body);
             
-            $doc = new DOMDocument;
-            
             $prefix = null;
             $identifier = null;
             $resumptionToken = null; // empty the resumptionToken to force a reload per page.
@@ -175,12 +174,16 @@ class PlgJSpaceOAI extends JSpaceIngestionPlugin
             {
                 if ($reader->nodeType == XMLReader::ELEMENT)
                 {
-                    $node = simplexml_import_dom($doc->importNode($reader->expand(), true));
+                    $doc = new DOMDocument;
+                    //$node = simplexml_import_dom($doc->importNode($reader->expand(), true));
+                    $doc->appendChild($doc->importNode($reader->expand(), true));
                     
+                    $node = simplexml_load_string($doc->saveXML());
+
                     switch ($reader->name)
                     {
                         case "record":
-                            $this->cache($harvest, $node, $metadataPrefix);
+                            $this->cache($harvest, $node);
                             
                             break;
                             
@@ -222,137 +225,59 @@ class PlgJSpaceOAI extends JSpaceIngestionPlugin
     /**
      * Caches a harvested record.
      * 
-     * @param  SimpleXmlElement  $data  An OAI record as an instance of the SimpleXmlElement class.
+     * @param  JObject           $harvest  The harvest configuration.
+     * @param  SimpleXmlElement  $data     An OAI record as an instance of the SimpleXmlElement class.
      */
     protected function cache($harvest, $data)
     {
-        $context = 'joai.'.$harvest->get('params')->get('discovery.plugin.metadata');
-        
-        $dispatcher = JEventDispatcher::getInstance();
-        JPluginHelper::importPlugin("joai");
-        $dispatcher->trigger('onJSpaceHarvestMetadata', array($context, $harvest, $data));
-        
-        if ($harvest->get('params')->get('harvest_type') !== self::METADATA)
+        if (isset($data->header->identifier))
         {
-            $metadataPrefix = $harvest->get('params')->get('discovery.plugin.assets');
-            
-            $queries = array(
-                'verb'=>'GetRecord',
-                'identifier'=>(string)$data->header->identifier,
-                'metadataPrefix'=>$metadataPrefix);
-        
-            $url = new JUri($harvest->get('params')->get('discovery.url'));
-            $url->setQuery($queries);
-            
-            $http = JHttpFactory::getHttp();
-            $response = $http->get($url);
-            
-            if ($response->code !== 200)
-            {
-                throw new Exception('Cannot retrieve asset from OAI url.');
-            }
-            
-            $context = 'joai.'.$metadataPrefix;
-            
-            $node = simplexml_load_string($response->body);
-            
-            $dispatcher->trigger('onJSpaceHarvestAssets', array($context, $harvest, $node));
-        }
-    }
-    
+            $context = 'joai.'.$harvest->get('params')->get('discovery.plugin.metadata');
 
-    protected function saveHook($record, $data, $harvest)
-    {
-        $collection = array();
-        
-        if (isset($data->files))
-        {
-            try
+            $dispatcher = JEventDispatcher::getInstance();
+            JPluginHelper::importPlugin("joai");
+
+            $array = $dispatcher->trigger('onJSpaceHarvestMetadata', array($context, $data->metadata));
+            
+            $cache = array("metadata"=>JArrayHelper::getValue($array, 0));
+            
+            if ($harvest->get('params')->get('harvest_type') !== self::METADATA)
             {
-                $files = $data->files;
+                $metadataPrefix = $harvest->get('params')->get('discovery.plugin.assets');
                 
-                $bundle = 'oai';
+                $queries = array(
+                    'verb'=>'GetRecord',
+                    'identifier'=>(string)$data->header->identifier,
+                    'metadataPrefix'=>$metadataPrefix);
+            
+                $url = new JUri($harvest->get('params')->get('discovery.url'));
+                $url->setQuery($queries);
                 
-                if ($harvest->get('params')->get('harvest_type') == self::LINKS)
-                {
-                    // harvest as weblinks.
-                    $weblinks = array();
-                    $weblinks[$bundle] = array();
-
-                    foreach ($files as $file)
-                    {
-                        $derivative = $file->derivative;
-                        
-                        $weblink = array(
-                            'url'=>$file->url,
-                            'title'=>$file->name
-                        );
-                        
-                        $weblinks[$bundle][] = $weblink;
-                    }
-
-                    $record->weblinks = $weblinks;
-                }
-                elseif ($harvest->get('params')->get('harvest_type') == self::ASSETS)
-                {
-                    // download assets.
-                    // set up a bundle of assets for each entry.
-                    $collection[$bundle] = array();
-                    $collection[$bundle]['assets'] = array();
-
-                    foreach ($files as $file)
-                    {
-                        $asset = $file;
-                        $asset->tmp_name = $this->_download($asset->url);
-                        
-                        $derivative = $asset->derivative;
-                        
-                        $collection[$bundle]['assets'][$derivative][] = JArrayHelper::fromObject($asset);
-                    }
-                }
-            }
-            catch (Exception $e)
-            {
-                JLog::add(__METHOD__.' '.$e->getMessage()."\n".$e->getTraceAsString(), JLog::ERROR, 'jspace');
+                $http = JHttpFactory::getHttp();
+                $response = $http->get($url);
                 
-                throw $e;
-            }
-        }
-
-        $record->save($collection);
-        
-        foreach ($collection as $bundle)
-        {
-            $assets = JArrayHelper::getValue($bundle, 'assets');
-            
-            foreach ($assets as $derivative)
-            {
-                foreach ($derivative as $asset)
+                if ((int)$response->code == 200)
                 {
-                    JFile::delete(JArrayHelper::getValue($asset, 'tmp_name'));
+                    $context = 'joai.'.$metadataPrefix;
+                    
+                    $node = simplexml_load_string($response->body);
+                    
+                    $array = $dispatcher->trigger('onJSpaceHarvestAssets', array($context, $node));
+
+                    $cache["assets"] = JArrayHelper::getValue($array, 0, array());
                 }
-            }
-        }
-    }
-    
-    public function _download($asset)
-    {
-        $tmp = tempnam(sys_get_temp_dir(), '');
-        
-        if ($source = @fopen($asset, 'r'))
-        {
-            $dest = fopen($tmp, 'w');
-            
-            while (!feof($source))
-            {
-                $chunk = fread($source, 1024);
-                fwrite($dest, $chunk);
+                else 
+                {
+                    JLog::add('Cannot retrieve asset from OAI url.', JLog::$WARNING, 'jspace');
+                }
+                
             }
             
-            fclose($dest);
-            fclose($source);
+            $table = JTable::getInstance('Cache', 'JSpaceTable');
+            $table->set('id', (string)$data->header->identifier);
+            $table->set('data', json_encode($cache));
+            $table->set('harvest_id', (int)$harvest->id);
+            $table->store();
         }
-        
-        return $tmp;
     }
 }

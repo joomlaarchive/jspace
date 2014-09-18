@@ -3,7 +3,11 @@ $formats = '';
 
 if (isset($_GET['verb']))
 {
-	if ($_GET['verb'] == 'ListMetadataFormats')
+    if ($_GET['verb'] == 'Identify')
+    {
+        $formats = './Identify.xml'; 
+    }
+	else if ($_GET['verb'] == 'ListMetadataFormats')
 	{
 		$formats = './ListMetadataFormats.xml';	
 	}
@@ -11,51 +15,33 @@ if (isset($_GET['verb']))
 	{
 		if (isset($_GET['metadataPrefix']) && $_GET['metadataPrefix'] == 'qdc')
 		{
-			$formats = './ListRecords.xml';
+		    if (isset($_GET['set']))
+            {
+                $formats = './qdc/ListRecords_with_set.xml';
+            }
+            else
+            {
+                $formats = './qdc/ListRecords.xml';
+            }
 		}
 		else if (isset($_GET['resumptionToken']) && $_GET['resumptionToken'] == 'MToxMDB8Mjp8Mzp8NDp8NTpxZGM=')
 		{
-			$formats = './ListRecords2.xml';
-		}
-		else if (isset($_GET['resumptionToken']) && $_GET['resumptionToken'] == 'MToyMDB8Mjp8Mzp8NDp8NTpxZGM=')
-		{
-			$formats = './ListRecords3.xml';
-		}
-		else if (isset($_GET['resumptionToken']) && $_GET['resumptionToken'] == 'MTozMDB8Mjp8Mzp8NDp8NTpxZGM=')
-		{
-			$formats = './ListRecords4.xml';
-		}
-		else if (isset($_GET['metadataPrefix']) && $_GET['metadataPrefix'] == 'ore')
-		{
-			$formats = './ListRecords_ore.xml';
-		}
-		else if (isset($_GET['resumptionToken']) && $_GET['resumptionToken'] == 'MToxMDB8Mjp8Mzp8NDp8NTpvcmU=')
-		{
-			$formats = './ListRecords2_ore.xml';
-		}
-		else if (isset($_GET['resumptionToken']) && $_GET['resumptionToken'] == 'MToyMDB8Mjp8Mzp8NDp8NTpvcmU=')
-		{
-			$formats = './ListRecords3_ore.xml';
-		}
-		else if (isset($_GET['resumptionToken']) && $_GET['resumptionToken'] == 'MTozMDB8Mjp8Mzp8NDp8NTpvcmU=')
-		{
-			$formats = './ListRecords4_ore.xml';
+			$formats = './qdc/ListRecords2.xml';
 		}
 		else if (isset($_GET['metadataPrefix']) && $_GET['metadataPrefix'] == 'oai_dc')
 		{
-			$formats = './ListRecords_oai_dc.xml';
+			if (isset($_GET['set']))
+            {
+                $formats = './oai_dc/ListRecords_with_set.xml';
+            }
+            else
+            {
+                $formats = './oai_dc/ListRecords.xml';
+            }
 		}
 		else if (isset($_GET['resumptionToken']) && $_GET['resumptionToken'] == 'MToxMDB8Mjp8Mzp8NDp8NTpvYWlfZGM=')
 		{
-			$formats = './ListRecords2_oai_dc.xml';
-		}
-		else if (isset($_GET['resumptionToken']) && $_GET['resumptionToken'] == 'MToyMDB8Mjp8Mzp8NDp8NTpvYWlfZGM=')
-		{
-			$formats = './ListRecords3_oai_dc.xml';
-		}
-		else if (isset($_GET['resumptionToken']) && $_GET['resumptionToken'] == 'MTozMDB8Mjp8Mzp8NDp8NTpvYWlfZGM=')
-		{
-			$formats = './ListRecords4_oai_dc.xml';
+			$formats = './oai_dc/ListRecords2.xml';
 		}
 	}
 	else if ($_GET['verb'] == 'GetRecord')
@@ -71,4 +57,3 @@ $xml = simplexml_load_file($formats);
 header('Content-Type: text/xml');
 print $xml->asXML();
 ?>
-

@@ -34,7 +34,7 @@ class PlgContentJSpaceWeblinks extends JPlugin
 		// load the jsolrindex component's params into plugin params for
 		// easy access.
 		$params = JComponentHelper::getParams('com_jspace', true);
-		
+
 		$this->params->loadArray(array('component'=>$params->toArray()));
 	}
 	
@@ -159,8 +159,35 @@ class PlgContentJSpaceWeblinks extends JPlugin
                 $weblink->id = JArrayHelper::getValue($data, 'id', null);
                 $weblink->url = JArrayHelper::getValue($data, 'url');
                 $weblink->title = JArrayHelper::getValue($data, 'title', $data['url']);
-                $weblink->alias = JFilterOutput::stringURLSafe($data['title']);
                 $weblink->catid = $this->params->get('catid', null);
+                $weblink->alias = JFilterOutput::stringURLSafe($data['title']);
+                
+                $table = JTable::getInstance('Weblink', 'WeblinksTable');
+                
+                // cannot fail because of an existing alias so find a unique one.
+                while ($table->load(array('alias'=>$weblink->alias, 'catid'=>$weblink->catid)))
+                {
+                    $parts = explode('-', $weblink->alias);
+                    $end = 1;
+
+                    if (count($parts) > 1)
+                    {
+                        $end = array_pop($parts);
+                        
+                        if ((int)$end > 0)
+                        {
+                            $end = $end+1;
+                        }
+                        else
+                        {
+                            $end = $end.'-1';
+                        }
+                        
+                    }
+                    
+                    $weblink->alias = implode('-', $parts).'-'.$end;
+                }
+                
                 $weblink->state = 1;
                 $weblink->access = $record->access;
                 $weblink->language = $record->language;
@@ -209,10 +236,17 @@ class PlgContentJSpaceWeblinks extends JPlugin
 	 */
 	public function onContentBeforeDelete($context, $record)
 	{
+        $path = JPATH_ROOT.'/administrator/components/com_jspace/';
+        JTable::addIncludePath($path.'tables');
+
         if ($context == 'com_weblinks.weblink')
-        {
+        {            
             $reference = JTable::getInstance('Reference', 'JSpaceTable');
-            $reference->delete($record->id);
+            
+            if ($reference->load($record->id))
+            {
+                $reference->delete($record->id);
+            }
         }
         else if ($context == 'com_jspace.record')
         {        

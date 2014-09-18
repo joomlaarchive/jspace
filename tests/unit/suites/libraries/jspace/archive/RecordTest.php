@@ -46,15 +46,23 @@ class JSpaceRecordTest extends TestCaseDatabase
         JFactory::getApplication()->input->set('item_id', $record->id);
         JFactory::getApplication()->input->set('type_id', '23');
         
-        require_once(JPATH_ROOT.'administrator/components/com_contenthistory/models/history.php');
+        require_once(JPATH_ROOT.'/administrator/components/com_contenthistory/models/history.php');
 
         $model = new ContenthistoryModelHistory();
 
         $this->assertEquals(2, count($model->getItems()));
+        
+        // check for the csv metadata.
+        foreach ($model->getItems() as $item)
+        {
+            $data = json_decode($item->version_data);
+            
+            $this->assertEquals('{"title":"Record Test Case","author":"Hayden Young"}', $data->metadatapairs);
+        }
     }
     
     public function testVersioningIgnored()
-    {
+    {    
         $registry = new JRegistry;
         $registry->set('title', array('Record Test Case'));
         $registry->set('author', array('Hayden Young'));
@@ -67,19 +75,17 @@ class JSpaceRecordTest extends TestCaseDatabase
         $record->set('created_by', 525);
         $record->set('published', 0);
         $record->set('schema', '[No Schema]');
-
-        $record->save();
         
-        $record->set('modified', JFactory::getDate()->toSql());
-
         $record->save();
 
+        // A resave will update modified/modified by.
+        $record->save();
+
+        require_once(JPATH_ROOT.'/administrator/components/com_contenthistory/models/history.php');
         JFactory::getApplication()->input->set('type_alias', 'com_jspace.record');
-        JFactory::getApplication()->input->set('item_id', $record->id);
         JFactory::getApplication()->input->set('type_id', '23');
+        JFactory::getApplication()->input->set('item_id', $record->id);
         
-        require_once(JPATH_ROOT.'administrator/components/com_contenthistory/models/history.php');
-
         $model = new ContenthistoryModelHistory();
 
         $this->assertEquals(1, count($model->getItems()));   

@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <form>
-    <fieldset name="details">    
+    <fieldset name="params">
+        <field 
+            name="frequency" 
+            type="list"
+            label="PLG_JSPACE_HARVEST_FREQUENCY_LABEL"
+            description="PLG_JSPACE_HARVEST_FREQUENCY_DESC"
+            default="1">
+            <option value="1">PLG_JSPACE_HARVEST_FREQUENCY_OPTION_ONCE</option>
+        </field>
     </fieldset>
     
     <fields name="params">

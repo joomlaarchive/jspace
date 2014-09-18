@@ -102,13 +102,13 @@ class PlgContentHarvest extends JPlugin
     
         $query = $database->getQuery(true);
         $query
-            ->select($database->qn('id'))
+            ->select($database->qn('h.id').', h.state')
             ->from($database->qn('#__jspace_harvests', 'h'))
-            ->where($database->qn('h.frequency').'=0', 'OR')
-            ->where($database->qn('h.frequency').'>'.$database->qn('h.total'));
+            ->where('('.$database->qn('h.frequency').'=0 OR '.$database->qn('h.frequency').'>'.$database->qn('h.total').')', 'AND')
+            ->where($database->qn('h.state').'=1');
 
         $results = $database->setQuery($query)->loadObjectList();
-        
+
         $start = new JDate('now');
         $this->out('started '.(string)$start);
 
@@ -127,6 +127,12 @@ class PlgContentHarvest extends JPlugin
                 
                 $harvest->harvested = $now->toSql();
                 $harvest->total++;
+                
+                if ($harvest->frequency != 0 && $harvest->total >= $harvest->frequency)
+                {
+                    $harvest->state = 2;
+                }
+                
                 $harvest->save();
             }
             catch (Exception $e)

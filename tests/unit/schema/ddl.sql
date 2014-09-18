@@ -424,3 +424,24 @@ CREATE INDEX `idx_ucm_content_core_modified_user_id` ON `jos_ucm_content` (`core
 CREATE INDEX `idx_ucm_content_core_checked_out_user_id` ON `jos_ucm_content` (`core_checked_out_user_id`);
 CREATE INDEX `idx_ucm_content_core_created_user_id` ON `jos_ucm_content` (`core_created_user_id`);
 CREATE INDEX `idx_ucm_content_core_type_id` ON `jos_ucm_content` (`core_type_id`);
+
+CREATE TABLE `jos_languages` (
+  `lang_id` INTEGER PRIMARY KEY AUTOINCREMENT,
+  `lang_code` CHAR(7) NOT NULL DEFAULT '',
+  `title` VARCHAR(50) NOT NULL DEFAULT '',
+  `title_native` VARCHAR(50) NOT NULL DEFAULT '',
+  `sef` VARCHAR(50) NOT NULL DEFAULT '',
+  `image` VARCHAR(50) NOT NULL DEFAULT '',
+  `description` VARCHAR(512) NOT NULL DEFAULT '',
+  `metakey` TEXT NOT NULL DEFAULT '',
+  `metadesc` TEXT NOT NULL DEFAULT '',
+  `sitename` VARCHAR(1024) NOT NULL default '',
+  `published` INTEGER NOT NULL DEFAULT '0',
+  `access` INTEGER NOT NULL DEFAULT '1',
+  `ordering` INTEGER NOT NULL default '0',
+  CONSTRAINT `idx_languages_sef` UNIQUE (`sef`),
+  CONSTRAINT `idx_languages_image` UNIQUE (`image`),
+  CONSTRAINT `idx_languages_lang_code` UNIQUE (`lang_code`)
+);
+
+CREATE INDEX `idx_languages_ordering` ON `jos_languages` (`ordering`);
