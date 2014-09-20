@@ -87,22 +87,22 @@
                     {
                         "source":"accessRights",
                         "target":"accessRights",
-                        "multiple":"0"
+                        "multiple":"1"
                     },
                     {
                         "source":"accrualMethod",
                         "target":"accrualMethod",
-                        "multiple":"0"
+                        "multiple":"1"
                     },
                     {
                         "source":"accrualPeriodicity",
                         "target":"accrualPeriodicity",
-                        "multiple":"0"
+                        "multiple":"1"
                     },
                     {
                         "source":"accrualPolicy",
                         "target":"accrualPolicy",
-                        "multiple":"0"
+                        "multiple":"1"
                     },
                     {
                         "source":"alternative",
@@ -180,6 +180,31 @@
                         "multiple":"0"
                     },
                     {
+                        "source":"extent",
+                        "target":"length",
+                        "multiple":"1"
+                    },
+                    {
+                        "source":"format",
+                        "target":"format",
+                        "multiple":"1"
+                    },
+                    {
+                        "source":"hasFormat",
+                        "target":"hasFormat",
+                        "multiple":"1"
+                    },
+                    {
+                        "source":"hasPart",
+                        "target":"hasPart",
+                        "multiple":"1"
+                    },
+                    {
+                        "source":"hasVersion",
+                        "target":"hasVersion",
+                        "multiple":"1"
+                    },
+                    {
                         "source":"identifier",
                         "target":"identifier",
                         "multiple":"1"
@@ -190,9 +215,39 @@
                         "multiple":"1"
                     },
                     {
+                        "source":"isFormatOf",
+                        "target":"isFormatOf",
+                        "multiple":"1"
+                    },
+                    {
+                        "source":"isPartOf",
+                        "target":"isPartOf",
+                        "multiple":"1"
+                    },
+                    {
+                        "source":"isReferencedBy",
+                        "target":"isReferencedBy",
+                        "multiple":"1"
+                    },
+                    {
+                        "source":"isReplacedBy",
+                        "target":"isReplacedBy",
+                        "multiple":"1"
+                    },
+                    {
+                        "source":"isRequiredBy",
+                        "target":"isRequiredBy",
+                        "multiple":"1"
+                    },
+                    {
                         "source":"issued",
                         "target":"issued",
                         "multiple":"0"
+                    },
+                    {
+                        "source":"isVersionOf",
+                        "target":"isVersionOf",
+                        "multiple":"1"
                     },
                     {
                         "source":"language",
@@ -207,6 +262,11 @@
                     {
                         "source":"mediator",
                         "target":"reviewer",
+                        "multiple":"1"
+                    },
+                    {
+                        "source":"medium",
+                        "target":"medium",
                         "multiple":"1"
                     },
                     {
@@ -232,6 +292,11 @@
                     {
                         "source":"relation",
                         "target":"relation",
+                        "multiple":"1"
+                    },
+                    {
+                        "source":"replaces",
+                        "target":"replaces",
                         "multiple":"1"
                     },
                     {

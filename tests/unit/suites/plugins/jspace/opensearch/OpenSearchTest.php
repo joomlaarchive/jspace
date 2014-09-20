@@ -131,7 +131,7 @@ class OpenSearchTest extends TestCaseDatabase
         $query = JFactory::getDbo()->getQuery(true);
         $query->select("COUNT(*)")->from('#__jspace_cache')->where('harvest_id='.$data['id']);
         
-        $this->assertEquals(752, (int)JFactory::getDbo()->setQuery($query)->loadResult());
+        $this->assertEquals(754, (int)JFactory::getDbo()->setQuery($query)->loadResult());
     }
     
     public function testOnJSpaceHarvestIngest()

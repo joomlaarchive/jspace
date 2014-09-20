@@ -11,7 +11,7 @@ class JSpaceMetadataCrosswalkTest extends PHPUnit_Framework_TestCase
         $crosswalk = new JSpaceMetadataCrosswalk($metadata);
         $data = $crosswalk->getCommonMetadata();
         
-        $this->assertEquals('file.name', $data->get('name'));
+        $this->assertEquals(array('file.name'), $data->get('name'));
     }
     
     public function testCommonMetadataReversed()
@@ -22,7 +22,7 @@ class JSpaceMetadataCrosswalkTest extends PHPUnit_Framework_TestCase
         $crosswalk = new JSpaceMetadataCrosswalk($metadata);
         $data = $crosswalk->getCommonMetadata(true);
         
-        $this->assertEquals('file.name', $data->get('resourceName'));
+        $this->assertEquals(array('file.name'), $data->get('resourceName'));
     }
 
     public function testSpecialMetadata()
@@ -48,7 +48,7 @@ class JSpaceMetadataCrosswalkTest extends PHPUnit_Framework_TestCase
         $crosswalk = new JSpaceMetadataCrosswalk($metadata);
         $data = $crosswalk->getSpecialMetadata();
         
-        $this->assertEquals('purifying selection can obscure the ancient age of viral lineages', $data->get('title'));
+        $this->assertEquals(array('purifying selection can obscure the ancient age of viral lineages'), $data->get('title'));
         $this->assertEquals(array('10.1093/molbev/msr170'), $data->get('identifier'));
         $this->assertEquals(array(), $crosswalk->getTags());
     }
@@ -75,10 +75,10 @@ class JSpaceMetadataCrosswalkTest extends PHPUnit_Framework_TestCase
         $crosswalk = new JSpaceMetadataCrosswalk($metadata);
         $data = $crosswalk->walk();
 
-        $this->assertEquals('Ebola hemorrhagic fever', $data->get('title'));
+        $this->assertEquals(array('Ebola hemorrhagic fever'), $data->get('title'));
         $this->assertEquals(array('epidemiology'), $data->get('keyword'));        
         $this->assertEquals(array('epidemiology'), $crosswalk->getTags());
-        $this->assertEquals('file.name', $data->get('name'));
+        $this->assertEquals(array('file.name'), $data->get('name'));
     }
     
     public function testCrosswalkFile()
@@ -104,8 +104,23 @@ class JSpaceMetadataCrosswalkTest extends PHPUnit_Framework_TestCase
         
         $crosswalk = new JSpaceMetadataCrosswalk($registry);
         
-        $this->assertEquals('5181', $crosswalk->walk()->get('contentLength'));
-        $this->assertEquals('image/jpeg', $crosswalk->walk()->get('contentType'));
-        $this->assertEquals('Tue, 19 Nov 2013 21:08:57 GMT', $crosswalk->walk()->get('modified'));
+        $this->assertEquals(array('5181'), $crosswalk->walk()->get('contentLength'));
+        $this->assertEquals(array('image/jpeg'), $crosswalk->walk()->get('contentType'));
+        $this->assertEquals(array('Tue, 19 Nov 2013 21:08:57 GMT'), $crosswalk->walk()->get('modified'));
+    }
+    
+    public function testMetadataMultipleValues()
+    {
+        $metadata = new JRegistry();
+        $metadata->set('dc.title', 'Title');
+        $metadata->set('dc.subject', array('Keyword1', 'Keyword2'));
+        $metadata->set('dc.identifier', array('doi:url', 'http://hdl.handle.net/12345'));
+        
+        $crosswalk = new JSpaceMetadataCrosswalk($metadata);
+        $data = $crosswalk->walk();
+        
+        $this->assertEquals(array('Title'), $data->get('title'));
+        $this->assertEquals(array('Keyword1', 'Keyword2'), $data->get('keyword'));
+        $this->assertEquals(array('doi:url', 'http://hdl.handle.net/12345'), $crosswalk->getIdentifiers());
     }
 }

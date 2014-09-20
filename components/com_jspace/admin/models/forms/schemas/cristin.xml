@@ -7,31 +7,31 @@
         <fieldset name="jspacemetadata"
             label="COM_JSPACE_RECORD_METADATA_LABEL">
             <field 
-                name="cristin.unitcode" 
+                name="unitcode" 
                 type="jspace.metadatatext"
                 label="COM_JSPACE_RECORD_METADATA_CRISTINUNITCODE_LABEL"
                 filter="JComponentHelper::filterText" 
                 required="true"/>
             <field 
-                name="cristin.unitname" 
+                name="unitname" 
                 type="jspace.metadatatext"
                 label="COM_JSPACE_RECORD_METADATA_CRISTINUNITNAME_LABEL"
                 filter="JComponentHelper::filterText" 
                 required="true"/>
             <field 
-                name="cristin.ispublished" 
+                name="ispublished" 
                 type="jspace.metadatatext"
                 label="COM_JSPACE_RECORD_METADATA_CRISTINISPUBLISHED_LABEL"
                 filter="JComponentHelper::filterText" 
                 required="true"/>
             <field 
-                name="cristin.fulltext" 
+                name="fulltext" 
                 type="jspace.metadatatextarea"
                 label="COM_JSPACE_RECORD_METADATA_CRISTINFULLTEXT_LABEL"
                 filter="JComponentHelper::filterText" 
                 required="true"/>
             <field 
-                name="cristin.qualitycode" 
+                name="qualitycode" 
                 type="jspace.metadatatext"
                 label="COM_JSPACE_RECORD_METADATA_CRISTINQUALITYCODE_LABEL"
                 filter="JComponentHelper::filterText" 

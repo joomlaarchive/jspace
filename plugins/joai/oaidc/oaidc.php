@@ -59,7 +59,7 @@ class PlgJOAIOAIDC extends JPlugin
             return;
         }
 
-        $metadata = new JRegistry();
+        $metadata = new JRegistry;
         $namespaces = $data->getDocNamespaces(true);
 
         foreach ($namespaces as $prefix=>$namespace)
@@ -67,11 +67,23 @@ class PlgJOAIOAIDC extends JPlugin
             if ($prefix)
             {
                 $data->registerXPathNamespace($prefix, $namespace);
-                $tags = $data->xpath('//oai_dc:dc/'.$prefix.':*');
-            
+                $tags = $data->xpath('//'.$prefix.':*');
+
                 foreach ($tags as $tag)
                 {
-                    $metadata->set($prefix.'.'.(string)$tag->getName(), (string)$tag);
+                    if (JString::trim((string)$tag))
+                    {
+                        $values = $metadata->get($prefix.'.'.(string)$tag->getName());
+                        
+                        if (!is_array($values))
+                        {
+                            $values = array();
+                        }
+                        
+                        $values[] = JString::trim((string)$tag);
+                        
+                        $metadata->set($prefix.'.'.(string)$tag->getName(), $values);
+                    }
                 }
             }
         }

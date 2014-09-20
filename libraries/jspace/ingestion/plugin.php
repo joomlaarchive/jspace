@@ -58,18 +58,17 @@ abstract class JSpaceIngestionPlugin extends JPlugin
                 
                 $array = array();
 
-                $array['schema'] = 'record';
+                $array['schema'] = $this->params->get('default.schema', 'record');
 
                 $id = $this->_mapIdentifierToId($item, $array['schema']); 
         
                 $crosswalk = JSpaceFactory::getCrosswalk(new JRegistry($data->metadata));
-                
+
                 $array['identifiers'] = $crosswalk->getIdentifiers();
                 $array['identifiers'][] = $item->id;
                 
                 $array['catid'] = $harvest->catid;
                 $array['metadata'] = $crosswalk->walk();
-
                 $array['title'] = $array['metadata']->get('title');
                 
                 // if title has more than one value, grab the first.

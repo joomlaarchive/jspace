@@ -143,9 +143,9 @@ class JSpaceMetadataCrosswalk extends JObject
     }
     
     /**
-     * Gets a list of identifiers based on identifiers settings.
+     * Gets a list of identifiers based on identifier settings.
      *
-     * @return  string[]  A list of identifiers based on identifiers settings.
+     * @return  string[]  A list of identifiers based on identifier settings.
      */
     public function getIdentifiers()
     {
@@ -164,17 +164,25 @@ class JSpaceMetadataCrosswalk extends JObject
                 $identifiers[] = $field;
             }
             
+            
             // clean up identifiers based on prefix settings.
             foreach (JArrayHelper::getValue($config, 'prefix', array()) as $prefix)
             {
-                while (current($identifiers))
+                $found = false;
+                
+                while (current($identifiers) && !$found)
                 {
-                    if (JString::strpos(current($identifiers), $prefix) === false)
-                    {
-                        unset($identifiers[key($identifiers)]);
+                    if (JString::strpos(current($identifiers), $prefix) === 0)
+                    {                    
+                        $found = true;
                     }
                     
                     next($identifiers);
+                }
+                
+                if (!$found)
+                {
+                    unset($identifiers[key($identifiers)]);
                 }
                 
                 reset($identifiers);
@@ -213,28 +221,24 @@ class JSpaceMetadataCrosswalk extends JObject
         {
             // sometimes the key needs to be lower case to avoid poorly marked up HTML.
             $source = $registry->get($mappable[$skey], $registry->get(JString::strtolower($mappable[$skey])));
-            
+
             if ($source)
             {
-                if ((bool)$mappable['multiple'])
+                $target = $metadata->get($mappable[$tkey]);
+
+                if (!is_array($target))
                 {
-                    $target = $metadata->get($mappable[$tkey]);
-                    
-                    if (!is_array($target))
-                    {
-                        $array = array();
-                        $array[] = $source;
-                        $source = $array;
-                    }
-                    else
-                    {
-                        $target[] = $source;
-                        $source = target;
-                    }
-                    
+                    $target = array();
                 }
                 
-                $metadata->set($mappable[$tkey], $source);
+                if (!is_array($source))
+                {   
+                    $array = array();
+                    $array[] = $source;
+                    $source = $array;
+                }
+                
+                $metadata->set($mappable[$tkey], array_merge($target, $source));
             }
         }
         
