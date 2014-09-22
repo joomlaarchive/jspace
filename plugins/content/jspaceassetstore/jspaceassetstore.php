@@ -73,19 +73,19 @@ class PlgContentJSpaceAssetstore extends JPlugin
         $root = $this->get('params')->get('path', null);
         $id = $asset->id;
         
-        $path = JSpaceArchiveAssetHelper::buildStoragePath($asset->record_id, $root);
-    
+        $path = JSpaceArchiveAssetHelper::buildStoragePath($asset->record_id, $root).$asset->hash;
+
         $handle = fopen($path, 'rb');
         
         if ($handle === false)
         {
             return false;
         }
-        
-        header("Content-Type: ".$asset->getMetadata()->get('contentType'));
-        header("Content-Disposition: attachment; filename=".$asset->getMetadata()->get('fileName').";");
-        header("Content-Length: ".$asset->getMetadata()->get('contentLength'));
-        
+
+        header("Content-Type: ".$asset->get('contentType'));
+        header("Content-Disposition: attachment; filename=".$asset->get('title').";");
+        header("Content-Length: ".$asset->get('contentLength'));
+
         while (!feof($handle))
         {
             $buffer = fread($handle, static::$chunksize);

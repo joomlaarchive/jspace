@@ -1,6 +1,15 @@
 <?php
+/**
+ * @package     JSpace
+ * @subpackage  Archive
+ *
+ * @copyright   Copyright (C) 2014 KnowledgeARC Ltd. All rights reserved.
+ * @license     GNU General Public License version 2 or later; see LICENSE
+ */
+
 defined('_JEXEC') or die;
 
+jimport('jspace.archive.object');
 jimport('jspace.table.asset');
 
 /**
@@ -10,31 +19,11 @@ jimport('jspace.table.asset');
  * @copyright   Copyright (C) 2014 KnowledgeARC Ltd. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE
  */
-class JSpaceAsset extends JObject
+class JSpaceAsset extends JSpaceObject
 {
     protected static $context = 'com_jspace.asset';
     
 	protected static $instances = array();
-	
-	public function __construct($identifier = 0)
-	{
-		$this->_metadata = new JRegistry;
-		
-		// if identifier is empty, try and load from bound id (for methods such as listObjectList).
-		if (!empty($identifier))
-		{
-			$this->id = $identifier;
-		}
-		
-		if (isset($this->id) && $this->id)
-		{
-			$this->load($this->id);
-		}
-		else
-		{
-			$this->id = 0;
-		}
-	}
 
 	public static function getInstance($identifier = 0)
 	{
@@ -65,21 +54,7 @@ class JSpaceAsset extends JObject
 	
 	public function bind(&$array)
 	{
-		if (array_key_exists('metadata', $array))
-		{
-			$this->_metadata->loadArray($array['metadata']);
-
-			if (is_array($array['metadata']))
-			{
-				$metadata = (string)$this->_metadata;
-			}
-			else
-			{
-				$metadata = $array['metadata'];
-			}
-
-			$this->metadata = $metadata;
-		}
+        $this->metadata = JArrayHelper::getValue($array, 'metadata', array());
 		
 		// Bind the array
 		if (!$this->setProperties($array))
@@ -119,7 +94,7 @@ class JSpaceAsset extends JObject
 	public function load($keys)
 	{
 		$table = JTable::getInstance('Asset', 'JSpaceTable');
-		
+
 		if (!$table->load($keys))
 		{
 			return false;
@@ -155,15 +130,5 @@ class JSpaceAsset extends JObject
 
 		// Trigger the onUserAfterDelete event
 		$dispatcher->trigger('onContentAfterDelete', array(static::$context, $this));
-	}
-	
-	/**
-	 * Gets the asset's metadata registry.
-	 * 
-	 * @return  JRegistry  The asset's metadata registry.
-	 */
-	public function getMetadata()
-	{
-		return $this->_metadata;
 	}
 }

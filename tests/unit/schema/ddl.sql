@@ -134,6 +134,9 @@ CREATE INDEX `idx_jspace_records_language` ON `jos_jspace_records` (`language`);
 
 CREATE TABLE `jos_jspace_assets` (
 	`id` INTEGER PRIMARY KEY AUTOINCREMENT,
+    `title` VARCHAR(255) NOT NULL,
+    `contentType` VARCHAR(255) NOT NULL,
+    `contentLength` INTEGER NOT NULL,
 	`hash` VARCHAR(255) NOT NULL,
 	`metadata` TEXT NOT NULL,
 	`derivative` VARCHAR(255) NOT NULL,

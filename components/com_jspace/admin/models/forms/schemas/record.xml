@@ -303,7 +303,7 @@
             <field 
                 name="itemThumbnail" 
                 type="jspace.asset" 
-                label="Item Preview" 
+                label="Item Thumbnail" 
                 description="Choose an image from your computer with maximum 100KB" 
                 size="10" 
                 accept="image/*"
@@ -313,7 +313,7 @@
             <field 
                 name="originals" 
                 type="jspace.asset" 
-                label="Raw Images" 
+                label="Originals" 
                 description="Choose an image from your computer with maximum 100KB" 
                 size="10"
                 derivative="original"
@@ -323,7 +323,7 @@
             <field 
                 name="previews" 
                 type="jspace.asset" 
-                label="Raw Images" 
+                label="Previews" 
                 description="Choose an image from your computer with maximum 100KB" 
                 size="10"
                 derivative="preview"
@@ -333,7 +333,7 @@
             <field 
                 name="thumbnails" 
                 type="jspace.asset" 
-                label="Raw Images" 
+                label="Thumbnails" 
                 description="Choose an image from your computer with maximum 100KB" 
                 size="10"
                 derivative="thumbnail"

@@ -7,68 +7,55 @@
             [
                 {
                     "source":"resourceName",
-                    "target":"name",
-                    "multiple":"0"
+                    "target":"title"
                 },
                 {
                     "source":"Content-Length",
-                    "target":"contentLength",
-                    "multiple":"0"
+                    "target":"contentLength"
                 },
                 {
                     "source":"Content-Type",
-                    "target":"contentType",
-                    "multiple":"0"
+                    "target":"contentType"
                 },
                 {
                     "source":"created",
-                    "target":"created",
-                    "multiple":"0"
+                    "target":"created"
                 },
                 {
                     "source":"Creation-Date",
-                    "target":"created",
-                    "multiple":"0"
+                    "target":"created"
                 },
                 {
                     "source":"date",
-                    "target":"created",
-                    "multiple":"0"
+                    "target":"created"
                 },
                 {
                     "source":"meta:creation-date",
-                    "target":"created",
-                    "multiple":"0"     
+                    "target":"created"
                 },
                 {
                     "source":"Last-Modified",
-                    "target":"modified",
-                    "multiple":"0"
+                    "target":"modified"
                 },
                 {
                     "source":"Last-Save-Date",
-                    "target":"modified",
-                    "multiple":"0"
+                    "target":"modified"
                 },
                 {
                     "source":"meta:save-date",
-                    "target":"modified",
-                    "multiple":"0"
+                    "target":"modified"
                 },
                 {
                     "source":"modified",
-                    "target":"modified",
-                    "multiple":"0"
+                    "target":"modified"
                 },
                 {
                     "source":"producer",
-                    "target":"product",
-                    "multiple":"0"
+                    "target":"product"
                 },
                 {
                     "source":"title",
-                    "target":"title",
-                    "multiple":"0"
+                    "target":"title"
                 }
             ]
         },
@@ -81,278 +68,227 @@
                 [
                     {
                         "source":"abstract",
-                        "target":"abstract",
-                        "multiple":"0"
+                        "target":"abstract"
                     },
                     {
                         "source":"accessRights",
-                        "target":"accessRights",
-                        "multiple":"1"
+                        "target":"accessRights"
                     },
                     {
                         "source":"accrualMethod",
-                        "target":"accrualMethod",
-                        "multiple":"1"
+                        "target":"accrualMethod"
                     },
                     {
                         "source":"accrualPeriodicity",
-                        "target":"accrualPeriodicity",
-                        "multiple":"1"
+                        "target":"accrualPeriodicity"
                     },
                     {
                         "source":"accrualPolicy",
-                        "target":"accrualPolicy",
-                        "multiple":"1"
+                        "target":"accrualPolicy"
                     },
                     {
                         "source":"alternative",
-                        "target":"alternativeTitle",
-                        "multiple":"1"
+                        "target":"alternativeTitle"
                     },
                     {
                         "source":"audience",
-                        "target":"intendedAudience",
-                        "multiple":"0"
+                        "target":"intendedAudience"
                     },
                     {
                         "source":"available",
-                        "target":"available",
-                        "multiple":"0"
+                        "target":"available"
                     },
                     {
                         "source":"bibliographicCitation",
-                        "target":"bibliography",
-                        "multiple":"1"
+                        "target":"bibliography"
                     },
                     {
                         "source":"conformsTo",
-                        "target":"conformsTo",
-                        "multiple":"1"
+                        "target":"conformsTo"
                     },
                     {
                         "source":"contributor",
-                        "target":"contributor",
-                        "multiple":"1"
+                        "target":"contributor"
                     },
                     {
                         "source":"coverage",
-                        "target":"coverage",
-                        "multiple":"1"
+                        "target":"coverage"
                     },
                     {
                         "source":"created",
-                        "target":"created",
-                        "multiple":"0"
+                        "target":"created"
                     },
                     {
                         "source":"creator",
-                        "target":"creator",
-                        "multiple":"1"
+                        "target":"creator"
                     },
                     {
                         "source":"date",
-                        "target":"date",
-                        "multiple":"1"
+                        "target":"date"
                     },
                     {
                         "source":"dateAccepted",
-                        "target":"dateAccepted",
-                        "multiple":"0"
+                        "target":"dateAccepted"
                     },
                     {
                         "source":"dateCopyrighted",
-                        "target":"dateCopyrighted",
-                        "multiple":"0"
+                        "target":"dateCopyrighted"
                     },
                     {
                         "source":"dateSubmitted",
-                        "target":"dateSubmitted",
-                        "multiple":"0"
+                        "target":"dateSubmitted"
                     },
                     {
                         "source":"description",
-                        "target":"description",
-                        "multiple":"0"
+                        "target":"description"
                     },
                     {
                         "source":"educationLevel",
-                        "target":"educationLevel",
-                        "multiple":"0"
+                        "target":"educationLevel"
                     },
                     {
                         "source":"extent",
-                        "target":"length",
-                        "multiple":"1"
+                        "target":"length"
                     },
                     {
                         "source":"format",
-                        "target":"format",
-                        "multiple":"1"
+                        "target":"format"
                     },
                     {
                         "source":"hasFormat",
-                        "target":"hasFormat",
-                        "multiple":"1"
+                        "target":"hasFormat"
                     },
                     {
                         "source":"hasPart",
-                        "target":"hasPart",
-                        "multiple":"1"
+                        "target":"hasPart"
                     },
                     {
                         "source":"hasVersion",
-                        "target":"hasVersion",
-                        "multiple":"1"
+                        "target":"hasVersion"
                     },
                     {
                         "source":"identifier",
-                        "target":"identifier",
-                        "multiple":"1"
+                        "target":"identifier"
                     },
                     {
                         "source":"instructionalMethod",
-                        "target":"interactions",
-                        "multiple":"1"
+                        "target":"interactions"
                     },
                     {
                         "source":"isFormatOf",
-                        "target":"isFormatOf",
-                        "multiple":"1"
+                        "target":"isFormatOf"
                     },
                     {
                         "source":"isPartOf",
-                        "target":"isPartOf",
-                        "multiple":"1"
+                        "target":"isPartOf"
                     },
                     {
                         "source":"isReferencedBy",
-                        "target":"isReferencedBy",
-                        "multiple":"1"
+                        "target":"isReferencedBy"
                     },
                     {
                         "source":"isReplacedBy",
-                        "target":"isReplacedBy",
-                        "multiple":"1"
+                        "target":"isReplacedBy"
                     },
                     {
                         "source":"isRequiredBy",
-                        "target":"isRequiredBy",
-                        "multiple":"1"
+                        "target":"isRequiredBy"
                     },
                     {
                         "source":"issued",
-                        "target":"issued",
-                        "multiple":"0"
+                        "target":"issued"
+    
                     },
                     {
                         "source":"isVersionOf",
-                        "target":"isVersionOf",
-                        "multiple":"1"
+                        "target":"isVersionOf"
                     },
                     {
                         "source":"language",
-                        "target":"language",
-                        "multiple":"0"
+                        "target":"language"
+    
                     },
                     {
                         "source":"license",
-                        "target":"license",
-                        "multiple":"0"
+                        "target":"license"
+    
                     },
                     {
                         "source":"mediator",
-                        "target":"reviewer",
-                        "multiple":"1"
+                        "target":"reviewer"
                     },
                     {
                         "source":"medium",
-                        "target":"medium",
-                        "multiple":"1"
+                        "target":"medium"
                     },
                     {
                         "source":"modified",
-                        "target":"modified",
-                        "multiple":"0"
+                        "target":"modified"
+    
                     },
                     {
                         "source":"provenance",
-                        "target":"ownership",
-                        "multiple":"1"
+                        "target":"ownership"
                     },
                     {
                         "source":"publisher",
-                        "target":"publisher",
-                        "multiple":"1"
+                        "target":"publisher"
                     },
                     {
                         "source":"references",
-                        "target":"references",
-                        "multiple":"1"
+                        "target":"references"
                     },
                     {
                         "source":"relation",
-                        "target":"relation",
-                        "multiple":"1"
+                        "target":"relation"
                     },
                     {
                         "source":"replaces",
-                        "target":"replaces",
-                        "multiple":"1"
+                        "target":"replaces"
                     },
                     {
                         "source":"requires",
-                        "target":"requires",
-                        "multiple":"1"
+                        "target":"requires"
                     },
                     {
                         "source":"rights",
-                        "target":"rights",
-                        "multiple":"1"
+                        "target":"rights"
                     },
                     {
                         "source":"rightsHolder",
-                        "target":"rightsHolder",
-                        "multiple":"1"
+                        "target":"rightsHolder"
                     },
                     {
                         "source":"subject",
-                        "target":"keyword",
-                        "multiple":"1"
+                        "target":"keyword"
                     },
                     {
                         "source":"source",
-                        "target":"source",
-                        "multiple":"1"
+                        "target":"source"
                     },
                     {
                         "source":"spatial",
-                        "target":"spatialCoverage",
-                        "multiple":"1"
+                        "target":"spatialCoverage"
                     },
                     {
                         "source":"tableOfContents",
-                        "target":"toc",
-                        "multiple":"1"
+                        "target":"toc"
                     },
                     {
                         "source":"temporal",
-                        "target":"temporalCoverage",
-                        "multiple":"1"
+                        "target":"temporalCoverage"
                     },
                     {
                         "source":"title",
-                        "target":"title",
-                        "multiple":"0"
+                        "target":"title"    
                     },
                     {
                         "source":"type",
-                        "target":"type",
-                        "multiple":"0"
+                        "target":"type"
                     },
                     {
                         "source":"valid",
-                        "target":"publishUpDown",
-                        "multiple":"0"
+                        "target":"publishUpDown"
                     }
                 ]
             },
@@ -363,83 +299,64 @@
                 [
                     {
                         "source":"abstract",
-                        "target":"abstract",
-                        "multiple":"0"
+                        "target":"abstract"
+    
                     },
                     {
                         "source":"contributor",
-                        "target":"contributor",
-                        "multiple":"1"
+                        "target":"contributor"
                     },
                     {
                         "source":"coverage",
-                        "target":"coverage",
-                        "multiple":"1"
+                        "target":"coverage"
                     },
                     {
                         "source":"creator",
-                        "target":"creator",
-                        "multiple":"1"
+                        "target":"creator"
                     },
                     {
                         "source":"date",
-                        "target":"date",
-                        "multiple":"1"
+                        "target":"date"
                     },
                     {
                         "source":"description",
-                        "target":"description",
-                        "multiple":"0"
-                    },
-                    {
-                        "source":"description",
-                        "target":"description",
-                        "multiple":"0"
+                        "target":"description"
                     },
                     {
                         "source":"identifier",
-                        "target":"identifier",
-                        "multiple":"1"
+                        "target":"identifier"
                     },
                     {
                         "source":"language",
-                        "target":"language",
-                        "multiple":"0"
+                        "target":"language"
                     },
                     {
                         "source":"subject",
-                        "target":"keyword",
-                        "multiple":"1"
+                        "target":"keyword"
                     },
                     {
                         "source":"publisher",
-                        "target":"publisher",
-                        "multiple":"1"
+                        "target":"publisher"
                     },
                     {
                         "source":"relation",
-                        "target":"relation",
-                        "multiple":"1"
+                        "target":"relation"
                     },
                     {
                         "source":"rights",
-                        "target":"rights",
-                        "multiple":"1"
+                        "target":"rights"
                     },
                     {
                         "source":"source",
-                        "target":"source",
-                        "multiple":"1"
+                        "target":"source"
                     },
                     {
                         "source":"title",
-                        "target":"title",
-                        "multiple":"0"
+                        "target":"title"
                     },
                     {
                         "source":"type",
-                        "target":"type",
-                        "multiple":"0"
+                        "target":"type"
                     }
                 ]
             },
@@ -450,8 +367,7 @@
                 [
                     {
                         "source":"identifier.doi",
-                        "target":"identifier",
-                        "multiple":"0"
+                        "target":"identifier"
                     }
                 ]
             },
@@ -462,13 +378,11 @@
                 [
                     {
                         "source":"ImageLength",
-                        "target":"imageHeight",
-                        "multiple":"0"
+                        "target":"imageHeight"
                     },
                     {
                         "source":"ImageWidth",
-                        "target":"imageWidth",
-                        "multiple":"0"
+                        "target":"imageWidth"
                     }
                 ]
             },
@@ -479,8 +393,7 @@
                 [
                     {
                         "source":"audioSampleRate",
-                        "target":"sampleRate",
-                        "multiple":"0"
+                        "target":"sampleRate"
                     }
                 ]
             },
@@ -491,8 +404,7 @@
                 [
                     {
                         "source":"NPages",
-                        "target":"pageCount",
-                        "multiple":"0"
+                        "target":"pageCount"
                     }
                 ]
             }

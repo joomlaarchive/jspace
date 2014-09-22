@@ -27,7 +27,7 @@ defined('JPATH_BASE') or die;
 <?php foreach ($displayData->getAssets() as $key=>$value) : ?>
 <div>
     <div>
-        <span class="chzn-container"><?php echo $value->getMetadata()->get('fileName'); ?></span>    
+        <span class="chzn-container"><?php echo $value->get('title'); ?></span>    
         <a 
             class="btn btn-small btn-success hasTooltip" 
             data-title="<?php echo JText::_('COM_JSPACE_FORMFIELD_ASSET_METADATA_DESC'); ?>"

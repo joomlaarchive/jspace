@@ -1,10 +1,33 @@
 <?php
+/**
+ * @package     JSpace
+ * @subpackage  FileSystem
+ *
+ * @copyright   Copyright (C) 2014 KnowledgeARC Ltd. All rights reserved.
+ * @license     GNU General Public License version 2 or later; see LICENSE
+ */
+
 defined('_JEXEC') or die;
 
 jimport('joomla.filesystem.file');
 
+/**
+ * Provides additional file manipulation.
+ *
+ * @package     JSpace
+ * @subpackage  FileSystem
+ */
 class JSpaceFile extends JFile
 {
+    /**
+     * Gets a file's metadata.
+     *
+     * The getMetadata method uses the configured Apache Tika application to extract metadata.
+     * 
+     * @param   string     $file  A file path.
+     * 
+     * @return  JRegistry  The file's metadata.
+     */
 	public static function getMetadata($file)
 	{
 		$params = JComponentHelper::getParams('com_jspace', true);
@@ -25,6 +48,7 @@ class JSpaceFile extends JFile
 		ob_end_clean();
 		
 		$metadata = new JRegistry();
+		
 		$metadata->loadString($result);
 
 		return $metadata;

@@ -49,7 +49,7 @@ class JSpaceMetadataCrosswalk extends JObject
         {
             throw new Exception('No crosswalk file found.');
         }
-        
+
         $crosswalk = json_decode(file_get_contents($path), true);
 
         $this->registry = $crosswalk;
@@ -110,6 +110,7 @@ class JSpaceMetadataCrosswalk extends JObject
     public function getCommonMetadata($reverse = false)
     {
         $metadata = JArrayHelper::getValue($this->registry, 'metadata', array());
+
         $schema = JArrayHelper::getValue($metadata, 'common', array());
         
         return $this->_mapMetadata($this->source, $schema, $reverse);

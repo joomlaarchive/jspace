@@ -58,6 +58,9 @@ CREATE TABLE IF NOT EXISTS `#__jspace_record_ancestors` (
 
 CREATE TABLE IF NOT EXISTS `#__jspace_assets` (
 	`id` INTEGER NOT NULL AUTO_INCREMENT,
+    `title` VARCHAR(255) NOT NULL,
+    `contentType` VARCHAR(255) NOT NULL,
+    `contentLength` INTEGER NOT NULL COMMENT 'In bytes',
 	`hash` VARCHAR(255) NOT NULL,
 	`metadata` TEXT NOT NULL,
 	`derivative` VARCHAR(255) NOT NULL,
