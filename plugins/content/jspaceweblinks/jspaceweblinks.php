@@ -85,12 +85,13 @@ class PlgContentJSpaceWeblinks extends JPlugin
                 ->where($database->qn('a.record_id').'='.$data->id);
             
             $weblinks = $database->setQuery($query)->loadAssocList();
+
+            // restructure weblinks; $data->[component without com_][view]
+            $data->weblinks = array('weblink'=>array());
             
-            // restructure weblinks in a format the WebLinkList form field will understand.
-            $data->weblinks = array();
             for ($i=0; $i < count($weblinks); $i++)
             {
-                $data->weblinks[$weblinks[$i]['bundle']][] = $weblinks[$i];
+                $data->weblinks['weblink'][] = $weblinks[$i];
             }
         }
     }
@@ -144,9 +145,9 @@ class PlgContentJSpaceWeblinks extends JPlugin
         
         $ids = $database->setQuery($query)->loadColumn();
         
-        foreach ($record->weblinks as $wkey=>$weblink)
+        foreach ($record->weblinks as $link)
         {
-            foreach ($weblink as $data)
+            foreach ($link as $key=>$data)
             {
                 // ignore empty urls.
                 if (!JArrayHelper::getValue($data, 'url'))
@@ -174,7 +175,6 @@ class PlgContentJSpaceWeblinks extends JPlugin
                 
                 $reference->id = $weblink->id;
                 $reference->context = 'com_weblinks.weblink';
-                $reference->bundle = $wkey;
                 $reference->record_id = $record->id;
                 
                 if (!$reference->store())

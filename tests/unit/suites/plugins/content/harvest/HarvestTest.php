@@ -127,7 +127,7 @@ class HarvestTest extends TestCaseDatabase
         $query = JFactory::getDbo()->getQuery(true);
         $query->select("COUNT(*)")->from('#__jspace_records')->where('alias <> \'root\'');
 
-        $this->assertEquals(33, (int)JFactory::getDbo()->setQuery($query)->loadResult());
+        $this->assertEquals(2, (int)JFactory::getDbo()->setQuery($query)->loadResult());
         
         $dispatcher = JEventDispatcher::getInstance();
         JPluginHelper::importPlugin('content', 'harvest', true);
@@ -136,7 +136,7 @@ class HarvestTest extends TestCaseDatabase
         $query = JFactory::getDbo()->getQuery(true);
         $query->select("COUNT(*)")->from('#__jspace_records')->where('alias <> \'root\'');
         
-        $this->assertEquals(33, (int)JFactory::getDbo()->setQuery($query)->loadResult());
+        $this->assertEquals(2, (int)JFactory::getDbo()->setQuery($query)->loadResult());
     }
        
     protected function getDataSet()

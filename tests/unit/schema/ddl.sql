@@ -133,15 +133,14 @@ CREATE INDEX `idx_jspace_records_createdby` ON `jos_jspace_records` (`created_by
 CREATE INDEX `idx_jspace_records_language` ON `jos_jspace_records` (`language`);
 
 CREATE TABLE `jos_jspace_assets` (
-	`id` INTEGER PRIMARY KEY AUTOINCREMENT,
+    `id` INTEGER PRIMARY KEY AUTOINCREMENT,
     `title` VARCHAR(255) NOT NULL,
     `contentType` VARCHAR(255) NOT NULL,
     `contentLength` INTEGER NOT NULL,
-	`hash` VARCHAR(255) NOT NULL,
-	`metadata` TEXT NOT NULL,
-	`derivative` VARCHAR(255) NOT NULL,
-	`bundle` VARCHAR(255) NOT NULL,
-	`record_id` INTEGER NOT NULL
+    `hash` VARCHAR(255) NOT NULL,
+    `metadata` TEXT NOT NULL,
+    `derivative` VARCHAR(255) NOT NULL,
+    `record_id` INTEGER NOT NULL
 );
 
 CREATE INDEX `idx_jspace_assets_hash` ON `jos_jspace_assets` (`hash`);
@@ -375,7 +374,6 @@ CREATE TABLE IF NOT EXISTS `jos_weblinks` (
 CREATE TABLE IF NOT EXISTS `jos_jspace_references` (
     `id` INTEGER NOT NULL,
     `context` VARCHAR(255) NOT NULL,
-    `bundle` VARCHAR(255) NULL,
     `record_id` INTEGER NOT NULL,
     PRIMARY KEY (`id`, `context`)
 );

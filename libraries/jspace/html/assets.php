@@ -24,45 +24,36 @@ abstract class JSpaceHtmlAssets
 	 *
 	 * @return  array  The cleaned array of assets.
 	 */
-	public static function clean($collection)
-	{
-		$cleaned = $collection;
-	
-		foreach ($cleaned as $bkey=>$bundle)
-		{
-			$assets = JArrayHelper::getValue($bundle, 'assets', array(), 'array');
-		
-			foreach ($assets as $dkey=>$derivative)
-			{
-				if (array_key_exists('tmp_name', $derivative))
-				{
-					$tmp = $derivative;
-					$derivative = array();
-					$derivative[] = $tmp;
- 					$cleaned[$bkey]['assets'][$dkey] = $derivative;
-				}
-				
-				// Strip empty uploads.
-				foreach ($derivative as $akey=>$asset)
-				{
-					if (JArrayHelper::getValue($asset, 'error') == 4)
-					{
-						unset($cleaned[$bkey]['assets'][$dkey][$akey]);
-					}
-				}
-				
-				if (count($cleaned[$bkey]['assets'][$dkey]) == 0)
-				{
-					unset($cleaned[$bkey]['assets'][$dkey]);
-				}
-			}
-			
-			if (count($cleaned[$bkey]['assets']) == 0)
-			{
-				unset($cleaned[$bkey]);
-			}
-		}
-		
-		return $cleaned;
-	}
+    public static function clean($collection)
+    {
+        $cleaned = $collection;
+
+        foreach ($cleaned as $dkey=>$derivative)
+        {
+            if (array_key_exists('tmp_name', $derivative))
+            {
+                $tmp = $derivative;
+                $derivative = array();
+                $derivative[] = $tmp;
+                $cleaned[$dkey] = $derivative;
+            }
+
+            // Strip empty uploads.
+            foreach ($derivative as $akey=>$asset)
+            {
+                if (JArrayHelper::getValue($asset, 'error') == 4)
+                {
+                    unset($cleaned[$dkey][$akey]);
+                }
+            }
+            
+            // strip empty derivatives.
+            if (count($cleaned[$dkey]) == 0)
+            {
+                unset($cleaned[$dkey]);
+            }
+        }
+
+        return $cleaned;
+    }
 }

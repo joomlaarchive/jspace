@@ -39,24 +39,20 @@ class JSpaceRecordTest extends TestCaseDatabase
             ->at($root);
     
         $_FILES = array(
-            'bundle'=>array(
-                'assets'=>array(
-                    'original'=>array(
-                        array(
-                            'name' => $files[0]->getName(),
-                            'type' => 'image/jpeg',
-                            'size' => $files[0]->size(),
-                            'tmp_name' => $files[0]->url(),
-                            'error' => 0
-                        ),
-                        array(
-                            'name' => $files[1]->getName(),
-                            'type' => 'application/pdf',
-                            'size' => $files[1]->size(),
-                            'tmp_name' => $files[1]->url(),
-                            'error' => 0
-                        )
-                    )
+            'original'=>array(
+                array(
+                    'name' => $files[0]->getName(),
+                    'type' => 'image/jpeg',
+                    'size' => $files[0]->size(),
+                    'tmp_name' => $files[0]->url(),
+                    'error' => 0
+                ),
+                array(
+                    'name' => $files[1]->getName(),
+                    'type' => 'application/pdf',
+                    'size' => $files[1]->size(),
+                    'tmp_name' => $files[1]->url(),
+                    'error' => 0
                 )
             )
         );

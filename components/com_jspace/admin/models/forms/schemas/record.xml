@@ -291,52 +291,47 @@
         <fieldset name="jspaceassets"
             label="COM_JSPACE_FILES_LABEL">
             <field 
-                name="itemPreview" 
+                name="item_preview" 
                 type="jspace.asset" 
                 label="Item Preview" 
                 description="Choose an image from your computer with maximum 100KB" 
                 size="10" 
                 accept="image/*"
-                derivative="item_preview"
                 validate="jspaceassets"/>
             
             <field 
-                name="itemThumbnail" 
+                name="item_thumbnail" 
                 type="jspace.asset" 
                 label="Item Thumbnail" 
                 description="Choose an image from your computer with maximum 100KB" 
                 size="10" 
                 accept="image/*"
-                derivative="item_thumbnail"
                 validate="jspaceassets"/>
             
             <field 
-                name="originals" 
+                name="original" 
                 type="jspace.asset" 
                 label="Originals" 
                 description="Choose an image from your computer with maximum 100KB" 
                 size="10"
-                derivative="original"
                 validate="jspaceassets"
                 multiple="true"/>
             
             <field 
-                name="previews" 
+                name="preview" 
                 type="jspace.asset" 
                 label="Previews" 
                 description="Choose an image from your computer with maximum 100KB" 
                 size="10"
-                derivative="preview"
                 validate="jspaceassets"
                 multiple="true"/>
             
             <field 
-                name="thumbnails" 
+                name="thumbnail" 
                 type="jspace.asset" 
                 label="Thumbnails" 
                 description="Choose an image from your computer with maximum 100KB" 
                 size="10"
-                derivative="thumbnail"
                 validate="jspaceassets"
                 multiple="true"/>
         </fieldset>
@@ -345,7 +340,7 @@
         <fieldset name="jspaceweblinks"
             label="COM_JSPACE_LINKS_LABEL">
             <field 
-                name="links"
+                name="weblink"
                 type="jspace.weblinklist" 
                 label="Web Links" 
                 description="Specify a web link." 

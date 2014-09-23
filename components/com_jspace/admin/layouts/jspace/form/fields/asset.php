@@ -5,22 +5,8 @@ defined('JPATH_BASE') or die;
 <input 
 	type="file" 
 	id="<?php echo $displayData->id; ?>"
-	name="<?php echo $displayData->assetsFieldName; ?>" 
+	name="<?php echo $displayData->name; ?>" 
 	<?php echo ($displayData->multiple) ? 'multiple="multiple"' : ''; ?>/>
-
-	<?php if ($displayData->metadata) : ?>
-	<input 
-		type="hidden" 
-		name="<?php echo $displayData->metadataFieldName; ?>" 
-		value="<?php echo $displayData->metadata; ?>"/>
-	<?php endif; ?>
-	
-	<?php if ($displayData->schema) : ?>
-	<input 
-		type="hidden" 
-		name="<?php echo $displayData->schemaFieldName; ?>" 
-		value="<?php echo $displayData->schema; ?>"/>
-	<?php endif; ?>
 <?php endif; ?>
 
 <?php $i = 0; ?>

@@ -1,31 +1,31 @@
 CREATE TABLE IF NOT EXISTS `#__jspace_records` (
-	`id` INTEGER PRIMARY KEY NOT NULL AUTO_INCREMENT,
-	`asset_id` INTEGER NOT NULL DEFAULT 0 COMMENT 'FK to the #__assets table.',
-	`title` VARCHAR(1024) NOT NULL,
-	`alias` VARCHAR(255) NOT NULL DEFAULT '',
-	`published` TINYINT NOT NULL DEFAULT 0 COMMENT 'The published state of the record.',
-	`language` CHAR(7) NOT NULL COMMENT 'The language code for the record.',
-	`created` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
-	`created_by` INTEGER NOT NULL DEFAULT 0,
-	`modified` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
-	`modified_by` INTEGER NOT NULL DEFAULT 0,
-	`checked_out` INTEGER NOT NULL DEFAULT 0,
-	`checked_out_time` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
-	`publish_up` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
-	`publish_down` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
-	`metadata` TEXT NOT NULL,
+    `id` INTEGER PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    `asset_id` INTEGER NOT NULL DEFAULT 0 COMMENT 'FK to the #__assets table.',
+    `title` VARCHAR(1024) NOT NULL,
+    `alias` VARCHAR(255) NOT NULL DEFAULT '',
+    `published` TINYINT NOT NULL DEFAULT 0 COMMENT 'The published state of the record.',
+    `language` CHAR(7) NOT NULL COMMENT 'The language code for the record.',
+    `created` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
+    `created_by` INTEGER NOT NULL DEFAULT 0,
+    `modified` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
+    `modified_by` INTEGER NOT NULL DEFAULT 0,
+    `checked_out` INTEGER NOT NULL DEFAULT 0,
+    `checked_out_time` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
+    `publish_up` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
+    `publish_down` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
+    `metadata` TEXT NOT NULL,
     `level` INTEGER NOT NULL DEFAULT 0,
     `path` VARCHAR(1024) NOT NULL COMMENT 'The computed path of the record based on the alias field.',
     `lft` INTEGER NOT NULL DEFAULT 0 COMMENT 'Nested set lft.',
     `rgt` INTEGER NOT NULL DEFAULT 0 COMMENT 'Nested set rgt.',
-	`schema` VARCHAR(255) NOT NULL DEFAULT 'Record' COMMENT 'The schema to load as part of this record.',
-	`parent_id` INTEGER NOT NULL DEFAULT 0,
-	`ordering` INTEGER NOT NULL DEFAULT 0,
-	`version` INTEGER NOT NULL DEFAULT 1,
-	`access` INTEGER NOT NULL DEFAULT 0,
-	`catid` INTEGER NOT NULL,
-	KEY `idx_jspace_records_access` (`access`),
-	KEY `idx_jspace_records_checkout` (`checked_out`),
+    `schema` VARCHAR(255) NOT NULL DEFAULT 'Record' COMMENT 'The schema to load as part of this record.',
+    `parent_id` INTEGER NOT NULL DEFAULT 0,
+    `ordering` INTEGER NOT NULL DEFAULT 0,
+    `version` INTEGER NOT NULL DEFAULT 1,
+    `access` INTEGER NOT NULL DEFAULT 0,
+    `catid` INTEGER NOT NULL,
+    KEY `idx_jspace_records_access` (`access`),
+    KEY `idx_jspace_records_checkout` (`checked_out`),
     KEY `idx_jspace_records_published` (`published`),
     KEY `idx_jspace_records_parent_id` (`parent_id`),
     KEY `idx_jspace_records_schema` (`schema`),
@@ -47,39 +47,37 @@ CREATE TABLE IF NOT EXISTS `#__jspace_record_identifiers` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `#__jspace_record_ancestors` (
-	`decendant` INTEGER NOT NULL DEFAULT 0,
-	`ancestor` INTEGER NOT NULL DEFAULT 0,
-	PRIMARY KEY (`decendant`, `ancestor`),
-	KEY `idx_jspace_record_ancestors_decendant` (`decendant`),
-	KEY `idx_jspace_record_ancestors_ancestor` (`ancestor`)
+    `decendant` INTEGER NOT NULL DEFAULT 0,
+    `ancestor` INTEGER NOT NULL DEFAULT 0,
+    PRIMARY KEY (`decendant`, `ancestor`),
+    KEY `idx_jspace_record_ancestors_decendant` (`decendant`),
+    KEY `idx_jspace_record_ancestors_ancestor` (`ancestor`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- physical files being archived.
 
 CREATE TABLE IF NOT EXISTS `#__jspace_assets` (
-	`id` INTEGER NOT NULL AUTO_INCREMENT,
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
     `title` VARCHAR(255) NOT NULL,
     `contentType` VARCHAR(255) NOT NULL,
     `contentLength` INTEGER NOT NULL COMMENT 'In bytes',
-	`hash` VARCHAR(255) NOT NULL,
-	`metadata` TEXT NOT NULL,
-	`derivative` VARCHAR(255) NOT NULL,
-	`bundle` VARCHAR(255) NOT NULL,
-	`record_id` INTEGER NOT NULL,
-	PRIMARY KEY (`id`),
-	KEY `idx_jspace_assets_hash` (`hash`),
-	KEY `idx_jspace_assets_record_id` (`record_id`)
+    `hash` VARCHAR(255) NOT NULL,
+    `metadata` TEXT NOT NULL,
+    `derivative` VARCHAR(255) NOT NULL,
+    `record_id` INTEGER NOT NULL,
+    PRIMARY KEY (`id`),
+    KEY `idx_jspace_assets_hash` (`hash`),
+    KEY `idx_jspace_assets_record_id` (`record_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- references (links) to assets
 
 CREATE TABLE IF NOT EXISTS `#__jspace_references` (
-	`id` INTEGER NOT NULL COMMENT 'The id of the context as it appears in the related component table.',
-	`context` VARCHAR(255) NOT NULL COMMENT 'The component and type name, E.g. com_jspace.ref, com_weblinks.weblink, com_newsfeeds.newsfeed, etc',
-	`bundle` VARCHAR(255) NULL,
-	`record_id` INTEGER NOT NULL,
-	PRIMARY KEY (`id`, `context`),
-	KEY `idx_jspace_reference_record_id` (`record_id`)
+    `id` INTEGER NOT NULL COMMENT 'The id of the context as it appears in the related component table.',
+    `context` VARCHAR(255) NOT NULL COMMENT 'The component and type name, E.g. com_jspace.ref, com_weblinks.weblink, com_newsfeeds.newsfeed, etc',
+    `record_id` INTEGER NOT NULL,
+    PRIMARY KEY (`id`, `context`),
+    KEY `idx_jspace_reference_record_id` (`record_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- A generic harvesting table. @todo Perhaps this should be more generalized, I.e. jspace_imports.

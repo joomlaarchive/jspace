@@ -184,31 +184,25 @@ class JSpaceRecord extends JSpaceObject
      */
     private function _saveAssets($collection)
     {
-        foreach ($collection as $bkey=>$bundle)
+        foreach ($collection as $dkey=>$derivative)
         {
-            $assets = JArrayHelper::getValue($bundle, 'assets', array(), 'array');
-        
-            foreach ($assets as $dkey=>$derivative)
-            {
-                foreach ($derivative as $akey=>$asset)
-                {                    
-                    $new = JSpaceAsset::getInstance();
-                    $new->bind($asset);
-                    
-                    $new->set('id', null);
-                    $new->set('record_id', $this->id);
-                    $new->set('title', JSpaceFile::makeSafe(JArrayHelper::getValue($asset, 'name')));
-                    $new->set('contentLength', JArrayHelper::getValue($asset, 'size', 0, 'int'));
-                    $new->set('contentType', JArrayHelper::getValue($asset, 'type', null, 'string'));
-                    $new->set('hash', JSpaceFile::getHash(JArrayHelper::getValue($asset, 'tmp_name')));
-                    $new->set('bundle', $bkey);
-                    $new->set('derivative', $dkey);
-                    
-                    $metadata = JSpaceFile::getMetadata(JArrayHelper::getValue($asset, 'tmp_name'));
-                    $new->set('metadata', $metadata);
-                    
-                    $new->save();
-                }
+            foreach ($derivative as $akey=>$asset)
+            {                    
+                $new = JSpaceAsset::getInstance();
+                $new->bind($asset);
+                
+                $new->set('id', null);
+                $new->set('record_id', $this->id);
+                $new->set('title', JSpaceFile::makeSafe(JArrayHelper::getValue($asset, 'name')));
+                $new->set('contentLength', JArrayHelper::getValue($asset, 'size', 0, 'int'));
+                $new->set('contentType', JArrayHelper::getValue($asset, 'type', null, 'string'));
+                $new->set('hash', JSpaceFile::getHash(JArrayHelper::getValue($asset, 'tmp_name')));
+                $new->set('derivative', $dkey);
+                
+                $metadata = JSpaceFile::getMetadata(JArrayHelper::getValue($asset, 'tmp_name'));
+                $new->set('metadata', $metadata);
+                
+                $new->save();
             }
         }
     }
@@ -309,14 +303,13 @@ class JSpaceRecord extends JSpaceObject
     {
         $database = JFactory::getDbo();
         $query = $database->getQuery(true);
-        
+
         $select = array(
             $database->qn('id'), 
             $database->qn('title'), 
             $database->qn('hash'), 
             $database->qn('metadata'), 
             $database->qn('derivative'), 
-            $database->qn('bundle'), 
             $database->qn('record_id'));
         
         $query

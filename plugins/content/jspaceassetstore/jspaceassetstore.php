@@ -110,34 +110,29 @@ class PlgContentJSpaceAssetstore extends JPlugin
 	{
 		$collection = JSpaceHtmlAssets::getCollection();
 		
-		foreach ($collection as $bkey=>$bundle)
+		foreach ($collection as $dkey=>$derivative)
 		{
-			$assets = JArrayHelper::getValue($bundle, 'assets', array(), 'array');
-		
-			foreach ($assets as $dkey=>$derivative)
-			{
-				foreach ($derivative as $akey=>$asset)
-				{
-					$hash = JSpaceFile::getHash(JArrayHelper::getValue($asset, 'tmp_name'));
-				
-					$database = JFactory::getDbo();
-					$query = $database->getQuery(true);
-					$query
-						->select('id')
-						->from('#__jspace_assets')
-						->where(array(
-							$database->qn('hash')."=".$database->q($hash),
-							$database->qn('record_id')."=".JArrayHelper::getValue($data, 'id', 0, 'int')));
-					
-					$database->setQuery($query);
-					
-					if ($database->loadResult())
-					{
-						JFactory::getApplication()->enqueueMessage(JText::_('COM_JSPACE_ERROR_FILE_EXISTS'), 'error');
-						return false;
-					}
-				}
-			}
+            foreach ($derivative as $akey=>$asset)
+            {
+                $hash = JSpaceFile::getHash(JArrayHelper::getValue($asset, 'tmp_name'));
+            
+                $database = JFactory::getDbo();
+                $query = $database->getQuery(true);
+                $query
+                    ->select('id')
+                    ->from('#__jspace_assets')
+                    ->where(array(
+                        $database->qn('hash')."=".$database->q($hash),
+                        $database->qn('record_id')."=".JArrayHelper::getValue($data, 'id', 0, 'int')));
+                
+                $database->setQuery($query);
+                
+                if ($database->loadResult())
+                {
+                    JFactory::getApplication()->enqueueMessage(JText::_('COM_JSPACE_ERROR_FILE_EXISTS'), 'error');
+                    return false;
+                }
+            }
 		}
 		
 		return true;

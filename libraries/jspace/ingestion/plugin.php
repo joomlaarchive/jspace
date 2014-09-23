@@ -219,11 +219,9 @@ abstract class JSpaceIngestionPlugin extends JPlugin
      */ 
     private function _getWeblinks($record, $assets)
     {
-        $bundle = 'originals';
-        
         // harvest as weblinks.
         $weblinks = array();
-        $weblinks[$bundle] = array();
+        $weblinks['weblink'] = array();
         
         $references = $record->getReferences();
         $table = JTable::getInstance('Weblink', 'WeblinksTable');
@@ -260,7 +258,7 @@ abstract class JSpaceIngestionPlugin extends JPlugin
             
             reset($references);
             
-            $weblinks[$bundle][] = $weblink;
+            $weblinks['weblink'][] = $weblink;
         }
 
         return $weblinks;   
@@ -278,20 +276,13 @@ abstract class JSpaceIngestionPlugin extends JPlugin
      */ 
     private function _getAssets($record, $assets)
     {
-        $bundle = 'originals';
-        
-        // download assets.
-        // set up a bundle of assets for each entry.
-        $collection[$bundle] = array();
-        $collection[$bundle]['assets'] = array();
-        
         foreach ($assets as $asset)
         {
             $this->_download($asset);
             
             $derivative = $asset->derivative;
             
-            $collection[$bundle]['assets'][$derivative][] = JArrayHelper::fromObject($asset);
+            $collection[$derivative][] = JArrayHelper::fromObject($asset);
         }
 
         return $collection;

@@ -187,14 +187,6 @@
 		</field>
 		
 		<field
-			name="bundles"
-			type="text"
-			label="COM_JSPACE_EXTRACTION_BUNDLES_LABEL"
-			description="COM_JSPACE_EXTRACTION_BUNDLES_DESC"
-			class="inputbox"
-			value="original"/>
-		
-		<field
 			name="extractor"
 			type="list"
 			label="COM_JSPACE_EXTRACTION_EXTRACTOR_LABEL"
