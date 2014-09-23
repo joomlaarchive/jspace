@@ -198,9 +198,9 @@ class JSpaceRecord extends JSpaceObject
                     $new->set('id', null);
                     $new->set('record_id', $this->id);
                     $new->set('title', JSpaceFile::makeSafe(JArrayHelper::getValue($asset, 'name')));
-                    $new->set('contentLength', JSpaceFile::makeSafe(JArrayHelper::getValue($asset, 'size')));
-                    $new->set('contentType', JSpaceFile::makeSafe(JArrayHelper::getValue($asset, 'type')));
-                    $new->set('hash', sha1_file(JArrayHelper::getValue($asset, 'tmp_name')));
+                    $new->set('contentLength', JArrayHelper::getValue($asset, 'size', 0, 'int'));
+                    $new->set('contentType', JArrayHelper::getValue($asset, 'type', null, 'string'));
+                    $new->set('hash', JSpaceFile::getHash(JArrayHelper::getValue($asset, 'tmp_name')));
                     $new->set('bundle', $bkey);
                     $new->set('derivative', $dkey);
                     
@@ -482,12 +482,34 @@ class JSpaceRecord extends JSpaceObject
             ->from($table->getTableName())
             ->where($database->qn('record_id').'='.(int)$this->id);
 
-        return $database->setQuery($query)->loadObjectList('id', 'JObject');    
+        return $database->setQuery($query)->loadObjectList('id', 'JObject');
     }
     
     public function getCreatedBy()
     {
         return JUser::getInstance($this->created_by);
+    }
+    
+    public function getReferences()
+    {
+        JTable::addIncludePath(JPATH_BASE.'/administrator/components/com_jspace/tables/');
+        
+        $database = JFactory::getDbo();
+        $table = JTable::getInstance('Reference', 'JSpaceTable');
+        $query = $database->getQuery(true);
+        
+        $fields = array();
+        foreach ($table->getFields() as $field)
+        {
+            $fields[] = $database->qn($field->Field);
+        }
+
+        $query
+            ->select($fields)
+            ->from($table->getTableName())
+            ->where($database->qn('record_id').'='.(int)$this->id);
+
+        return $database->setQuery($query)->loadObjectList('id', 'JObject');       
     }
     
     public function bindAssetMetadata($assetId)

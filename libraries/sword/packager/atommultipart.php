@@ -144,7 +144,7 @@ class SwordPackagerAtomMultipart {
             unset($atom);
             $xml .= "--===============SWORDPARTS==\r\n";
             $xml .= "Content-Type: application/zip\r\n";
-            $xml .= "Content-MD5: " . md5_file($sac_package) . "\r\n";
+            $xml .= "Content-MD5: " . JSpaceFile::getHash($sac_package) . "\r\n";
             $xml .= "MIME-Version: 1.0\r\n";
             $xml .= "Content-Disposition: attachment; name=\"payload\"; filename=\"package.zip\"\r\n";
             $xml .= "Packaging: http://purl.org/net/sword/package/SimpleZip\r\n";

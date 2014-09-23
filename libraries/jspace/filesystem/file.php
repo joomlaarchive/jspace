@@ -20,6 +20,16 @@ jimport('joomla.filesystem.file');
 class JSpaceFile extends JFile
 {
     /**
+     * A sha1 constant.
+     */
+    const SHA1 = 'sha1';
+    
+    /**
+     * An md5 constant.
+     */
+    const MD5 = 'md5';
+
+    /**
      * Gets a file's metadata.
      *
      * The getMetadata method uses the configured Apache Tika application to extract metadata.
@@ -52,5 +62,27 @@ class JSpaceFile extends JFile
 		$metadata->loadString($result);
 
 		return $metadata;
+	}
+	
+	/**
+	 * Gets a file's hash value.
+	 * 
+	 * @param   string  $file  A file path.
+	 * @param   int     $hash  The hash type to use. Defaults to SHA1.
+	 *
+	 * @return  string  A file's hash value.
+	 */
+	public static function getHash($file, $hash = self::SHA1)
+	{
+        switch ($hash)
+        {
+            case self::MD5:
+                return md5_file($file);
+                break;
+                
+            default:
+                return sha1_file($file);
+                break;
+        }
 	}
 }

@@ -57,7 +57,7 @@ class SwordAppClient {
         $headers = array();
         $sal_useragent = SwordUtils::getUserAgent();
         array_push($headers, $sal_useragent);
-        array_push($headers, "Content-MD5: " . md5_file($sac_fname));
+        array_push($headers, "Content-MD5: " . JSpaceFile::getHash($sac_fname));
         if (!empty($sac_obo)) {
             array_push($headers, "On-Behalf-Of: " . $sac_obo);
         }
@@ -258,7 +258,7 @@ class SwordAppClient {
         $headers = array();
         $sal_useragent = SwordUtils::getUserAgent();
         array_push($headers, $sal_useragent);
-        array_push($headers, "Content-MD5: " . md5_file($sac_fname));
+        array_push($headers, "Content-MD5: " . JSpaceFile::getHash($sac_fname));
         if (!empty($sac_obo)) {
             array_push($headers, "On-Behalf-Of: " . $sac_obo);
         }
@@ -322,7 +322,7 @@ class SwordAppClient {
         $headers = array();
         $sal_useragent = SwordUtils::getUserAgent();
         array_push($headers, $sal_useragent);
-        array_push($headers, "Content-MD5: " . md5_file($sac_fname));
+        array_push($headers, "Content-MD5: " . JSpaceFile::getHash($sac_fname));
         if (!empty($sac_obo)) {
             array_push($headers, "On-Behalf-Of: " . $sac_obo);
         }

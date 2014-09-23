@@ -118,7 +118,7 @@ class PlgContentJSpaceAssetstore extends JPlugin
 			{
 				foreach ($derivative as $akey=>$asset)
 				{
-					$hash = sha1_file(JArrayHelper::getValue($asset, 'tmp_name'));
+					$hash = JSpaceFile::getHash(JArrayHelper::getValue($asset, 'tmp_name'));
 				
 					$database = JFactory::getDbo();
 					$query = $database->getQuery(true);

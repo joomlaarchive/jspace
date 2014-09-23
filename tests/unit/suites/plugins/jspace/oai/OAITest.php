@@ -89,17 +89,17 @@ class OAITest extends TestCaseDatabase
         $query->select("COUNT(*)")->from('#__jspace_cache')->where('harvest_id='.$this->data['id']);
         
         // check number of records digested.
-        $this->assertEquals(200, (int)JFactory::getDbo()->setQuery($query)->loadResult());
+        $this->assertEquals(2, (int)JFactory::getDbo()->setQuery($query)->loadResult());
 
         $query = JFactory::getDbo()->getQuery(true);
         
         $query
             ->select("data")
             ->from('#__jspace_cache')
-            ->where('id='.JFactory::getDbo()->q('oai:archive.bora.wijiti.net:10049/286'));
+            ->where('id='.JFactory::getDbo()->q('oai:archive.bora.wijiti.net:10049/73'));
     
         // Retrieve a single cached item and check it for integrity.
-        $expected = '{"metadata":{"dc":{"title":["Hjemmebes\u00f8k til familier med nyf\u00f8dt barn : rapport fra kartlegging av helses\u00f8sters tilbud ved helsestasjoner i Bergen"],"creator":["\u00d8kland, Toril","Hj\u00e4lmhult, Esther"],"type":["Report"],"identifier":["http:\/\/hdl.handle.net\/10049\/286"],"language":["nob"]},"dcterms":{"dateAccepted":["2010-11-18T10:11:42Z"],"available":["2010-11-18T10:11:42Z"],"created":["2010-11-18T10:11:42Z"],"issued":["2010-11-18T10:11:42Z"]}}}';
+        $expected = '{"metadata":{"dc":{"title":["Cross-Cultural Healing in East African Ethnography"],"creator":["Rekdal, Ole Bj\u00f8rn"],"type":["Peer reviewed"],"identifier":["This article is available in AnthroSource","0745-5194","http:\/\/hdl.handle.net\/10049\/73"],"language":["eng"],"relation":["Medical Anthropology Quarterly 13(4)"],"publisher":["American Anthropological Association"]},"dcterms":{"dateAccepted":["2006-09-21T09:38:49Z"],"available":["2006-09-21T09:38:49Z"],"created":["2006-09-21T09:38:49Z"],"issued":["1999-12"]}}}';
         
         $this->assertEquals($expected, JFactory::getDbo()->setQuery($query)->loadResult());
     }
@@ -138,7 +138,7 @@ class OAITest extends TestCaseDatabase
         $this->assertEquals($expected, JFactory::getDbo()->setQuery($query)->loadResult());
     }
     
-    public function testOnJSpaceHarvestIngest()
+    public function testOnJSpaceHarvestIngestWithResumptionToken()
     {
         $harvest = JSpaceIngestionHarvest::getInstance();
         $harvest->bind($this->data);
@@ -182,7 +182,7 @@ class OAITest extends TestCaseDatabase
         $query = JFactory::getDbo()->getQuery(true);
         $query->select("COUNT(*)")->from('#__jspace_records')->where('alias <> \'root\'');
         
-        $this->assertEquals(33, (int)JFactory::getDbo()->setQuery($query)->loadResult());
+        $this->assertEquals(2, (int)JFactory::getDbo()->setQuery($query)->loadResult());
         
         $query = JFactory::getDbo()->getQuery(true);
         $query
@@ -199,7 +199,7 @@ class OAITest extends TestCaseDatabase
             ->select("COUNT(*)")
             ->from('#__tags');
 
-        $this->assertEquals(24, JFactory::getDbo()->setQuery($query)->loadResult());
+        $this->assertEquals(23, JFactory::getDbo()->setQuery($query)->loadResult());
     }
 
     public function testOnJSpaceHarvestIngestWithWeblinks()
@@ -267,7 +267,7 @@ class OAITest extends TestCaseDatabase
     {
         $harvest = JSpaceIngestionHarvest::getInstance();
         $harvest->bind($this->data);
-        $harvest->get('params')->set('harvest_type', 0);
+        $harvest->get('params')->set('harvest_type', 2);
         $harvest->get('params')->set('set', 'com_10049_24');
         
         $dispatcher = JEventDispatcher::getInstance();
@@ -285,7 +285,7 @@ class OAITest extends TestCaseDatabase
         $query = JFactory::getDbo()->getQuery(true);
         $query->select("COUNT(*)")->from('#__jspace_records')->where('alias <> \'root\'');
         
-        $this->assertEquals(33, (int)JFactory::getDbo()->setQuery($query)->loadResult());
+        $this->assertEquals(2, (int)JFactory::getDbo()->setQuery($query)->loadResult());
         
         $harvest->get('params')->set('discovery.url', 'http://localhost/jspace/request_updated.php');
         
@@ -297,7 +297,7 @@ class OAITest extends TestCaseDatabase
         $query = JFactory::getDbo()->getQuery(true);
         $query->select("COUNT(*)")->from('#__jspace_records')->where('alias <> \'root\'');
         
-        $this->assertEquals(34, (int)JFactory::getDbo()->setQuery($query)->loadResult());
+        $this->assertEquals(3, (int)JFactory::getDbo()->setQuery($query)->loadResult());
     }
     
     public function testDuplicateAliases()
@@ -305,7 +305,7 @@ class OAITest extends TestCaseDatabase
         $harvest = JSpaceIngestionHarvest::getInstance();
         $harvest->bind($this->data);
         $harvest->get('params')->set('harvest_type', 1);
-        $harvest->get('params')->set('set', 'col_123456789_20');
+        $harvest->get('params')->set('set', 'com_10049_24');
         
         $dispatcher = JEventDispatcher::getInstance();
 
@@ -322,7 +322,7 @@ class OAITest extends TestCaseDatabase
         $query = JFactory::getDbo()->getQuery(true);
         $query->select("COUNT(*)")->from('#__jspace_records')->where('alias <> \'root\'');
         
-        $this->assertEquals(33, (int)JFactory::getDbo()->setQuery($query)->loadResult());
+        $this->assertEquals(2, (int)JFactory::getDbo()->setQuery($query)->loadResult());
         
         $query = JFactory::getDbo()->getQuery(true);
         $query
@@ -337,7 +337,7 @@ class OAITest extends TestCaseDatabase
             ->select("COUNT(*)")
             ->from('#__tags');
 
-        $this->assertEquals(24, JFactory::getDbo()->setQuery($query)->loadResult());
+        $this->assertEquals(23, JFactory::getDbo()->setQuery($query)->loadResult());
        
         $harvest->harvested = null;
        
@@ -348,7 +348,7 @@ class OAITest extends TestCaseDatabase
         $query = JFactory::getDbo()->getQuery(true);
         $query->select("COUNT(*)")->from('#__jspace_records')->where('alias <> \'root\'');
         
-        $this->assertEquals(33, (int)JFactory::getDbo()->setQuery($query)->loadResult());
+        $this->assertEquals(2, (int)JFactory::getDbo()->setQuery($query)->loadResult());
         
         $query = JFactory::getDbo()->getQuery(true);
         $query
@@ -363,7 +363,7 @@ class OAITest extends TestCaseDatabase
             ->select("COUNT(*)")
             ->from('#__tags');
 
-        $this->assertEquals(24, JFactory::getDbo()->setQuery($query)->loadResult());
+        $this->assertEquals(23, JFactory::getDbo()->setQuery($query)->loadResult());
     }
     
     protected function getDataSet()

@@ -129,8 +129,8 @@ class PlgContentJSpaceWeblinks extends JPlugin
 			return true;
 		}
 
-		$path = JPATH_ROOT.'/administrator/components/com_weblinks/';
-		JTable::addIncludePath($path.'tables');
+        $path = JPATH_ROOT.'/administrator/components/com_weblinks/';
+        JTable::addIncludePath($path.'tables');
 
         $database = JFactory::getDbo();
         $query = $database->getQuery(true);
@@ -144,50 +144,23 @@ class PlgContentJSpaceWeblinks extends JPlugin
         
         $ids = $database->setQuery($query)->loadColumn();
         
-		foreach ($record->weblinks as $wkey=>$weblink)
-		{
+        foreach ($record->weblinks as $wkey=>$weblink)
+        {
             foreach ($weblink as $data)
             {
                 // ignore empty urls.
-                if (!$data['url'])
+                if (!JArrayHelper::getValue($data, 'url'))
                 {
                     continue;
                 }
                 
                 $weblink = JTable::getInstance('Weblink', 'WeblinksTable');
+                $weblink->load(JArrayHelper::getValue($data, 'id'));
                 
-                $weblink->id = JArrayHelper::getValue($data, 'id', null);
                 $weblink->url = JArrayHelper::getValue($data, 'url');
-                $weblink->title = JArrayHelper::getValue($data, 'title', $data['url']);
                 $weblink->catid = $this->params->get('catid', null);
-                $weblink->alias = JFilterOutput::stringURLSafe($data['title']);
-                
-                $table = JTable::getInstance('Weblink', 'WeblinksTable');
-                
-                // cannot fail because of an existing alias so find a unique one.
-                while ($table->load(array('alias'=>$weblink->alias, 'catid'=>$weblink->catid)))
-                {
-                    $parts = explode('-', $weblink->alias);
-                    $end = 1;
-
-                    if (count($parts) > 1)
-                    {
-                        $end = array_pop($parts);
-                        
-                        if ((int)$end > 0)
-                        {
-                            $end = $end+1;
-                        }
-                        else
-                        {
-                            $end = $end.'-1';
-                        }
-                        
-                    }
-                    
-                    $weblink->alias = implode('-', $parts).'-'.$end;
-                }
-                
+                $weblink->title = JArrayHelper::getValue($data, 'title', $data['url']);
+                $weblink->alias = (int)$record->id.'-'.JFilterOutput::stringURLSafe($weblink->title);
                 $weblink->state = 1;
                 $weblink->access = $record->access;
                 $weblink->language = $record->language;
@@ -213,23 +186,23 @@ class PlgContentJSpaceWeblinks extends JPlugin
                 {
                     unset($ids[$index]);
                 }
-			}
-		}
-		
-		foreach ($ids as $id)
-		{
+            }
+        }
+
+        foreach ($ids as $id)
+        {
             $reference = JTable::getInstance('Reference', 'JSpaceTable');
             $reference->delete($id);
             
             $weblink = JTable::getInstance('Weblink', 'WeblinksTable');
             $weblink->delete($id);
-		}
+        }
         
         return true;
-	}
-	
-	/**
-	 * Deletes a record's weblinks from the Joomla! weblinks component.
+    }
+    
+    /**
+     * Deletes a record's weblinks from the Joomla! weblinks component.
      *
      * @param   string  $context  The context of the content being passed. Will be com_jspace.record * or com_weblinks.weblink.
 	 * @param   Object  $record  An instance of the JSpaceRecord class.

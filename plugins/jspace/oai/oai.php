@@ -259,7 +259,7 @@ class PlgJSpaceOAI extends JSpaceIngestionPlugin
                 if ((int)$response->code == 200)
                 {
                     $context = 'joai.'.$metadataPrefix;
-                    
+
                     $node = simplexml_load_string($response->body);
                     
                     $array = $dispatcher->trigger('onJSpaceHarvestAssets', array($context, $node));

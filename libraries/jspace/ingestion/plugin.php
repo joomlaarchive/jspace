@@ -37,7 +37,7 @@ abstract class JSpaceIngestionPlugin extends JPlugin
     /** 
      * Ingest records, moving them from the cache to the JSpace data store.
      *
-     * @param  JObject  $harvest  An instance of the harvest class.
+     * @param  JSpaceIngestionHarvest  $harvest  An instance of the harvest class.
      */
     public function onJSpaceHarvestIngest($harvest)
     {
@@ -56,18 +56,16 @@ abstract class JSpaceIngestionPlugin extends JPlugin
                     throw new Exception("No metadata to ingest.");
                 }
                 
-                $array = array();
-
-                $array['schema'] = $this->params->get('default.schema', 'record');
-
-                $id = $this->_mapIdentifierToId($item, $array['schema']); 
+                $id = $this->_getId($item->id, $harvest->catid);
         
                 $crosswalk = JSpaceFactory::getCrosswalk(new JRegistry($data->metadata));
 
-                $array['identifiers'] = $crosswalk->getIdentifiers();
-                $array['identifiers'][] = $item->id;
-                
+                $array = array();
                 $array['catid'] = $harvest->catid;
+                $array['schema'] = $this->params->get('default.schema', 'record');
+                $array['identifiers'] = $crosswalk->getIdentifiers();
+                $array['identifiers'][] = $item->id; // also store the cache id.
+                
                 $array['metadata'] = $crosswalk->walk();
                 $array['title'] = $array['metadata']->get('title');
                 
@@ -92,100 +90,41 @@ abstract class JSpaceIngestionPlugin extends JPlugin
                 $record->set('language', $harvest->get('params')->get('default.language', '*'));
                 $record->set('state', $harvest->get('params')->get('default.state', 1));
                 
-                $this->preSaveHook($record, $data, $harvest);
-                $this->saveAssets($record, $data, $harvest);
-                $this->postSaveHook($record, $data, $harvest);
+                $collection = array();
+                
+                if (!isset($data->assets))
+                {
+                    $data->assets = $collection;
+                }
+                
+                try
+                {
+                    if ($harvest->get('params')->get('harvest_type') == self::LINKS)
+                    {
+                        $record->weblinks = $this->_getWeblinks($record, $data->assets);
+                    }
+                    elseif ($harvest->get('params')->get('harvest_type') == self::ASSETS)
+                    {
+                        $collection = $this->_getAssets($record, $data->assets);
+                        $this->_expungeExpiredAssets($record, $data->assets);
+                    }
+                }
+                catch (Exception $e)
+                {
+                    JLog::add(__METHOD__.' '.$e->getMessage()."\n".$e->getTraceAsString(), JLog::ERROR, 'jspace');
+                }
+                
+                $record->save($collection);
+
+                foreach ($data->assets as $asset)
+                {
+                    JSpaceFile::delete($this->_getTempFile($asset));
+                }
             }
 
             $items = $harvest->getCache($i);
             $i+=count($items);
         }
-    }
-    
-    /**
-     * Override to carry out custom functionality before the record is saved.
-     */
-    protected function preSaveHook($record, $data, $harvest)
-    {
-    
-    }
-
-    protected function saveAssets($record, $data, $harvest)
-    {
-        $collection = array();
-
-        if (isset($data->assets))
-        {
-            try
-            {
-                $assets = $data->assets;
-                
-                $bundle = 'oai';
-                
-                if ($harvest->get('params')->get('harvest_type') == self::LINKS)
-                {
-                    // harvest as weblinks.
-                    $weblinks = array();
-                    $weblinks[$bundle] = array();
-
-                    foreach ($assets as $asset)
-                    {
-                        $derivative = $asset->derivative;
-                        
-                        $weblink = array(
-                            'url'=>$asset->url,
-                            'title'=>$asset->name
-                        );
-                        
-                        $weblinks[$bundle][] = $weblink;
-                    }
-
-                    $record->weblinks = $weblinks;
-                }
-                elseif ($harvest->get('params')->get('harvest_type') == self::ASSETS)
-                {
-                    // download assets.
-                    // set up a bundle of assets for each entry.
-                    $collection[$bundle] = array();
-                    $collection[$bundle]['assets'] = array();
-
-                    foreach ($assets as $asset)
-                    {
-                        $asset->tmp_name = $this->_download($asset->url);
-                        
-                        $derivative = $asset->derivative;
-                        
-                        $collection[$bundle]['assets'][$derivative][] = JArrayHelper::fromObject($asset);
-                    }
-                }
-            }
-            catch (Exception $e)
-            {
-                JLog::add(__METHOD__.' '.$e->getMessage()."\n".$e->getTraceAsString(), JLog::ERROR, 'jspace');
-                
-                throw $e;
-            }
-        }
-
-        $record->save($collection);
-        
-        foreach ($collection as $bundle)
-        {
-            $assets = JArrayHelper::getValue($bundle, 'assets');
-            
-            foreach ($assets as $derivative)
-            {
-                foreach ($derivative as $asset)
-                {
-                    JFile::delete(JArrayHelper::getValue($asset, 'tmp_name'));
-                }
-            }
-        }
-    }
-    
-    protected function postSaveHook($record, $data, $harvest)
-    {
-    
     }
     
     public abstract function onJSpaceHarvestDiscover($harvest);
@@ -205,7 +144,15 @@ abstract class JSpaceIngestionPlugin extends JPlugin
         return trim(JArrayHelper::getValue($parts, 0));
     }
     
-    private function _mapIdentifierToId($item, $schema)
+    /**
+     * Gets a record id based on an existing unique identifier.
+     * 
+     * @param   string  $identifier  A cached record identifier.
+     * @param   int     $catid       A cached record identifier.
+     *
+     * @return  int     The internal record id or 0 if no id exists.
+     */
+    private function _getId($identifier, $catid)
     {
         $database = JFactory::getDbo();
         $query = $database->getQuery(true);
@@ -214,19 +161,42 @@ abstract class JSpaceIngestionPlugin extends JPlugin
             ->select($database->qn('r.id'))
             ->from($database->qn('#__jspace_record_identifiers', 'i'))
             ->join('inner', $database->qn('#__jspace_records', 'r').' ON ('.$database->qn('i.record_id').'='.$database->qn('r.id').')')
-            ->where($database->qn('i.id').'='.$database->q($item->id), 'and')
-            ->where($database->qn('r.schema').'='.$database->q($schema));
+            ->where($database->qn('i.id').'='.$database->q($identifier), 'and')
+            ->where($database->qn('r.catid').'='.(int)$catid);
 
         return (int)$database->setQuery($query)->loadResult();
     }
-
-    private function _download($asset)
+    
+    /**
+     * Gets the temporary location of the asset, downloading it if it doesn't already exist.
+     * 
+     * @param   stdClass  $asset  The harvested asset information.
+     *
+     * @return  string    The asset's temporary location.
+     */
+    private function _getTempFile($asset)
     {
-        $tmp = tempnam(sys_get_temp_dir(), '');
-        
-        if ($source = @fopen($asset, 'r'))
+        if (!isset($asset->tmp_name) || !JSpaceFile::exists($asset->tmp_name))
         {
-            $dest = fopen($tmp, 'w');
+            $this->_download($asset);
+        }
+        
+        return $asset->tmp_name;
+    }
+
+    /**
+     * Downloads an asset to a temporary location.
+     * 
+     * @param  stdClass  $asset  The harvested asset information. This method will add the 
+     * temporary asset location to the asset as a class variable named tmp_name.
+     */
+    private function _download(&$asset)
+    {        
+        $asset->tmp_name = tempnam(sys_get_temp_dir(), '');
+        
+        if ($source = @fopen($asset->url, 'r'))
+        {
+            $dest = fopen($asset->tmp_name, 'w');
             
             while (!feof($source))
             {
@@ -237,7 +207,124 @@ abstract class JSpaceIngestionPlugin extends JPlugin
             fclose($dest);
             fclose($source);
         }
+    }
+    
+    /**
+     * Gets a list of web links based on the harvested assets.
+     *
+     * @param   JSpaceRecord  $record  The record the harvested information will be saved to.
+     * @param   stdClass[]    $assets  An array of assets.
+     *
+     * @return  array         An array of weblinks conforming to JSpace's weblink hierarchy format.
+     */ 
+    private function _getWeblinks($record, $assets)
+    {
+        $bundle = 'originals';
         
-        return $tmp;
+        // harvest as weblinks.
+        $weblinks = array();
+        $weblinks[$bundle] = array();
+        
+        $references = $record->getReferences();
+        $table = JTable::getInstance('Weblink', 'WeblinksTable');
+
+        foreach ($assets as $asset)
+        {
+            $derivative = $asset->derivative;
+            
+            $weblink = array(
+                'url'=>$asset->url,
+                'title'=>$asset->name
+            );
+            
+            $found = false;
+            
+            // load weblink by reference/alias to determine whether updating or adding.
+            // (jspaceweblink will handle deletes)
+            while (($reference = current($references)) && !$found)
+            {
+                $alias = (int)$record->id.'-'.JFilterOutput::stringURLSafe($asset->name);
+                $keys = 
+                    array(
+                        'id'=>$reference->id,
+                        'alias'=>$alias);
+                
+                if ($table->load($keys))
+                {
+                    $weblink['id'] = $table->id;
+                    $found = true;
+                }
+                
+                next($references);
+            }
+            
+            reset($references);
+            
+            $weblinks[$bundle][] = $weblink;
+        }
+
+        return $weblinks;   
+    }
+    
+    /**
+     * Gets a list of assets based on the harvested assets.
+     *
+     * @param   JSpaceIngestionHarvest  $record  The record the harvested information will be 
+     * saved to.
+     * @param   stdClass[]              $assets  An array of assets.
+     *
+     * @return  array                   An array of assets conforming to JSpace's asset hierarchy
+     * format.
+     */ 
+    private function _getAssets($record, $assets)
+    {
+        $bundle = 'originals';
+        
+        // download assets.
+        // set up a bundle of assets for each entry.
+        $collection[$bundle] = array();
+        $collection[$bundle]['assets'] = array();
+        
+        foreach ($assets as $asset)
+        {
+            $this->_download($asset);
+            
+            $derivative = $asset->derivative;
+            
+            $collection[$bundle]['assets'][$derivative][] = JArrayHelper::fromObject($asset);
+        }
+
+        return $collection;
+    }
+    
+    /**
+     * Expunges (deletes) assets that are no longer found in the harvest source from the current 
+     * JSpace record.
+     *
+     * @param   JSpaceIngestionHarvest  $record  The record the harvested information will be 
+     * saved to.
+     * @param   stdClass[]              $assets  An array of assets.
+     */ 
+    private function _expungeExpiredAssets($record, $assets)
+    {
+        // file hashes of assets to keep.
+        $hashes = array();
+        
+        foreach ($assets as $asset)
+        {
+            $this->_download($asset);
+            $hashes[] = JSpaceFile::getHash($this->_getTempFile($asset));
+        }
+        
+        // delete assets that have been removed since last harvest.
+        foreach ($hashes as $hash)
+        {
+            $deletes = $record->getAssets(array('hash'=>$hash));
+            
+            foreach ($deletes as $delete)
+            {
+                $delete->delete();
+            }
+        }
     }
 }
