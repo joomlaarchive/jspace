@@ -7,9 +7,9 @@
         <fieldset name="jspacemetadata"
             label="COM_JSPACE_RECORD_METADATA_LABEL">
             <field 
-                name="title" 
+                name="schemaless" 
                 type="jspace.metadataschemaless"
-                label="COM_JSPACE_RECORD_METADATA_TITLE_LABEL"
+                label="COM_JSPACE_RECORD_METADATA_LABEL"
                 filter="JComponentHelper::filterText" 
                 required="true"/>
         </fieldset>

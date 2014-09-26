@@ -5,12 +5,14 @@
          */
         $(document).on("click", ".jspace-add-field", function(e) {
             e.preventDefault();
-            
-            var prefix = $(this).data('jspace-prefix');
-            var fields = $('[data-jspace-name^="'+prefix+'"]');
+
+            var root = $(this).parent();
+            var prefix = root.attr('data-jspace-name');
+            var fields = root.children('.jspace-control');
             var length = fields.length;
-            var maximum = $(this).data('jspace-maximum');
-            
+
+            var maximum = root.data('jspace-maximum');
+
             if (length >= maximum)
                 return;
             
@@ -19,16 +21,17 @@
             $.each(template.children(":input"), function(i, input) {
                 if ($(input).attr('name')) {
                     var search = template.data('jspace-name');
-                    var replace = prefix+'['+length+']';               
+                    var replace = prefix+'['+length+']';
+
                     $(input).attr('name', $(input).attr('name').replace(search, replace));
-                    $(input).val('');
+                    $(input).val("");
                 }
             });
             
             template.data('jspace-name', prefix+'['+(length)+']');
             template.attr('data-jspace-name', template.data('jspace-name'));
             fields.last().after(template);
-            
+
             $(this).data('jspace-length', length+1);
         });
 
@@ -37,18 +40,17 @@
          */        
         $(document).on("click", ".jspace-remove-field", function(e) {
             e.preventDefault();
-            
-            var prefix = $(".jspace-add-field").data('jspace-prefix');
-            var fields = $('[data-jspace-name^="'+prefix+'"]');
+
+            var root = $(this).parent().parent();
+            var prefix = root.attr('data-jspace-name');
+            var fields = root.children('.jspace-control');
             var length = fields.length;
-            
+
             if (length == 1)
                 return;
             
             $(this).parent().remove();
-            
-            var fields = $('[data-jspace-name^="'+prefix+'"]');
-        
+                    
             $.each(fields, function(i, field) {
                 $.each($(field).children(":input"), function(j, input) {                    
                     if ($(input).attr('name')) {

@@ -62,7 +62,7 @@ abstract class JSpaceIngestionPlugin extends JPlugin
 
                 $array = array();
                 $array['catid'] = $harvest->catid;
-                $array['schema'] = $this->params->get('default.schema', 'record');
+                $array['schema'] = $this->params->get('default.schema', '__default__');
                 $array['identifiers'] = $crosswalk->getIdentifiers();
                 $array['identifiers'][] = $item->id; // also store the cache id.
                 

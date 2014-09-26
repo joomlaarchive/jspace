@@ -14,7 +14,7 @@ class OAITest extends TestCaseDatabase
         
         $registry = new JRegistry;
         $registry->set('harvest_assets', false);
-        $registry->set('default.schema', 'record');
+        $registry->set('default.schema', '__default__');
         $registry->set('default.access', '0');
         $registry->set('default.language', '*');
         $registry->set('default.state', 1);
@@ -192,7 +192,7 @@ class OAITest extends TestCaseDatabase
             
         $record = JSpaceRecord::getInstance((int)JFactory::getDbo()->setQuery($query, 0, 1)->loadResult());
         
-        $this->assertEquals('record', $record->schema);
+        $this->assertEquals('__default__', $record->schema);
         
         $query = JFactory::getDbo()->getQuery(true);
         $query

@@ -1,9 +1,23 @@
 <?php
+/**
+ * @package     JSpace.Component
+ * @subpackage  Form
+ *
+ * @copyright   Copyright (C) 2014 KnowledgeArc Ltd. All rights reserved.
+ * @license     GNU General Public License version 2 or later; see LICENSE
+ */
+
 defined('_JEXEC') or die('Restricted access');
 
 jimport('jspace.factory');
 jimport('jspace.archive.schema');
  
+/**
+ * Displays a list of schemas in a modal popup.
+ *
+ * @package     JSpace.Component
+ * @subpackage  Form
+ */
 class JSpaceFormFieldSchemas extends JFormField
 {
     protected $type = 'JSpace.Schemas';

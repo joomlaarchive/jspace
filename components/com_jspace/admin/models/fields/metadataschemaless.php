@@ -1,8 +1,19 @@
 <?php
+/**
+ * @package     JSpace.Component
+ * @subpackage  Form
+ *
+ * @copyright   Copyright (C) 2014 KnowledgeArc Ltd. All rights reserved.
+ * @license     GNU General Public License version 2 or later; see LICENSE
+ */
+
 defined('JPATH_BASE') or die;
 
 /**
  * Provides a mechanism for adding and deleting multiple metadata fields.
+ *
+ * @package     JSpace.Component
+ * @subpackage  Form
  */
 class JSpaceFormFieldMetadataSchemaless extends JFormField
 {
@@ -34,6 +45,10 @@ class JSpaceFormFieldMetadataSchemaless extends JFormField
                 
                 return $this->$name;
                 
+                break;
+                
+            case 'maximum':
+                return JArrayHelper::getValue($this->element, 'maximum', 40);
                 break;
             
             default:

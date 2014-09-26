@@ -1,8 +1,19 @@
 <?php
+/**
+ * @package     JSpace.Component
+ * @subpackage  Form
+ *
+ * @copyright   Copyright (C) 2014 KnowledgeArc Ltd. All rights reserved.
+ * @license     GNU General Public License version 2 or later; see LICENSE
+ */
+ 
 defined('JPATH_BASE') or die;
 
 /**
  * Supports a modal record picker.
+ *
+ * @package     JSpace.Component
+ * @subpackage  Form
  */
 class JSpaceFormFieldRecord extends JFormField
 {

@@ -59,8 +59,8 @@
                     description="COM_JSPACE_HARVEST_DEEFAULT_SCHEMA_DESC"
                     filter="string" 
                     size="1" 
-                    default="record">
-                    <option value="record">Record</option>
+                    default="__default__">
+                    <option value="__default__">Default (for harvesting)</option>
                     <option value="__schemaless__">[No Schema]</option>
                 </field>
                 <field 

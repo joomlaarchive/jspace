@@ -39,6 +39,10 @@ class JSpaceFormFieldWeblinkList extends JFormField
 			case 'context':
 				return JArrayHelper::getValue($this->element, $name, null, 'string');
 				break;
+
+            case 'maximum':
+                return JArrayHelper::getValue($this->element, 'maximum', 5);
+                break;
 			
 			default:
 				return parent::__get($name);

@@ -1,11 +1,22 @@
 <?php
+/**
+ * @package     JSpace.Component
+ * @subpackage  Form
+ *
+ * @copyright   Copyright (C) 2014 KnowledgeArc Ltd. All rights reserved.
+ * @license     GNU General Public License version 2 or later; see LICENSE
+ */
+
 defined('_JEXEC') or die('Restricted access');
  
 jimport('joomla.form.helper');
 JFormHelper::loadFieldClass('textarea');
 
 /**
- * An extension of the JFormFieldTextArea field, adding the ability to handle an array of values.
+ * An extension of the textarea form field to handle JSpace metadata.
+ *
+ * @package     JSpace.Component
+ * @subpackage  Form
  */
 class JSpaceFormFieldMetadataTextArea extends JFormFieldTextArea
 {
@@ -36,6 +47,10 @@ class JSpaceFormFieldMetadataTextArea extends JFormFieldTextArea
                 
                 return $this->$name;
                 
+                break;
+
+            case 'maximum':
+                return JArrayHelper::getValue($this->element, 'maximum', 5);
                 break;
             
             default:

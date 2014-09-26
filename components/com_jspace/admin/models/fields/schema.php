@@ -1,6 +1,20 @@
 <?php
+/**
+ * @package     JSpace.Component
+ * @subpackage  Form
+ *
+ * @copyright   Copyright (C) 2014 KnowledgeArc Ltd. All rights reserved.
+ * @license     GNU General Public License version 2 or later; see LICENSE
+ */
+
 defined('_JEXEC') or die('Restricted access');
  
+/**
+ * Provides a schema selector and display form field.
+ *
+ * @package     JSpace.Component
+ * @subpackage  Form
+ */
 class JSpaceFormFieldSchema extends JFormField
 {
 	/**

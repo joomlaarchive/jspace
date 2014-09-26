@@ -124,7 +124,11 @@ class JSpaceModelRecord extends JModelAdmin
         {
             $parent = JSpaceRecord::getInstance($parentId);
             
-            if ($parent->alias != 'root')
+            if ($parent->alias == 'root')
+            {
+                $form->removeField('parentTitle');
+            }
+            else
             {
                 $form->setFieldAttribute('catid', 'type', 'hidden');
                 $form->setValue('catid', null, $parent->catid);
@@ -135,6 +139,19 @@ class JSpaceModelRecord extends JModelAdmin
         {
             $form->removeField('parent_id');
             $form->removeField('parentTitle');
+        }
+        
+        // try to get the schema from the posted data if it isn't in $data.
+        if (!($schema = JArrayHelper::getValue($data, 'schema')))
+        {
+            $tmp = JFactory::getApplication()->input->post->get('jform', array(), 'array');
+            $schema = JArrayHelper::getValue($tmp, 'schema');
+        }
+
+        if ($schema) 
+        {
+            $path = JPATH_ROOT.'/administrator/components/com_jspace/models/forms/schemas/'.$schema.'.xml';
+            $form->loadFile($path, false);
         }
 
         return $form;
@@ -152,27 +169,7 @@ class JSpaceModelRecord extends JModelAdmin
     }
 
     protected function preprocessForm(JForm $form, &$data, $group = 'content')
-    {
-        // force to array (perhaps move to $this->loadFormData())
-        if (is_a($data, "JObject"))
-        {
-            $data = $data->getProperties();
-        }
-        
-        // try to get the schema from the posted data if it isn't in $data.
-        if (!($schema = JArrayHelper::getValue($data, 'schema')))
-        {
-            $tmp = JFactory::getApplication()->input->post->get('jform', array(), 'array');
-            
-            $schema = JArrayHelper::getValue($tmp, 'schema');
-        }
-
-        if ($schema) 
-        {
-            $path = JPATH_ROOT.'/administrator/components/com_jspace/models/forms/schemas/'.$schema.'.xml';
-            $form->loadFile($path, false);
-        }
-        
+    {        
         $assoc = JLanguageAssociations::isEnabled();
         if ($assoc)
         {
@@ -186,9 +183,9 @@ class JSpaceModelRecord extends JModelAdmin
             $fieldset->addAttribute('description', 'COM_JSPACE_RECORD_ASSOCIATIONS_FIELDSET_DESC');
             $add = false;
                 
-            foreach ($languages as $tag => $language)
+            foreach ($languages as $tag=>$language)
             {
-                if (empty($data['language']) || $tag != $data['language'])
+                if (empty($data->language) || $tag != $data->language)
                 {
                     $add = true;
                     $field = $fieldset->addChild('field');
@@ -207,12 +204,33 @@ class JSpaceModelRecord extends JModelAdmin
                 $form->load($addform, false);
             }
         }
-        
+
         parent::preprocessForm($form, $data, $group);
+    }
+    
+    protected function preprocessData($context, &$data)
+    {
+        parent::preprocessData($context, $data);
         
-        if ($metadata = JArrayHelper::getValue($data, 'metadata'))
+        if (isset($data->metadata))
         {
-            $data['metadata'] = $this->_mapToSchemalessMetadata($metadata, $form);
+            $form = $this->getForm($data->getProperties(), false);
+            
+            // flatten values that belong to single value fields.
+            foreach ($data->metadata as $key=>$value)
+            {
+                $field = $form->getField($key, 'metadata');
+                
+                if ($field)
+                {
+                    if (!(bool)$field->multiple && is_array($value))
+                    {
+                        $data->metadata[$key] = JArrayHelper::getValue($value, 0);
+                    }
+                }
+            }
+        
+            $data->metadata = $this->_mapToSchemalessMetadata(JArrayHelper::fromObject($data));
         }
     }
 
@@ -244,10 +262,9 @@ class JSpaceModelRecord extends JModelAdmin
         $pk = JArrayHelper::getValue($data, 'id', (int)$this->getState('record.id'));
         $record = JSpaceRecord::getInstance($pk);
         
-        $metadata = JArrayHelper::getValue($data, 'metadata');
-        
-        $data['metadata'] = $this->_mapFromSchemalessMetadata($metadata);
-        
+        $metadata = $this->_toArray(JArrayHelper::getValue($data, 'metadata'));
+        $data['metadata'] = $this->_mapFromSchemalessMetadata($data);
+
         // Bind the data.
         if (!$record->bind($data))
         {
@@ -418,16 +435,19 @@ class JSpaceModelRecord extends JModelAdmin
      * This method will search fields in the record's schema form, only transforming name/value pairs 
      * which match the JSpace.MetadataSchemaless field type.
      * 
-     * @param   array  $metadata  An array of metadata values.
+     * @param   array  array  The form data.
      * 
      * @return  array  The transformed metadata.
      */
-    private function _mapFromSchemalessMetadata($metadata)
+    private function _mapFromSchemalessMetadata($data)
     {
+        $metadata = JArrayHelper::getValue($data, 'metadata');
+        $form = $this->getForm($data, false);
+        
         // re-map schemaless metadata name/value pairs to metadata.
-        foreach ($this->getForm()->getFieldsets('metadata') as $fieldset)
+        foreach ($form->getFieldsets('metadata') as $fieldset)
         {
-            foreach ($this->getForm()->getFieldset($fieldset->name) as $field)
+            foreach ($form->getFieldset($fieldset->name) as $field)
             {
                 if (JString::strtolower($field->type) == 'jspace.metadataschemaless')
                 {
@@ -460,27 +480,31 @@ class JSpaceModelRecord extends JModelAdmin
      * This method will search fields in the record's schema form, only transforming name/value pairs 
      * which match the JSpace.MetadataSchemaless field type.
      * 
-     * @param   array  $metadata  An array of metadata values.
-     * @param   JForm  $form      The record's form object.
+     * @param   array  array  The form data.
      * 
      * @return  array  The transformed metadata.
      */
-    private function _mapToSchemalessMetadata($metadata, JForm $form)
+    private function _mapToSchemalessMetadata($data)
     {
+        $metadata = JArrayHelper::getValue($data, 'metadata');
+        
+        JForm::addFormPath(JPATH_ROOT.'/administrator/components/com_jspace/models/forms/schemas');
+        $form = $this->getForm($data, false);
+        
         // first find the metadataschemaless field.
-        $fields = $form->getGroup('metadata'); 
+        $fields = $form->getGroup('metadata');
         $schemaless = null;
         
         while (($field = current($fields)) && !$schemaless)
         {
-            if ($field->type == 'jspace.metadataschemaless')
+            if (JString::strtolower($field->type) == 'jspace.metadataschemaless')
             {
                 $schemaless = $field->fieldname;
             }
             
             next($fields);
         }
-    
+
         // if found, load it with unmapped values.
         if ($schemaless)
         {
@@ -490,16 +514,45 @@ class JSpaceModelRecord extends JModelAdmin
                 {
                     if (!JArrayHelper::getValue($metadata, $schemaless))
                     {
-                        $metadata['$schemaless'] = array();
+                        $metadata[$schemaless] = array();
                     }
                     
                     foreach ($array as $value)
                     {
-                        $metadata['$schemaless'][] = array('name'=>$key,'value'=>$value);
+                        $metadata[$schemaless][] = array('name'=>$key,'value'=>$value);
                     }
                     
                     unset($metadata[$key]);
                 }
+            }
+        }
+
+        return $metadata;
+    }
+
+    /**
+     * Parses a metadata array, converting array elements to strings where the corresponding 
+     * JSpace form field is not configured for multiple elements.
+     * 
+     * This method allows for the use of Joomla! standard fields even though each metadata field 
+     * is stored as an array.
+     *
+     * Fields are checked against a JForm based on the $schema parameter.
+     *
+     * @param   $source  The source metadata.
+     * 
+     * @return  Metadata that can be handled by both JSpace metadata fields and standard Joomla! 
+     * form fields.
+     */
+    private function _toArray($source)
+    {
+        $metadata = $source;
+        
+        foreach ($source as $key=>$value)
+        {
+            if (is_string($value))
+            {
+                $metadata[$key] = array($value);
             }
         }
         

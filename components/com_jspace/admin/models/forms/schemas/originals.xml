@@ -3,4 +3,50 @@
     name="originals"
     label="COM_JSPACE_RECORD_SCHEMA_ORIGINALS_LABEL"
     description="COM_JSPACE_RECORD_SCHEMA_ORIGINALS_DESC">
+    <fields name="metadata">
+        <fieldset name="jspacemetadata"
+            label="COM_JSPACE_METADATA_LABEL">
+            <field 
+                name="title" 
+                type="jspace.metadatatext"
+                label="COM_JSPACE_METADATA_TITLE_LABEL"
+                filter="JComponentHelper::filterText" 
+                required="true"/>
+            <field 
+                name="creator" 
+                type="jspace.metadatatext"
+                label="COM_JSPACE_METADATA_CREATOR_LABEL"
+                filter="JComponentHelper::filterText" 
+                required="true"/>
+            <field 
+                name="contentType" 
+                type="jspace.metadatatext"
+                label="COM_JSPACE_METADATA_TYPE_LABEL"
+                filter="JComponentHelper::filterText"/>
+            <field 
+                name="contentLength" 
+                type="jspace.metadatatextarea"
+                label="COM_JSPACE_METADATA_ABSTRACT_LABEL"
+                filter="JComponentHelper::filterText"/>
+            <field 
+                name="license" 
+                type="jspace.metadatatextarea"
+                label="COM_JSPACE_METADATA_LICENSE_LABEL"
+                filter="JComponentHelper::filterText"/>
+        </fieldset>
+    </fields>
+    
+    <fields name="collection">
+        <fieldset name="jspaceassets"
+            label="COM_JSPACE_FILES_LABEL">
+            <field 
+                name="original" 
+                type="jspace.asset" 
+                label="Originals" 
+                description="Choose an image from your computer with maximum 100KB" 
+                size="10"
+                validate="jspaceassets"
+                multiple="true"/>
+        </fieldset>
+    </fields>
 </form>

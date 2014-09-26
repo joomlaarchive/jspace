@@ -1,10 +1,21 @@
 <?php
+/**
+ * @package     JSpace.Component
+ * @subpackage  Form
+ *
+ * @copyright   Copyright (C) 2014 KnowledgeArc Ltd. All rights reserved.
+ * @license     GNU General Public License version 2 or later; see LICENSE
+ */
+ 
 defined('JPATH_BASE') or die;
 
 /**
  * A file uploader for a record.
  * 
  * Provides the ability to upload one or more assets as part of a record.
+ *
+ * @package     JSpace.Component
+ * @subpackage  Form
  */
 class JSpaceFormFieldAsset extends JFormField
 {
