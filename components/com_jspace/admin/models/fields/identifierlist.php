@@ -6,34 +6,34 @@
  * @copyright   Copyright (C) 2014 KnowledgeArc Ltd. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE
  */
-
+ 
 defined('_JEXEC') or die('Restricted access');
  
 jimport('joomla.form.helper');
-JFormHelper::loadFieldClass('textarea');
+JFormHelper::loadFieldClass('text');
 
 /**
- * An extension of the textarea form field to handle JSpace metadata.
+ * Provides a list of text boxes for managing identifiers.
  *
  * @package     JSpace.Component
  * @subpackage  Form
  */
-class JSpaceFormFieldMetadataTextArea extends JFormFieldTextArea
+class JSpaceFormFieldIdentifierList extends JFormField
 {
-	/**
-	 * field type
-	 * @var string
-	 */
-	protected $type = 'JSpace.MetadataTextArea';
+    /**
+     * field type
+     * @var string
+     */
+    protected $type = 'JSpace.IdentifierList';
 
-	/**
-	 * Method to get the field input markup
-	 */
-	protected function getInput()
-	{
-		$html = JLayoutHelper::render("jspace.form.fields.metadata.textarea", $this);
-		return $html;
-	}
+    /**
+     * Method to get the field input markup
+     */
+    protected function getInput()
+    {
+        $html = JLayoutHelper::render("jspace.form.fields.identifierlist", $this);
+        return $html;
+    }
     
     public function __get($name)
     {

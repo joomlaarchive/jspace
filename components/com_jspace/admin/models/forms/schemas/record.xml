@@ -3,16 +3,19 @@
     name="record"
     label="COM_JSPACE_RECORD_SCHEMA_RECORD_LABEL"
     description="COM_JSPACE_RECORD_SCHEMA_RECORD_DESC">
+    
+    <fieldset name="identifiers">
+        <field 
+            name="identifiers" 
+            type="jspace.identifierlist"
+            label="COM_JSPACE_IDENTIFIERLIST_LABEL"
+            filter="JComponentHelper::filterText"
+            multiple="true"/>
+    </fieldset>
+    
     <fields name="metadata">
-        <fieldset name="jspacemetadata"
+        <fieldset name="metadata"
             label="COM_JSPACE_METADATA_LABEL">
-            <field 
-                name="title" 
-                type="text"
-                label="COM_JSPACE_METADATA_TITLE_LABEL"
-                filter="JComponentHelper::filterText" 
-                required="true"
-                multiple="false"/>
             <field 
                 name="creator" 
                 type="jspace.metadatatext"
@@ -60,11 +63,6 @@
                 name="modified" 
                 type="jspace.metadatatext"
                 label="COM_JSPACE_METADATA_MODIFIED_LABEL"
-                filter="JComponentHelper::filterText"/>
-            <field 
-                name="identifier" 
-                type="jspace.metadatatext"
-                label="COM_JSPACE_METADATA_IDENTIFIER_LABEL"
                 filter="JComponentHelper::filterText"/>
             <field 
                 name="license" 

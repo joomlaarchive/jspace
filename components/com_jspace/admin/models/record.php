@@ -33,15 +33,15 @@ class JSpaceModelRecord extends JModelAdmin
 
     public function getItem($pk = null)
     {
+        $pk = (!empty($pk)) ? $pk : (int) $this->getState($this->getName() . '.id');
+    
         $app = JFactory::getApplication();
 
-        if ($item = parent::getItem($pk))
-        {
-            // Convert the metadata field to an array.
-            $registry = new JRegistry;
-            $registry->loadString($item->metadata);
-            $item->metadata = $registry->toArray();
-        }
+        // @todo we should just return this but to not break current compatibility, copy to JObject.
+        $record = JSpaceRecord::getInstance($pk);
+        $item = JArrayHelper::toObject($record->getProperties(), 'JObject');
+        $item->metadata = $record->get('metadata')->toArray();
+        $item->identifiers = $record->getIdentifiers();
 
         // Load associated content items
         $assoc = JLanguageAssociations::isEnabled();
@@ -61,21 +61,21 @@ class JSpaceModelRecord extends JModelAdmin
                     null, 
                     null);
 
-                foreach ($associations as $tag => $association)
+                foreach ($associations as $tag=>$association)
                 {
                     $item->associations[$tag] = $association->id;
                 }
             }
         }
 
-        if (!($parent = JFactory::getApplication()->input->getInt('parent')))
+        if (!($parentId = JFactory::getApplication()->input->getInt('parent')))
         {
-            $parent = $item->parent_id;
+            $parentId = $item->parent_id;
         }
 
-        if ($parent)
+        if ($parentId)
         {
-            $record = JSpaceRecord::getInstance($parent);
+            $parent = JSpaceRecord::getInstance($parentId);
             $item->parentTitle = $record->title;
         }
         
@@ -85,7 +85,7 @@ class JSpaceModelRecord extends JModelAdmin
         
         // Override the base user data with any data in the session.
         $data = $app->getUserState('com_jspace.edit.record.data', array());
-        foreach ($data as $k => $v)
+        foreach ($data as $k=>$v)
         {
             $item->$k = $v;
         }
@@ -229,7 +229,7 @@ class JSpaceModelRecord extends JModelAdmin
                     }
                 }
             }
-        
+            
             $data->metadata = $this->_mapToSchemalessMetadata(JArrayHelper::fromObject($data));
         }
     }
@@ -262,7 +262,7 @@ class JSpaceModelRecord extends JModelAdmin
         $pk = JArrayHelper::getValue($data, 'id', (int)$this->getState('record.id'));
         $record = JSpaceRecord::getInstance($pk);
         
-        $metadata = $this->_toArray(JArrayHelper::getValue($data, 'metadata'));
+        $data['metadata'] = $this->_toArray(JArrayHelper::getValue($data, 'metadata'));
         $data['metadata'] = $this->_mapFromSchemalessMetadata($data);
 
         // Bind the data.

@@ -464,18 +464,12 @@ class JSpaceRecord extends JSpaceObject
         $table = JTable::getInstance('RecordIdentifier', 'JSpaceTable');
         $query = $database->getQuery(true);
         
-        $fields = array();
-        foreach ($table->getFields() as $field)
-        {
-            $fields[] = $database->qn($field->Field);
-        }
-
         $query
-            ->select($fields)
+            ->select($database->qn('id'))
             ->from($table->getTableName())
             ->where($database->qn('record_id').'='.(int)$this->id);
 
-        return $database->setQuery($query)->loadObjectList('id', 'JObject');
+        return $database->setQuery($query)->loadColumn();
     }
     
     public function getCreatedBy()

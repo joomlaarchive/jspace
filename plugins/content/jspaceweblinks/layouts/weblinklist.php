@@ -9,7 +9,7 @@ JFactory::getDocument()->addScript(JUri::root().'media/com_jspace/js/jspace.js')
     data-jspace-maximum="<?php echo $displayData->maximum; ?>">
 
     <?php foreach ($displayData->value as $key=>$weblink) : ?>
-    <div class="jspace-control" data-jspace-name="<?php echo $displayData->name.'['.$key.']'; ?>">
+    <div class="jspace-control">
         <input 
             type="hidden" 
             name="<?php echo $displayData->name; ?>[<?php echo $key; ?>][id]"
@@ -34,8 +34,7 @@ JFactory::getDocument()->addScript(JUri::root().'media/com_jspace/js/jspace.js')
 
     <?php if (!count($displayData->value)) : ?>
     <div 
-        class="jspace-control" 
-        data-jspace-name="<?php echo $displayData->name.'['.count($displayData->value).']'; ?>">
+        class="jspace-control">
         <input
             type="url" 
             name="<?php echo $displayData->name; ?>[<?php echo count($displayData->value); ?>][url]"

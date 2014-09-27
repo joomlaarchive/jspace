@@ -38,17 +38,7 @@ class JSpaceFormFieldMetadataText extends JFormFieldText
     public function __get($name)
     {
         switch ($name) 
-        { 
-            case 'value':
-                if (!is_array($this->$name))
-                {
-                    $this->$name = array();
-                }
-                
-                return $this->$name;
-                
-                break;
-                
+        {
             case 'maximum':
                 return JArrayHelper::getValue($this->element, 'maximum', 5);
                 break;

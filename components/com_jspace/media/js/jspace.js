@@ -7,32 +7,32 @@
             e.preventDefault();
 
             var root = $(this).parent();
-            var prefix = root.attr('data-jspace-name');
-            var fields = root.children('.jspace-control');
-            var length = fields.length;
-
+            var length = root.children('.jspace-control').length;
             var maximum = root.data('jspace-maximum');
 
             if (length >= maximum)
                 return;
             
-            var template = fields.last().clone();
+            var template = root.children('.jspace-control').last().clone();
             
-            $.each(template.children(":input"), function(i, input) {
-                if ($(input).attr('name')) {
-                    var search = template.data('jspace-name');
-                    var replace = prefix+'['+length+']';
+            template.children(":input").val("");
 
-                    $(input).attr('name', $(input).attr('name').replace(search, replace));
-                    $(input).val("");
+            root.children('.jspace-control').last().after(template);
+            
+            $.each(root.children('.jspace-control'), function(i, field) {                
+                // only jspace controls with multi-inputs should be reindexed.
+                if ($(field).children(":input").length > 1) {
+                    
+                    $.each($(field).children(":input"), function(j, input) {
+                        if ($(input).attr('name')) {
+                            var name = $(input).attr('name');
+                            name = name.replace(/\[[0-9]+\]/g, '['+i+']');
+
+                            $(input).attr('name', name);
+                        }
+                    });
                 }
             });
-            
-            template.data('jspace-name', prefix+'['+(length)+']');
-            template.attr('data-jspace-name', template.data('jspace-name'));
-            fields.last().after(template);
-
-            $(this).data('jspace-length', length+1);
         });
 
         /**
@@ -42,29 +42,27 @@
             e.preventDefault();
 
             var root = $(this).parent().parent();
-            var prefix = root.attr('data-jspace-name');
-            var fields = root.children('.jspace-control');
-            var length = fields.length;
+            var length = root.children('.jspace-control').length;
 
             if (length == 1)
                 return;
             
             $(this).parent().remove();
-                    
-            $.each(fields, function(i, field) {
-                $.each($(field).children(":input"), function(j, input) {                    
-                    if ($(input).attr('name')) {
-                        var search = $(field).data('jspace-name');
-                        var replace = prefix+'['+i+']';
+                 
+            $.each(root.children('.jspace-control'), function(i, field) {
+                // only jspace controls with multi-inputs should be reindexed.
+                if ($(field).children(":input").length > 1) {
+                
+                    $.each($(field).children(":input"), function(j, input) {                    
+                        if ($(input).attr('name')) {
+                            var name = $(input).attr('name');
+                            name = name.replace(/\[[0-9]+\]/g, '['+i+']');
 
-                        $(input).attr('name', $(input).attr('name').replace(search, replace));
-                    }
-                });
-
-                $(field).attr('data-jspace-name', prefix+'['+i+']');
+                            $(input).attr('name', name);
+                        }
+                    });
+                }
             });
-            
-            $(".jspace-add-field").data("jspace-length", length-1);
         });
     })
 })(jQuery);
