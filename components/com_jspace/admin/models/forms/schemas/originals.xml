@@ -4,7 +4,7 @@
     label="COM_JSPACE_RECORD_SCHEMA_ORIGINALS_LABEL"
     description="COM_JSPACE_RECORD_SCHEMA_ORIGINALS_DESC">
     <fields name="metadata">
-        <fieldset name="jspacemetadata"
+        <fieldset name="metadata"
             label="COM_JSPACE_METADATA_LABEL">
             <field 
                 name="title" 
