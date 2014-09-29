@@ -59,16 +59,13 @@ class JSpaceMetadataCrosswalk extends JObject
      * Walks the source metadata, remapping each metadata value from its current metadata key to a
      * different metadata key name as defined in the crosswalk registry file.
      *
-     * @param   bool   $reverse  True if the crosswalk should be reversed, false otherwise. 
-     * Defaults to false
-     *
      * @return  JRegistry  A registry of metadata values.
      */
-    public function walk($reverse = false)
+    public function walk()
     {
         $metadata = new JRegistry();
-        $metadata->merge($this->getSpecialMetadata($reverse));
-        $metadata->merge($this->getCommonMetadata($reverse));
+        $metadata->merge($this->getSpecialMetadata());
+        $metadata->merge($this->getCommonMetadata());
         
         return $metadata;
     }
@@ -81,21 +78,34 @@ class JSpaceMetadataCrosswalk extends JObject
      *
      * @return  JRegistry  A registry of metadata based on "special" crosswalk settings.
      */
-    public function getSpecialMetadata($reverse = false)
+    public function getSpecialMetadata($prefixes = array(), $reverse = false)
     {        
         $metadata = JArrayHelper::getValue($this->registry, 'metadata', array());
         $schemas = JArrayHelper::getValue($metadata, 'special', array());
         
         $data = new JRegistry();
-        
+
         foreach ($schemas as $key=>$schema)
         {
-            $source = new JRegistry;
-            $source->loadObject($this->source->get($key));
-
-            $data->merge($this->_mapMetadata($source, $schema, $reverse));
-        }
+            if (empty($prefixes) || array_search($key, $prefixes) === false)
+            {
+                continue;
+            }
         
+            if ($reverse)
+            {
+                $target = $this->_mapMetadata($this->source, $schema, $reverse);
+                
+                $data->set($key, $target->toObject());
+            }
+            else
+            {
+                $source = new JRegistry;
+                $source->loadObject($this->source->get($key));                
+                $data->merge($this->_mapMetadata($source, $schema, $reverse));
+            }
+        }
+
         return $data;
     }
 
@@ -217,12 +227,12 @@ class JSpaceMetadataCrosswalk extends JObject
         }
         
         $metadata = new JRegistry();
-        
+$meta = new JRegistry;
         foreach (JArrayHelper::getValue($schema, 'map', array()) as $mappable)
         {
             // sometimes the key needs to be lower case to avoid poorly marked up HTML.
             $source = $registry->get($mappable[$skey], $registry->get(JString::strtolower($mappable[$skey])));
-
+            
             if ($source)
             {
                 $target = $metadata->get($mappable[$tkey]);
@@ -242,7 +252,31 @@ class JSpaceMetadataCrosswalk extends JObject
                 $metadata->set($mappable[$tkey], array_merge($target, $source));
             }
         }
-        
+
         return $metadata;
+    }
+    
+    public static function getKeys($registry)
+    {
+        return array_keys(self::_flatten($registry->toArray()));
+    }
+    
+    private static function _flatten($array, $prefix = '')
+    {
+        $result = array();
+    
+        foreach($array as $key=>$value)
+        {
+            if (is_array($value))
+            {
+                $result = $result + self::_flatten($value, $prefix.($prefix ? '.' : '').$key);
+            }
+            else
+            {               
+                $result[$prefix] = null;
+            }
+        }
+    
+        return $result;
     }
 }

@@ -1,1 +1,0 @@
-<a href="<?php echo $displayData->url; ?>" class="btn btn-primary"><?php echo JText::_('PLG_CONTENT_JSPACEDSPACE_DOWNLOAD_LABEL'); ?></a>

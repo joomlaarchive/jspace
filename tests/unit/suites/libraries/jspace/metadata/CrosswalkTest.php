@@ -11,18 +11,41 @@ class JSpaceMetadataCrosswalkTest extends PHPUnit_Framework_TestCase
         $crosswalk = new JSpaceMetadataCrosswalk($metadata);
         $data = $crosswalk->getCommonMetadata();
         
-        $this->assertEquals(array('file.name'), $data->get('name'));
+        $this->assertEquals(array('file.name'), $data->get('title'));
+    }
+    
+    public function testKeying()
+    {
+        $metadata = new JRegistry;
+        $metadata->set('creator', array('author'));
+        $metadata->set('editor', array('editor'));
+        $crosswalk = new JSpaceMetadataCrosswalk($metadata);
+        $data = $crosswalk->getSpecialMetadata(array('dim'), true);
+       var_dump($data->get('dim.dc'));
     }
     
     public function testCommonMetadataReversed()
     {
         $metadata = new JRegistry();
-        $metadata->set('name', 'file.name');
+        $metadata->set('title', 'file.name');
         
         $crosswalk = new JSpaceMetadataCrosswalk($metadata);
         $data = $crosswalk->getCommonMetadata(true);
         
         $this->assertEquals(array('file.name'), $data->get('resourceName'));
+    }
+    
+    public function testWalkReversed()
+    {
+        $metadata = new JRegistry();
+        $metadata->set('title', 'file.name');
+        $metadata->set('creator', array('Author 1'));
+        $metadata->set('alternativeTitle', array('Alternative title 1'));
+        
+        $crosswalk = new JSpaceMetadataCrosswalk($metadata);
+        $data = $crosswalk->getSpecialMetadata(array(), true);
+        var_dump($data);
+        //$this->assertEquals(array('file.name'), $data->get('resourceName'));
     }
 
     public function testSpecialMetadata()

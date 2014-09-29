@@ -11,8 +11,8 @@ class SimpleTest extends PHPUnit_Framework_TestCase
 		$webDriver = new WebDriver();
 		$webDriver->get("http://localhost/joomla33/administrator");
 		
-		$webDriver->findElement(By::name("username"))->sendKeys("haydenyoung");
-		$webDriver->findElement(By::name("passwd"))->sendKeys("\$land0c%");
+		$webDriver->findElement(By::name("username"))->sendKeys("...");
+		$webDriver->findElement(By::name("passwd"))->sendKeys("...");
 		$webDriver->findElement(By::cssSelector("button[class='btn btn-primary btn-large']"))->click();
     }
 }
