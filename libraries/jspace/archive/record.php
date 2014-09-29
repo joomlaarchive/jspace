@@ -29,6 +29,16 @@ class JSpaceRecord extends JSpaceObject
     protected static $instances = array();
     
     public $parent_id = 0;
+    
+    protected $checked_out = 0;
+    
+    protected $checked_out_time = null;
+    
+    protected $schema = null;
+    
+    protected $publish_up = null;
+    
+    protected $publish_down = null;
 
     /**
      * External identifiers ensure JSpace records are unique when used with other systems such as 
@@ -308,6 +318,8 @@ class JSpaceRecord extends JSpaceObject
             $database->qn('id'), 
             $database->qn('title'), 
             $database->qn('hash'), 
+            $database->qn('contentType'), 
+            $database->qn('contentLength'), 
             $database->qn('metadata'), 
             $database->qn('derivative'), 
             $database->qn('record_id'));

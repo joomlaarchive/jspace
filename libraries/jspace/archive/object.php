@@ -21,6 +21,8 @@ jimport('jspace.filesystem.file');
  */
 abstract class JSpaceObject extends JObject
 {
+    protected $_metadata;
+
     public function __construct($identifier = 0)
     {
         JTable::addIncludePath(JPATH_ROOT.'/administrator/components/com_jspace/tables/');

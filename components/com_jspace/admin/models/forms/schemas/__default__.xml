@@ -184,11 +184,6 @@
                 label="COM_JSPACE_METADATA_LENGTH_LABEL"
                 filter="JComponentHelper::filterText"/>
             <field 
-                name="license" 
-                type="jspace.metadatatextarea"
-                label="COM_JSPACE_METADATA_LICENSE_LABEL"
-                filter="JComponentHelper::filterText"/>
-            <field 
                 name="reviewer" 
                 type="jspace.metadatatext"
                 label="COM_JSPACE_METADATA_REVIEWER_LABEL"

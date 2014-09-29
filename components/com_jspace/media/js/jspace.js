@@ -19,7 +19,7 @@
 
             root.children('.jspace-control').last().after(template);
             
-            $.each(root.children('.jspace-control'), function(i, field) {                
+            $.each(root.children('.jspace-control'), function(i, field) {
                 // only jspace controls with multi-inputs should be reindexed.
                 if ($(field).children(":input").length > 1) {
                     

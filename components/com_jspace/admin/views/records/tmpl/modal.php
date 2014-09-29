@@ -63,9 +63,6 @@ require_once JPATH_ROOT.'/components/com_jspace/helpers/route.php';
                     <th width="10%" class="nowrap hidden-phone">
                         <?php echo JText::_('JDATE'); ?>
                     </th>
-                    <th width="10%">
-                        <?php echo JText::_('JGLOBAL_HITS'); ?>
-                    </th>
                     <th width="1%" class="nowrap hidden-phone">
                         <?php echo JText::_('JGRID_HEADING_ID'); ?>
                     </th>
@@ -147,10 +144,6 @@ $this->escape($item->parent_title);
                     
                     <td class="nowrap small hidden-phone">
                         <?php echo JHtml::_('date', $item->created, JText::_('DATE_FORMAT_LC4')); ?>
-                    </td>
-                    
-                    <td class="center">
-                        <?php echo (int) $item->hits; ?>
                     </td>
                     
                     <td class="center hidden-phone">

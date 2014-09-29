@@ -52,11 +52,11 @@ $useDefList = ($this->item->params->get('show_modify_date') || $this->item->para
         <span class="label label-warning"><?php echo JText::_('JUNPUBLISHED'); ?></span>
         <?php endif; ?>
         
-        <?php if (strtotime($this->item->publish_up) > strtotime(JFactory::getDate())) : ?>
+        <?php if (strtotime($this->item->get('publish_up')) > strtotime(JFactory::getDate())) : ?>
         <span class="label label-warning"><?php echo JText::_('JNOTPUBLISHEDYET'); ?></span>
         <?php endif; ?>
         
-        <?php if ((strtotime($this->item->publish_down) < strtotime(JFactory::getDate())) && $this->item->publish_down != '0000-00-00 00:00:00') : ?>
+        <?php if ((strtotime($this->item->get('publish_down')) < strtotime(JFactory::getDate())) && $this->item->get('publish_down') != '0000-00-00 00:00:00') : ?>
         <span class="label label-warning"><?php echo JText::_('JEXPIRED'); ?></span>
         <?php endif; ?>
     </div>
@@ -107,9 +107,9 @@ $useDefList = ($this->item->params->get('show_modify_date') || $this->item->para
                 <dd class="published">
                     <span class="icon-calendar"></span>
                     <time 
-                        datetime="<?php echo JHtml::_('date', $this->item->publish_up, 'c'); ?>" 
+                        datetime="<?php echo JHtml::_('date', $this->item->get('publish_up'), 'c'); ?>" 
                         itemprop="datePublished">
-                        <?php echo JText::sprintf('COM_JSPACE_PUBLISHED_DATE_ON', JHtml::_('date', $this->item->publish_up, JText::_('DATE_FORMAT_LC3'))); ?>
+                        <?php echo JText::sprintf('COM_JSPACE_PUBLISHED_DATE_ON', JHtml::_('date', $this->item->get('publish_up'), JText::_('DATE_FORMAT_LC3'))); ?>
                     </time>
                 </dd>
                 <?php endif; ?>

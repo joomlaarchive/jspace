@@ -181,5 +181,17 @@
             name="metadatapairs"
             type="hidden"
             label="COM_JSPACE_RECORD_METADATAPAIRS_LABEL"/>
-	</fieldset>
+    </fieldset>
+    
+    <fields name="metadata">
+        <fieldset name="licensing">
+            <field
+                name="license" 
+                type="textarea"
+                label="COM_JSPACE_METADATA_LICENSE_LABEL"
+                description="COM_JSPACE_METADATA_LICENSE_DESC"
+                filter="safehtml">
+            </field>
+        </fieldset>
+    </fields>
 </form>

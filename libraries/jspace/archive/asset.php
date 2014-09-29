@@ -55,7 +55,7 @@ class JSpaceAsset extends JSpaceObject
 	public function bind(&$array)
 	{
         $this->metadata = JArrayHelper::getValue($array, 'metadata', array());
-		
+        
 		// Bind the array
 		if (!$this->setProperties($array))
 		{

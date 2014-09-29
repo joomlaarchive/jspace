@@ -28,11 +28,6 @@
                 type="jspace.metadatatextarea"
                 label="COM_JSPACE_METADATA_ABSTRACT_LABEL"
                 filter="JComponentHelper::filterText"/>
-            <field 
-                name="license" 
-                type="jspace.metadatatextarea"
-                label="COM_JSPACE_METADATA_LICENSE_LABEL"
-                filter="JComponentHelper::filterText"/>
         </fieldset>
     </fields>
     
