@@ -33,7 +33,7 @@
 
 	<target name="package" description="Creates a JSpace library package.">
 		<echo message="Packaging JSpace library."/>
-		<zip destfile="${package.dest}/lib_jspace.zip"
+		<zip destfile="${package.dest}/jspace.zip"
 		       basedir="${src}"
 		       update="true"
 		       excludes="build*.xml"/>

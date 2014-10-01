@@ -106,7 +106,7 @@ CREATE TABLE IF NOT EXISTS `#__jspace_harvests` (
 
 -- A holding table for records harvested.
 
-CREATE TABLE `#__jspace_cache` (
+CREATE TABLE IF NOT EXISTS `#__jspace_cache` (
     `id` VARCHAR(255), 
     `data` TEXT NULL, 
     `harvest_id` INTEGER NOT NULL DEFAULT 0, 

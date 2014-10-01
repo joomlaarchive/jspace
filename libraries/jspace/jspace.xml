@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <extension type="library" method="upgrade" version="3.0">
-	<name>JSpace library</name>
+	<name>lib_jspace</name>
 	<libraryname>jspace</libraryname>
 	<author>KnowledgeARC</author>
+    <creationDate>2013-05-15</creationDate>
 	<authorEmail>development@knowledgearc.com</authorEmail>
 	<authorUrl>http://www.knowledgearc.org</authorUrl>
 	<copyright>Copyright (C) 2012-2013 KnowledgeARC Ltd. All rights reserved.</copyright>
 	<license>http://www.gnu.org/licenses/gpl-3.0.html</license>
     <version>0.5.0</version>
     <description>LIB_JSPACE_XML_DESCRIPTION</description>
-	
+
     <files folder="libraries">
         <folder>archive</folder>
         <folder>filesystem</folder>
@@ -24,7 +25,7 @@
         <folder>table</folder>
         <filename>factory.php</filename>
     </files>
-    
+
 	<languages>
 		<language tag="en-GB">language/en-GB/en-GB.lib_jspace.ini</language>
 		<language tag="en-GB">language/en-GB/en-GB.lib_jspace.sys.ini</language>

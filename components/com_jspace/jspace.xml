@@ -2,7 +2,7 @@
 <extension type="component" version="2.5" method="upgrade">
 	<name>com_jspace</name>
 	<creationDate>2013-05-15</creationDate>
-	<author>KnowledgeARC</author>
+	<author>KnowledgeArc Ltd</author>
 	<authorEmail>development@knowledgearc.com</authorEmail>
 	<authorUrl>http://www.knowledgearc.org</authorUrl>
 	<copyright>>Copyright (C) 2013-2014 KnowledgeARC Ltd. All rights reserved.</copyright>
