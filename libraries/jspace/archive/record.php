@@ -6,7 +6,7 @@
  * @copyright   Copyright (C) 2014 KnowledgeARC Ltd. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE
  */
- 
+
 defined('_JEXEC') or die;
 
 jimport('joomla.table.category');
@@ -25,25 +25,25 @@ jimport('jspace.filesystem.file');
 class JSpaceRecord extends JSpaceObject
 {
     protected static $context = 'com_jspace.record';
-    
+
     protected static $instances = array();
-    
+
     public $parent_id = 0;
-    
+
     protected $checked_out = 0;
-    
+
     protected $checked_out_time = null;
-    
+
     protected $schema = null;
-    
+
     protected $publish_up = null;
-    
+
     protected $publish_down = null;
 
     /**
-     * External identifiers ensure JSpace records are unique when used with other systems such as 
+     * External identifiers ensure JSpace records are unique when used with other systems such as
      * Handle.net.
-     * 
+     *
      * @var  string[]  $identifiers  An array of external identifiers.
      */
     protected $identifiers = array();
@@ -52,7 +52,7 @@ class JSpaceRecord extends JSpaceObject
      * Gets an instance of the JSpaceRecord class, creating it if it doesn't exist.
      *
      * @param   int  $identifier  The record id to retrieve.
-     * 
+     *
      * @return  JSpaceRecord      An instance of the JSpaceRecord class.
      */
     public static function getInstance($identifier = 0)
@@ -104,10 +104,10 @@ class JSpaceRecord extends JSpaceObject
             {
                 $array['identifiers'] = array();
             }
-            
+
             $this->identifiers = array_merge($this->identifiers, $array['identifiers']);
-        }        
-        
+        }
+
         $this->metadata = JArrayHelper::getValue($array, 'metadata', array());
 
         // Bind the array
@@ -124,16 +124,16 @@ class JSpaceRecord extends JSpaceObject
      *
      * @param   array   $collection An array of assets and other asset-related information.
      * @param   string  $updateOnly
-     * 
+     *
      * @return  bool    True on success, false otherwise.
      */
     public function save($collection = array(), $updateOnly = false)
     {
-        $dispatcher = JEventDispatcher::getInstance();    
+        $dispatcher = JEventDispatcher::getInstance();
         JPluginHelper::importPlugin('content');
-        
+
         $table = JTable::getInstance('Record', 'JSpaceTable');
-        
+
         if (!($isNew = empty($this->id)))
         {
             $table->load($this->id);
@@ -143,21 +143,21 @@ class JSpaceRecord extends JSpaceObject
         {
             $table->setLocation($this->parent_id, 'last-child');
         }
-        
+
         $table->bind($this->getProperties());
-        
+
         if (isset($this->newTags))
         {
             $table->newTags = $this->newTags;
         }
-        
+
         $result = $dispatcher->trigger('onContentBeforeSave', array(static::$context, $this, $isNew));
-        
+
         if (in_array(false, $result, true))
         {
             return false;
         }
-        
+
         if (!$result = $table->store())
         {
             JLog::add(__METHOD__." Cannot save. ".$table->getError(), JLog::CRITICAL, 'jspace');
@@ -168,7 +168,7 @@ class JSpaceRecord extends JSpaceObject
         {
             $this->id = $table->get('id');
         }
-        
+
         // update $this fields with internally changed table fields.
         $this->parent_id = $table->get('parent_id');
 
@@ -197,10 +197,10 @@ class JSpaceRecord extends JSpaceObject
         foreach ($collection as $dkey=>$derivative)
         {
             foreach ($derivative as $akey=>$asset)
-            {                    
+            {
                 $new = JSpaceAsset::getInstance();
                 $new->bind($asset);
-                
+
                 $new->set('id', null);
                 $new->set('record_id', $this->id);
                 $new->set('title', JSpaceFile::makeSafe(JArrayHelper::getValue($asset, 'name')));
@@ -208,18 +208,18 @@ class JSpaceRecord extends JSpaceObject
                 $new->set('contentType', JArrayHelper::getValue($asset, 'type', null, 'string'));
                 $new->set('hash', JSpaceFile::getHash(JArrayHelper::getValue($asset, 'tmp_name')));
                 $new->set('derivative', $dkey);
-                
+
                 $metadata = JSpaceFile::getMetadata(JArrayHelper::getValue($asset, 'tmp_name'));
                 $new->set('metadata', $metadata);
-                
+
                 $new->save();
             }
         }
     }
-    
+
     /**
      * Saves the alternative identifiers.
-     * 
+     *
      * @todo Investigate moving to JSpaceTableRecord.
      */
     private function _saveIdentifiers()
@@ -247,64 +247,64 @@ class JSpaceRecord extends JSpaceObject
         $table->load($this->id);
 
         $dispatcher->trigger('onContentBeforeDelete', array(static::$context, $table));
-    
+
         $database = JFactory::getDbo();
         $query = $database->getQuery(true);
-        
+
         $query
             ->select(array($database->qn('id'), $database->qn('record_id')))
             ->from($database->qn('#__jspace_record_identifiers'))
             ->where($database->qn('record_id').'='.(int)$this->id);
 
         $identifiers = $database->setQuery($query)->loadObjectList();
-            
+
         foreach ($identifiers as $identifier)
         {
             $table = JTable::getInstance('RecordIdentifier', 'JSpaceTable');
             $table->delete($identifier->id);
         }
-        
+
         foreach ($this->getAssets() as $asset)
         {
             $asset->delete();
         }
-        
+
         if (!$table->delete())
         {
             throw new Exception($table->getError());
         }
-        
+
         $dispatcher->trigger('onContentAfterDelete', array(static::$context, $table));
 
         return true;
     }
-    
+
     public function load($keys)
     {
         $table = JTable::getInstance('Record', 'JSpaceTable');
-        
+
         if (!$table->load($keys))
         {
             return false;
         }
-        
+
         $this->metadata = $table->metadata;
-        
+
         $this->setProperties($table->getProperties());
 
         return true;
     }
-    
+
     /**
      * Gets a list of assets associated with this record.
      *
      * The list of assets can be filtered by passing an array of key, value pairs:
-     * 
+     *
      * E.g.
-     * 
+     *
      * $filters = array('bundle'=>'videos','derivative'=>'original');
      * $record->getAssets($filters);
-     * 
+     *
      * @param   array  $filters  An array of filters.
      *
      * @return  JSpaceAsset[]  An array of JSpaceAsset objects.
@@ -315,44 +315,44 @@ class JSpaceRecord extends JSpaceObject
         $query = $database->getQuery(true);
 
         $select = array(
-            $database->qn('id'), 
-            $database->qn('title'), 
-            $database->qn('hash'), 
-            $database->qn('contentType'), 
-            $database->qn('contentLength'), 
-            $database->qn('metadata'), 
-            $database->qn('derivative'), 
+            $database->qn('id'),
+            $database->qn('title'),
+            $database->qn('hash'),
+            $database->qn('contentType'),
+            $database->qn('contentLength'),
+            $database->qn('metadata'),
+            $database->qn('derivative'),
             $database->qn('record_id'));
-        
+
         $query
             ->select($select)
             ->from($database->qn('#__jspace_assets'))
             ->where($database->qn('record_id').'='.(int)$this->id);
-        
+
         foreach ($filters as $key=>$value)
         {
             $query->where($database->qn($key).'='.$database->q($value));
         }
-        
+
         $database->setQuery($query);
 
         return $database->loadObjectList('id', 'JSpaceAsset');
     }
-    
+
     public function getTags()
     {
         $tags = new JHelperTags;
         $tags->getItemTags('com_jspace.record', $this->id);
-        
+
         return $tags;
     }
-    
+
     /**
      * Get JSpace record, its children and assets as a tree structure.
      * @param   int        $id  The id of the root record to fetch.
      *
      * @return  stdClass   The top record node along with all children.
-     * The record contains its children as an array within a children property with each child 
+     * The record contains its children as an array within a children property with each child
      * node having its own children and so on until the leaf node is reached.
      *
      * @throw   Exception  If a record cannot be found or if the $id parameter equals the root node.
@@ -360,14 +360,14 @@ class JSpaceRecord extends JSpaceObject
     public static function getTree($id)
     {
         JTable::addIncludePath(JPATH_BASE.'/administrator/components/com_jspace/tables/');
-        
+
         $table = JTable::getInstance('Record', 'JSpaceTable');
-        
+
         if (!$table->load($id))
         {
             throw new Exception('The record cannot be found.', 404);
         }
-        
+
         if ($table->title == 'JSpace_Record_Root')
         {
             throw new Exception('Direct access to root node not allowed', 403);
@@ -376,18 +376,18 @@ class JSpaceRecord extends JSpaceObject
         $items = $table->getTree();
         return self::_buildTree($items);
     }
-    
+
     private static function _buildTree($items, $parent = 0, $level = 0)
     {
         if ($level > 1000) return ''; // Make sure not to have an endless recursion
-        
+
         $tree = array();
-        
+
         if ($parent == 0 && $level == 0)
         {
             $tree = null;
         }
-        
+
         foreach ($items as $key=>$value)
         {
             if(is_null($tree) || (int)$value->parent_id == $parent)
@@ -395,7 +395,7 @@ class JSpaceRecord extends JSpaceObject
                 $item = $value;
                 unset($items[$key]);
                 $item->children = self::_buildTree($items, $value->id, $value->level);
-                
+
                 if (is_array($tree))
                 {
                     $tree[] = $item;
@@ -406,10 +406,10 @@ class JSpaceRecord extends JSpaceObject
                 }
             }
         }
-        
+
         return $tree;
     }
-    
+
     /**
      * Gets the parent record this record belongs to.
      *
@@ -419,17 +419,17 @@ class JSpaceRecord extends JSpaceObject
     public function getParent()
     {
         $viewLevels = JFactory::getUser()->getAuthorisedViewLevels();
-        
+
         $parent = JSpaceRecord::getInstance($this->parent_id);
-        
-        if ($parent->access && !in_array($parent->access, $viewLevels))
+
+        if ($parent->alias == 'root' || ($parent->access && !in_array($parent->access, $viewLevels)))
         {
             $parent = null;
         }
-        
-        return $parent; 
+
+        return $parent;
     }
-    
+
     /**
      * Gets the category the current record belongs to.
      *
@@ -440,7 +440,7 @@ class JSpaceRecord extends JSpaceObject
     {
          return JCategories::getInstance('JSpace')->get($this->catid);
     }
-    
+
     /**
      * Loads and returns the children of the current JSpaceRecord.
      *
@@ -449,11 +449,11 @@ class JSpaceRecord extends JSpaceObject
     public function getChildren()
     {
         JTable::addIncludePath(JPATH_BASE.'/administrator/components/com_jspace/tables/');
-        
+
         $database = JFactory::getDbo();
         $table = JTable::getInstance('Record', 'JSpaceTable');
         $query = $database->getQuery(true);
-        
+
         $fields = array();
         foreach ($table->getFields() as $field)
         {
@@ -467,15 +467,15 @@ class JSpaceRecord extends JSpaceObject
 
         return $database->setQuery($query)->loadObjectList('id', 'JSpaceRecord');
     }
-    
+
     public function getIdentifiers()
     {
         JTable::addIncludePath(JPATH_BASE.'/administrator/components/com_jspace/tables/');
-        
+
         $database = JFactory::getDbo();
         $table = JTable::getInstance('RecordIdentifier', 'JSpaceTable');
         $query = $database->getQuery(true);
-        
+
         $query
             ->select($database->qn('id'))
             ->from($table->getTableName())
@@ -483,20 +483,20 @@ class JSpaceRecord extends JSpaceObject
 
         return $database->setQuery($query)->loadColumn();
     }
-    
+
     public function getCreatedBy()
     {
         return JUser::getInstance($this->created_by);
     }
-    
+
     public function getReferences()
     {
         JTable::addIncludePath(JPATH_BASE.'/administrator/components/com_jspace/tables/');
-        
+
         $database = JFactory::getDbo();
         $table = JTable::getInstance('Reference', 'JSpaceTable');
         $query = $database->getQuery(true);
-        
+
         $fields = array();
         foreach ($table->getFields() as $field)
         {
@@ -508,13 +508,13 @@ class JSpaceRecord extends JSpaceObject
             ->from($table->getTableName())
             ->where($database->qn('record_id').'='.(int)$this->id);
 
-        return $database->setQuery($query)->loadObjectList('id', 'JObject');       
+        return $database->setQuery($query)->loadObjectList('id', 'JObject');
     }
-    
+
     public function bindAssetMetadata($assetId)
     {
         $asset = JSpaceAsset::getInstance($assetId);
-        
+
         if ($asset->id)
         {
             $crosswalk = JSpaceFactory::getCrosswalk($asset->get('metadata'));

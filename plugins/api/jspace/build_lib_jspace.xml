@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="API - JSpace Plugin" default="" basedir=".">
 	<property name="dest.plugins.jspace" value="${dest.plugins}/api"/>
-	
+
 	<target name="update" description="">
 		<echo message="Deploying API - JSpace Plugin to Joomla! environment."/>
 		<copy todir="${dest.plugins.jspace}/jspace">

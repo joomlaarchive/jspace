@@ -6,7 +6,7 @@
  * @copyright   Copyright (C) 2014 KnowledgeARC Ltd. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE
  */
- 
+
 defined('_JEXEC') or die;
 
 jimport('jspace.table.observer.recordhistory');
@@ -34,7 +34,7 @@ class JSpaceTableRecord extends JTableNested
         JTableObserverTags::createObserver($this, $observerParams);
         JTableObserverRecordhistory::createObserver($this, $observerParams);
 	}
-	
+
 	/**
 	 * (non-PHPdoc)
 	 * @see JTable::bind()
@@ -85,45 +85,45 @@ class JSpaceTableRecord extends JTableNested
 		}
 
 		// Set publish_up to null date if not set
-		if (!$this->publish_up)
+		if (!(int)$this->publish_up)
 		{
-			$this->publish_up = $this->_db->getNullDate();
+			$this->publish_up = JFactory::getDate()->toSql();
 		}
 
 		// Set publish_down to null date if not set
-		if (!$this->publish_down)
+		if (!(int)$this->publish_down)
 		{
 			$this->publish_down = $this->_db->getNullDate();
 		}
-		
+
 		if (trim($this->alias) == '')
 		{
 			$this->alias = $this->title;
 		}
-	
+
 		$this->alias = JApplicationHelper::stringURLSafe($this->alias);
-	
+
 		if (trim(str_replace('-', '', $this->alias)) == '')
 		{
 			$this->alias = JFactory::getDate()->format('Y-m-d-H-i-s');
 		}
-		
+
 		$this->path = $this->alias;
-		
+
 		$this->version++;
 
 		$result = parent::store($updateNulls);
-		
+
 		return $result;
 	}
-	
+
 	protected function _getAssetName()
 	{
 		$k = $this->_tbl_key;
 
 		return 'com_jspace.record.' . (int) $this->$k;
 	}
-	
+
 	/**
 	 * Method to return the title to use for the asset table.
 	 *

@@ -11,7 +11,7 @@ defined('_JEXEC') or die;
 jimport('jspace.archive.record');
 
 /**
- * Models the display and management of a single JSpace record, its children, assets and 
+ * Models the display and management of a single JSpace record, its children, assets and
  * references.
  *
  * @package     JSpace.Component
@@ -22,15 +22,15 @@ class JSpaceModelRecord extends JModelItem
     public function __construct($config = array())
     {
         parent::__construct($config);
-        
+
         // Guess the context as Option.ModelName.
         if (empty($this->context))
         {
             $this->context = JString::strtolower($this->option . '.' . $this->getName());
         }
-        
+
         $this->typeAlias = $this->context;
-        
+
         //@TODO Joomla hasn't standardized on _context or context.
         $this->_context = $this->context;
     }
@@ -81,7 +81,7 @@ class JSpaceModelRecord extends JModelItem
 
                 $published = $this->getState('filter.published');
                 $archived = $this->getState('filter.archived');
-                
+
                 // Check for published state if filter set.
                 if (((is_numeric($published)) || (is_numeric($archived))) && (($record->published != $published) && ($record->published != $archived)))
                 {
@@ -89,7 +89,7 @@ class JSpaceModelRecord extends JModelItem
                 }
 
                 $record->params = clone $this->getState('params');
-                
+
                 if (!$user->get('guest'))
                 {
                     $userId = $user->get('id');
@@ -153,10 +153,10 @@ class JSpaceModelRecord extends JModelItem
 
         return $this->get('item');
     }
-    
+
     public function getLanguage()
-    {        
-        if ($this->getItem()->language === '*') 
+    {
+        if ($this->getItem()->language === '*')
         {
             return JFactory::getConfig()->get('language');
         }

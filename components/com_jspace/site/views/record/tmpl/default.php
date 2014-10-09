@@ -1,12 +1,12 @@
 <?php
 /**
  * Default display for details about a single record.
- * 
+ *
  * @copyright   Copyright (C) 2014 KnowledgeArc Ltd. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE
  *
  * Contributors
- * Please feel free to add your name and email (optional) here if you have 
+ * Please feel free to add your name and email (optional) here if you have
  * contributed any source code changes.
  *
  * Name                         Email
@@ -22,18 +22,19 @@ $user    = JFactory::getUser();
 
 JHtml::_('behavior.caption');
 
-$useDefList = ($this->item->params->get('show_modify_date') || $this->item->params->get('show_publish_date') || 
-    $this->item->params->get('show_create_date') || $this->item->params->get('show_category') 
+$useDefList = ($this->item->params->get('show_modify_date') || $this->item->params->get('show_publish_date') ||
+    $this->item->params->get('show_create_date') || $this->item->params->get('show_category')
     || $this->item->params->get('show_parent_category') || $this->item->params->get('show_author'));
 ?>
-<div 
-    class="item-page<?php echo $this->pageclass_sfx; ?>" 
+<div
+    class="item-page<?php echo $this->pageclass_sfx; ?>"
     itemscope
     itemtype="http://schema.org/ScholarlyArticle">
-    <meta 
-        itemprop="inLanguage" 
+
+    <meta
+        itemprop="inLanguage"
         content="<?php echo $this->get('Language'); ?>"/>
-        
+
     <?php if ($this->params->get('show_page_heading', 1)) : ?>
     <div class="page-header">
         <h1><?php echo $this->escape($this->params->get('page_heading')); ?></h1>
@@ -47,19 +48,28 @@ $useDefList = ($this->item->params->get('show_modify_date') || $this->item->para
                 <?php echo $this->escape($this->item->title); ?></a>
             <?php endif; ?>
         </h2>
-        
+
         <?php if ($this->item->published == 0) : ?>
         <span class="label label-warning"><?php echo JText::_('JUNPUBLISHED'); ?></span>
         <?php endif; ?>
-        
+
         <?php if (strtotime($this->item->get('publish_up')) > strtotime(JFactory::getDate())) : ?>
         <span class="label label-warning"><?php echo JText::_('JNOTPUBLISHEDYET'); ?></span>
         <?php endif; ?>
-        
+
         <?php if ((strtotime($this->item->get('publish_down')) < strtotime(JFactory::getDate())) && $this->item->get('publish_down') != '0000-00-00 00:00:00') : ?>
         <span class="label label-warning"><?php echo JText::_('JEXPIRED'); ?></span>
         <?php endif; ?>
     </div>
+    <?php endif; ?>
+
+    <?php if ($parent = $this->item->getParent()) : ?>
+        <div>
+            <a
+                href="<?php echo JRoute::_('index.php?option=com_jspace&view=record&id='.$parent->id); ?>"
+                itemprop="isPartOf">
+                <?php echo $parent->get('title'); ?></a>
+        </div>
     <?php endif; ?>
 
     <?php if ($this->item->params->get('access-view')) :?>
@@ -67,18 +77,18 @@ $useDefList = ($this->item->params->get('show_modify_date') || $this->item->para
         <div class="article-info muted">
             <dl class="article-info">
                 <dt class="article-info-term"><?php echo JText::_('COM_JSPACE_RECORD_INFO'); ?></dt>
-                
+
                 <?php if ($this->item->params->get('show_author') && $this->item->getCreatedBy()->get('name')) : ?>
-                <dd 
-                    class="createdby" 
-                    itemprop="author" 
-                    itemscope 
-                    itemtype="http://schema.org/Person">                
-                    <?php echo JText::sprintf('COM_JSPACE_RECORD_CREATED_BY', '<span 
+                <dd
+                    class="createdby"
+                    itemprop="author"
+                    itemscope
+                    itemtype="http://schema.org/Person">
+                    <?php echo JText::sprintf('COM_JSPACE_RECORD_CREATED_BY', '<span
                         itemprop="name">'.$this->item->getCreatedBy()->get('name').'</span>'); ?>
                 </dd>
                 <?php endif; ?>
-                
+
                 <?php if ($this->item->params->get('show_parent') && $this->parentslug) : ?>
                 <dd class="parent-category-name">
                     <?php $title = $this->escape($this->item->getParent()->title); ?>
@@ -90,7 +100,7 @@ $useDefList = ($this->item->params->get('show_modify_date') || $this->item->para
                     <?php endif; ?>
                 </dd>
                 <?php endif; ?>
-                
+
                 <?php if ($this->item->params->get('show_category') && $this->catslug) : ?>
                 <dd class="category-name">
                     <?php $title = $this->escape($this->item->getCategory()->title); ?>
@@ -106,8 +116,8 @@ $useDefList = ($this->item->params->get('show_modify_date') || $this->item->para
                 <?php if ($this->item->params->get('show_publish_date')) : ?>
                 <dd class="published">
                     <span class="icon-calendar"></span>
-                    <time 
-                        datetime="<?php echo JHtml::_('date', $this->item->get('publish_up'), 'c'); ?>" 
+                    <time
+                        datetime="<?php echo JHtml::_('date', $this->item->get('publish_up'), 'c'); ?>"
                         itemprop="datePublished">
                         <?php echo JText::sprintf('COM_JSPACE_PUBLISHED_DATE_ON', JHtml::_('date', $this->item->get('publish_up'), JText::_('DATE_FORMAT_LC3'))); ?>
                     </time>
@@ -117,19 +127,19 @@ $useDefList = ($this->item->params->get('show_modify_date') || $this->item->para
                 <?php if ($this->item->params->get('show_modify_date')) : ?>
                 <dd class="modified">
                     <span class="icon-calendar"></span>
-                    <time 
-                        datetime="<?php echo JHtml::_('date', $this->item->modified, 'c'); ?>" 
+                    <time
+                        datetime="<?php echo JHtml::_('date', $this->item->modified, 'c'); ?>"
                         itemprop="dateModified">
                         <?php echo JText::sprintf('COM_JSPACE_LAST_UPDATED', JHtml::_('date', $this->item->modified, JText::_('DATE_FORMAT_LC3'))); ?>
                     </time>
                 </dd>
                 <?php endif; ?>
-                
+
                 <?php if ($this->item->params->get('show_create_date')) : ?>
                 <dd class="create">
                     <span class="icon-calendar"></span>
-                    <time 
-                        datetime="<?php echo JHtml::_('date', $this->item->created, 'c'); ?>" 
+                    <time
+                        datetime="<?php echo JHtml::_('date', $this->item->created, 'c'); ?>"
                         itemprop="dateCreated">
                         <?php echo JText::sprintf('COM_JSPACE_CREATED_DATE_ON', JHtml::_('date', $this->item->created, JText::_('DATE_FORMAT_LC3'))); ?>
                     </time>
@@ -139,14 +149,14 @@ $useDefList = ($this->item->params->get('show_modify_date') || $this->item->para
         </div>
         <?php endif; ?>
 
-        <?php 
-        if ($this->item->params->get('show_tags', 1) && !empty($this->item->getTags()->itemTags)) : 
+        <?php
+        if ($this->item->params->get('show_tags', 1) && !empty($this->item->getTags()->itemTags)) :
             $tagLayout = new JLayoutFile('joomla.content.tags');
             echo $tagLayout->render($this->item->getTags()->itemTags);
         endif;
         ?>
 
-        <?php if ($this->item->params->get('access-view')):?>    
+        <?php if ($this->item->params->get('access-view')):?>
         <div itemprop="articleBody">
             <?php foreach ($this->item->get('metadata')->toArray() as $key=>$value) : ?>
             <dl>
@@ -160,11 +170,17 @@ $useDefList = ($this->item->params->get('show_modify_date') || $this->item->para
                 </dd>
             </dl>
             <?php endforeach; ?>
-            
-            <?php 
+
+            <?php
             foreach ($this->item->getChildren() as $child) :
-                $this->child = $child;
-                echo $this->loadTemplate('child');
+            ?>
+            <div>
+                <a
+                    href="<?php echo JRoute::_('index.php?option=com_jspace&view=record&id='.$child->get('id')); ?>"
+                    itemprop="hasPart">
+                    <?php echo $child->get('title'); ?></a>
+            </div>
+            <?php
             endforeach;
             ?>
         </div>
