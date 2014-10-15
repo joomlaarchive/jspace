@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="JSpace" default="" basedir=".">
-	
+
 	<target name="clean" description="Clean JSpace library from Joomla.">
 		<delete dir="${dest.libs}/jspace"/>
-		
+
 		<delete>
 			<fileset dir="${dest.languages}" defaultexcludes="true">
 				<include name="**/*.lib_jspace*.ini"/>
@@ -11,24 +11,29 @@
 		</delete>
 		<delete dir="${dest.libs}/jspace"/>
 	</target>
-	
+
 	<target name="update" description="Copies JSpace library to existing Joomla install.">
 		<echo message="Deploying JSpace library to Joomla! environment."/>
-		
-		
+
+
 		<copy todir="${dest.libs}/jspace">
 			<fileset dir="${src}" defaultexcludes="true">
 				<include name="**"/>
 				<exclude name="**/language/**"/>
 			</fileset>
-		</copy> 
-		<!--
+		</copy>
+
 		<copy todir="${dest.languages}">
 			<fileset dir="${src}/language" defaultexcludes="true">
 				<include name="**/**"/>
 			</fileset>
 		</copy>
-		-->
+
+        <copy todir="${dest.administrator.languages}">
+            <fileset dir="${src}/language" defaultexcludes="true">
+                <include name="**/*.lib_jspace.ini"/>
+            </fileset>
+        </copy>
 	</target>
 
 	<target name="package" description="Creates a JSpace library package.">

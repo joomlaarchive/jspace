@@ -7,7 +7,7 @@
  * @license     GNU General Public License version 2 or later; see LICENSE
  *
  * Contributors
- * Please feel free to add your name and email (optional) here if you have 
+ * Please feel free to add your name and email (optional) here if you have
  * contributed any source code changes.
  *
  * Name                         Email
@@ -38,7 +38,7 @@ class JSpaceController extends JControllerLegacy
         $user = JFactory::getUser();
         $id = $this->input->getInt('w_id');
         $vName = $this->input->get('view', 'categories');
-        
+
         $this->input->set('view', $vName);
 
         if ($user->get('id') ||($this->input->getMethod() == 'POST' && $vName = 'categories'))

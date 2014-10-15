@@ -411,7 +411,7 @@ class JSpaceRouter extends JComponentRouterBase
                     $db = JFactory::getDbo();
                     $query = $db->getQuery(true)
                         ->select($db->quoteName('id'))
-                        ->from('#__content')
+                        ->from('#__jspace_records')
                         ->where($db->quoteName('catid') . ' = ' . (int) $vars['catid'])
                         ->where($db->quoteName('alias') . ' = ' . $db->quote($db->quote($segment)));
                     $db->setQuery($query);
@@ -444,7 +444,7 @@ class JSpaceRouter extends JComponentRouterBase
 }
 
 /**
- * Content router functions
+ * JSpace router functions
  *
  * These functions are proxys for the new router interface
  * for old SEF extensions.

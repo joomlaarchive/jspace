@@ -4,7 +4,7 @@
         name="records"
         label="COM_JSPACE_FIELDSET_RECORDS_LABEL"
         description="COM_JSPACE_FIELDSET_RECORDS_DESC">
-        
+
         <field
             name="show_title"
             type="radio"
@@ -126,8 +126,8 @@
             <option value="0">JNO</option>
         </field>
     </fieldset>
-    
-    <fieldset 
+
+    <fieldset
 		name="editinglayout"
         label="COM_JSPACE_FIELDSET_EDITING_LAYOUT_LABEL"
         description="COM_JSPACE_FIELDSET_EDITING_LAYOUT_DESC">
@@ -141,7 +141,7 @@
 			<option value="0">JNO</option>
 			<option value="1">JYES</option>
 		</field>
- 
+
 		<field
 			name="history_limit"
 			type="text"
@@ -150,8 +150,8 @@
 			description="JGLOBAL_HISTORY_LIMIT_OPTIONS_DESC"
 			default="5"/>
     </fieldset>
-    
-	<fieldset 
+
+	<fieldset
 		name="storage"
 		label="COM_JSPACE_FIELDSET_STORAGE_LABEL"
 		description="COM_JSPACE_FIELDSET_STORAGE_DESC">
@@ -170,8 +170,8 @@
 			description="COM_JSPACE_STORAGE_UPLOAD_MIME_DESC"
 			class="inputbox"/>
     </fieldset>
-    
-	<fieldset 
+
+	<fieldset
 		name="extraction"
 		label="COM_JSPACE_FIELDSET_EXTRACTION_LABEL"
 		description="COM_JSPACE_FIELDSET_EXTRACTION_DESC">
@@ -185,7 +185,7 @@
 			<option value="0">JNO</option>
 			<option value="1">JYES</option>
 		</field>
-		
+
 		<field
 			name="extractor"
 			type="list"
@@ -197,52 +197,52 @@
 				<option value="remote">COM_JSPACE_EXTRACTION_EXTRACTOR_REMOTE</option>
 				<option value="solr">COM_JSPACE_EXTRACTION_EXTRACTOR_SOLR</option>
 		</field>
-		
+
 		<field
 			name="attachments_spacer1"
 			type="spacer"
 			hr="true"/>
-		
+
 		<field
 			name="local_tika_app_path"
 			type="text"
 			label="COM_JSPACE_EXTRACTION_LOCALTIKA_APPPATH_LABEL"
 			description="COM_JSPACE_EXTRACTION_LOCALTIKA_APPPATH_DESC"
 			class="inputbox"/>
-		
+
 		<field
 			name="attachments_spacer2"
 			type="spacer"
 			hr="true"/>
-		
+
 		<field
 			name="remote_tika_host"
 			type="text"
 			label="COM_JSPACE_EXTRACTION_REMOTETIKA_HOST_LABEL"
 			description="COM_JSPACE_EXTRACTION_REMOTETIKA_HOST_DESC"
 			class="inputbox"/>
-		
+
 		<field
 			name="remote_tika_port"
 			type="text"
 			label="COM_JSPACE_EXTRACTION_REMOTETIKA_PORT_LABEL"
 			description="COM_JSPACE_EXTRACTION_REMOTETIKA_PORT_DESC"
 			class="inputbox"/>
-		
+
 		<field
 			name="remote_tika_username"
 			type="text"
 			label="COM_JSPACE_EXTRACTION_REMOTETIKA_USERNAME_LABEL"
 			description="COM_JSPACE_EXTRACTION_REMOTETIKA_USERNAME_DESC"
 			class="inputbox"/>
-		
+
 		<field
 			name="remote_tika_password"
 			type="text"
 			label="COM_JSPACE_EXTRACTION_REMOTETIKA_PASSWORD_LABEL"
 			description="COM_JSPACE_EXTRACTION_REMOTETIKA_PASSWORD_DESC"
 			class="inputbox"/>
-		
+
 		<field
 			name="remote_tika_path"
 			type="text"
@@ -250,7 +250,77 @@
 			description="COM_JSPACE_EXTRACTION_REMOTETIKA_PATH_DESC"
 			class="inputbox"/>
 	</fieldset>
-    
+
+    <fieldset
+        name="oai"
+        label="COM_JSPACE_FIELDSET_OAI_LABEL"
+        description="COM_JSPACE_FIELDSET_OAI_DESCRIPTION">
+        <field
+            name="oai_enabled"
+            type="checkbox"
+            value="1"
+            label="COM_JSPACE_FIELD_OAI_ENABLED_LABEL"
+            description="COM_JSPACE_FIELD_OAI_ENABLED_DESCRIPTION"/>
+
+        <field
+            name="oai_repository_name"
+            type="text"
+            default="JSpace"
+            label="COM_JSPACE_FIELD_OAI_REPOSITORY_NAME_LABEL"
+            description="COM_JSPACE_FIELD_OAI_REPOSITORY_NAME_DESCRIPTION"/>
+
+        <field
+            name="oai_accesslevel"
+            type="accesslevel"
+            value="1"
+            label="COM_JSPACE_FIELD_OAI_ACCESSLEVEL_LABEL"
+            description="COM_JSPACE_FIELD_OAI_ACCESSLEVEL_DESC"/>
+
+        <field
+            name="oai_earliest_datestamp"
+            type="Calendar"
+            default="1970-01-01"
+            label="COM_JSPACE_FIELD_OAI_EARLIEST_DATESTAMP_LABEL"
+            description="COM_JSPACE_FIELD_OAI_EARLIEST_DATESTAMP_DESCRIPTION"/>
+
+        <field
+            name="oai_granularity"
+            type="list"
+            default="Y-m-d"
+            label="COM_JSPACE_FIELD_OAI_GRANULARITY_LABEL"
+            description="COM_JSPACE_FIELD_OAI_GRANULARITY_DESCRIPTION">
+            <option value="Y-m-d">Day (YYYY-MM-DD)</option>
+            <option value="Y-m-d\TH:i:s\Z">Second (YYYY-MM-DDThh:mm:ssZ)</option>
+        </field>
+
+        <field
+            name="oai_resumptiontokenexpires"
+            type="list"
+            default="+1 week"
+            label="COM_JSPACE_FIELD_OAI_RESUMPTIONTOKENEXPIRES_LABEL"
+            description="COM_JSPACE_FIELD_OAI_RESUMPTIONTOKENEXPIRES_DESC">
+            <option value="">COM_JSPACE_FIELD_OAI_RESUMPTIONTOKENEXPIRES_NEVER</option>
+            <option value="+1 day">COM_JSPACE_FIELD_OAI_RESUMPTIONTOKENEXPIRES_1DAY</option>
+            <option value="+1 week">COM_JSPACE_FIELD_OAI_RESUMPTIONTOKENEXPIRES_1WEEK</option>
+            <option value="+1 month">COM_JSPACE_FIELD_OAI_RESUMPTIONTOKENEXPIRES_1MONTH</option>
+        </field>
+
+        <field
+            name="oai_administrators"
+            type="text"
+            label="COM_JSPACE_FIELD_OAI_ADMINISTRATORS_EMAILS_LABEL"
+            description="COM_JSPACE_FIELD_OAI_ADMINISTRATORS_EMAILS_DESCRIPTION"/>
+
+        <field
+            name="oai_ignorecategories"
+            type="category"
+            label="COM_JSPACE_FIELD_OAI_IGNORECATEGORIES_LABEL"
+            description="COM_JSPACE_FIELD_OAI_IGNORECATEGORIES_DESC"
+            extension="com_jspace"
+            multiple="true"/>
+
+    </fieldset>
+
 	<fieldset name="permissions"
 		label="JCONFIG_PERMISSIONS_LABEL"
 		description="JCONFIG_PERMISSIONS_DESC">

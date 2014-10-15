@@ -5,26 +5,26 @@
  * @copyright	Copyright (C) 2012 Wijiti Pty Ltd. All rights reserved.
  * @license     This file is part of the JSolrSearch component for Joomla!.
 
-   The JSolrSearch component for Joomla! is free software: you can redistribute it 
-   and/or modify it under the terms of the GNU General Public License as 
-   published by the Free Software Foundation, either version 3 of the License, 
+   The JSolrSearch component for Joomla! is free software: you can redistribute it
+   and/or modify it under the terms of the GNU General Public License as
+   published by the Free Software Foundation, either version 3 of the License,
    or (at your option) any later version.
 
-   The JSolrSearch component for Joomla! is distributed in the hope that it will be 
+   The JSolrSearch component for Joomla! is distributed in the hope that it will be
    useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
    GNU General Public License for more details.
 
    You should have received a copy of the GNU General Public License
-   along with the JSolrSearch component for Joomla!.  If not, see 
+   along with the JSolrSearch component for Joomla!.  If not, see
    <http://www.gnu.org/licenses/>.
 
  * Contributors
- * Please feel free to add your name and email (optional) here if you have 
+ * Please feel free to add your name and email (optional) here if you have
  * contributed any source code changes.
  * Name							Email
- * Michał Kocztorz				<michalkocztorz@wijiti.com> 
- * 
+ * Michał Kocztorz				<michalkocztorz@wijiti.com>
+ *
  */
 
 // no direct access
@@ -40,7 +40,7 @@ defined('_JEXEC') or die;
 abstract class JSpaceHelperRoute
 {
 	protected static $lookup = array();
-	
+
     public static function getCategoryRoute($catid, $language = 0)
     {
         if ($catid instanceof JCategoryNode)
@@ -129,7 +129,7 @@ abstract class JSpaceHelperRoute
 
         return $link;
     }
-	
+
     protected static function buildLanguageLookup()
     {
         if (count(self::$lang_lookup) == 0)
@@ -152,9 +152,9 @@ abstract class JSpaceHelperRoute
 
     protected static function _findItem($needles = null)
     {
-        $app        = JFactory::getApplication();
-        $menus      = $app->getMenu('site');
-        $language   = isset($needles['language']) ? $needles['language'] : '*';
+        $app      = JFactory::getApplication();
+        $menus    = $app->getMenu('site');
+        $language = isset($needles['language']) ? $needles['language'] : '*';
 
         // Prepare the reverse lookup array.
         if (!isset(self::$lookup[$language]))
@@ -164,37 +164,37 @@ abstract class JSpaceHelperRoute
             $component  = JComponentHelper::getComponent('com_jspace');
 
             $attributes = array('component_id');
-            $values = array($component->id);
+            $values     = array($component->id);
 
             if ($language != '*')
             {
                 $attributes[] = 'language';
-                $values[] = array($needles['language'], '*');
+                $values[]     = array($needles['language'], '*');
             }
 
             $items = $menus->getItems($attributes, $values);
 
-            if ($items)
+            foreach ($items as $item)
             {
-                foreach ($items as $item)
+                if (isset($item->query) && isset($item->query['view']))
                 {
-                    if (isset($item->query) && isset($item->query['view']))
-                    {
-                        $view = $item->query['view'];
-                        if (!isset(self::$lookup[$language][$view]))
-                        {
-                            self::$lookup[$language][$view] = array();
-                        }
-                        if (isset($item->query['id']))
-                        {
+                    $view = $item->query['view'];
 
-                            // here it will become a bit tricky
-                            // language != * can override existing entries
-                            // language == * cannot override existing entries
-                            if (!isset(self::$lookup[$language][$view][$item->query['id']]) || $item->language != '*')
-                            {
-                                self::$lookup[$language][$view][$item->query['id']] = $item->id;
-                            }
+                    if (!isset(self::$lookup[$language][$view]))
+                    {
+                        self::$lookup[$language][$view] = array();
+                    }
+
+                    if (isset($item->query['id']))
+                    {
+                        /**
+                         * Here it will become a bit tricky
+                         * language != * can override existing entries
+                         * language == * cannot override existing entries
+                         */
+                        if (!isset(self::$lookup[$language][$view][$item->query['id']]) || $item->language != '*')
+                        {
+                            self::$lookup[$language][$view][$item->query['id']] = $item->id;
                         }
                     }
                 }
@@ -220,13 +220,15 @@ abstract class JSpaceHelperRoute
 
         // Check if the active menuitem matches the requested language
         $active = $menus->getActive();
-        if ($active && ($language == '*' || in_array($active->language, array('*', $language)) || !JLanguageMultilang::isEnabled()))
+
+        if ($active && $active->component == 'com_jspace' && ($language == '*' || in_array($active->language, array('*', $language)) || !JLanguageMultilang::isEnabled()))
         {
             return $active->id;
         }
 
         // If not found, return language specific home link
         $default = $menus->getDefault($language);
+
         return !empty($default->id) ? $default->id : null;
     }
 }

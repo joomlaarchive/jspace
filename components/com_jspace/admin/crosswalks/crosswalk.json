@@ -197,7 +197,7 @@
                     {
                         "source":"issued",
                         "target":"issued"
-    
+
                     },
                     {
                         "source":"isVersionOf",
@@ -206,12 +206,12 @@
                     {
                         "source":"language",
                         "target":"language"
-    
+
                     },
                     {
                         "source":"license",
                         "target":"license"
-    
+
                     },
                     {
                         "source":"mediator",
@@ -224,7 +224,7 @@
                     {
                         "source":"modified",
                         "target":"modified"
-    
+
                     },
                     {
                         "source":"provenance",
@@ -280,7 +280,7 @@
                     },
                     {
                         "source":"title",
-                        "target":"title"    
+                        "target":"title"
                     },
                     {
                         "source":"type",
@@ -300,7 +300,7 @@
                     {
                         "source":"abstract",
                         "target":"abstract"
-    
+
                     },
                     {
                         "source":"contributor",
@@ -317,6 +317,14 @@
                     {
                         "source":"date",
                         "target":"date"
+                    },
+                    {
+                        "source":"date",
+                        "target":"created"
+                    },
+                    {
+                        "source":"date",
+                        "target":"modified"
                     },
                     {
                         "source":"description",

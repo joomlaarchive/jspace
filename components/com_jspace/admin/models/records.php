@@ -6,7 +6,7 @@
  * @copyright   Copyright (C) 2014 KnowledgeArc Ltd. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE
  */
- 
+
 defined('_JEXEC') or die;
 
 /**
@@ -44,105 +44,105 @@ class JSpaceModelRecords extends JModelList
                 'author_id',
                 'category_id'
 			);
-		
+
 			if (JLanguageAssociations::isEnabled())
 			{
 				$config['filter_fields'][] = 'association';
 			}
 		}
-		
+
 		parent::__construct($config);
 	}
-	
+
 	protected function populateState($ordering = null, $direction = null)
 	{
 		$app = JFactory::getApplication();
-	
+
 		// Adjust the context to support modal layouts.
 		if ($layout = $app->input->get('layout'))
 		{
 			$this->context .= '.' . $layout;
 		}
-	
+
 		$search = $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search');
 		$this->setState('filter.search', $search);
-	
+
 		$access = $this->getUserStateFromRequest($this->context . '.filter.access', 'filter_access', 0, 'int');
 		$this->setState('filter.access', $access);
-	
+
 		$authorId = $app->getUserStateFromRequest($this->context . '.filter.author_id', 'filter_author_id');
 		$this->setState('filter.author_id', $authorId);
-	
+
 		$published = $this->getUserStateFromRequest($this->context . '.filter.published', 'filter_published', '');
 		$this->setState('filter.published', $published);
-	
+
 		$categoryId = $this->getUserStateFromRequest($this->context . '.filter.category_id', 'filter_category_id');
 		$this->setState('filter.category_id', $categoryId);
-	
+
 		$language = $this->getUserStateFromRequest($this->context . '.filter.language', 'filter_language', '');
 		$this->setState('filter.language', $language);
 
 		// List state information.
 		parent::populateState('r.lft', 'asc');
-	
+
 		// Force a language
 		$forcedLanguage = $app->input->get('forcedLanguage');
-	
+
 		if (!empty($forcedLanguage))
 		{
 			$this->setState('filter.language', $forcedLanguage);
 			$this->setState('filter.forcedLanguage', $forcedLanguage);
 		}
 	}
-	
+
 	protected function getListQuery()
 	{
 		$db = $this->getDbo();
 		$query = $db->getQuery(true);
 		$user = JFactory::getUser();
-	
+
 		$table = $this->getTable('Record', 'JSpaceTable');
 		$fields = array();
-		
+
 		foreach ($table->getFields() as $field)
-		{			
+		{
 			$fields[] = 'r.'.$db->qn($field->Field);
 		}
 
 		$query->select($this->getState('list.select', $fields));
-		
-		$query			
-			->from('#__jspace_records AS r')
+
+		$query
+			->from($db->qn('#__jspace_records', 'r'))
 			->where("NOT r.alias = 'root'");
-		
+
 		// Get the parent title.
 		$query
 			->select('r2.title AS parent_title')
 			->join('LEFT', '#__jspace_records AS r2 ON r.parent_id = r2.id');
-		
+
 		// Join over the language
 		$query->select('l.title AS language_title')
 		->join('LEFT', $db->quoteName('#__languages') . ' AS l ON l.lang_code = r.language');
-		
+
 		if (JLanguageAssociations::isEnabled())
 		{
 			$query->select('COUNT(asso2.id)>1 as association')
 			->join('LEFT', '#__associations AS asso ON asso.id = r.id AND asso.context='.$db->quote('com_jspace.record'))
 			->join('LEFT', '#__associations AS asso2 ON asso2.key = asso.key');
 		}
-	
+
 		// Join over the users for the checked out user.
 		$query->select('uc.name AS editor')
 		->join('LEFT', '#__users AS uc ON uc.id=r.checked_out');
-	
+
 		// Join over the asset groups.
 		$query->select('ag.title AS access_level')
 		->join('LEFT', '#__viewlevels AS ag ON ag.id = r.access');
-		
+
 		// Join over the users for the author.
 		$query->select('ua.name AS author_name')
 		->join('LEFT', '#__users AS ua ON ua.id = r.created_by');
-	
+
 		// Join over the categories.
 		$query->select('c.id as catid, c.title AS category_title')
 		->join('LEFT', '#__categories AS c ON c.id = r.catid');
@@ -167,23 +167,23 @@ class JSpaceModelRecords extends JModelList
                 $query->where('(r.title LIKE ' . $search . ' OR r.alias LIKE ' . $search . ')');
             }
         }
-        
+
 		// Filter by access level.
 		if ($access = $this->getState('filter.access'))
 		{
 			$query->where('r.access = ' . (int) $access);
 		}
-		
+
 		// Implement View Level Access
 		if (!$user->authorise('core.admin'))
 		{
 			$groups = implode(',', $user->getAuthorisedViewLevels());
 			$query->where('r.access IN (' . $groups . ')');
 		}
-		
+
 		// Filter by published state
 		$published = $this->getState('filter.published');
-		
+
 		if (is_numeric($published))
 		{
 			$query->where('r.published = ' . (int) $published);
@@ -192,7 +192,7 @@ class JSpaceModelRecords extends JModelList
 		{
 			$query->where('(r.published = 0 OR r.published = 1)');
 		}
-		
+
 		// Filter by a single or group of categories.
 		$baselevel = 1;
 		$categoryId = $this->getState('filter.category_id');
@@ -213,7 +213,7 @@ class JSpaceModelRecords extends JModelList
             $categoryId = implode(',', $categoryId);
             $query->where('a.catid IN (' . $categoryId . ')');
 		}
-		
+
 		$query->order($db->escape($this->getState('list.ordering', 'r.lft')) . ' ' . $db->escape($this->getState('list.direction', 'ASC')));
 
 		return $query;
