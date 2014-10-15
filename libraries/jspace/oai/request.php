@@ -38,7 +38,9 @@ JLoader::import('jspace.oai.exception');
  */
 class JSpaceOAIRequest extends JObject
 {
-    const LIMIT = 2;
+    const LIMIT = 100;
+
+    const GRANULARITY = 'Y-m-d\TH:i:s\Z';
 
     /**
      * Provides a list of OAI-aware verbs and their configurations.
@@ -109,7 +111,7 @@ class JSpaceOAIRequest extends JObject
     {
         $config = JSpaceFactory::getConfig();
 
-        $responseDate = JDate::getInstance('now', 'UTC')->format('Y-m-d\TH:i:s\Z');
+        $responseDate = JDate::getInstance('now', 'UTC')->format(self::GRANULARITY);
 
         $response = new DomDocument('1.0', 'UTF-8');
         $oaiPmh = $response->createElement("OAI-PMH");
@@ -198,19 +200,6 @@ class JSpaceOAIRequest extends JObject
         $config = JSpaceFactory::getConfig();
 
         $earliestDatestamp = new JDate( $config->get('oai_earliest_datestamp', ''));
-        $granularity = $config->get('oai_granularity', 'Y-m-d');
-        $granularityXML = '';
-
-        switch ($granularity)
-        {
-            case 'Y-m-d':
-                $granularityXML = 'YYYY-MM-DD';
-                break;
-
-            default:
-                $granularityXML = 'YYYY-MM-DDThh:mm:ssZ';
-                break;
-        }
 
         $admins = $config->get('oai_administrators', "");
         $admins = explode(";", $admins);
@@ -227,9 +216,9 @@ class JSpaceOAIRequest extends JObject
             $xml->documentElement->appendChild($xml->createElement('adminEmail', $email));
         }
 
-        $xml->documentElement->appendChild($xml->createElement('earliestDatestamp', $earliestDatestamp->format( $granularity)));
+        $xml->documentElement->appendChild($xml->createElement('earliestDatestamp', $earliestDatestamp->format(self::GRANULARITY)));
         $xml->documentElement->appendChild($xml->createElement('deletedRecord', 'transient'));
-        $xml->documentElement->appendChild($xml->createElement('granularity', $granularityXML));
+        $xml->documentElement->appendChild($xml->createElement('granularity', "YYYY-MM-DDThh:mm:ssZ"));
         $description = $xml->documentElement->appendChild($xml->createElement('description'));
 
         $oaiIdentifier = $xml->createElement('oai-identifier');
@@ -380,17 +369,11 @@ class JSpaceOAIRequest extends JObject
             $xml->documentElement->appendChild($header);
         }
 
-        $resumptionToken = null;
-        $newCursor = $this->get('cursor', 0)+SELF::LIMIT;
+        $resumptionToken = $xml->importNode(
+            $this->createResumptionToken(
+                array('completeListSize'=>$this->getRecordCount())), true);
 
-        if ($newCursor < $this->getRecordCount()) {
-            $resumptionToken = $this->createResumptionToken(array('cursor'=>$newCursor));
-        }
-
-        $resumptionToken = $xml->createElement('resumptionToken', $resumptionToken);
         $xml->documentElement->appendChild($resumptionToken);
-        $resumptionToken->setAttribute('cursor', $this->get('cursor', 0));
-        $resumptionToken->setAttribute('completeListSize', $this->getRecordCount());
 
         return $xml->documentElement;
     }
@@ -427,17 +410,11 @@ class JSpaceOAIRequest extends JObject
             $xml->documentElement->appendChild($xrecord);
         }
 
-        $resumptionToken = null;
-        $newCursor = $this->get('cursor', 0)+SELF::LIMIT;
+        $resumptionToken = $xml->importNode(
+            $this->createResumptionToken(
+                array('completeListSize'=>$this->getRecordCount())), true);
 
-        if ($newCursor < $this->getRecordCount()) {
-            $resumptionToken = $this->createResumptionToken(array('cursor'=>$newCursor));
-        }
-
-        $resumptionToken = $xml->createElement('resumptionToken', $resumptionToken);
         $xml->documentElement->appendChild($resumptionToken);
-        $resumptionToken->setAttribute('cursor', $this->get('cursor', 0));
-        $resumptionToken->setAttribute('completeListSize', $this->getRecordCount());
 
         return $xml->documentElement;
     }
@@ -623,13 +600,13 @@ class JSpaceOAIRequest extends JObject
 
         $nullDate = $db->q($db->getNullDate());
 
-        if ($startDate = $this->get('from')) {
-            $startDate = $db->q(JFactory::getDate($startDate)->toSql());
+        $datestamp = JSpaceFactory::getConfig()->get('oai_earliest_datestamp', '1970-01-01');
 
-            $where[] = '(('.$db->qn('r.created').'>='.$startDate.' AND '.
-                $db->qn('r.modified').'='.$nullDate.') OR '.
-                $db->qn('r.modified').'>='.$startDate.')';
-        }
+        $startDate = $db->q(JFactory::getDate($this->get('from', $datestamp))->toSql());
+
+        $where[] = '(('.$db->qn('r.created').'>='.$startDate.' AND '.
+            $db->qn('r.modified').'='.$nullDate.') OR '.
+            $db->qn('r.modified').'>='.$startDate.')';
 
         if ($endDate = $this->get('until')) {
             $endDate = $db->q(JFactory::getDate($endDate)->toSql());
@@ -808,7 +785,7 @@ class JSpaceOAIRequest extends JObject
         $datestamp = JFactory::getDate($record->get('modified', $record->get('created')));
 
         $header->appendChild(
-            $xml->createElement('datestamp', $datestamp->format('Y-m-d\TH:i:s\Z')));
+            $xml->createElement('datestamp', $datestamp->format(self::GRANULARITY)));
 
         $header->appendChild(
             $xml->createElement('setSpec', $record->get('category')));
@@ -890,7 +867,7 @@ class JSpaceOAIRequest extends JObject
         if ($expires) {
             $expires = JFactory::getDate($this->get('created').$expires);
 
-            $resumptionToken->setAttribute('expirationDate', $expires->format('Y-m-d\TH:i:s\Z'));
+            $resumptionToken->setAttribute('expirationDate', $expires->format(self::GRANULARITY));
         }
 
         return $xml->documentElement;

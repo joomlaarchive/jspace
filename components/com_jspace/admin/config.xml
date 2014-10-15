@@ -281,7 +281,7 @@
             type="Calendar"
             default="1970-01-01"
             label="COM_JSPACE_FIELD_OAI_EARLIEST_DATESTAMP_LABEL"
-            description="COM_JSPACE_FIELD_OAI_EARLIEST_DATESTAMP_DESCRIPTION"/>
+            description="COM_JSPACE_FIELD_OAI_EARLIEST_DATESTAMP_DESC"/>
 
         <field
             name="oai_granularity"
