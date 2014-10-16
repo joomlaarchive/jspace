@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <metadata>
-	<layout title="COM_JSPACE_OAI_LAYOUT_TITLE" option="com_jspace_oai_option">
-		<message>
-			<![CDATA[COM_JSPACE_OAI_LAYOUT_DESC]]>
-		</message>
-	</layout>
-	
+    <layout title="COM_JSPACE_OAI_LAYOUT_TITLE" option="com_jspace_oai_option">
+        <message>
+            <![CDATA[COM_JSPACE_OAI_LAYOUT_DESC]]>
+        </message>
+    </layout>
 </metadata>

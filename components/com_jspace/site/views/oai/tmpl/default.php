@@ -1,6 +1,6 @@
 <?php
 /**
- * OAI view
+ * OAI welcome page.
  *
  * @package     JSpace
  * @copyright   Copyright (C) 2011-2014 Wijiti Pty Ltd. All rights reserved.
@@ -28,5 +28,54 @@
  */
 
 defined( '_JEXEC' ) or die( 'Restricted access' );
+?>
+<h1><?php echo JText::_('COM_JSPACE_OAI_HEADING'); ?></h1>
 
-echo $this->oai->getResponse()->saveXML();
+<p><?php echo JText::_('COM_JSPACE_OAI_INTRODUCTION'); ?></p>
+
+<h3><a href="<?php echo JRoute::_(JSpaceHelperRoute::getOaiRoute('Identify')); ?>">Identify</a></h3>
+<p><?php echo JText::_('COM_JSPACE_OAI_IDENTIFY'); ?></p>
+
+<h3><a href="<?php echo JRoute::_(JSpaceHelperRoute::getOaiRoute('ListMetadataFormats')); ?>">ListMetadataFormats</a></h3>
+<p><?php echo JText::_('COM_JSPACE_OAI_LISTMETADATAFORMATS'); ?></p>
+<p><strong><?php echo JText::_('COM_JSPACE_OAI_ARGUMENTS_LABEL'); ?></strong>
+    <ul>
+        <li><?php echo JText::_('COM_JSPACE_OAI_LISTMETADATAFORMATS_ARGUMENTS_IDENTIFIER'); ?></li>
+    </ul>
+</p>
+
+<h3><a href="<?php echo JRoute::_(JSpaceHelperRoute::getOaiRoute('ListSets')); ?>">ListSets</a></h3>
+<p><?php echo JText::_('COM_JSPACE_OAI_LISTSETS'); ?></p>
+
+<h3><a href="<?php echo JRoute::_(JSpaceHelperRoute::getOaiRoute('ListIdentifiers')); ?>">ListIdentifiers</a></h3>
+<p><?php echo JText::_('COM_JSPACE_OAI_LISTIDENTIFIERS'); ?></p>
+<p><strong><?php echo JText::_('COM_JSPACE_OAI_ARGUMENTS_LABEL'); ?></strong>
+    <ul>
+        <li><?php echo JText::_('COM_JSPACE_OAI_ARGUMENTS_METADATAPREFIX'); ?></li>
+        <li><?php echo JText::_('COM_JSPACE_OAI_ARGUMENTS_FROM'); ?></li>
+        <li><?php echo JText::_('COM_JSPACE_OAI_ARGUMENTS_UNTIL'); ?></li>
+        <li><?php echo JText::_('COM_JSPACE_OAI_ARGUMENTS_SET'); ?></li>
+    </ul>
+</p>
+
+<h3><a href="<?php echo JRoute::_(JSpaceHelperRoute::getOaiRoute('ListRecords')); ?>">ListRecords</a></h3>
+<p><?php echo JText::_('COM_JSPACE_OAI_LISTRECORDS'); ?></p>
+<p><strong><?php echo JText::_('COM_JSPACE_OAI_ARGUMENTS_LABEL'); ?></strong>
+    <ul>
+        <li><?php echo JText::_('COM_JSPACE_OAI_ARGUMENTS_METADATAPREFIX'); ?></li>
+        <li><?php echo JText::_('COM_JSPACE_OAI_ARGUMENTS_FROM'); ?></li>
+        <li><?php echo JText::_('COM_JSPACE_OAI_ARGUMENTS_UNTIL'); ?></li>
+        <li><?php echo JText::_('COM_JSPACE_OAI_ARGUMENTS_SET'); ?></li>
+    </ul>
+</p>
+
+<h3><a href="<?php echo JRoute::_(JSpaceHelperRoute::getOaiRoute('GetRecord')); ?>">GetRecord</a></h3>
+<p><?php echo JText::_('COM_JSPACE_OAI_GETRECORD'); ?></p>
+<p><strong><?php echo JText::_('COM_JSPACE_OAI_ARGUMENTS_LABEL'); ?></strong>
+    <ul>
+        <li><?php echo JText::_('COM_JSPACE_OAI_ARGUMENTS_GETRECORD_IDENTIFIER'); ?></li>
+        <li><?php echo JText::_('COM_JSPACE_OAI_ARGUMENTS_METADATAPREFIX'); ?></li>
+    </ul>
+</p>
+
+<p><?php echo JText::_('COM_JSPACE_OAI_ARGUMENTS_RESUMPTIONTOKEN'); ?></p>

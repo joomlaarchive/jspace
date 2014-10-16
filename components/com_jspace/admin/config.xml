@@ -318,7 +318,6 @@
             description="COM_JSPACE_FIELD_OAI_IGNORECATEGORIES_DESC"
             extension="com_jspace"
             multiple="true"/>
-
     </fieldset>
 
 	<fieldset name="permissions"

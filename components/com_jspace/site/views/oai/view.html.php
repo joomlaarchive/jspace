@@ -3,7 +3,7 @@
  * OAI representation of item
  *
  * @package     JSpace
- * @copyright   Copyright (C) 2011-2014 Wijiti Pty Ltd. All rights reserved.
+ * @copyright   Copyright (C) 2014 Wijiti Pty Ltd. All rights reserved.
  * @license     This file is part of the JSpace component for Joomla!.
 
    The JSpace component for Joomla! is free software: you can redistribute it
@@ -23,37 +23,20 @@
  * Contributors
  * Please feel free to add your name and email (optional) here if you have
  * contributed any source code changes.
- * @author Hayden Young <haydenyoung@wijiti.com>
- * @author Michał Kocztorz <michalkocztorz@wijiti.com>
+ * @author Hayden Young <hayden@knowledgearc.com>
  */
 
-defined('_JEXEC') or die('Restricted access');
+defined('_JEXEC' ) or die( 'Restricted access');
 
-JLoader::import('jspace.factory');
+jimport('joomla.application.component.view');
+jimport('jspace.factory');
 
-class JSpaceModelOAI extends JModelLegacy
+class JSpaceViewOAI extends JViewLegacy
 {
-    /**
-     * Gets the OAI request.
-     */
-    public function getRequest()
+    function display($tpl = null)
     {
-        $config = JSpaceFactory::getConfig();
+        $this->set('oai', $this->get('Request'));
 
-        if(!$config->get('oai_enabled', false))
-        {
-            header($_SERVER['SERVER_PROTOCOL'] . ' 404 Not found', true, 404);
-            jexit();
-        }
-
-        try
-        {
-            return JSpaceFactory::getOAIRequest(JFactory::getApplication()->input);
-        }
-        catch (Exception $e)
-        {
-            header($_SERVER['SERVER_PROTOCOL'] . ' 500 Internal server error', true, 500);
-            jexit();
-        }
+        parent::display($tpl);
     }
 }

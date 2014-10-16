@@ -86,7 +86,7 @@ class JSpaceRouter extends JComponentRouterBase
             return $segments;
         }
 
-        if ($view == 'category' || $view == 'record')
+        if ($view == 'category' || $view == 'record' || $view == 'oai')
         {
             if (!$menuItemGiven)
             {

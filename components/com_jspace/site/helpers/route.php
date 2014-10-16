@@ -130,6 +130,35 @@ abstract class JSpaceHelperRoute
         return $link;
     }
 
+    public static function getOaiRoute($verb, $arguments = array())
+    {
+        // Create the link
+        $link = new JUri('index.php?option=com_jspace&view=oai&layout=xml&format=xml');
+
+        $app      = JFactory::getApplication();
+        $menus    = $app->getMenu('site');
+
+        $component  = JComponentHelper::getComponent('com_jspace');
+
+        $item = $menus->getItems('link', (string)$link, true);
+
+        if ($item->id) {
+            $link->delVar('view');
+            $link->delVar('layout');
+            $link->delVar('format');
+            $link->setVar('Itemid', $item->id);
+            $link->setVar('verb', $verb);
+
+            foreach ($arguments as $key=>$value) {
+                $link->setVar($key, $value);
+            }
+        } else {
+            $link = '';
+        }
+
+        return (string)$link;
+    }
+
     protected static function buildLanguageLookup()
     {
         if (count(self::$lang_lookup) == 0)

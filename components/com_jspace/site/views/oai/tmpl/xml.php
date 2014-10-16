@@ -1,9 +1,9 @@
 <?php
 /**
- * OAI representation of item
+ * OAI XML output.
  *
  * @package     JSpace
- * @copyright   Copyright (C) 2011-2014 Wijiti Pty Ltd. All rights reserved.
+ * @copyright   Copyright (C) 2014 Wijiti Pty Ltd. All rights reserved.
  * @license     This file is part of the JSpace component for Joomla!.
 
    The JSpace component for Joomla! is free software: you can redistribute it
@@ -27,33 +27,6 @@
  * @author Michał Kocztorz <michalkocztorz@wijiti.com>
  */
 
-defined('_JEXEC') or die('Restricted access');
+defined( '_JEXEC' ) or die( 'Restricted access' );
 
-JLoader::import('jspace.factory');
-
-class JSpaceModelOAI extends JModelLegacy
-{
-    /**
-     * Gets the OAI request.
-     */
-    public function getRequest()
-    {
-        $config = JSpaceFactory::getConfig();
-
-        if(!$config->get('oai_enabled', false))
-        {
-            header($_SERVER['SERVER_PROTOCOL'] . ' 404 Not found', true, 404);
-            jexit();
-        }
-
-        try
-        {
-            return JSpaceFactory::getOAIRequest(JFactory::getApplication()->input);
-        }
-        catch (Exception $e)
-        {
-            header($_SERVER['SERVER_PROTOCOL'] . ' 500 Internal server error', true, 500);
-            jexit();
-        }
-    }
-}
+echo $this->oai->getResponse()->saveXML();

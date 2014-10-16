@@ -1,6 +1,6 @@
 <?php
 /**
- * OAI representation of item
+ * OAI-XML output.
  *
  * @package     JSpace
  * @copyright   Copyright (C) 2011-2014 Wijiti Pty Ltd. All rights reserved.

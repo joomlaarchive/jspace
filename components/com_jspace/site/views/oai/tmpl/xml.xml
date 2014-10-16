@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<metadata>
+    <layout title="com_jspace_oai_view_xml_title" option="com_jspace_oai_view_xml_title">
+        <message>
+            <![CDATA[com_jspace_oai_view_xml_desc]]>
+        </message>
+    </layout>
+
+    <fields name="request">
+        <fieldset name="request">
+            <field
+                name="format"
+                type="hidden"
+                default="xml"/>
+        </fieldset>
+    </fields>
+</metadata>
