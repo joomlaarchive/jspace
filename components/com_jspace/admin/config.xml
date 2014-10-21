@@ -284,16 +284,6 @@
             description="COM_JSPACE_FIELD_OAI_EARLIEST_DATESTAMP_DESC"/>
 
         <field
-            name="oai_granularity"
-            type="list"
-            default="Y-m-d"
-            label="COM_JSPACE_FIELD_OAI_GRANULARITY_LABEL"
-            description="COM_JSPACE_FIELD_OAI_GRANULARITY_DESCRIPTION">
-            <option value="Y-m-d">Day (YYYY-MM-DD)</option>
-            <option value="Y-m-d\TH:i:s\Z">Second (YYYY-MM-DDThh:mm:ssZ)</option>
-        </field>
-
-        <field
             name="oai_resumptiontokenexpires"
             type="list"
             default="+1 week"

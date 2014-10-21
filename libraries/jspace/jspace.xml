@@ -22,6 +22,7 @@
         <folder>ingestion</folder>
         <folder>metadata</folder>
         <folder>multifileupload</folder>
+        <folder>oai</folder>
         <folder>table</folder>
         <filename>factory.php</filename>
     </files>

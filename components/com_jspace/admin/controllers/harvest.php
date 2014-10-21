@@ -21,7 +21,7 @@ class JSpaceControllerHarvest extends JControllerForm
         $checkin = property_exists($table, 'checked_out');
         $context = "$this->option.edit.$this->context";
         $task = $this->getTask();
-        
+
         $return = true;
 
         // Determine the name of the primary key for the data.
@@ -52,7 +52,7 @@ class JSpaceControllerHarvest extends JControllerForm
         // Validate the posted data.
         // Sometimes the form needs some posted data, such as for plugins and modules.
         $form = $model->getForm($data);
-        
+
         if (!$form)
         {
             $app->enqueueMessage($model->getError(), 'error');
@@ -87,7 +87,7 @@ class JSpaceControllerHarvest extends JControllerForm
 
             $return = false;
         }
-        
+
         // Attempt to discover the data.
         if ($model->discover($validData))
         {

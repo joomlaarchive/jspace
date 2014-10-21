@@ -81,11 +81,24 @@ class JSpaceOAIRequest extends JObject
         JFactory::getLanguage()->load('lib_jspace');
         JLog::addLogger(array());
 
-        unset($properties['option']);
-        unset($properties['view']);
-        unset($properties['layout']);
-        unset($properties['format']);
-        unset($properties['Itemid']);
+        $allowedProperties = array();
+
+        // sanitize
+        if ($verb = JArrayHelper::getValue($properties, 'verb')) {
+
+            $verbSettings = JArrayHelper::getValue(self::$verbs, $verb);
+            $allowedProperties = array_merge(
+                JArrayHelper::getValue($verbSettings, 'mandatory', array()),
+                JArrayHelper::getValue($verbSettings, 'optional', array()));
+
+            $allowedProperties[] = 'verb';
+        }
+
+        foreach (array_keys($properties) as $property) {
+            if (array_search($property, $allowedProperties) === false) {
+                unset($properties[$property]);
+            }
+        }
 
         parent::__construct($properties);
     }
@@ -171,7 +184,7 @@ class JSpaceOAIRequest extends JObject
                     JText::_('LIB_JSPACE_OAI_EXCEPTION_BADVERB_LABEL'),
                     'badVerb');
             }
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             if ($e instanceof JSpaceOAIException) {
                 $error = $response->createElement("error", $e->getMessage());
                 $error->setAttribute('code', $e->getCode());
@@ -846,7 +859,7 @@ class JSpaceOAIRequest extends JObject
 
         $xml = new DomDocument();
 
-        $newCursor = (int)$this->get('cursor', 0)+SELF::LIMIT;
+        $newCursor = (int)$this->get('cursor', 0)+self::LIMIT;
 
         $token = null;
 
