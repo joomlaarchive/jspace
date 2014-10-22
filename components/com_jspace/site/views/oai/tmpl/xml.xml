@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <metadata>
-    <layout title="com_jspace_oai_view_xml_title" option="com_jspace_oai_view_xml_title">
+    <layout title="com_jspace_oai_view_xml_title" option="com_jspace_oai_option">
         <message>
             <![CDATA[com_jspace_oai_view_xml_desc]]>
         </message>
