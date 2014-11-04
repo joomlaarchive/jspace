@@ -45,7 +45,7 @@ class JSpaceController extends JControllerLegacy
         {
             $cachable = false;
         }
-
+        
         $safeurlparams = array(
             'id'                => 'INT',
             'limit'             => 'UINT',

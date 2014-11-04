@@ -143,9 +143,9 @@ abstract class JSpaceHelperRoute
         $item = $menus->getItems('link', (string)$link, true);
 
         if ($item->id) {
-            $link->delVar('view');
-            $link->delVar('layout');
-            $link->delVar('format');
+            //$link->delVar('view');
+            //$link->delVar('layout');
+            //$link->delVar('format');
             $link->setVar('Itemid', $item->id);
             $link->setVar('verb', $verb);
 

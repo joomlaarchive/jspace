@@ -127,10 +127,9 @@ class JSpaceOAIRequest extends JObject
         $responseDate = JDate::getInstance('now', 'UTC')->format(self::GRANULARITY);
 
         $response = new DomDocument('1.0', 'UTF-8');
-        $oaiPmh = $response->createElement("OAI-PMH");
-        $oaiPmh->setAttribute('xmlns', "http://www.openarchives.org/OAI/2.0/");
-        $oaiPmh->setAttribute('xmlns:xsi', "http://www.w3.org/2001/XMLSchema-instance");
-        $oaiPmh->setAttribute('xsi:schemaLocation', 'http://www.openarchives.org/OAI/2.0/ http://www.openarchives.org/OAI/2.0/OAI-PMH.xsd');
+        $oaiPmh = $response->createElementNS("http://www.openarchives.org/OAI/2.0/", "OAI-PMH");
+        $oaiPmh->setAttributeNS("http://www.w3.org/2000/xmlns/", "xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance");
+        $oaiPmh->setAttributeNS("http://www.w3.org/2001/XMLSchema-instance", 'schemaLocation', 'http://www.openarchives.org/OAI/2.0/ http://www.openarchives.org/OAI/2.0/OAI-PMH.xsd');
 
         $oaiPmh->appendChild($response->createElement('responseDate', $responseDate));
 
@@ -405,8 +404,8 @@ class JSpaceOAIRequest extends JObject
             throw new JSpaceOAIException(JText::_("LIB_JSPACE_OAI_EXCEPTION_NORECORDSMATCH_LABEL"), 'noRecordsMatch');
         }
 
-        $xml = new DomDocument();
-        $xml->appendChild($xml->createElement(ucfirst(__FUNCTION__)));
+        $dom = new DomDocument();
+        $dom->appendChild($dom->createElement(ucfirst(__FUNCTION__)));
 
         $records = $this->getRecords();
 
@@ -419,17 +418,17 @@ class JSpaceOAIRequest extends JObject
                 $record->set('relation', htmlentities($parentUrl));
             }
 
-            $xrecord = $xml->importNode($this->createRecord($record), true);
-            $xml->documentElement->appendChild($xrecord);
+            $xrecord = $dom->importNode($this->createRecord($record), true);
+            $dom->documentElement->appendChild($xrecord);
         }
 
-        $resumptionToken = $xml->importNode(
+        $resumptionToken = $dom->importNode(
             $this->createResumptionToken(
                 array('completeListSize'=>$this->getRecordCount())), true);
 
-        $xml->documentElement->appendChild($resumptionToken);
+        $dom->documentElement->appendChild($resumptionToken);
 
-        return $xml->documentElement;
+        return $dom->documentElement;
     }
 
     /**

@@ -50,12 +50,12 @@ class PlgJOAIOAIDC extends JPlugin
         }
 
         $xml = new DomDocument();
-        $oaiDc = $xml->createElement('oai_dc:dc');
+        $oaiDc = $xml->createElementNS("http://www.openarchives.org/OAI/2.0/oai_dc/", 'oai_dc:dc');
         $xml->appendChild($oaiDc);
-        $oaiDc->setAttribute("xmlns:oai_dc", "http://www.openarchives.org/OAI/2.0/oai_dc/");
-        $oaiDc->setAttribute("xmlns:dc", "http://purl.org/dc/elements/1.1/");
-        $oaiDc->setAttribute("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance");
-        $oaiDc->setAttribute("xsi:schemaLocation", "http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd");
+        $oaiDc->setAttributeNS("http://www.w3.org/2000/xmlns/", "xmlns:dc", "http://purl.org/dc/elements/1.1/");
+
+        $oaiDc->setAttributeNS("http://www.w3.org/2000/xmlns/", "xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance");
+        $oaiDc->setAttributeNS("http://www.w3.org/2001/XMLSchema-instance", 'schemaLocation', "http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd");
 
         $properties = $data->getProperties();
         unset($properties['metadata']);
@@ -72,7 +72,7 @@ class PlgJOAIOAIDC extends JPlugin
         foreach ($keys as $key) {
             foreach ($metadata->get($key) as $value) {
                 if ($value) {
-                    $oaiDc->appendChild($xml->createElement($key, $value));
+                    $oaiDc->appendChild($xml->createElementNS("http://purl.org/dc/elements/1.1/", str_replace('.', ':', $key), $value));
                 }
             }
         }

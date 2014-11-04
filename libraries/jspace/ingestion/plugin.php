@@ -276,6 +276,8 @@ abstract class JSpaceIngestionPlugin extends JPlugin
      */
     private function _getAssets($record, $assets)
     {
+        $collection = array();
+        
         foreach ($assets as $asset)
         {
             $this->_download($asset);

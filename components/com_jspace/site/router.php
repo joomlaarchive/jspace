@@ -86,7 +86,7 @@ class JSpaceRouter extends JComponentRouterBase
             return $segments;
         }
 
-        if ($view == 'category' || $view == 'record' || $view == 'oai')
+        if ($view == 'category' || $view == 'record')
         {
             if (!$menuItemGiven)
             {
@@ -192,6 +192,14 @@ class JSpaceRouter extends JComponentRouterBase
 
             unset($query['id']);
             unset($query['catid']);
+        }
+
+        if ($view == 'oai') {
+            if ($menuItemGiven) {
+                unset($query['view']);
+                unset($query['layout']);
+                unset($query['format']);
+            }
         }
 
         if ($view == 'archive')
