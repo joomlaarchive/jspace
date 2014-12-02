@@ -6,10 +6,8 @@
  * @copyright   Copyright (C) 2014 KnowledgeArc Ltd. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE
  */
- 
-defined('_JEXEC') or die;
 
-jimport('jspace.factory');
+defined('_JEXEC') or die;
 
 /**
  * Models a list of schemas.
@@ -23,9 +21,9 @@ class JSpaceModelRecordSchemas extends JModelLegacy
 	{
 		parent::__construct($config);
 	}
-	
+
 	public function getItems()
 	{
-        return JSpaceFactory::getSchemas();
+        return \JSpace\Factory::getSchemas();
 	}
 }

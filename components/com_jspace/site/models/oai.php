@@ -38,7 +38,7 @@ class JSpaceModelOAI extends JModelLegacy
      */
     public function getRequest()
     {
-        $config = JSpaceFactory::getConfig();
+        $config = \JSpace\Factory::getConfig();
 
         if(!$config->get('oai_enabled', false))
         {
@@ -48,7 +48,7 @@ class JSpaceModelOAI extends JModelLegacy
 
         try
         {
-            return JSpaceFactory::getOAIRequest(JFactory::getApplication()->input);
+            return \JSpace\Factory::getOAIRequest(JFactory::getApplication()->input);
         }
         catch (Exception $e)
         {

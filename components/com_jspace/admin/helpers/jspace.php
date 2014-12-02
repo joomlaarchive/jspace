@@ -1,31 +1,31 @@
 <?php
 /**
  * A general helper for the JSpace component.
- * 
+ *
  * @package		JSpace
  * @copyright	Copyright (C) 2012 Wijiti Pty Ltd. All rights reserved.
  * @license     This file is part of the JSpace component for Joomla!.
 
-   The JSpace component for Joomla! is free software: you can redistribute it 
-   and/or modify it under the terms of the GNU General Public License as 
-   published by the Free Software Foundation, either version 3 of the License, 
+   The JSpace component for Joomla! is free software: you can redistribute it
+   and/or modify it under the terms of the GNU General Public License as
+   published by the Free Software Foundation, either version 3 of the License,
    or (at your option) any later version.
 
-   The JSpace component for Joomla! is distributed in the hope that it will be 
+   The JSpace component for Joomla! is distributed in the hope that it will be
    useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
    GNU General Public License for more details.
 
    You should have received a copy of the GNU General Public License
-   along with the JSpace component for Joomla!.  If not, see 
+   along with the JSpace component for Joomla!.  If not, see
    <http://www.gnu.org/licenses/>.
 
  * Contributors
- * Please feel free to add your name and email (optional) here if you have 
+ * Please feel free to add your name and email (optional) here if you have
  * contributed any source code changes.
  * Name							Email
- * Hayden Young					<haydenyoung@wijiti.com> 
- * 
+ * Hayden Young					<haydenyoung@wijiti.com>
+ *
  */
 
 defined('_JEXEC') or die('Restricted access');
@@ -63,8 +63,13 @@ class JSpaceHelper
             'index.php?option=com_jspace&view=harvests',
             $vName == 'harvests'
         );
+        JHtmlSidebar::addEntry(
+            JText::_('COM_JSPACE_SUBMENU_SUBMISSIONS'),
+            'index.php?option=com_jspace&view=submissions',
+            $vName == 'submissions'
+        );
 	}
-	
+
 	/**
 	 * Gets a list of the actions that can be performed.
 	 *
@@ -78,22 +83,22 @@ class JSpaceHelper
 		$user	= JFactory::getUser();
 		$result	= new JObject();
 
-		if (empty($categoryId)) 
+		if (empty($categoryId))
 		{
 			$assetName = 'com_jspace';
 		}
-		else 
+		else
 		{
 			$assetName = 'com_jspace.category.'.(int) $categoryId;
 		}
 
 		$actions = array(
-			'core.admin', 
-			'core.manage', 
-			'core.create', 
-			'core.edit', 
-			'core.edit.own', 
-			'core.edit.state', 
+			'core.admin',
+			'core.manage',
+			'core.create',
+			'core.edit',
+			'core.edit.own',
+			'core.edit.state',
 			'core.delete'
 		);
 

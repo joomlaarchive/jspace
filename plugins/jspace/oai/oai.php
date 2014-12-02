@@ -9,10 +9,10 @@
 
 defined('_JEXEC') or die;
 
-jimport('jspace.ingestion.oai.client');
-jimport('jspace.ingestion.oai.harvester');
-jimport('jspace.ingestion.oai.assetharvester');
-jimport('jspace.ingestion.plugin');
+use JSpace\Ingestion\Oai\Client;
+use JSpace\Ingestion\Oai\Harvester;
+use JSpace\Ingestion\Oai\AssetHarvester;
+use JSpace\Ingestion\Plugin as JSpaceIngestionPlugin;
 
 /**
  * Handles OAI harvesting from the command line.

@@ -32,7 +32,7 @@ class JSpaceTableRecord extends JTableNested
 
 		$observerParams = array('typeAlias'=>'com_jspace.record');
         JTableObserverTags::createObserver($this, $observerParams);
-        JTableObserverRecordhistory::createObserver($this, $observerParams);
+        JSpace\Table\Observer\RecordHistory::createObserver($this, $observerParams);
 	}
 
 	/**

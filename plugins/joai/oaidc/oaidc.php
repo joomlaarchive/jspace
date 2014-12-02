@@ -8,8 +8,9 @@
 
 defined('_JEXEC') or die;
 
-jimport('jspace.table.cache');
-jimport('jspace.metadata.registry');
+JLoader::import('jspace.table.cache');
+
+use JSpace\Metadata\Crosswalk;
 
 /**
  * Harvests metadata in the OAI Dublin Core format.
@@ -64,10 +65,10 @@ class PlgJOAIOAIDC extends JPlugin
         $registry->loadArray($properties);
         $registry->loadString($data->get('metadata'));
 
-        $crosswalk = JSpaceFactory::getCrosswalk($registry);
+        $crosswalk = \JSpace\Factory::getCrosswalk($registry);
         $metadata = $crosswalk->getSpecialMetadata(array('dc'), true);
 
-        $keys = JSpaceMetadataCrosswalk::getKeys($metadata);
+        $keys = Crosswalk::getKeys($metadata);
 
         foreach ($keys as $key) {
             foreach ($metadata->get($key) as $value) {

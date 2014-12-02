@@ -427,6 +427,5 @@ class Com_JSpaceInstallerScript
     {
         $installer = new JInstaller();
         $newManifest = $installer->parseXMLInstallFile($path);
-        var_dump($newManifest);
     }
 }

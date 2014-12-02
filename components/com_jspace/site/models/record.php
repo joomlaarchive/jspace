@@ -72,7 +72,7 @@ class JSpaceModelRecord extends JModelItem
         {
             try
             {
-                $record = JSpaceRecord::getInstance($pk);
+                $record = JSpace\Archive\Record::getInstance($pk);
 
                 if (!($record->id))
                 {

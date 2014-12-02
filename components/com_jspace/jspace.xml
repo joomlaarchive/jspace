@@ -9,27 +9,27 @@
 	<license>http://www.gnu.org/licenses/gpl-3.0.html</license>
 	<version>0.5.0</version>
 	<description>COM_JSPACE_XML_DESCRIPTION</description>
-    
+
     <scriptfile>script.php</scriptfile>
-    
+
     <install>
     	<sql>
 			<file driver="mysql" charset="utf8">sql/install.mysql.utf8.sql</file>
 		</sql>
 	</install>
-	
+
     <uninstall>
     	<sql>
     		<file driver="mysql" charset="utf8">sql/uninstall.mysql.utf8.sql</file>
     	</sql>
     </uninstall>
-    
+
 	<update>
 		<schemas>
 			<schemapath type="mysql">sql/updates/mysql</schemapath>
 		</schemas>
 	</update>
-	
+
 	<files folder="site">
         <folder>controllers</folder>
 		<folder>helpers</folder>
@@ -39,11 +39,11 @@
 		<filename>jspace.php</filename>
 		<filename>router.php</filename>
 	</files>
-	
+
  	<languages folder="site">
  		<language tag="en-GB">language/en-GB/en-GB.com_jspace.ini</language>
  	</languages>
- 	
+
     <media folder="media" destination="com_jspace">
     	<folder>css</folder>
         <folder>js</folder>
@@ -52,27 +52,32 @@
 	<administration>
 		<menu img="class:jspace">JSpace</menu>
 		<submenu>
-			<menu 
-				link="option=com_jspace" 
+			<menu
+				link="option=com_jspace"
 				view="cpanel" img="class:jspace"
 				alt="JSpace/CPanel">com_jspace_cpanel</menu>
-			<menu 
+			<menu
 				link="option=com_categories&amp;extension=com_jspace"
-				view="categories" 
-				img="class:jspace-cat" 
+				view="categories"
+				img="class:jspace-cat"
 				alt="JSpace/Categories">com_jspace_categories</menu>
-            <menu 
-                link="option=com_jspace&amp;view=records" 
+            <menu
+                link="option=com_jspace&amp;view=records"
                 view="records" img="class:jspace"
                 alt="JSpace/Records">com_jspace_records</menu>
-            <menu 
+            <menu
                 link="option=com_jspace&amp;view=harvests"
-                view="harvests" 
-                img="class:jspace-cat" 
+                view="harvests"
+                img="class:jspace-cat"
                 alt="JSpace/Harvests">com_jspace_harvests</menu>
+            <menu
+                link="option=com_jspace&amp;view=submissions"
+                view="submissions"
+                img="class:jspace-cat"
+                alt="JSpace/Submissions">com_jspace_submissions</menu>
 		</submenu>
-                
-		<files folder="admin">			
+
+		<files folder="admin">
 			<folder>cli</folder>
 			<folder>controllers</folder>
             <folder>crosswalks</folder>
@@ -87,13 +92,13 @@
             <filename>controller.php</filename>
             <filename>jspace.php</filename>
 		</files>
-		
+
 	 	<languages folder="admin">
  			<language tag="en-GB">language/en-GB/en-GB.com_jspace.ini</language>
  			<language tag="en-GB">language/en-GB/en-GB.com_jspace.sys.ini</language>
  		</languages>
 	</administration>
-	
+
     <params>
     </params>
 </extension>

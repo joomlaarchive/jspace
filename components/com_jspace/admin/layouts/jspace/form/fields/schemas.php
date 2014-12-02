@@ -2,7 +2,7 @@
 $categoryId = $displayData->getCategoryId();
 
 $groups = $displayData->getUserGroups();
-$schemas = JSpaceFactory::getSchemas();
+$schemas = \JSpace\Factory::getSchemas();
 ?>
 
 <div id="schemas-sliders" class="tabbable tabs-left">
@@ -15,77 +15,77 @@ $schemas = JSpaceFactory::getSchemas();
         </li>
     <?php endforeach; ?>
     </ul>
-    
+
     <div class="tab-content">
         <?php foreach ($groups as $group) : ?>
-        <div 
-            class="tab-pane<?php echo ($group->value == 1) ? ' active' : ''; ?>" 
+        <div
+            class="tab-pane<?php echo ($group->value == 1) ? ' active' : ''; ?>"
             id="schema-<?php echo $group->value; ?>">
             <table class="table table-striped">
                 <thead>
                     <tr>
-                        <th 
-                            class="actions" 
+                        <th
+                            class="actions"
                             id="actions-th<?php echo $group->value; ?>">
                             <span class="acl-action"><?php echo  JText::_('COM_JSPACE_SCHEMAS_SCHEMA'); ?></span>
                         </th>
 
-                        <th 
-                            class="settings" 
+                        <th
+                            class="settings"
                             id="settings-th<?php echo $group->value; ?>">
                             <span class="acl-action"><?php echo JText::_('COM_JSPACE_SCHEMAS_NEWSETTING'); ?> </span>
                         </th>
                         <th id="aclactionth<?php echo $group->value; ?>">
-                            <span 
+                            <span
                                 class="acl-action"><?php echo JText::_('COM_JSPACE_SCHEMAS_CALCULATEDSETTING'); ?></span>
                         </th>
                     </tr>
                 </thead>
-                
+
                 <tbody>
                     <?php foreach ($schemas as $schema) : ?>
                     <tr>
                         <td headers="actions-th<?php echo $group->value; ?>">
-                            <label 
-                                for="<?php echo $displayData->id.'_'.$schema->name.'_'.$group->value; ?>" class="hasTooltip" 
+                            <label
+                                for="<?php echo $displayData->id.'_'.$schema->name.'_'.$group->value; ?>" class="hasTooltip"
                                 title="<?php echo htmlspecialchars(JText::_($schema->label).' '.JText::_($schema->description), ENT_COMPAT, 'UTF-8'); ?>">
                                 <?php echo JText::_($schema->label); ?>
                             </label>
                         </td>
 
                         <td headers="settings-th<?php echo $group->value; ?>">
-                            <select 
-                                class="input-small" 
-                                name="<?php echo $displayData->name.'['.$schema->name.']['.$group->value.']'; ?>" id="<?php echo $displayData->id.'_'.$schema->name.'_'.$group->value; ?>" 
+                            <select
+                                class="input-small"
+                                name="<?php echo $displayData->name.'['.$schema->name.']['.$group->value.']'; ?>" id="<?php echo $displayData->id.'_'.$schema->name.'_'.$group->value; ?>"
                                 title="<?php echo JText::sprintf('JLIB_RULES_SELECT_ALLOW_DENY_GROUP', JText::_($schema->label), trim($group->text)); ?>">
 
                                 <?php
                                 $inheritedRule = $schema->canUse($group->value, $categoryId);
-                                
+
                                 $schemaRule = $schema->isUsed($group->value, $categoryId);
                                 ?>
-                                
+
                                 <?php if (!empty($group->parent_id)) : ?>
-                                <option 
+                                <option
                                     value=""
                                     <?php echo ($schemaRule === -1 ? ' selected="selected"' : ''); ?>><?php echo JText::_('COM_JSPACE_SCHEMA_INHERITED'); ?></option>
                                 <?php endif; ?>
-                                <option 
+                                <option
                                     value="1"
                                     <?php echo ($schemaRule === 1 ? ' selected="selected"' : ''); ?>><?php echo JText::_('COM_JSPACE_SCHEMA_USE'); ?></option>
-                                <option 
+                                <option
                                     value="0"
                                     <?php echo ($schemaRule === 0 ? ' selected="selected"' : ''); ?>><?php echo JText::_('COM_JSPACE_SCHEMA_DONTUSE'); ?></option>
                             </select>
                         </td>
-                        
+
                         <td headers="aclactionth<?php echo $group->value; ?>">
                             <?php if ($inheritedRule === true) : ?>
-                            <span 
+                            <span
                                 class="label label-success">
                                 <?php echo JText::_('COM_JSPACE_SCHEMA_USE'); ?></span>
                             <?php else : ?>
-                            <span 
+                            <span
                                 class="label label-important">
                                 <?php echo JText::_('COM_JSPACE_SCHEMA_DONTUSE'); ?></span>
                             <?php endif; ?>

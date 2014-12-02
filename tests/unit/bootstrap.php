@@ -42,5 +42,7 @@ JError::setErrorHandling(E_ERROR, 'ignore');
 
 require dirname(dirname(__FILE__)).'/vendor/autoload.php';
 
+JLoader::registerNamespace('JSpace', dirname(dirname(dirname(__FILE__))).'/libraries');
+
 JTable::addIncludePath(dirname(dirname(dirname(__FILE__))).'/components/com_jspace/admin/tables');
 JTable::addIncludePath(JPATH_BASE.'/administrator/components/com_weblinks/tables');

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="library" method="upgrade" version="3.0">
+	<name>lib_jspace</name>
+	<libraryname>JSpace</libraryname>
+	<author>KnowledgeARC</author>
+    <creationDate>2012-05-15</creationDate>
+	<authorEmail>development@knowledgearc.com</authorEmail>
+	<authorUrl>http://www.knowledgearc.org</authorUrl>
+	<copyright>Copyright (C) 2012-2014 KnowledgeARC Ltd. All rights reserved.</copyright>
+	<license>http://www.gnu.org/licenses/gpl-3.0.html</license>
+    <version>0.5.0</version>
+    <description>LIB_JSPACE_XML_DESCRIPTION</description>
+
+    <files folder="libraries">
+        <folder>Archive</folder>
+        <folder>FileSystem</folder>
+        <folder>Helper</folder>
+        <folder>Html</folder>
+        <folder>Ingestion</folder>
+        <folder>Metadata</folder>
+        <folder>Oai</folder>
+        <folder>Table</folder>
+        <filename>Factory.php</filename>
+    </files>
+
+	<languages>
+		<language tag="en-GB">language/en-GB/en-GB.lib_jspace.ini</language>
+		<language tag="en-GB">language/en-GB/en-GB.lib_jspace.sys.ini</language>
+	</languages>
+</extension>

@@ -6,14 +6,20 @@
  * @copyright   Copyright (C) 2014 KnowledgeArc Ltd. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE
  */
- 
+
 defined('_JEXEC') or die;
 
-jimport('joomla.registry.registry');
+use Joomla\Registry\Registry;
 
-jimport('jspace.factory');
-jimport('jspace.archive.record');
-jimport('jspace.ingestion.plugin');
+use JSpace\Factory as JSpaceFactory;
+use JSpace\Archive\Record;
+use JSpace\Ingestion\Plugin as JSpaceIngestionPlugin;
+
+use \JHttpFactory;
+use \JArrayHelper;
+use \DomDocument;
+use \DOMXPath;
+use \SimpleXMLElement;
 
 /**
  * Handles importing items via an OpenSearch compliant search engine.
@@ -22,32 +28,32 @@ jimport('jspace.ingestion.plugin');
  * @subpackage  JSpace
  */
 class PlgJSpaceOpenSearch extends JSpaceIngestionPlugin
-{    
+{
     /**
      * Attempts to discover whether the harvest configuration points to an OpenSearch-enabled url.
-     * 
+     *
      * @param   string     $sourceUrl  The url to discover.
      *
-     * @return  JRegistry  A OpenSearch description as a JRegistry or false if no description 
+     * @return  JRegistry  A OpenSearch description as a JRegistry or false if no description
      * can be found.
      */
     public function onJSpaceHarvestDiscover($sourceUrl)
     {
         return $this->_discover($sourceUrl);
     }
-    
+
     /**
      * Recursively discovers the atom/rss OpenSearch url.
      *
      * @param   string     $sourceUrl  The url to discover.
      *
-     * @return  JRegistry  A OpenSearch description as a JRegistry or false if no description 
+     * @return  JRegistry  A OpenSearch description as a JRegistry or false if no description
      * can be found.
      */
     private function _discover($sourceUrl)
     {
         $discovered = false;
-    
+
         $url = new JUri($sourceUrl);
         $http = JHttpFactory::getHttp();
         $response = $http->get($url);
@@ -56,22 +62,22 @@ class PlgJSpaceOpenSearch extends JSpaceIngestionPlugin
         {
             $contentType = JArrayHelper::getValue($response->headers, 'Content-Type');
             $contentType = $this->parseContentType($contentType);
-         
+
             if ($contentType === 'text/html')
             {
                 $dom = new DomDocument();
                 $dom->loadHTML($response->body);
                 $xpath = new DOMXPath($dom);
-                
+
                 $opendocument = '//html/head/link[@type="application/opensearchdescription+xml"]';
                 $links = $xpath->query($opendocument);
-                
+
                 if (count($links))
                 {
                     $link = $dom->importNode($links->item(0), true);
-                    
+
                     $href = new JUri($link->getAttribute('href'));
-                    
+
                     // sometimes the opensearch url is not complete so complete it.
                     if (!$href->getScheme())
                     {
@@ -79,7 +85,7 @@ class PlgJSpaceOpenSearch extends JSpaceIngestionPlugin
                         $url->setPath($href);
                         $url->setQuery($href->getQuery());
                     }
-                    
+
                     $url->setVar('source', $sourceUrl);
 
                     $discovered = $this->_discover((string)$url);
@@ -88,7 +94,7 @@ class PlgJSpaceOpenSearch extends JSpaceIngestionPlugin
             else if ($contentType === 'application/opensearchdescription+xml')
             {
                 $originalUrl = $url->getVar('source');
-                
+
                 $xml = new SimpleXMLElement($response->body);
 
                 if (isset($xml->Url))
@@ -99,7 +105,7 @@ class PlgJSpaceOpenSearch extends JSpaceIngestionPlugin
                     {
                         $template = JArrayHelper::getValue($url, 'template', null, 'string');
                         $type = JArrayHelper::getValue($url, 'type', null, 'string');
-                    
+
                         $link = new JUri($template);
                         $queries = $link->getQuery(true);
                         //@todo a search/replace will probably suffice.
@@ -111,15 +117,15 @@ class PlgJSpaceOpenSearch extends JSpaceIngestionPlugin
                                 break;
                             }
                         }
-                        
+
                         $link->setQuery($queries);
-                        
+
                         // don't try and discover the html search.
                         if (strpos($type, 'text/html') === false)
                         {
                             $discovered = $this->_discover((string)$link);
                         }
-                        
+
                         $i++;
                     }
                 }
@@ -132,14 +138,14 @@ class PlgJSpaceOpenSearch extends JSpaceIngestionPlugin
                 $discovered->set('discovery.url', (string)$sourceUrl);
                 $discovered->set('discovery.plugin.type', (string)$contentType);
             }
-            
+
         }
-        
+
         return $discovered;
     }
-    
+
     /**
-     * Captures the onJSpaceHarvestRetrieve event, retrieving records via the configured 
+     * Captures the onJSpaceHarvestRetrieve event, retrieving records via the configured
      * OpenSearch results.
      *
      * @param  JObject  $harvest  The harvest information.
@@ -150,7 +156,7 @@ class PlgJSpaceOpenSearch extends JSpaceIngestionPlugin
         {
             return;
         }
-    
+
         $templateUrl = $harvest->get('params')->get('discovery.url');
 
         $http = JHttpFactory::getHttp();
@@ -161,15 +167,15 @@ class PlgJSpaceOpenSearch extends JSpaceIngestionPlugin
             "{language}"=>urlencode(JFactory::getLanguage()->getName()),
             "{inputEncoding}"=>"UTF-8",
             "{outputEncoding}"=>"UTF-8");
-        
-        $dom = new DomDocument();        
+
+        $dom = new DomDocument();
         $count = 0; // the number of records to retrieve.
-        
+
         do
         {
             $url = new JUri($templateUrl);
             $queries = $url->getQuery(true);
-            
+
             foreach ($queries as $keyq=>$valueq)
             {
                 if (array_key_exists($valueq, $parameters))
@@ -177,16 +183,16 @@ class PlgJSpaceOpenSearch extends JSpaceIngestionPlugin
                     $queries[$keyq] = $parameters[$valueq];
                 }
             }
-            
+
             $url->setQuery($queries);
-            
+
             $response = $http->get($url);
-            
+
             if ((int)$response->code === 200)
             {
                 $reader = new XMLReader;
                 $reader->xml($response->body);
-            
+
                 while($reader->read())
                 {
                     if ($reader->nodeType == XmlReader::ELEMENT)
@@ -196,17 +202,17 @@ class PlgJSpaceOpenSearch extends JSpaceIngestionPlugin
                             $entry = simplexml_import_dom($dom->importNode($reader->expand(), true));
                             $this->cache($harvest, $entry);
                         }
-                        
+
                         if ($reader->localName == 'item')
                         {
                             $entry = simplexml_import_dom($dom->importNode($reader->expand(), true));
                             $this->cache($harvest, $entry);
                         }
-                        
+
                         if ($reader->localName == 'totalResults')
                         {
                             $totalResults = simplexml_import_dom($dom->importNode($reader->expand(), true));
-                            
+
                             if (!$count)
                             {
                                 $count = (int)$totalResults;
@@ -215,17 +221,17 @@ class PlgJSpaceOpenSearch extends JSpaceIngestionPlugin
                     }
                 }
             }
-            
+
             $parameters['{startIndex?}']+=$parameters['{count?}'];
             $parameters['{startPage?}']+=1;
         }
         while($parameters['{startIndex?}'] < $count);
     }
-    
+
     protected function cache($harvest, $data)
     {
         $contentType = $harvest->get('params')->get('discovery.plugin.type');
-   
+
         if (isset($data->id))
         {
             $identifier = (string)$data->id;
@@ -238,23 +244,23 @@ class PlgJSpaceOpenSearch extends JSpaceIngestionPlugin
         if ($identifier)
         {
             $metadata = new JRegistry();
-            
+
             // suppress duplicate attribute errors.
             libxml_use_internal_errors(true);
 
             $dom = new DOMDocument;
             $dom->loadHTMLFile($identifier);
             $xpath = new DOMXPath($dom);
-            
+
             $tags = $xpath->query('//head/meta');
-            
+
             foreach ($tags as $tag)
             {
                 $metadata->set(JString::strtolower($tag->getAttribute('name')), $tag->getAttribute('content'));
             }
-            
+
             $cache = array("metadata"=>$metadata);
-        
+
             $table = JTable::getInstance('Cache', 'JSpaceTable');
             $table->set('id', $identifier);
             $table->set('data', json_encode($cache));

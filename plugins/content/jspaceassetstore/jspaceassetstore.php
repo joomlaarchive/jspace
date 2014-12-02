@@ -73,7 +73,7 @@ class PlgContentJSpaceAssetstore extends JPlugin
         $root = $this->get('params')->get('path', null);
         $id = $asset->id;
 
-        $path = JSpaceArchiveAssetHelper::buildStoragePath($asset->record_id, $root).$asset->hash;
+        $path = JSpace\Archive\AssetHelper::buildStoragePath($asset->record_id, $root).$asset->hash;
 
         $handle = fopen($path, 'rb');
 
@@ -108,7 +108,7 @@ class PlgContentJSpaceAssetstore extends JPlugin
      */
     public function onJSpaceRecordAfterValidate($form, $data, $group = null)
     {
-        $collection = JSpaceHtmlAssets::getCollection();
+        $collection = \JSpace\Html\Assets::getCollection();
 
         foreach ($collection as $dkey=>$derivative)
         {
@@ -275,7 +275,7 @@ class PlgContentJSpaceAssetstore extends JPlugin
         $config = array();
         $errors = array();
 
-        $path = JSpaceArchiveAssetHelper::preparePath($this->params->get('path'));
+        $path = JSpace\Archive\AssetHelper::preparePath($this->params->get('path'));
 
         if (JFolder::exists($path))
         {

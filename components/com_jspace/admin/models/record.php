@@ -6,13 +6,11 @@
  * @copyright   Copyright (C) 2014 KnowledgeArc Ltd. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE
  */
- 
+
 defined('_JEXEC') or die;
 
-jimport('jspace.archive.record');
-jimport('jspace.archive.asset');
-jimport('jspace.html.assets');
-jimport('jspace.clamav.client');
+use \JSpace\Archive\Record;
+use \JSpace\Html\Assets;
 
 /**
  * Models the management of a JSpace record.
@@ -27,18 +25,18 @@ class JSpaceModelRecord extends JModelAdmin
     public function __construct($config = array())
     {
         parent::__construct($config);
-        
+
         $this->typeAlias = $this->get('option').'.'.$this->getName();
     }
 
     public function getItem($pk = null)
     {
         $pk = (!empty($pk)) ? $pk : (int) $this->getState($this->getName() . '.id');
-    
+
         $app = JFactory::getApplication();
 
         // @todo we should just return this but to not break current compatibility, copy to JObject.
-        $record = JSpaceRecord::getInstance($pk);
+        $record = Record::getInstance($pk);
         $item = JArrayHelper::toObject($record->getProperties(), 'JObject');
         $item->metadata = $record->get('metadata')->toArray();
         $item->identifiers = $record->getIdentifiers();
@@ -53,12 +51,12 @@ class JSpaceModelRecord extends JModelAdmin
             if ($item->id != null)
             {
                 $associations = JLanguageAssociations::getAssociations(
-                    $this->option, 
-                    '#__jspace_records', 
-                    $this->typeAlias, 
-                    $item->id, 
-                    'id', 
-                    null, 
+                    $this->option,
+                    '#__jspace_records',
+                    $this->typeAlias,
+                    $item->id,
+                    'id',
+                    null,
                     null);
 
                 foreach ($associations as $tag=>$association)
@@ -75,27 +73,27 @@ class JSpaceModelRecord extends JModelAdmin
 
         if ($parentId)
         {
-            $parent = JSpaceRecord::getInstance($parentId);
+            $parent = Record::getInstance($parentId);
             $item->parentTitle = $record->title;
         }
-        
+
         // Add tags.
         $item->tags = new JHelperTags;
         $item->tags->getTagIds($item->id, $this->typeAlias);
-        
+
         // Override the base user data with any data in the session.
         $data = $app->getUserState('com_jspace.edit.record.data', array());
         foreach ($data as $k=>$v)
         {
             $item->$k = $v;
         }
-        
+
         $dispatcher = JEventDispatcher::getInstance();
         JPluginHelper::importPlugin('content');
-        
+
         // Trigger the data preparation event.
         $dispatcher->trigger('onContentPrepareData', array($this->typeAlias, $item));
-        
+
         return $item;
     }
 
@@ -108,7 +106,7 @@ class JSpaceModelRecord extends JModelAdmin
             return false;
         }
 
-        if ($loadData) 
+        if ($loadData)
         {
             $data = $form->getData()->toArray();
         }
@@ -122,8 +120,8 @@ class JSpaceModelRecord extends JModelAdmin
         // show the parent if it is specified, otherwise make the category selectable.
         if ($parentId)
         {
-            $parent = JSpaceRecord::getInstance($parentId);
-            
+            $parent = Record::getInstance($parentId);
+
             if ($parent->alias == 'root')
             {
                 $form->removeField('parentTitle');
@@ -140,7 +138,7 @@ class JSpaceModelRecord extends JModelAdmin
             $form->removeField('parent_id');
             $form->removeField('parentTitle');
         }
-        
+
         // try to get the schema from the posted data if it isn't in $data.
         if (!($schema = JArrayHelper::getValue($data, 'schema')))
         {
@@ -148,7 +146,7 @@ class JSpaceModelRecord extends JModelAdmin
             $schema = JArrayHelper::getValue($tmp, 'schema');
         }
 
-        if ($schema) 
+        if ($schema)
         {
             $path = JPATH_ROOT.'/administrator/components/com_jspace/models/forms/schemas/'.$schema.'.xml';
             $form->loadFile($path, false);
@@ -162,19 +160,19 @@ class JSpaceModelRecord extends JModelAdmin
         $app = JFactory::getApplication();
 
         $data = $this->getItem();
-        
+
         $this->preprocessData($this->typeAlias, $data);
 
         return $data;
     }
 
     protected function preprocessForm(JForm $form, &$data, $group = 'content')
-    {        
+    {
         $assoc = JLanguageAssociations::isEnabled();
         if ($assoc)
         {
             $languages = JLanguageHelper::getLanguages('lang_code');
-                
+
             $addform = new SimpleXMLElement('<form />');
             $fields = $addform->addChild('fields');
             $fields->addAttribute('name', 'associations');
@@ -182,7 +180,7 @@ class JSpaceModelRecord extends JModelAdmin
             $fieldset->addAttribute('name', 'item_associations');
             $fieldset->addAttribute('description', 'COM_JSPACE_RECORD_ASSOCIATIONS_FIELDSET_DESC');
             $add = false;
-                
+
             foreach ($languages as $tag=>$language)
             {
                 if (empty($data->language) || $tag != $data->language)
@@ -198,7 +196,7 @@ class JSpaceModelRecord extends JModelAdmin
                     $field->addAttribute('clear', 'true');
                 }
             }
-                
+
             if ($add)
             {
                 $form->load($addform, false);
@@ -207,20 +205,20 @@ class JSpaceModelRecord extends JModelAdmin
 
         parent::preprocessForm($form, $data, $group);
     }
-    
+
     protected function preprocessData($context, &$data)
     {
         parent::preprocessData($context, $data);
-        
+
         if (isset($data->metadata))
         {
             $form = $this->getForm($data->getProperties(), false);
-            
+
             // flatten values that belong to single value fields.
             foreach ($data->metadata as $key=>$value)
             {
                 $field = $form->getField($key, 'metadata');
-                
+
                 if ($field)
                 {
                     if (!(bool)$field->multiple && is_array($value))
@@ -229,7 +227,7 @@ class JSpaceModelRecord extends JModelAdmin
                     }
                 }
             }
-            
+
             $data->metadata = $this->_mapToSchemalessMetadata(JArrayHelper::fromObject($data));
         }
     }
@@ -247,12 +245,12 @@ class JSpaceModelRecord extends JModelAdmin
         {
             $table->publish_up = JFactory::getDate()->toSql();
         }
-        
+
         if ($table->state == 1 && intval($table->publish_down) == 0)
         {
             $table->publish_down = $db->getNullDate();
         }
-        
+
         // Increment the content version number.
         $table->version++;
     }
@@ -260,8 +258,8 @@ class JSpaceModelRecord extends JModelAdmin
     public function save($data)
     {
         $pk = JArrayHelper::getValue($data, 'id', (int)$this->getState('record.id'));
-        $record = JSpaceRecord::getInstance($pk);
-        
+        $record = Record::getInstance($pk);
+
         $data['metadata'] = $this->_toArray(JArrayHelper::getValue($data, 'metadata'));
         $data['metadata'] = $this->_mapFromSchemalessMetadata($data);
 
@@ -270,10 +268,10 @@ class JSpaceModelRecord extends JModelAdmin
         {
             return false;
         }
-        
+
         // All assets' files should be an array before being saved.
-        $collection = JSpaceHtmlAssets::getCollection();
-        
+        $collection = Assets::getCollection();
+
         try
         {
             // Store the data.
@@ -289,7 +287,7 @@ class JSpaceModelRecord extends JModelAdmin
             $this->setError(JText::_('JERROR_AN_ERROR_HAS_OCCURRED'));
             return false;
         }
-        
+
         $this->setState('record.id', $record->id);
 
         $this->setState($this->getName() . '.new', ($pk ? false : true));
@@ -301,14 +299,14 @@ class JSpaceModelRecord extends JModelAdmin
     {
         foreach ($pks as $pk)
         {
-            $record = JSpaceRecord::getInstance($pk);
-            
+            $record = Record::getInstance($pk);
+
             if (!$record->delete())
             {
                 return false;
             }
         }
-        
+
         return true;
     }
 
@@ -316,25 +314,25 @@ class JSpaceModelRecord extends JModelAdmin
     {
         $dispatcher = JEventDispatcher::getInstance();
         JPluginHelper::importPlugin('content');
-        
+
         $result = $dispatcher->trigger('onJSpaceRecordBeforeValidate', array($form, $data, $group));
-        
+
         if (in_array(false, $result, true))
         {
             return false;
         }
-        
+
         $params = JComponentHelper::getParams('com_jspace');
-        
+
         // A general post size check of the incoming form.
         $contentLength = $_SERVER['CONTENT_LENGTH'];
         $uploadMaxSize = (int)($params->get('upload_maxsize', 10)) * 1024 * 1024;
         $maxFileSize = (int)(ini_get('upload_max_filesize')) * 1024 * 1024;
         $maxPostSize = (int)(ini_get('post_max_size')) * 1024 * 1024;
         $memoryLimit = (int)(ini_get('memory_limit')) * 1024 * 1024;
-        
+
         if ($uploadMaxSize)
-        {		
+        {
             if ($contentLength > $uploadMaxSize ||
                 $contentLength > $maxFileSize ||
                 $contentLength > $maxPostSize ||
@@ -343,18 +341,18 @@ class JSpaceModelRecord extends JModelAdmin
                 JFactory::getApplication()->enqueueMessage(JText::_('COM_JSPACE_ERROR_WARNUPLOADTOOLARGE'), 'warning');
                 return false;
             }
-        }		
-        
+        }
+
         if ($data = parent::validate($form, $data, $group))
         {
             $result = $dispatcher->trigger('onJSpaceRecordAfterValidate', array($form, $data, $group));
-            
+
             if (in_array(false, $result, true))
             {
                 return false;
             }
         }
-        
+
         return $data;
     }
 
@@ -372,7 +370,7 @@ class JSpaceModelRecord extends JModelAdmin
 
     /**
      * Deletes an asset from the record based on the id parameter.
-     * 
+     *
      * @param  int  $assetId  The id of the asset to be deleted.
      */
     public function deleteAsset($assetId)
@@ -383,7 +381,7 @@ class JSpaceModelRecord extends JModelAdmin
         {
             $ids = array($assetId);
         }
-        
+
         foreach ($ids as $id)
         {
             $asset = $this->getAsset($id);
@@ -405,7 +403,7 @@ class JSpaceModelRecord extends JModelAdmin
 
     /**
      * Deletes a reference from the record based on the id and context parameters.
-     * 
+     *
      * @param  int     $id       The id of the reference to be deleted.
      * @param  string  $context  The context of the reference to be deleted.
      */
@@ -417,33 +415,33 @@ class JSpaceModelRecord extends JModelAdmin
 
     /**
      * Binds the asset metadata to the record's metadata.
-     * 
+     *
      * @param  int  $assetId  The id of the asset to use.
      */
     public function useAssetMetadata($assetId)
     {
         $asset = JSpaceAsset::getInstance($assetId);
 
-        $record = JSpaceRecord::getInstance($asset->record_id);
+        $record = Record::getInstance($asset->record_id);
         $record->bindAssetMetadata($asset->id);
     }
 
     /**
-     * Transforms schemaless metadata to/from name/value pairs into a format JSpace's record storage 
+     * Transforms schemaless metadata to/from name/value pairs into a format JSpace's record storage
      * accepts.
      *
-     * This method will search fields in the record's schema form, only transforming name/value pairs 
+     * This method will search fields in the record's schema form, only transforming name/value pairs
      * which match the JSpace.MetadataSchemaless field type.
-     * 
+     *
      * @param   array  array  The form data.
-     * 
+     *
      * @return  array  The transformed metadata.
      */
     private function _mapFromSchemalessMetadata($data)
     {
         $metadata = JArrayHelper::getValue($data, 'metadata');
         $form = $this->getForm($data, false);
-        
+
         // re-map schemaless metadata name/value pairs to metadata.
         foreach ($form->getFieldsets('metadata') as $fieldset)
         {
@@ -452,7 +450,7 @@ class JSpaceModelRecord extends JModelAdmin
                 if (JString::strtolower($field->type) == 'jspace.metadataschemaless')
                 {
                     $nameValuePairs = JArrayHelper::getValue($metadata, $field->fieldname);
-                    
+
                     foreach ($nameValuePairs as $nameValuePair)
                     {
                         if ($name = JArrayHelper::getValue($nameValuePair, 'name'))
@@ -461,47 +459,47 @@ class JSpaceModelRecord extends JModelAdmin
                             {
                                 $metadata[$name] = array();
                             }
-                            
+
                             $metadata[$name][] = JArrayHelper::getValue($nameValuePair, 'value');
                         }
                     }
-                    
+
                     unset($metadata[$field->fieldname]);
                 }
             }
         }
-        
+
         return $metadata;
     }
-    
+
     /**
      * Transforms the stored metadata into a name/value format the schemaless metadata understands.
      *
-     * This method will search fields in the record's schema form, only transforming name/value pairs 
+     * This method will search fields in the record's schema form, only transforming name/value pairs
      * which match the JSpace.MetadataSchemaless field type.
-     * 
+     *
      * @param   array  array  The form data.
-     * 
+     *
      * @return  array  The transformed metadata.
      */
     private function _mapToSchemalessMetadata($data)
     {
         $metadata = JArrayHelper::getValue($data, 'metadata');
-        
+
         JForm::addFormPath(JPATH_ROOT.'/administrator/components/com_jspace/models/forms/schemas');
         $form = $this->getForm($data, false);
-        
+
         // first find the metadataschemaless field.
         $fields = $form->getGroup('metadata');
         $schemaless = null;
-        
+
         while (($field = current($fields)) && !$schemaless)
         {
             if (JString::strtolower($field->type) == 'jspace.metadataschemaless')
             {
                 $schemaless = $field->fieldname;
             }
-            
+
             next($fields);
         }
 
@@ -516,12 +514,12 @@ class JSpaceModelRecord extends JModelAdmin
                     {
                         $metadata[$schemaless] = array();
                     }
-                    
+
                     foreach ($array as $value)
                     {
                         $metadata[$schemaless][] = array('name'=>$key,'value'=>$value);
                     }
-                    
+
                     unset($metadata[$key]);
                 }
             }
@@ -531,23 +529,23 @@ class JSpaceModelRecord extends JModelAdmin
     }
 
     /**
-     * Parses a metadata array, converting array elements to strings where the corresponding 
+     * Parses a metadata array, converting array elements to strings where the corresponding
      * JSpace form field is not configured for multiple elements.
-     * 
-     * This method allows for the use of Joomla! standard fields even though each metadata field 
+     *
+     * This method allows for the use of Joomla! standard fields even though each metadata field
      * is stored as an array.
      *
      * Fields are checked against a JForm based on the $schema parameter.
      *
      * @param   $source  The source metadata.
-     * 
-     * @return  Metadata that can be handled by both JSpace metadata fields and standard Joomla! 
+     *
+     * @return  Metadata that can be handled by both JSpace metadata fields and standard Joomla!
      * form fields.
      */
     private function _toArray($source)
     {
         $metadata = $source;
-        
+
         foreach ($source as $key=>$value)
         {
             if (is_string($value))
@@ -555,10 +553,10 @@ class JSpaceModelRecord extends JModelAdmin
                 $metadata[$key] = array($value);
             }
         }
-        
+
         return $metadata;
     }
-    
+
     /**
      * Method rebuild the entire nested set tree.
      *

@@ -7,6 +7,8 @@ class JSpaceController extends JControllerLegacy
 
 	public function display($cachable = false, $urlparams = false)
 	{
+        $config = JSpace\Factory::getConfig();
+        
 		$view   = $this->input->get('view', $this->default_view);
 		$layout = $this->input->get('layout', $this->default_view);
 		$id     = $this->input->getInt('id');
