@@ -34,7 +34,7 @@ class JSpaceFormFieldAsset extends JFormField
 
 	public function getAssets()
 	{
-		$record = JSpace\Archive\Record::getInstance($this->form->getData()->get('id'));
+		$record = JSpace\Archive\Record::getInstance((int)$this->form->getData()->get('id'));
 
 		return $record->getAssets(array('derivative'=>$this->fieldname));
 	}

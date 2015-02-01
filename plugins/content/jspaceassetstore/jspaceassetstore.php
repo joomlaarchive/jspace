@@ -8,12 +8,11 @@
 
 defined('_JEXEC') or die;
 
-jimport('joomla.filesystem.folder');
+use \JSpace\Factory as JSpaceFactory;
+use \JSpace\Archive\AssetHelper;
+use \JSpace\FileSystem\File as JSpaceFile;
 
-jimport('jspace.factory');
-jimport('jspace.archive.assethelper');
-jimport('jspace.filesystem.file');
-jimport('jspace.html.assets');
+JLoader::import('joomla.filesystem.folder');
 
 /**
  * Stores assets to the locally configured file system.
@@ -48,9 +47,9 @@ class PlgContentJSpaceAssetstore extends JPlugin
     /**
      * Returns the HTML to the JSpace Asset Store download mechanism.
      *
-     * @param   JSpaceAsset  $asset  An instance of the asset being downloaded.
+     * @param   \JSpace\Html\Asset  $asset  An instance of the asset being downloaded.
      *
-     * @return  string       The html to the JSpace Asset Store download mechanism.
+     * @return  string              The html to the JSpace Asset Store download mechanism.
      */
     public function onJSpaceAssetPrepareDownload($asset)
     {
@@ -66,14 +65,14 @@ class PlgContentJSpaceAssetstore extends JPlugin
      * Streams a file from the JSpace Asset Store to the client's web browser
      * (or other download mechanism).
      *
-     * @param  JSpaceAsset  $asset  An instance of the asset being downloaded.
+     * @param  \JSpace\Html\Asset  $asset  An instance of the asset being downloaded.
      */
     public function onJSpaceAssetDownload($asset)
     {
         $root = $this->get('params')->get('path', null);
         $id = $asset->id;
 
-        $path = JSpace\Archive\AssetHelper::buildStoragePath($asset->record_id, $root).$asset->hash;
+        $path = AssetHelper::buildStoragePath($asset->record_id, $root).$asset->hash;
 
         $handle = fopen($path, 'rb');
 
@@ -154,7 +153,7 @@ class PlgContentJSpaceAssetstore extends JPlugin
             return true;
         }
 
-        $path = JSpaceArchiveAssetHelper::preparePath($this->params->get('path'));
+        $path = AssetHelper::preparePath($this->params->get('path'));
 
         while ($path && !JFolder::exists($path))
         {
@@ -191,7 +190,7 @@ class PlgContentJSpaceAssetstore extends JPlugin
         $root = $this->get('params')->get('path', null);
         $id = $asset->id;
 
-        $path = JSpaceArchiveAssetHelper::buildStoragePath($asset->record_id, $root);
+        $path = AssetHelper::buildStoragePath($asset->record_id, $root);
 
         if (!JFolder::create($path))
         {
@@ -221,47 +220,35 @@ class PlgContentJSpaceAssetstore extends JPlugin
 
         $root = $this->get('params')->get('path', null);
 
-        $storage = JSpaceArchiveAssetHelper::buildStoragePath($asset->record_id, $root);
+        $storage = AssetHelper::buildStoragePath($asset->record_id, $root);
 
         $path = $storage.$asset->hash;
 
-        try
-        {
-            if (JFile::exists($path))
-            {
-                if (!JFile::delete($path))
-                {
+        try {
+            if (JFile::exists($path)) {
+                if (!JFile::delete($path)) {
                     JLog::add(__METHOD__.' '.JText::sprintf('PLG_JSPACE_ASSETSTORE_WARNING_FILEDELETEFAILED', json_encode($asset).", path=".$path), JLog::WARNING, 'jspace');
                 }
-            }
-            else
-            {
+            } else {
                 JLog::add(__METHOD__.' '.JText::sprintf('PLG_JSPACE_ASSETSTORE_WARNING_FILEDOESNOTEXIST', json_encode($asset).", path=".$path), JLog::WARNING, 'jspace');
             }
 
             // Cleanup; try to delete as much of the path as possible.
             $empty = true;
 
-            do
-            {
+            do {
                 $array = explode('/', $storage);
                 array_pop($array);
                 $storage = implode('/', $array);
 
                 // once we hit a directory with files or the configured archive dir, stop.
-                if (JFolder::files($storage) || $storage.'/' == JSpaceArchiveAssetHelper::preparePath($root))
-                {
+                if (JFolder::files($storage) || $storage.'/' == AssetHelper::preparePath($root)) {
                     $empty = false;
-                }
-                else
-                {
+                } else {
                     JFolder::delete($storage);
                 }
-            }
-            while ($empty);
-        }
-        catch (Exception $e)
-        {
+            } while ($empty);
+        } catch (Exception $e) {
             JLog::add($e->getMessage(), JLog::ERROR, 'jspace');
         }
     }
@@ -275,7 +262,7 @@ class PlgContentJSpaceAssetstore extends JPlugin
         $config = array();
         $errors = array();
 
-        $path = JSpace\Archive\AssetHelper::preparePath($this->params->get('path'));
+        $path = AssetHelper::preparePath($this->params->get('path'));
 
         if (JFolder::exists($path))
         {

@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="JSpace" default="" basedir=".">
+    <property file="build.properties"/>
+    <property name="dest.administrator"             value="${dest}/administrator"/>
+    <property name="dest.administrator.components"  value="${dest.administrator}/components"/>
+    <property name="dest.administrator.languages"   value="${dest.administrator}/language"/>
+    <property name="dest.components"                value="${dest}/components"/>
+    <property name="dest.languages"                 value="${dest}/language"/>
+    <property name="dest.media"                     value="${dest}/media"/>
+    <property name="dest.cli"                       value="${dest}/cli"/>
+
+    <target name="clean" description="Clean JSpace component from Joomla.">
+        <delete dir="${dest.administrator.components}/com_jspace"/>
+
+        <delete>
+            <fileset dir="${dest.administrator.languages}" defaultexcludes="true">
+                <include name="**/*.com_jspace*.ini"/>
+            </fileset>
+        </delete>
+
+        <delete dir="${dest.media}/com_jspace"/>
+
+        <delete dir="${dest.components}/com_jspace"/>
+
+        <delete>
+            <fileset dir="${dest.languages}" defaultexcludes="true">
+                <include name="**/*.com_jspace*.ini"/>
+            </fileset>
+        </delete>
+    </target>
+
+    <target name="update" description="Copies JSpace component to existing Joomla install.">
+        <echo message="Deploying JSpace component to Joomla! environment."/>
+
+        <phingcall target="clean"/>
+
+        <copy todir="${dest.administrator.components}/com_jspace">
+            <fileset dir="${src}/admin" defaultexcludes="true">
+                <include name="**"/>
+                <exclude name="**/language/**"/>
+            </fileset>
+        </copy>
+
+        <copy todir="${dest.cli}">
+            <fileset dir="${src}/admin/cli" defaultexcludes="true">
+                <include name="jspace.php"/>
+            </fileset>
+        </copy>
+
+        <copy todir="${dest.administrator.languages}">
+            <fileset dir="${src}/admin/language" defaultexcludes="true">
+                <include name="**/**"/>
+            </fileset>
+        </copy>
+        <copy todir="${dest.media}/com_jspace">
+            <fileset dir="${src}/media" defaultexcludes="true">
+                <include name="**/**"/>
+            </fileset>
+        </copy>
+        <copy todir="${dest.components}/com_jspace">
+            <fileset dir="${src}/site" defaultexcludes="true">
+                <include name="**/**"/>
+                <exclude name="**/language/**"/>
+            </fileset>
+        </copy>
+        <copy todir="${dest.languages}">
+            <fileset dir="${src}/site/language" defaultexcludes="true">
+                <include name="**/**"/>
+            </fileset>
+        </copy>
+    </target>
+
+    <target name="package" description="Creates a JSpace component package.">
+        <echo message="Packaging JSpace component."/>
+        <zip destfile="${package.dest}/com_jspace.zip"
+               basedir="${src}"
+               excludes="build.xml"/>
+    </target>
+
+    <target name="package_with_dependencies" description="Creates a JSpace component package with dependencies.">
+        <echo message="Packaging JSpace component with dependencies."/>
+
+        <zip destfile="${package.dest}/com_jspace_package.zip"
+               basedir="${src}"
+               update="true"
+               excludes="build.xml"/>
+
+        <zip destfile="${package.dest}/com_jspace_package.zip" update="true">
+            <zipfileset dir="${package.dest}" prefix="plugins">
+                <include name="plg_content_harvest.zip"/>
+                <include name="plg_content_jspaceassetstore.zip"/>
+                <include name="plg_content_jspaceschemas.zip"/>
+                <include name="plg_content_jspaceweblinks.zip"/>
+                <include name="plg_joai_oaidc.zip"/>
+                <include name="plg_joai_ore.zip"/>
+                <include name="plg_joai_qdc.zip"/>
+                <include name="plg_jspace_oai.zip"/>
+                <include name="plg_jspace_opensearch.zip"/>
+            </zipfileset>
+            <zipfileset dir="${package.dest}" prefix="libraries">
+                <include name="jspace.zip"/>
+            </zipfileset>
+        </zip>
+    </target>
+</project>

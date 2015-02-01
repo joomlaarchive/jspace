@@ -10,6 +10,8 @@ use \Exception;
 \JLoader::import('joomla.table.category');
 use \JCategories;
 use \JArrayHelper;
+use \JLog;
+use \JText;
 use JSpace\Archive\Object;
 use JSpace\Archive\Asset;
 
@@ -53,7 +55,7 @@ class Record extends Object
     {
         if (!is_numeric($identifier))
         {
-            \JLog::add(JText::sprintf('JLIB_USER_ERROR_ID_NOT_EXISTS', $identifier), \JLog::WARNING, 'jspace');
+            JLog::add(JText::sprintf('JLIB_USER_ERROR_ID_NOT_EXISTS', $identifier), JLog::WARNING, 'jspace');
 
             return false;
         }
@@ -154,7 +156,7 @@ class Record extends Object
 
         if (!$result = $table->store())
         {
-            \JLog::add(__METHOD__." Cannot save. ".$table->getError(), \JLog::CRITICAL, 'jspace');
+            JLog::add(__METHOD__." Cannot save. ".$table->getError(), JLog::CRITICAL, 'jspace');
             return false;
         }
 
@@ -169,7 +171,7 @@ class Record extends Object
         // Rebuild the tree path.
         if (!$table->rebuildPath($table->id))
         {
-            \JLog::add(__METHOD__." Cannot rebuild path. ".$table->getError(), \JLog::CRITICAL, 'jspace');
+            JLog::add(__METHOD__." Cannot rebuild path. ".$table->getError(), JLog::CRITICAL, 'jspace');
             return false;
         }
 

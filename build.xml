@@ -39,13 +39,13 @@
 
         <mkdir dir="${package.dest}/jspace"/>
 
-        <subant target="package">
+        <phingcall target="package">
             <fileset dir=".">
                 <include name="**/**/build_*.xml"/>
             </fileset>
             <property name="src"            value="${src}"/>
             <property name="package.dest"   value="${package.dest}/jspace"/>
-        </subant>
+        </phingcall>
     </target>
 
     <target name="package_with_dependencies" description="Packages all JSpace extensions along with any required dependencies such as libraries, plugins and/or modules.">

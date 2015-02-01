@@ -5,6 +5,9 @@
  */
 namespace JSpace\Html;
 
+use \JFactory;
+use \JArrayHelper;
+
 /**
  * Provides helpers for manipulating HTML data.
  */

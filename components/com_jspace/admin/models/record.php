@@ -37,7 +37,8 @@ class JSpaceModelRecord extends JModelAdmin
 
         // @todo we should just return this but to not break current compatibility, copy to JObject.
         $record = Record::getInstance($pk);
-        $item = JArrayHelper::toObject($record->getProperties(), 'JObject');
+        $properties = $record->getProperties();
+        $item = JArrayHelper::toObject($properties, 'JObject');
         $item->metadata = $record->get('metadata')->toArray();
         $item->identifiers = $record->getIdentifiers();
 
@@ -139,19 +140,6 @@ class JSpaceModelRecord extends JModelAdmin
             $form->removeField('parentTitle');
         }
 
-        // try to get the schema from the posted data if it isn't in $data.
-        if (!($schema = JArrayHelper::getValue($data, 'schema')))
-        {
-            $tmp = JFactory::getApplication()->input->post->get('jform', array(), 'array');
-            $schema = JArrayHelper::getValue($tmp, 'schema');
-        }
-
-        if ($schema)
-        {
-            $path = JPATH_ROOT.'/administrator/components/com_jspace/models/forms/schemas/'.$schema.'.xml';
-            $form->loadFile($path, false);
-        }
-
         return $form;
     }
 
@@ -166,7 +154,7 @@ class JSpaceModelRecord extends JModelAdmin
         return $data;
     }
 
-    protected function preprocessForm(JForm $form, &$data, $group = 'content')
+    protected function preprocessForm(JForm $form, $data, $group = 'content')
     {
         $assoc = JLanguageAssociations::isEnabled();
         if ($assoc)
