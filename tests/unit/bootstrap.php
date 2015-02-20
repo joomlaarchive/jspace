@@ -11,8 +11,11 @@ ini_set('display_errors', 1);
 define('_JEXEC', 1);
 define('DS', DIRECTORY_SEPARATOR);
 
+// retrieve joomla destination from properties file.
+$properties = parse_ini_file(dirname(dirname(dirname(__FILE__))).'/build.properties');
+
 // Load Joomla framework
-define('JPATH_BASE', '/var/www/html/joomla33/');
+define('JPATH_BASE', $properties['dest']);
 require_once JPATH_BASE.'/includes/defines.php';
 require_once JPATH_BASE.'/includes/framework.php';
 
@@ -30,9 +33,8 @@ $_SERVER['REQUEST_URI'] = '/index.php';
 
 $app = JFactory::getApplication('site');
 
-if (!defined('JSPACEPATH_TESTS'))
-{
-define('JSPACEPATH_TESTS', dirname(__FILE__));
+if (!defined('JSPACEPATH_TESTS')) {
+    define('JSPACEPATH_TESTS', dirname(__FILE__));
 }
 
 // Set error handling.
@@ -40,8 +42,7 @@ JError::setErrorHandling(E_NOTICE, 'ignore');
 JError::setErrorHandling(E_WARNING, 'ignore');
 JError::setErrorHandling(E_ERROR, 'ignore');
 
-require dirname(dirname(__FILE__)).'/vendor/autoload.php';
-
+require_once JPATH_PLATFORM.'/loader.php';
 JLoader::registerNamespace('JSpace', dirname(dirname(dirname(__FILE__))).'/libraries');
 
 JTable::addIncludePath(dirname(dirname(dirname(__FILE__))).'/components/com_jspace/admin/tables');
