@@ -5,8 +5,6 @@
  */
 namespace JSpace\Table\Observer;
 
-\JLoader::import('jspace.helper.recordhistory');
-
 /**
  * Table class supporting modified pre-order tree traversal behavior.
  *
