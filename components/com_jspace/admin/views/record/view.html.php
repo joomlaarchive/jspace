@@ -8,9 +8,9 @@ class JSpaceViewRecord extends JViewLegacy
 	protected $item;
 
 	protected $state;
-	
+
 	protected $option;
-	
+
 	protected $context;
 
 	/**
@@ -44,7 +44,7 @@ class JSpaceViewRecord extends JViewLegacy
 	protected function addToolbar()
 	{
 		JFactory::getApplication()->input->set('hidemainmenu', true);
-		
+
 		$user		= JFactory::getUser();
 		$userId		= $user->get('id');
 		$isNew		= ($this->item->id == 0);
@@ -52,7 +52,7 @@ class JSpaceViewRecord extends JViewLegacy
 
 		// Built the actions for new and existing records.
 		$canDo		= $this->canDo;
-			JToolbarHelper::title(JText::_('COM_JSPACE_PAGE_' . ($checkedOut ? 'VIEW_RECORD' : ($isNew ? 
+			JToolbarHelper::title(JText::_('COM_JSPACE_PAGE_' . ($checkedOut ? 'VIEW_RECORD' : ($isNew ?
 'ADD_RECORD' : 'EDIT_RECORD'))), 'pencil-2 record-add');
 
 		// For new records, check the create permission.
@@ -69,26 +69,22 @@ class JSpaceViewRecord extends JViewLegacy
 			if (!$checkedOut)
 			{
 				// Since it's an existing record, check the edit permission, or fall back to edit own if the owner.
-				if ($canDo->get('core.edit') || ($canDo->get('core.edit.own') && $this->item->created_by == $userId))
-				{
+				if ($canDo->get('core.edit') || ($canDo->get('core.edit.own') && $this->item->created_by == $userId)) {
 					JToolbarHelper::apply('record.apply');
 					JToolbarHelper::save('record.save');
-					
-					if ($canDo->get('core.create'))
-					{
+
+					if ($canDo->get('core.create')) {
 						JToolbarHelper::save2new('record.save2new');
 					}
 				}
 			}
 
 			// If checked out, we can still save
-			if ($canDo->get('core.create'))
-			{
+			if ($canDo->get('core.create')) {
 				JToolbarHelper::save2copy('record.save2copy');
 			}
 
-			if ($this->state->params->get('save_history', 0) && $user->authorise('core.edit'))
-			{
+			if ($this->state->params->get('save_history', 1) && $user->authorise('core.edit')) {
 				JToolbarHelper::versions($this->context, $this->item->id);
 			}
 

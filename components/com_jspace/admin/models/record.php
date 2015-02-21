@@ -216,7 +216,7 @@ class JSpaceModelRecord extends JModelAdmin
                 }
             }
 
-            $data->metadata = $this->_mapToSchemalessMetadata(JArrayHelper::fromObject($data));
+            $data->metadata = $this->mapToSchemalessMetadata(JArrayHelper::fromObject($data));
         }
     }
 
@@ -248,8 +248,8 @@ class JSpaceModelRecord extends JModelAdmin
         $pk = JArrayHelper::getValue($data, 'id', (int)$this->getState('record.id'));
         $record = Record::getInstance($pk);
 
-        $data['metadata'] = $this->_toArray(JArrayHelper::getValue($data, 'metadata'));
-        $data['metadata'] = $this->_mapFromSchemalessMetadata($data);
+        $data['metadata'] = $this->toArray(JArrayHelper::getValue($data, 'metadata'));
+        $data['metadata'] = $this->mapFromSchemalessMetadata($data);
 
         // Bind the data.
         if (!$record->bind($data))
@@ -425,7 +425,7 @@ class JSpaceModelRecord extends JModelAdmin
      *
      * @return  array  The transformed metadata.
      */
-    private function _mapFromSchemalessMetadata($data)
+    private function mapFromSchemalessMetadata($data)
     {
         $metadata = JArrayHelper::getValue($data, 'metadata');
         $form = $this->getForm($data, false);
@@ -470,7 +470,7 @@ class JSpaceModelRecord extends JModelAdmin
      *
      * @return  array  The transformed metadata.
      */
-    private function _mapToSchemalessMetadata($data)
+    private function mapToSchemalessMetadata($data)
     {
         $metadata = JArrayHelper::getValue($data, 'metadata');
 
@@ -530,7 +530,7 @@ class JSpaceModelRecord extends JModelAdmin
      * @return  Metadata that can be handled by both JSpace metadata fields and standard Joomla!
      * form fields.
      */
-    private function _toArray($source)
+    private function toArray($source)
     {
         $metadata = $source;
 

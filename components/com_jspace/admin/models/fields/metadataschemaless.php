@@ -23,7 +23,7 @@ class JSpaceFormFieldMetadataSchemaless extends JFormField
      * @var     string
      */
     protected $type = 'JSpace.MetadataSchemaless';
-    
+
     /**
      * Method to get the field input markup
      */
@@ -32,25 +32,25 @@ class JSpaceFormFieldMetadataSchemaless extends JFormField
         $html = JLayoutHelper::render("jspace.form.fields.metadata.schemaless", $this);
         return $html;
     }
-    
+
     public function __get($name)
     {
-        switch ($name) 
-        { 
+        switch ($name)
+        {
             case 'value':
                 if (!is_array($this->$name))
                 {
                     $this->$name = array();
                 }
-                
+
                 return $this->$name;
-                
+
                 break;
-                
+
             case 'maximum':
                 return JArrayHelper::getValue($this->element, 'maximum', 40);
                 break;
-            
+
             default:
                 return parent::__get($name);
                 break;

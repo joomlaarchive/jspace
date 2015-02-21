@@ -4,7 +4,7 @@
  *
  * @package     JSpace
  * @subpackage  Installer
- * @copyright   Copyright (C) 2014 KnowledgeArc Ltd. All rights reserved.
+ * @copyright   Copyright (C) 2014-2015 KnowledgeArc Ltd. All rights reserved.
  * @license     This file is part of the JSpace component for Joomla!.
 
    The JSpace component for Joomla! is free software: you can redistribute it
@@ -89,14 +89,10 @@ class Com_JSpaceInstallerScript
     {
         $src = JPATH_ROOT."/cli/jspace.php";
 
-        if (JFile::exists($src))
-        {
-            if (JFile::delete($src))
-            {
+        if (JFile::exists($src)) {
+            if (JFile::delete($src)) {
                 echo "<p>JSpace CLI uninstalled from ".$src." successfully.</p>";
-            }
-            else
-            {
+            } else {
                 echo "<p>Could not uninstall JSpace CLI from ".$src.". You will need to manually remove it.</p>";
             }
         }
@@ -104,9 +100,9 @@ class Com_JSpaceInstallerScript
 
     public function postflight($type, $parent)
     {
-        $cli = $this->_installCLI($parent);
+        $cli = $this->installCLI($parent);
 
-        $dependencies = $this->_installDependencies($parent);
+        $dependencies = $this->installDependencies($parent);
 
         ?>
         <table class="adminlist table table-striped" style="width: 100%;">
@@ -153,7 +149,7 @@ class Com_JSpaceInstallerScript
         <?php
     }
 
-    private function _installCLI($parent)
+    private function installCLI($parent)
     {
         $success = false;
 
@@ -161,10 +157,8 @@ class Com_JSpaceInstallerScript
 
         $cli = JPATH_ROOT.'/cli/jspace.php';
 
-        if (JFile::exists($src))
-        {
-            if ($success = JFile::move($src, $cli))
-            {
+        if (JFile::exists($src)) {
+            if ($success = JFile::move($src, $cli)) {
                 JFolder::delete($parent->getParent()->getPath('extension_administrator').'/cli');
             }
         }
@@ -177,20 +171,21 @@ class Com_JSpaceInstallerScript
      *
      * @param JAdapterInstance $parent
      */
-    private function _installDependencies($parent)
+    private function installDependencies($parent)
     {
         $installed = array();
 
         $src = $parent->getParent()->getPath('source');
 
-        foreach ($this->dependencies as $type=>$extension)
-        {
-            foreach ($extension as $name=>$params)
-            {
+        foreach ($this->dependencies as $type=>$extension) {
+            foreach ($extension as $name=>$params) {
                 $packageZip = $src.'/'.$type.'/'.$name.'.zip';
 
-                if ($package = JInstallerHelper::unpack($packageZip))
-                {
+                if (!JFile::exists($packageZip)) {
+                    continue;
+                }
+
+                if ($package = JInstallerHelper::unpack($packageZip)) {
                     $installer = new JInstaller();
                     $installer->setOverwrite(true);
 
@@ -200,8 +195,7 @@ class Com_JSpaceInstallerScript
 
                     $oldManifest = null;
 
-                    if (JFile::exists($path))
-                    {
+                    if (JFile::exists($path)) {
                         $oldManifest = $installer->parseXMLInstallFile($path);
                     }
 
@@ -211,13 +205,11 @@ class Com_JSpaceInstallerScript
 
                     $newManifest = $installer->parseXMLInstallFile($path);
 
-                    if ($oldManifest)
-                    {
+                    if ($oldManifest) {
                         $oldVersion = JArrayHelper::getValue($oldManifest, 'version');
                         $newVersion = JArrayHelper::getValue($newManifest, 'version');
 
-                        if (version_compare($oldVersion, $newVersion, 'ge'))
-                        {
+                        if (version_compare($oldVersion, $newVersion, 'ge')) {
                             $doInstall = false;
                         }
                     }
@@ -232,26 +224,19 @@ class Com_JSpaceInstallerScript
                     $language->load($name.'.sys', $dir);
                     $status = 2;
 
-                    if ($doInstall)
-                    {
-                        if ($success = $installer->install($dir))
-                        {
+                    if ($doInstall) {
+                        if ($success = $installer->install($dir)) {
                             $status = 1;
 
-                            if ($success)
-                            {
+                            if ($success) {
                                 // post installation configuration.
-                                if ($type == 'modules')
-                                {
+                                if ($type == 'modules') {
                                     $this->_configureModule($name, $params);
-                                }
-                                else if ($type == 'plugins')
-                                {
+                                } else if ($type == 'plugins') {
                                     $this->_configurePlugin($name, $params);
                                 }
                             }
-                        } else
-                        {
+                        } else {
                             $status = 0;
                         }
                     }
@@ -274,8 +259,7 @@ class Com_JSpaceInstallerScript
     {
         $path = JPATH_ROOT;
 
-        switch ($type)
-        {
+        switch ($type) {
             case 'libraries':
                 $path.="/administrator/manifests/libraries/$name";
                 break;
@@ -289,8 +273,7 @@ class Com_JSpaceInstallerScript
                 break;
 
             case 'plugins':
-                if (count($parts = explode('_', $name)) == 3)
-                {
+                if (count($parts = explode('_', $name)) == 3) {
                     $path.='/plugins/'.JArrayHelper::getValue($parts, 1).'/'.JArrayHelper::getValue($parts, 2).'/'.JArrayHelper::getValue($parts, 2);
                 }
 
@@ -303,8 +286,7 @@ class Com_JSpaceInstallerScript
 
     private function _getExtractedManifest($path, $type, $name)
     {
-        switch ($type)
-        {
+        switch ($type) {
             case 'libraries':
                 $path.="$name";
                 break;
@@ -314,8 +296,7 @@ class Com_JSpaceInstallerScript
                 break;
 
             case 'plugins':
-                if (count($parts = explode('_', $name, 3)) == 3)
-                {
+                if (count($parts = explode('_', $name, 3)) == 3) {
                     $path.=JArrayHelper::getValue($parts, 2);
                 }
 
@@ -328,8 +309,7 @@ class Com_JSpaceInstallerScript
     {
         $extension = JTable::getInstance('extension');
 
-        if ($extension->load(array('name'=>$name, 'type'=>'plugin')))
-        {
+        if ($extension->load(array('name'=>$name, 'type'=>'plugin'))) {
             $extension->enabled = (int)JArrayHelper::getValue($params, 'published', false, 'bool');
             $extension->store();
         }
@@ -350,43 +330,36 @@ class Com_JSpaceInstallerScript
             ->from('#__modules')
             ->where("module = '$name'");
 
-        if ($clientId = JArrayHelper::getValue($params, 'client_id'))
-        {
+        if ($clientId = JArrayHelper::getValue($params, 'client_id')) {
             $query->where("client_id = $clientId");
         }
 
 
-        if ($installedPosition = JArrayHelper::getValue($params, 'installed_position'))
-        {
+        if ($installedPosition = JArrayHelper::getValue($params, 'installed_position')) {
             $query->where("position = '$installedPosition'");
         }
 
         $count = $db->setQuery($query)->loadResult();
 
-        if (!$count)
-        {
+        if (!$count) {
             $language = JFactory::getLanguage();
             $language->load($name, JPATH_ADMINISTRATOR, null, true);
 
             // Set up module per config preferences.
-            if (count($params))
-            {
+            if (count($params)) {
                 $query = $db->getQuery(true)
                     ->update($db->qn('#__modules'))
                     ->where($db->qn('module').' = '.$db->q($name));
 
-                if ($title = JArrayHelper::getValue($params, 'title'))
-                {
+                if ($title = JArrayHelper::getValue($params, 'title')) {
                     $query->set($db->qn('title').' = '.$db->q(JText::_($title)));
                 }
 
-                if ($position = JArrayHelper::getValue($params, 'position'))
-                {
+                if ($position = JArrayHelper::getValue($params, 'position')) {
                     $query->set($db->qn('position').' = '.$db->q($position));
                 }
 
-                if (JArrayHelper::getValue($params, 'published'))
-                {
+                if (JArrayHelper::getValue($params, 'published')) {
                     $query->set($db->qn('published').' = '.$db->q('1'));
                 }
 
