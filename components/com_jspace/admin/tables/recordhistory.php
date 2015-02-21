@@ -15,7 +15,7 @@ defined('JPATH_PLATFORM') or die;
  * @package     JSpace
  * @subpackage  Table
  */
-class JSpaceTableRecordhistory extends JTableContenthistory
+class JSpaceTableRecordHistory extends JTableContenthistory
 {
     protected $hierarchicalVersionData = null;
 
@@ -29,14 +29,14 @@ class JSpaceTableRecordhistory extends JTableContenthistory
     public function store($updateNulls = false)
     {
         $this->set('hierarchicalVersionData', $this->get('version_data'));
-    
+
         $data = json_decode($this->get('hierarchicalVersionData'));
-        
+
         $metadata = json_decode($data->metadata);
         $registry = new JRegistry();
         $registry->loadObject($metadata);
         $metadata = $registry->toArray();
-        
+
         foreach ($metadata as $key=>$value)
         {
             if (is_array($value))
@@ -53,14 +53,14 @@ class JSpaceTableRecordhistory extends JTableContenthistory
 
         return parent::store($updateNulls);
     }
-    
+
     public function get($property, $default = null)
     {
         if ($property == 'version_data' && $this->hierarchicalVersionData != null)
         {
             return $this->hierarchicalVersionData;
         }
-        
+
         return parent::get($property, $default);
     }
 }
