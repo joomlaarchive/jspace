@@ -90,7 +90,7 @@ class JSpaceModelRecord extends JModelAdmin
         }
 
         $dispatcher = JEventDispatcher::getInstance();
-        JPluginHelper::importPlugin('content');
+        JPluginHelper::importPlugin('jspace');
 
         // Trigger the data preparation event.
         $dispatcher->trigger('onContentPrepareData', array($this->typeAlias, $item));
@@ -301,7 +301,7 @@ class JSpaceModelRecord extends JModelAdmin
     public function validate($form, $data, $group = null)
     {
         $dispatcher = JEventDispatcher::getInstance();
-        JPluginHelper::importPlugin('content');
+        JPluginHelper::importPlugin('jspace');
 
         $result = $dispatcher->trigger('onJSpaceRecordBeforeValidate', array($form, $data, $group));
 

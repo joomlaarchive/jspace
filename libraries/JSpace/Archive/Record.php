@@ -147,7 +147,7 @@ class Record extends Object
             $table->newTags = $this->newTags;
         }
 
-        $result = $dispatcher->trigger('onContentBeforeSave', array(static::$context, $this, $isNew));
+        $result = $dispatcher->trigger('onJSpaceBeforeSave', array(static::$context, $this, $isNew));
 
         if (in_array(false, $result, true))
         {
@@ -178,7 +178,7 @@ class Record extends Object
         $this->_saveIdentifiers();
         $this->_saveAssets($collection);
 
-        $dispatcher->trigger('onContentAfterSave', array(static::$context, $this, $isNew));
+        $dispatcher->trigger('onJSpaceAfterSave', array(static::$context, $this, $isNew));
 
         return $result;
     }
@@ -206,7 +206,9 @@ class Record extends Object
                 $new->set('derivative', $dkey);
 
                 $metadata = \JSpace\FileSystem\File::getMetadata(\JArrayHelper::getValue($asset, 'tmp_name'));
-                $new->set('metadata', $metadata);
+
+                $crosswalk = \JSpace\Factory::getCrosswalk($metadata);
+                $new->set('metadata', $crosswalk->walk());
 
                 $new->save();
             }

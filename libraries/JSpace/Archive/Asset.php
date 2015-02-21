@@ -63,11 +63,11 @@ class Asset extends Object
 	public function save($updateOnly = false)
 	{
 		$dispatcher = \JEventDispatcher::getInstance();
-        \JPluginHelper::importPlugin('content');
+        \JPluginHelper::importPlugin('jspace');
 
 		$isNew = empty($this->id);
 
-		$dispatcher->trigger('onContentBeforeSave', array(static::$context, $this, $isNew));
+		$dispatcher->trigger('onJSpaceBeforeSave', array(static::$context, $this, $isNew));
 
 		$this->metadata = (string)$this->_metadata;
 
@@ -80,7 +80,7 @@ class Asset extends Object
 			$this->id = $table->get('id');
 		}
 
-		$dispatcher->trigger('onContentAfterSave', array(static::$context, $this, $isNew));
+		$dispatcher->trigger('onJSpaceAfterSave', array(static::$context, $this, $isNew));
 	}
 
 	public function load($keys)

@@ -20,7 +20,7 @@ class AssetHelper extends \JObject
      */
     public static function buildStoragePath($id, $root = null)
     {
-        $hashcode = self::getHashCode((string)$id);
+        $hashcode = static::getHashCode((string)$id);
 
         $mask = 255;
 
@@ -29,7 +29,7 @@ class AssetHelper extends \JObject
         $parts[] = str_pad((($hashcode >> 8) & $mask), 3, '0', STR_PAD_LEFT);
         $parts[] = str_pad((($hashcode >> 16) & $mask), 3, '0', STR_PAD_LEFT);
 
-        return self::preparePath($root).implode("/", $parts)."/";
+        return static::preparePath($root).implode("/", $parts)."/";
     }
 
     /**
@@ -44,7 +44,7 @@ class AssetHelper extends \JObject
      *
      * @return  string  The prepared path.
      */
-    public function preparePath($path)
+    public static function preparePath($path)
     {
         if (strpos($path, 'JPATH_ROOT') === 0)
         {
