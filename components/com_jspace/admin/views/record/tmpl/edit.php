@@ -13,12 +13,7 @@ $ignoreFieldSets = array('title','details','publishing','metadata','item_associa
 <script type="text/javascript">
 	Joomla.submitbutton = function(task, schema)
 	{
-		if (task == 'record.setSchema')
-		{
-			document.id('record-form').elements['jform[schema]'].value = schema;
-			Joomla.submitform('record.setSchema', document.id('record-form'));
-		}
-		else if (task == 'record.cancel' || document.formvalidator.isValid(document.id('record-form')))
+        if (task == 'record.cancel' || document.formvalidator.isValid(document.id('record-form')))
 		{
 			Joomla.submitform(task, document.id('record-form'));
 		}
