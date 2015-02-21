@@ -3,13 +3,15 @@
  * @package     JSpace
  * @subpackage  Table
  *
- * @copyright   Copyright (C) 2014 KnowledgeARC Ltd. All rights reserved.
+ * @copyright   Copyright (C) 2014-2015 KnowledgeARC Ltd. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE
  */
 
 defined('_JEXEC') or die;
 
-jimport('jspace.table.observer.recordhistory');
+JLoader::registerNamespace('JSpace', JPATH_PLATFORM);
+
+use \JSpace\Table\Observer\RecordHistory;
 
 /**
  * Represents a JSpace record.
@@ -32,7 +34,7 @@ class JSpaceTableRecord extends JTableNested
 
 		$observerParams = array('typeAlias'=>'com_jspace.record');
         JTableObserverTags::createObserver($this, $observerParams);
-        JSpace\Table\Observer\RecordHistory::createObserver($this, $observerParams);
+        RecordHistory::createObserver($this, $observerParams);
 	}
 
 	/**
