@@ -44,13 +44,6 @@
 			readonly="true"
 			required="true"/>
 
-		<field
-			name="schema"
-			type="jspace.schema"
-			label="COM_JSPACE_RECORD_SCHEMA_LABEL"
-			description="COM_JSPACE_RECORD_SCHEMA_DESC"
-			required="true"/>
-
 		<field name="published" type="list" label="JSTATUS"
 		       labelclass="todo-label"
 		       description="JFIELD_PUBLISHED_DESC" class="inputbox"
@@ -215,7 +208,7 @@
                 size="10"
                 validate="jspaceassets"
                 multiple="true"/>
-            
+
             <field
                 name="item_preview"
                 type="jspace.asset"
