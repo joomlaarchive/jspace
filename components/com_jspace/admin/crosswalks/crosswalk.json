@@ -648,14 +648,14 @@
     },
     "tags":
     [
-        "dcterms.subject",
-        "dcterms.type",
-        "dc.subject",
-        "dc.type"
+        "dcterms:subject",
+        "dcterms:type",
+        "dc:subject",
+        "dc:type"
     ],
     "identifiers":
     {
-        "dc.identifier":
+        "dc:identifier":
         {
             "prefix":
             [
