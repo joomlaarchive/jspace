@@ -1,10 +1,10 @@
 <?php
-jimport('jspace.ingestion.harvest');
+use JSpace\Ingestion\Harvest;
 
 require_once(JSPACEPATH_TESTS.'/core/case/database.php');
 
 // @todo query dspace for info to assert tests against.
-class OAITest extends TestCaseDatabase
+class OaiTest extends TestCaseDatabase
 {
     public $data;
 
@@ -35,7 +35,7 @@ class OAITest extends TestCaseDatabase
 
     public function testOnJSpaceHarvestDiscover()
     {
-        $harvest = JSpaceIngestionHarvest::getInstance();
+        $harvest = Harvest::getInstance();
         $harvest->bind($this->data);
 
         $dispatcher = JEventDispatcher::getInstance();
@@ -58,7 +58,7 @@ class OAITest extends TestCaseDatabase
         $data = $this->data;
         $data['originating_url'] = 'http://apps.who.int/iris/simple-search?query=Ebola';
 
-        $harvest = JSpaceIngestionHarvest::getInstance();
+        $harvest = Harvest::getInstance();
         $harvest->bind($data);
 
         $dispatcher = JEventDispatcher::getInstance();
@@ -72,7 +72,7 @@ class OAITest extends TestCaseDatabase
 
     public function testOnJSpaceHarvestRetrieveQDC()
     {
-        $harvest = JSpaceIngestionHarvest::getInstance();
+        $harvest = Harvest::getInstance();
         $harvest->bind($this->data);
         $harvest->get('params')->set('harvest_type', 0);
         $harvest->get('params')->set('discovery.type', 'oai');
@@ -99,33 +99,33 @@ class OAITest extends TestCaseDatabase
             ->where('id='.JFactory::getDbo()->q('oai:archive.bora.wijiti.net:10049/73'));
 
         // Retrieve a single cached item and check it for integrity.
-        $expected = '{"metadata":{"dc":{"title":["Cross-Cultural Healing in East African Ethnography"],"creator":["Rekdal, Ole Bj\u00f8rn"],"type":["Peer reviewed"],"identifier":["This article is available in AnthroSource","0745-5194","http:\/\/hdl.handle.net\/10049\/73"],"language":["eng"],"relation":["Medical Anthropology Quarterly 13(4)"],"publisher":["American Anthropological Association"]},"dcterms":{"dateAccepted":["2006-09-21T09:38:49Z"],"available":["2006-09-21T09:38:49Z"],"created":["2006-09-21T09:38:49Z"],"issued":["1999-12"]}}}';
+        $expected = '{"metadata":{"dc:title":["Cross-Cultural Healing in East African Ethnography"],"dc:creator":["Rekdal, Ole Bj\u00f8rn"],"dc:type":["Peer reviewed"],"dc:identifier":["This article is available in AnthroSource","0745-5194","http:\/\/hdl.handle.net\/10049\/73"],"dc:language":["eng"],"dc:relation":["Medical Anthropology Quarterly 13(4)"],"dc:publisher":["American Anthropological Association"],"dcterms:dateAccepted":["2006-09-21T09:38:49Z"],"dcterms:available":["2006-09-21T09:38:49Z"],"dcterms:created":["2006-09-21T09:38:49Z"],"dcterms:issued":["1999-12"]}}';
 
         $this->assertEquals($expected, JFactory::getDbo()->setQuery($query)->loadResult());
     }
 
     public function testOnJSpaceHarvestRetrieveOAI_DC()
     {
-        $harvest = JSpaceIngestionHarvest::getInstance();
+        $harvest = Harvest::getInstance();
         $harvest->bind($this->data);
         $harvest->get('params')->set('harvest_type', 0);
         $harvest->get('params')->set('discovery.type', 'oai');
         $harvest->get('params')->set('discovery.url', 'http://localhost/jspace/request.php');
         $harvest->get('params')->set('discovery.plugin.metadata', 'oai_dc');
 
-        $dispatcher = JEventDispatcher::getInstance();
-        JPluginHelper::importPlugin('jspace', 'oai', true, $dispatcher);
+        $dispatcher = \JEventDispatcher::getInstance();
+        \JPluginHelper::importPlugin('jspace', 'oai', true, $dispatcher);
 
         $dispatcher->trigger('onJSpaceHarvestRetrieve', array($harvest));
 
-        $query = JFactory::getDbo()->getQuery(true);
+        $query = \JFactory::getDbo()->getQuery(true);
 
         $query->select("COUNT(*)")->from('#__jspace_cache')->where('harvest_id='.$harvest->id);
 
         // check number of records digested.
-        $this->assertEquals(200, (int)JFactory::getDbo()->setQuery($query)->loadResult());
+        $this->assertEquals(200, (int)\JFactory::getDbo()->setQuery($query)->loadResult());
 
-        $query = JFactory::getDbo()->getQuery(true);
+        $query = \JFactory::getDbo()->getQuery(true);
 
         $query
             ->select("data")
@@ -133,14 +133,14 @@ class OAITest extends TestCaseDatabase
             ->where('id='.JFactory::getDbo()->q('oai:archive.bora.wijiti.net:10049/286'));
 
         // Retrieve a single cached item and check it for integrity.
-        $expected = '{"metadata":{"dc":{"title":["Hjemmebes\u00f8k til familier med nyf\u00f8dt barn : rapport fra kartlegging av helses\u00f8sters tilbud ved helsestasjoner i Bergen"],"creator":["\u00d8kland, Toril","Hj\u00e4lmhult, Esther"],"description":["Hensikten med prosjektet har v\u00e6rt \u00e5 utvikle og styrke praksis gjennom \u00e5 dokumentere kunnskap om helses\u00f8sters hjemmebes\u00f8k til foreldre med nyf\u00f8dte barn. I f\u00f8lge sentrale forskrifter og retningslinjer skal hjemmebes\u00f8k tilbys foreldre med nyf\u00f8dt barn, helst innen to uker etter f\u00f8dsel. Siden midten av 1990-\u00e5rene tyder antall hjemmebes\u00f8k p\u00e5 \u00e5 reduseres i en del kommuner og bydeler, samtidig som mor og barn ofte utskrives tidlig fra f\u00f8deinstitusjon. Oppsummering av eksisterende forskning omkring hjemmebes\u00f8k tydeliggj\u00f8r at Norden er spesiell med et universelt tilbud. Forskningen er sparsom, men gir likevel viktig bidrag til \u00e5 synliggj\u00f8re, problematisere og utvikle god praksis for \u00e5 kunne ta velinformerte beslutninger.\r\nProblemstilling. Hvordan vurderer og vektlegger helses\u00f8stre sin praksis omkring hjemmebes\u00f8kstilbudet?\r\nMetodisk tiln\u00e6rming. I prosjektet kartlegges helses\u00f8stres vurderinger og vektlegging av hjemmebes\u00f8k til nyblivne foreldre i Bergen. Datainnsamling med sp\u00f8rreskjema til 82 helses\u00f8stre er gjennomf\u00f8rt 2007 med svarprosent p\u00e5 60. Data er statistisk bearbeidet med kommunens dataprogramsystem Corporator. \u00c5pne undersp\u00f8rsm\u00e5l er kvalitativt bearbeidet og analysert.\r\nFunn. Helses\u00f8strene mener det er stort behov for hjemmebes\u00f8k, og med noen unntak omkring premature barn og barselkvinnen kjenner de seg godt kompetente til oppgaven. Unders\u00f8kelsen viser likevel at foreldre med nyf\u00f8dt barn i Bergen i ulik grad f\u00e5r dette tilbudet. Ved tidspress prioriterer en del helses\u00f8stre hjemmebes\u00f8k kun til f\u00f8rstegangsf\u00f8dende. Svarene tyder ogs\u00e5 p\u00e5 at noen med en egendefinert praksis ytterligere nedprioriter oppgaven og avviker fra offentlige anbefalinger. M\u00e5ten helses\u00f8ster presenterer tilbudet p\u00e5, kan spille en avgj\u00f8rende rolle for om foreldre takker ja til hjemmebes\u00f8k. Dersom hjemmebes\u00f8ket utelates, er det ikke n\u00f8dvendigvis en tidsbesparelse, fordi foreldre ofte kompenserer med hyppigere konsultasjoner p\u00e5 helsestasjonen.\r\nKonklusjon. Unders\u00f8kelsen viser noen \u00e5rsaker til ujevn hjemmebes\u00f8ksdekning og ulikt helsetjenestetilbud til nyblivne foreldre i Bergen. Det kan v\u00e6re aktuelt for noen \u00e5 videreutvikle sin faglige kompetanse i forhold til premature barn og deres familier."],"date":["2010-11-18T10:11:42Z","2010-11-18T10:11:42Z","2010-11-18T10:11:42Z"],"type":["Report"],"identifier":["http:\/\/hdl.handle.net\/10049\/286"],"language":["nob"]}}}';
+        $expected = '{"metadata":{"dc:title":["Hjemmebes\u00f8k til familier med nyf\u00f8dt barn : rapport fra kartlegging av helses\u00f8sters tilbud ved helsestasjoner i Bergen"],"dc:creator":["\u00d8kland, Toril","Hj\u00e4lmhult, Esther"],"dc:description":["Hensikten med prosjektet har v\u00e6rt \u00e5 utvikle og styrke praksis gjennom \u00e5 dokumentere kunnskap om helses\u00f8sters hjemmebes\u00f8k til foreldre med nyf\u00f8dte barn. I f\u00f8lge sentrale forskrifter og retningslinjer skal hjemmebes\u00f8k tilbys foreldre med nyf\u00f8dt barn, helst innen to uker etter f\u00f8dsel. Siden midten av 1990-\u00e5rene tyder antall hjemmebes\u00f8k p\u00e5 \u00e5 reduseres i en del kommuner og bydeler, samtidig som mor og barn ofte utskrives tidlig fra f\u00f8deinstitusjon. Oppsummering av eksisterende forskning omkring hjemmebes\u00f8k tydeliggj\u00f8r at Norden er spesiell med et universelt tilbud. Forskningen er sparsom, men gir likevel viktig bidrag til \u00e5 synliggj\u00f8re, problematisere og utvikle god praksis for \u00e5 kunne ta velinformerte beslutninger.\r\nProblemstilling. Hvordan vurderer og vektlegger helses\u00f8stre sin praksis omkring hjemmebes\u00f8kstilbudet?\r\nMetodisk tiln\u00e6rming. I prosjektet kartlegges helses\u00f8stres vurderinger og vektlegging av hjemmebes\u00f8k til nyblivne foreldre i Bergen. Datainnsamling med sp\u00f8rreskjema til 82 helses\u00f8stre er gjennomf\u00f8rt 2007 med svarprosent p\u00e5 60. Data er statistisk bearbeidet med kommunens dataprogramsystem Corporator. \u00c5pne undersp\u00f8rsm\u00e5l er kvalitativt bearbeidet og analysert.\r\nFunn. Helses\u00f8strene mener det er stort behov for hjemmebes\u00f8k, og med noen unntak omkring premature barn og barselkvinnen kjenner de seg godt kompetente til oppgaven. Unders\u00f8kelsen viser likevel at foreldre med nyf\u00f8dt barn i Bergen i ulik grad f\u00e5r dette tilbudet. Ved tidspress prioriterer en del helses\u00f8stre hjemmebes\u00f8k kun til f\u00f8rstegangsf\u00f8dende. Svarene tyder ogs\u00e5 p\u00e5 at noen med en egendefinert praksis ytterligere nedprioriter oppgaven og avviker fra offentlige anbefalinger. M\u00e5ten helses\u00f8ster presenterer tilbudet p\u00e5, kan spille en avgj\u00f8rende rolle for om foreldre takker ja til hjemmebes\u00f8k. Dersom hjemmebes\u00f8ket utelates, er det ikke n\u00f8dvendigvis en tidsbesparelse, fordi foreldre ofte kompenserer med hyppigere konsultasjoner p\u00e5 helsestasjonen.\r\nKonklusjon. Unders\u00f8kelsen viser noen \u00e5rsaker til ujevn hjemmebes\u00f8ksdekning og ulikt helsetjenestetilbud til nyblivne foreldre i Bergen. Det kan v\u00e6re aktuelt for noen \u00e5 videreutvikle sin faglige kompetanse i forhold til premature barn og deres familier."],"dc:date":["2010-11-18T10:11:42Z","2010-11-18T10:11:42Z","2010-11-18T10:11:42Z"],"dc:type":["Report"],"dc:identifier":["http:\/\/hdl.handle.net\/10049\/286"],"dc:language":["nob"]}}';
 
-        $this->assertEquals($expected, JFactory::getDbo()->setQuery($query)->loadResult());
+        $this->assertEquals($expected, \JFactory::getDbo()->setQuery($query)->loadResult());
     }
 
     public function testOnJSpaceHarvestIngestWithResumptionToken()
     {
-        $harvest = JSpaceIngestionHarvest::getInstance();
+        $harvest = Harvest::getInstance();
         $harvest->bind($this->data);
         $harvest->get('params')->set('harvest_type', 0);
         $harvest->get('params')->set('discovery.type', 'oai');
@@ -162,7 +162,7 @@ class OAITest extends TestCaseDatabase
 
     public function testOnJSpaceHarvestIngestSingleSet()
     {
-        $harvest = JSpaceIngestionHarvest::getInstance();
+        $harvest = Harvest::getInstance();
         $harvest->bind($this->data);
         $harvest->get('params')->set('harvest_type', 0);
         $harvest->get('params')->set('set', 'com_10049_24');
@@ -192,8 +192,6 @@ class OAITest extends TestCaseDatabase
 
         $record = JSpace\Archive\Record::getInstance((int)JFactory::getDbo()->setQuery($query, 0, 1)->loadResult());
 
-        $this->assertEquals('__default__', $record->schema);
-
         $query = JFactory::getDbo()->getQuery(true);
         $query
             ->select("COUNT(*)")
@@ -204,7 +202,7 @@ class OAITest extends TestCaseDatabase
 
     public function testOnJSpaceHarvestIngestWithWeblinks()
     {
-        $harvest = JSpaceIngestionHarvest::getInstance();
+        $harvest = Harvest::getInstance();
         $harvest->bind($this->data);
         $harvest->originating_url = 'http://localhost/jspace/request_ore.php';
         $harvest->get('params')->set('harvest_type', 1);
@@ -228,13 +226,13 @@ class OAITest extends TestCaseDatabase
 
         $query = JFactory::getDbo()->getQuery(true);
         $query->select("COUNT(*)")->from('#__weblinks AS a')->join('inner', '#__jspace_references AS b ON a.id = b.id');
-
+        
         $this->assertEquals(2, (int)JFactory::getDbo()->setQuery($query)->loadResult());
     }
 
     public function testOnJSpaceHarvestIngestWithAssets()
     {
-        $harvest = JSpaceIngestionHarvest::getInstance();
+        $harvest = Harvest::getInstance();
         $harvest->bind($this->data);
         $harvest->originating_url = 'http://localhost/jspace/request_ore.php';
         $harvest->get('params')->set('harvest_type', 2);
@@ -265,7 +263,7 @@ class OAITest extends TestCaseDatabase
 
     public function testOnJSpaceHarvestWithDuplicateCacheData()
     {
-        $harvest = JSpaceIngestionHarvest::getInstance();
+        $harvest = Harvest::getInstance();
         $harvest->bind($this->data);
         $harvest->get('params')->set('harvest_type', 2);
         $harvest->get('params')->set('set', 'com_10049_24');
@@ -302,7 +300,7 @@ class OAITest extends TestCaseDatabase
 
     public function testDuplicateAliases()
     {
-        $harvest = JSpaceIngestionHarvest::getInstance();
+        $harvest = Harvest::getInstance();
         $harvest->bind($this->data);
         $harvest->get('params')->set('harvest_type', 1);
         $harvest->get('params')->set('set', 'com_10049_24');

@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright   Copyright (C) 2014 KnowledgeArc Ltd. All rights reserved.
+ * @copyright   Copyright (C) 2014-2015 KnowledgeArc Ltd. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE
  */
 namespace JSpace\Ingestion;
@@ -37,20 +37,17 @@ abstract class Plugin extends \JPlugin
 
         $i = count($items);
 
-        while (count($items) > 0)
-        {
-            foreach ($items as $item)
-            {
+        while (count($items) > 0) {
+            foreach ($items as $item) {
                 $data = json_decode($item->data);
 
-                if (!isset($data->metadata))
-                {
+                if (!isset($data->metadata)) {
                     throw new \Exception("No metadata to ingest.");
                 }
 
                 $id = $this->_getId($item->id, $harvest->catid);
 
-                $crosswalk = \JSpace\Factory::getCrosswalk(new Registry($data->metadata));
+                $crosswalk = \JSpace\Factory::getCrosswalk(\JArrayHelper::fromObject($data->metadata));
 
                 $array = array();
                 $array['catid'] = $harvest->catid;
@@ -59,11 +56,10 @@ abstract class Plugin extends \JPlugin
                 $array['identifiers'][] = $item->id; // also store the cache id.
 
                 $array['metadata'] = $crosswalk->walk();
-                $array['title'] = $array['metadata']->get('title');
+                $array['title'] = $array['metadata']['title'];
 
                 // if title has more than one value, grab the first.
-                if (is_array($array['title']))
-                {
+                if (is_array($array['title'])) {
                     $array['title'] = \JArrayHelper::getValue($array['title'], 0);
                 }
 
@@ -71,8 +67,7 @@ abstract class Plugin extends \JPlugin
 
                 $array['tags'] = array();
 
-                foreach ($crosswalk->getTags() as $tag)
-                {
+                foreach ($crosswalk->getTags() as $tag) {
                     $array['tags'][] = "#new#".$tag;
                 }
 
@@ -84,32 +79,24 @@ abstract class Plugin extends \JPlugin
 
                 $collection = array();
 
-                if (!isset($data->assets))
-                {
+                if (!isset($data->assets)) {
                     $data->assets = $collection;
                 }
 
-                try
-                {
-                    if ($harvest->get('params')->get('harvest_type') == self::LINKS)
-                    {
-                        $record->weblinks = $this->_getWeblinks($record, $data->assets);
-                    }
-                    elseif ($harvest->get('params')->get('harvest_type') == self::ASSETS)
-                    {
+                try {
+                    if ($harvest->get('params')->get('harvest_type') == self::LINKS) {
+                        $record->weblinks = $this->getWeblinks($record, $data->assets);
+                    } elseif ($harvest->get('params')->get('harvest_type') == self::ASSETS) {
                         $collection = $this->_getAssets($record, $data->assets);
                         $this->_expungeExpiredAssets($record, $data->assets);
                     }
-                }
-                catch (Exception $e)
-                {
+                } catch (Exception $e) {
                     JLog::add(__METHOD__.' '.$e->getMessage()."\n".$e->getTraceAsString(), JLog::ERROR, 'jspace');
                 }
 
                 $record->save($collection);
 
-                foreach ($data->assets as $asset)
-                {
+                foreach ($data->assets as $asset) {
                     \JSpace\FileSystem\File::delete($this->_getTempFile($asset));
                 }
             }
@@ -209,7 +196,7 @@ abstract class Plugin extends \JPlugin
      *
      * @return  array                  An array of weblinks conforming to JSpace's weblink hierarchy format.
      */
-    private function _getWeblinks($record, $assets)
+    private function getWeblinks($record, $assets)
     {
         // harvest as weblinks.
         $weblinks = array();
@@ -218,8 +205,7 @@ abstract class Plugin extends \JPlugin
         $references = $record->getReferences();
         $table = \JTable::getInstance('Weblink', 'WeblinksTable');
 
-        foreach ($assets as $asset)
-        {
+        foreach ($assets as $asset) {
             $derivative = $asset->derivative;
 
             $weblink = array(
@@ -231,8 +217,7 @@ abstract class Plugin extends \JPlugin
 
             // load weblink by reference/alias to determine whether updating or adding.
             // (jspaceweblink will handle deletes)
-            while (($reference = current($references)) && !$found)
-            {
+            while (($reference = current($references)) && !$found) {
                 $alias = (int)$record->id.'-'.\JFilterOutput::stringURLSafe($asset->name);
                 $keys =
                     array(
@@ -298,7 +283,7 @@ abstract class Plugin extends \JPlugin
         foreach ($assets as $asset)
         {
             $this->_download($asset);
-            $hashes[] = JSpace\FileSystem\File::getHash($this->_getTempFile($asset));
+            $hashes[] = \JSpace\FileSystem\File::getHash($this->_getTempFile($asset));
         }
 
         // delete assets that have been removed since last harvest.

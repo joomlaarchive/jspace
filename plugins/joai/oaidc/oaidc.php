@@ -1,52 +1,41 @@
 <?php
 /**
- * @package    JOAI.Plugin
+ * @package    JOai.Plugin
  *
- * @copyright   Copyright (C) 2014 KnowledgeArc Ltd. All rights reserved.
+ * @copyright   Copyright (C) 2014-2015 KnowledgeArc Ltd. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE
  */
 
 defined('_JEXEC') or die;
 
-JLoader::import('jspace.table.cache');
+\JLoader::import('jspace.table.cache');
 
+use Joomla\Registry\Registry;
 use JSpace\Metadata\Crosswalk;
 
 /**
  * Harvests metadata in the OAI Dublin Core format.
  *
- * @package  JOAI.Plugin
+ * @package  Joai.Plugin
  */
-class PlgJOAIOAIDC extends JPlugin
+class PlgJoaiOaidc extends JPlugin
 {
-	/**
-	 * Instatiates an instance of the PlgJOAIOAIDC class.
-	 *
-	 * @param   object  &$subject  The object to observe
-	 * @param   array   $config    An optional associative array of configuration settings.
-	 *                             Recognized key values include 'name', 'group', 'params', 'language'
-	 *                             (this list is not meant to be comprehensive).
-	 */
-	public function __construct(&$subject, $config)
-	{
-		parent::__construct($subject, $config);
-		$this->loadLanguage();
-
-		JLog::addLogger(array());
-	}
+    public function __construct(&$subject, $config)
+    {
+        parent::__construct($subject, $config);
+        $this->params->set('metadataPrefix', 'oai_dc');
+        $this->params->set('schema', 'http://www.openarchives.org/OAI/2.0/oai_dc.xsd');
+        $this->params->set('metadataNamespace', 'http://www.openarchives.org/OAI/2.0/oai_dc/');
+    }
 
     public function onJSpaceProviderMetadataFormat()
     {
-        return array(
-            'metadataPrefix'=>'oai_dc',
-            'schema'=>'http://www.openarchives.org/OAI/2.0/oai_dc.xsd',
-            'metadataNamespace'=>'http://www.openarchives.org/OAI/2.0/oai_dc/');
+        return $this->params->get('metadataPrefix');
     }
 
     public function onJSpaceCrosswalkMetadata($context, $data)
     {
-        if ($context != 'joai.oai_dc')
-        {
+        if ($context != "joai.".$this->params->get('metadataPrefix')) {
             return;
         }
 
@@ -61,17 +50,17 @@ class PlgJOAIOAIDC extends JPlugin
         $properties = $data->getProperties();
         unset($properties['metadata']);
 
-        $registry = new JRegistry;
+        $registry = new Registry;
         $registry->loadArray($properties);
         $registry->loadString($data->get('metadata'));
 
         $crosswalk = \JSpace\Factory::getCrosswalk($registry);
         $metadata = $crosswalk->getSpecialMetadata(array('dc'), true);
 
-        $keys = Crosswalk::getKeys($metadata);
+        $keys = array_keys($metadata);
 
         foreach ($keys as $key) {
-            foreach ($metadata->get($key) as $value) {
+            foreach (\JArrayHelper::getValue($metadata, $key) as $value) {
                 if ($value) {
                     $oaiDc->appendChild($xml->createElementNS("http://purl.org/dc/elements/1.1/", str_replace('.', ':', $key), $value));
                 }
@@ -88,7 +77,7 @@ class PlgJOAIOAIDC extends JPlugin
 	 */
 	public function onJSpaceQueryMetadataFormat()
 	{
-		return 'oai_dc';
+		return $this->params->get('metadataPrefix');
 	}
 
 	/**
@@ -101,35 +90,31 @@ class PlgJOAIOAIDC extends JPlugin
 	 */
     public function onJSpaceHarvestMetadata($context, $data)
     {
-        if ($context != 'joai.oai_dc')
-        {
+        if ($context != 'joai.oai_dc') {
             return;
         }
 
-        $metadata = new JRegistry;
+        $metadata = array();
         $namespaces = $data->getDocNamespaces(true);
 
-        foreach ($namespaces as $prefix=>$namespace)
-        {
-            if ($prefix)
-            {
+        foreach ($namespaces as $prefix=>$namespace) {
+            if ($prefix) {
                 $data->registerXPathNamespace($prefix, $namespace);
                 $tags = $data->xpath('//'.$prefix.':*');
 
-                foreach ($tags as $tag)
-                {
-                    if (JString::trim((string)$tag))
-                    {
-                        $values = $metadata->get($prefix.'.'.(string)$tag->getName());
+                foreach ($tags as $tag) {
+                    if (JString::trim((string)$tag)) {
+                        $key = $prefix.':'.(string)$tag->getName();
 
-                        if (!is_array($values))
-                        {
+                        $values = JArrayHelper::getValue($metadata, $key);
+
+                        if (!is_array($values)) {
                             $values = array();
                         }
 
-                        $values[] = JString::trim((string)$tag);
+                        $values[] = (string)$tag;
 
-                        $metadata->set($prefix.'.'.(string)$tag->getName(), $values);
+                        $metadata[$key] = $values;
                     }
                 }
             }

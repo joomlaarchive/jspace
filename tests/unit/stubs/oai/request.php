@@ -5,11 +5,11 @@ if (isset($_GET['verb']))
 {
     if ($_GET['verb'] == 'Identify')
     {
-        $formats = './Identify.xml'; 
+        $formats = './Identify.xml';
     }
 	else if ($_GET['verb'] == 'ListMetadataFormats')
 	{
-		$formats = './ListMetadataFormats.xml';	
+		$formats = './ListMetadataFormats.xml';
 	}
 	else if ($_GET['verb'] == 'ListRecords')
 	{

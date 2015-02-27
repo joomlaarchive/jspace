@@ -1,9 +1,8 @@
 <?php
 /**
  * @package     JSpace.Plugin
- * @subpackage  JSpace
  *
- * @copyright   Copyright (C) 2014 KnowledgeArc Ltd. All rights reserved.
+ * @copyright   Copyright (C) 2014-2015 KnowledgeArc Ltd. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE
  */
 
@@ -18,9 +17,8 @@ use JSpace\Ingestion\Plugin as JSpaceIngestionPlugin;
  * Handles OAI harvesting from the command line.
  *
  * @package     JSpace.Plugin
- * @subpackage  JSpace
  */
-class PlgJSpaceOAI extends JSpaceIngestionPlugin
+class PlgJSpaceOai extends JSpaceIngestionPlugin
 {
     const FOLLOW_ON = 0;
 
@@ -47,34 +45,30 @@ class PlgJSpaceOAI extends JSpaceIngestionPlugin
 
         $validContentType = (in_array($contentType, array('text/xml', 'application/xml')) !== false);
 
-        if ((int)$response->code === 200 && $validContentType)
-        {
+        if ((int)$response->code === 200 && $validContentType) {
             $url->setVar('verb', 'ListMetadataFormats');
 
             $http = JHttpFactory::getHttp();
             $response = $http->get($url);
 
-            if ((int)$response->code === 200)
-            {
+            if ((int)$response->code === 200) {
                 $dom = new DomDocument();
                 $dom->loadXML($response->body);
 
                 $nodes = $dom->getElementsByTagName('metadataPrefix');
                 $availablePrefixes = array();
 
-                foreach ($nodes as $node)
-                {
+                foreach ($nodes as $node) {
                     $availablePrefixes[] = ((string)$node->nodeValue);
                 }
 
                 $dispatcher = JEventDispatcher::getInstance();
                 JPluginHelper::importPlugin("joai");
                 $result = $dispatcher->trigger('onJSpaceQueryMetadataFormat');
+
                 $found = false;
-                while (($metadataPrefix = current($result)) && !$found)
-                {
-                    if (array_search($metadataPrefix, $availablePrefixes) !== false)
-                    {
+                while (($metadataPrefix = current($result)) && !$found) {
+                    if (array_search($metadataPrefix, $availablePrefixes) !== false) {
                         $discovered = new JRegistry;
                         $discovered->set('discovery.type', 'oai');
                         $discovered->set('discovery.url', (string)$sourceUrl);
@@ -87,15 +81,12 @@ class PlgJSpaceOAI extends JSpaceIngestionPlugin
                 }
 
                 // if a metadata format can be discovered, also discover the asset format.
-                if ($discovered)
-                {
+                if ($discovered) {
                     $result = $dispatcher->trigger('onJSpaceQueryAssetFormat');
 
                     $found = false;
-                    while (($assetPrefix = current($result)) && !$found)
-                    {
-                        if (array_search($assetPrefix, $availablePrefixes) !== false)
-                        {
+                    while (($assetPrefix = current($result)) && !$found) {
+                        if (array_search($assetPrefix, $availablePrefixes) !== false) {
                             $discovered->set('discovery.plugin.assets', (string)$assetPrefix);
 
                             $found = true;
@@ -117,8 +108,7 @@ class PlgJSpaceOAI extends JSpaceIngestionPlugin
      */
     public function onJSpaceHarvestRetrieve($harvest)
     {
-        if ($harvest->get('params')->get('discovery.type') != 'oai')
-        {
+        if ($harvest->get('params')->get('discovery.type') != 'oai') {
             return;
         }
 
@@ -128,31 +118,24 @@ class PlgJSpaceOAI extends JSpaceIngestionPlugin
 
         $metadataPrefix = $harvest->get('params')->get('discovery.plugin.metadata');
 
-        do
-        {
+        do {
             $queries = array();
 
-            if ($resumptionToken)
-            {
+            if ($resumptionToken) {
                 $queries['resumptionToken'] = $resumptionToken;
 
                 // take a break to avoid any timeout issues.
-                if (($sleep = $harvest->get('params')->get('follow_on', self::FOLLOW_ON)) != 0)
-                {
+                if (($sleep = $harvest->get('params')->get('follow_on', self::FOLLOW_ON)) != 0) {
                     sleep($sleep);
                 }
-            }
-            else
-            {
+            } else {
                 $queries['metadataPrefix'] = $metadataPrefix;
 
-                if ($harvest->harvested != JFactory::getDbo()->getNullDate())
-                {
+                if ($harvest->harvested != JFactory::getDbo()->getNullDate()) {
                     $queries['from'] = JFactory::getDate($harvest->harvested)->toISO8601();
                 }
 
-                if ($set = $harvest->get('params')->get('set'))
-                {
+                if ($set = $harvest->get('params')->get('set')) {
                     $queries['set'] = $set;
                 }
             }
@@ -170,18 +153,15 @@ class PlgJSpaceOAI extends JSpaceIngestionPlugin
             $identifier = null;
             $resumptionToken = null; // empty the resumptionToken to force a reload per page.
 
-            while ($reader->read())
-            {
-                if ($reader->nodeType == XMLReader::ELEMENT)
-                {
+            while ($reader->read()) {
+                if ($reader->nodeType == XMLReader::ELEMENT) {
                     $doc = new DOMDocument;
                     //$node = simplexml_import_dom($doc->importNode($reader->expand(), true));
                     $doc->appendChild($doc->importNode($reader->expand(), true));
 
                     $node = simplexml_load_string($doc->saveXML());
 
-                    switch ($reader->name)
-                    {
+                    switch ($reader->name) {
                         case "record":
                             $this->cache($harvest, $node);
 
@@ -189,8 +169,7 @@ class PlgJSpaceOAI extends JSpaceIngestionPlugin
 
                         case 'responseDate':
                             // only get the response date if fresh harvest.
-                            if (!$resumptionToken)
-                            {
+                            if (!$resumptionToken) {
                                 $this->harvested = JFactory::getDate($node);
                             }
 
@@ -204,8 +183,7 @@ class PlgJSpaceOAI extends JSpaceIngestionPlugin
                         case 'error':
                             if (JArrayHelper::getValue($node, 'code', null, 'string') !== "noRecordsMatch") {
                                 throw new Exception((string)$node, 500);
-                            }
-                            else {
+                            } else {
                                 throw new Exception(JArrayHelper::getValue($node, 'code', null, 'string'));
                             }
 
