@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright   Copyright (C) 2014 KnowledgeArc Ltd. All rights reserved.
+ * @copyright   Copyright (C) 2014-2015 KnowledgeArc Ltd. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE
  */
 namespace JSpace\Archive;
@@ -126,42 +126,36 @@ class Record extends Object
     public function save($collection = array(), $updateOnly = false)
     {
         $dispatcher = \JEventDispatcher::getInstance();
-        \JPluginHelper::importPlugin('content');
+        \JPluginHelper::importPlugin('jspace');
 
         $table = \JTable::getInstance('Record', 'JSpaceTable');
 
-        if (!($isNew = empty($this->id)))
-        {
+        if (!($isNew = empty($this->id))) {
             $table->load($this->id);
         }
 
-        if ($isNew || $table->parent_id != $this->parent_id)
-        {
+        if ($isNew || $table->parent_id != $this->parent_id) {
             $table->setLocation($this->parent_id, 'last-child');
         }
 
         $table->bind($this->getProperties());
 
-        if (isset($this->newTags))
-        {
+        if (isset($this->newTags)) {
             $table->newTags = $this->newTags;
         }
 
         $result = $dispatcher->trigger('onJSpaceBeforeSave', array(static::$context, $this, $isNew));
 
-        if (in_array(false, $result, true))
-        {
+        if (in_array(false, $result, true)) {
             return false;
         }
 
-        if (!$result = $table->store())
-        {
+        if (!$result = $table->store()) {
             JLog::add(__METHOD__." Cannot save. ".$table->getError(), JLog::CRITICAL, 'jspace');
             return false;
         }
 
-        if (empty($this->id))
-        {
+        if (empty($this->id)) {
             $this->id = $table->get('id');
         }
 
@@ -169,8 +163,7 @@ class Record extends Object
         $this->parent_id = $table->get('parent_id');
 
         // Rebuild the tree path.
-        if (!$table->rebuildPath($table->id))
-        {
+        if (!$table->rebuildPath($table->id)) {
             JLog::add(__METHOD__." Cannot rebuild path. ".$table->getError(), JLog::CRITICAL, 'jspace');
             return false;
         }
@@ -496,8 +489,7 @@ class Record extends Object
         $query = $database->getQuery(true);
 
         $fields = array();
-        foreach ($table->getFields() as $field)
-        {
+        foreach ($table->getFields() as $field) {
             $fields[] = $database->qn($field->Field);
         }
 

@@ -2,23 +2,23 @@
 /**
  * @package    JSpace.Plugin
  *
- * @copyright   Copyright (C) 2014 KnowledgeArc Ltd. All rights reserved.
+ * @copyright   Copyright (C) 2014-2015 KnowledgeArc Ltd. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE
  */
 
 defined('_JEXEC') or die;
 
-jimport('jspace.table.reference');
+\JTable::addIncludePath(JPATH_ROOT.'/administrator/components/com_jspace/tables/');
 
 /**
  * Stores weblinks in the Joomla! Weblinks component.
  *
  * @package  JSpace.Plugin
  */
-class PlgContentJSpaceWeblinks extends JPlugin
+class PlgJSpaceWeblinks extends JPlugin
 {
 	/**
-	 * Instatiates an instance of the PlgContentJSpaceWeblinks class.
+	 * Instatiates an instance of the PlgJSpaceWeblinks class.
 	 * @param   object  &$subject  The object to observe
 	 * @param   array   $config    An optional associative array of configuration settings.
 	 *                             Recognized key values include 'name', 'group', 'params', 'language'
@@ -62,18 +62,15 @@ class PlgContentJSpaceWeblinks extends JPlugin
      */
     public function onContentPrepareData($context, $data)
     {
-        if ($context != 'com_jspace.record')
-        {
+        if ($context != 'com_jspace.record') {
             return true;
         }
 
-        if (!$data)
-        {
+        if (!$data) {
             return true;
         }
 
-        if ($data->id)
-        {
+        if ($data->id) {
             $database = JFactory::getDbo();
             $query = $database->getQuery(true);
 
@@ -89,8 +86,7 @@ class PlgContentJSpaceWeblinks extends JPlugin
             // restructure weblinks; $data->[component without com_][view]
             $data->weblinks = array('weblink'=>array());
 
-            for ($i=0; $i < count($weblinks); $i++)
-            {
+            for ($i=0; $i < count($weblinks); $i++) {
                 $data->weblinks['weblink'][] = $weblinks[$i];
             }
         }
@@ -113,20 +109,18 @@ class PlgContentJSpaceWeblinks extends JPlugin
 	 * Saves a record's weblinks in the Joomla! weblinks component.
 	 *
 	 * @param   string   $context  The context of the content being passed. Will be com_jspace.record.
-	 * @param   JObject  $record   An instance of the Record class.
+	 * @param   JObject  $item     A derivative of the JObject class.
      * @param   bool     $isNew    True if the record being saved is new, false otherwise.
 	 *
 	 * @return  bool     True if the weblinks are successfully saved, false otherwise.
 	 */
-	public function onContentAfterSave($context, $record, $isNew)
+	public function onJSpaceAfterSave($context, $item, $isNew)
 	{
-        if ($context != 'com_jspace.record')
-        {
+        if ($context != 'com_jspace.record') {
             return true;
         }
 
-		if (!isset($record->weblinks))
-		{
+		if (!isset($item->weblinks)) {
 			return true;
 		}
 
@@ -141,17 +135,14 @@ class PlgContentJSpaceWeblinks extends JPlugin
             ->from($database->qn('#__jspace_references', 'a'))
             ->join('INNER', $database->qn('#__weblinks', 'b').' ON '.$database->qn('b.id').'='.$database->qn('a.id'))
             ->where($database->qn('context').'='.$database->q('com_weblinks.weblink'))
-            ->where($database->qn('record_id').'='.$record->id);
+            ->where($database->qn('record_id').'='.$item->id);
 
         $ids = $database->setQuery($query)->loadColumn();
 
-        foreach ($record->weblinks as $link)
-        {
-            foreach ($link as $key=>$data)
-            {
+        foreach ($item->weblinks as $link) {
+            foreach ($link as $key=>$data) {
                 // ignore empty urls.
-                if (!JArrayHelper::getValue($data, 'url'))
-                {
+                if (!JArrayHelper::getValue($data, 'url')) {
                     continue;
                 }
 
@@ -161,13 +152,12 @@ class PlgContentJSpaceWeblinks extends JPlugin
                 $weblink->url = JArrayHelper::getValue($data, 'url');
                 $weblink->catid = $this->params->get('catid', null);
                 $weblink->title = JArrayHelper::getValue($data, 'title', $data['url']);
-                $weblink->alias = (int)$record->id.'-'.JFilterOutput::stringURLSafe($weblink->title);
+                $weblink->alias = (int)$item->id.'-'.JFilterOutput::stringURLSafe($weblink->title);
                 $weblink->state = 1;
-                $weblink->access = $record->access;
-                $weblink->language = $record->language;
+                $weblink->access = $item->access;
+                $weblink->language = $item->language;
 
-                if (!$weblink->store())
-                {
+                if (!$weblink->store()) {
                     throw new Exception($weblink->getError());
                 }
 
@@ -175,22 +165,19 @@ class PlgContentJSpaceWeblinks extends JPlugin
 
                 $reference->id = $weblink->id;
                 $reference->context = 'com_weblinks.weblink';
-                $reference->record_id = $record->id;
+                $reference->record_id = $item->id;
 
-                if (!$reference->store())
-                {
+                if (!$reference->store()) {
                     throw new Exception($reference->getError());
                 }
 
-                if (($index = array_search(JArrayHelper::getValue($data, 'id', null), $ids)) !== false)
-                {
+                if (($index = array_search(JArrayHelper::getValue($data, 'id', null), $ids)) !== false) {
                     unset($ids[$index]);
                 }
             }
         }
 
-        foreach ($ids as $id)
-        {
+        foreach ($ids as $id) {
             $reference = JTable::getInstance('Reference', 'JSpaceTable');
             $reference->delete($id);
 
@@ -205,24 +192,20 @@ class PlgContentJSpaceWeblinks extends JPlugin
      * Deletes a record's weblinks from the Joomla! weblinks component.
      *
      * @param   string  $context  The context of the content being passed. Will be com_jspace.record * or com_weblinks.weblink.
-	 * @param   Object  $record  An instance of the Record class.
+	 * @param   Object  $item  A derivative of the JObject class.
 	 */
-	public function onContentBeforeDelete($context, $record)
+	public function onJSpaceBeforeDelete($context, $item)
 	{
         $path = JPATH_ROOT.'/administrator/components/com_jspace/';
         JTable::addIncludePath($path.'tables');
 
-        if ($context == 'com_weblinks.weblink')
-        {
+        if ($context == 'com_weblinks.weblink') {
             $reference = JTable::getInstance('Reference', 'JSpaceTable');
 
-            if ($reference->load($record->id))
-            {
-                $reference->delete($record->id);
+            if ($reference->load($item->id)) {
+                $reference->delete($item->id);
             }
-        }
-        else if ($context == 'com_jspace.record')
-        {
+        } else if ($context == 'com_jspace.record') {
             $path = JPATH_ROOT.'/administrator/components/com_weblinks/';
             JTable::addIncludePath($path.'tables');
 
@@ -233,7 +216,7 @@ class PlgContentJSpaceWeblinks extends JPlugin
             $query = 'DELETE r, w FROM '.$database->qn('#__jspace_references', 'r').' '.
                      'INNER JOIN '.$database->qn('#__weblinks', 'w').' ON r.id = w.id '.
                      'WHERE '.$database->qn('r.context').'='.$database->q('com_weblinks.weblink').' '.
-                     'AND '.$database->qn('r.record_id').'='.(int)$record->id;
+                     'AND '.$database->qn('r.record_id').'='.(int)$item->id;
 
             $database->setQuery($query)->execute();
         }

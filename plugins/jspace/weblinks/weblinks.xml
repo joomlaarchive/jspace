@@ -1,31 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<extension version="3.2" type="plugin" group="content" method="upgrade">
-	<name>plg_content_jspaceweblinks</name>
+<extension version="3.2" type="plugin" group="jspace" method="upgrade">
+	<name>plg_jspace_weblinks</name>
 	<author>KnowledgeArc</author>
 	<creationDate>2014/03/30</creationDate>
-	<copyright>Copyright (C) 2014 KnowledgeArc Ltd. All rights reserved.</copyright>
+	<copyright>Copyright (C) 2014-2015 KnowledgeArc Ltd. All rights reserved.</copyright>
 	<license>GNU General Public License version 2 or later; see LICENSE.txt</license>
 	<authorEmail>development@knowledgearc.com</authorEmail>
 	<authorUrl>www.knowledgearc.org</authorUrl>
 	<version>0.5.0</version>
-	<description>PLG_CONTENT_JSPACEWEBLINKS_XML_DESCRIPTION</description>
-	
+	<description>PLG_JSPACE_WEBLINKS_XML_DESCRIPTION</description>
+
 	<files>
-		<filename plugin="jspaceweblinks">jspaceweblinks.php</filename>
+		<filename plugin="weblinks">weblinks.php</filename>
 		<folder>fields</folder>
 		<folder>layouts</folder>
 	</files>
 	<languages>
-		<language tag="en-GB">language/en-GB/en-GB.plg_content_jspaceweblinks.ini</language>
-		<language tag="en-GB">language/en-GB/en-GB.plg_content_jspaceweblinks.sys.ini</language>
+		<language tag="en-GB">language/en-GB/en-GB.plg_jspace_weblinks.ini</language>
+		<language tag="en-GB">language/en-GB/en-GB.plg_jspace_weblinks.sys.ini</language>
 	</languages>
 	<config>
         <fields name="params">
             <fieldset name="basic">
-                <field 
-                    name="catid" 
+                <field
+                    name="catid"
                     type="category"
-                    description="PLG_CONTENT_JSPACEWEBLINKS_FIELD_CATEGORIES_DESC"
+                    description="PLG_JSPACE_WEBLINKS_FIELD_CATEGORIES_DESC"
                     extension="com_weblinks"
                     label="JCATEGORIES"
                     size="10"
