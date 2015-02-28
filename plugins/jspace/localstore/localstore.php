@@ -76,8 +76,7 @@ class PlgJSpaceLocalstore extends JPlugin
 
         $handle = fopen($path, 'rb');
 
-        if ($handle === false)
-        {
+        if ($handle === false) {
             return false;
         }
 
@@ -85,8 +84,7 @@ class PlgJSpaceLocalstore extends JPlugin
         header("Content-Disposition: attachment; filename=".$asset->get('title').";");
         header("Content-Length: ".$asset->get('contentLength'));
 
-        while (!feof($handle))
-        {
+        while (!feof($handle)) {
             $buffer = fread($handle, static::$chunksize);
 
             echo $buffer;
@@ -109,10 +107,8 @@ class PlgJSpaceLocalstore extends JPlugin
     {
         $collection = \JSpace\Html\Assets::getCollection();
 
-        foreach ($collection as $dkey=>$derivative)
-        {
-            foreach ($derivative as $akey=>$asset)
-            {
+        foreach ($collection as $dkey=>$derivative) {
+            foreach ($derivative as $akey=>$asset) {
                 $hash = JSpaceFile::getHash(JArrayHelper::getValue($asset, 'tmp_name'));
 
                 $database = JFactory::getDbo();
@@ -126,8 +122,7 @@ class PlgJSpaceLocalstore extends JPlugin
 
                 $database->setQuery($query);
 
-                if ($database->loadResult())
-                {
+                if ($database->loadResult()) {
                     JFactory::getApplication()->enqueueMessage(JText::_('COM_JSPACE_ERROR_FILE_EXISTS'), 'error');
                     return false;
                 }
@@ -187,13 +182,11 @@ class PlgJSpaceLocalstore extends JPlugin
 
         $path = AssetHelper::buildStoragePath($item->record_id, $root);
 
-        if (!JFolder::create($path))
-        {
+        if (!JFolder::create($path)) {
             throw new Exception(JText::sprintf("PLG_JSPACE_LOCALSTORE_ERROR_CREATE_STORAGE_PATH", $path));
         }
 
-        if (!JFile::copy($item->tmp_name, $path.$item->hash))
-        {
+        if (!JFile::copy($item->tmp_name, $path.$item->hash)) {
             throw new Exception(JText::sprintf("PLG_JSPACE_LOCALSTORE_ERROR_COPY_FILE", $item->tmp_name));
         }
 
@@ -208,8 +201,7 @@ class PlgJSpaceLocalstore extends JPlugin
      */
     public function onJSpaceBeforeDelete($context, $item)
     {
-        if ($context != 'com_jspace.asset')
-        {
+        if ($context != 'com_jspace.asset') {
             return true;
         }
 
@@ -259,17 +251,13 @@ class PlgJSpaceLocalstore extends JPlugin
 
         $path = AssetHelper::preparePath($this->params->get('path'));
 
-        if (JFolder::exists($path))
-        {
+        if (JFolder::exists($path)) {
             $config['path'] = $path;
 
-            if (JString::strpos($path, JPATH_ROOT) === 0)
-            {
+            if (JString::strpos($path, JPATH_ROOT) === 0) {
                 $errors[] = JText::_('PLG_JSPACE_LOCALSTORE_PATH_NOT_RECOMMENDED');
             }
-        }
-        else
-        {
+        } else {
             $errors[] = JText::_('PLG_JSPACE_LOCALSTORE_PATH_NOT_EXISTS');
         }
 
