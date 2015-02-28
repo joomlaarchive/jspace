@@ -3,7 +3,7 @@
  * @package     JSpace.Component
  * @subpackage  Model
  *
- * @copyright   Copyright (C) 2014 KnowledgeArc Ltd. All rights reserved.
+ * @copyright   Copyright (C) 2014-2015 KnowledgeArc Ltd. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE
  */
 
@@ -333,7 +333,7 @@ class JSpaceModelRecord extends JModelAdmin
 
         if ($data = parent::validate($form, $data, $group))
         {
-            $result = $dispatcher->trigger('onJSpaceRecordAfterValidate', array($form, $data, $group));
+            $result = $dispatcher->trigger('onJSpaceAfterValidate', array($form, $data, $group));
 
             if (in_array(false, $result, true))
             {

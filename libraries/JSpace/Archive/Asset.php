@@ -110,7 +110,7 @@ class Asset extends Object
 
 		// Trigger the onUserBeforeDelete event
 		$dispatcher = \JEventDispatcher::getInstance();
-		$dispatcher->trigger('onContentBeforeDelete', array(static::$context, $this));
+		$dispatcher->trigger('onJSpaceBeforeDelete', array(static::$context, $this));
 
 		// Create the user table object
 		$table = \JTable::getInstance('Asset', 'JSpaceTable');
@@ -121,6 +121,6 @@ class Asset extends Object
 		}
 
 		// Trigger the onUserAfterDelete event
-		$dispatcher->trigger('onContentAfterDelete', array(static::$context, $this));
+		$dispatcher->trigger('onJSpaceAfterDelete', array(static::$context, $this));
 	}
 }

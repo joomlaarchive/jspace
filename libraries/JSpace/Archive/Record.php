@@ -53,24 +53,19 @@ class Record extends Object
      */
     public static function getInstance($identifier = 0)
     {
-        if (!is_numeric($identifier))
-        {
+        if (!is_numeric($identifier)) {
             JLog::add(JText::sprintf('JLIB_USER_ERROR_ID_NOT_EXISTS', $identifier), JLog::WARNING, 'jspace');
 
             return false;
-        }
-        else
-        {
+        } else {
             $id = $identifier;
         }
 
-        if ($id === 0)
-        {
+        if ($id === 0) {
             return new Record;
         }
 
-        if (empty(self::$instances[$id]))
-        {
+        if (empty(self::$instances[$id])) {
             $record = new Record($id);
             self::$instances[$id] = $record;
         }
@@ -89,15 +84,12 @@ class Record extends Object
      */
     public function bind(&$array)
     {
-        if ((!empty($array['tags']) && $array['tags'][0] != ''))
-        {
+        if ((!empty($array['tags']) && $array['tags'][0] != '')) {
             $this->newTags = $array['tags'];
         }
 
-        if (array_key_exists('identifiers', $array))
-        {
-            if (!is_array(JArrayHelper::getValue($array, 'identifiers')))
-            {
+        if (array_key_exists('identifiers', $array)) {
+            if (!is_array(JArrayHelper::getValue($array, 'identifiers'))) {
                 $array['identifiers'] = array();
             }
 
@@ -107,8 +99,7 @@ class Record extends Object
         $this->metadata = JArrayHelper::getValue($array, 'metadata', array());
 
         // Bind the array
-        if (!$this->setProperties($array))
-        {
+        if (!$this->setProperties($array)) {
             throw new Exception('Data to be bound is neither an array nor an object');
         }
 
@@ -168,8 +159,8 @@ class Record extends Object
             return false;
         }
 
-        $this->_saveIdentifiers();
-        $this->_saveAssets($collection);
+        $this->saveIdentifiers();
+        $this->saveAssets($collection);
 
         $dispatcher->trigger('onJSpaceAfterSave', array(static::$context, $this, $isNew));
 
@@ -181,12 +172,10 @@ class Record extends Object
      *
      * @param  array  $collection  An array of assets to save with the record.
      */
-    private function _saveAssets($collection)
+    private function saveAssets($collection)
     {
-        foreach ($collection as $dkey=>$derivative)
-        {
-            foreach ($derivative as $akey=>$asset)
-            {
+        foreach ($collection as $dkey=>$derivative) {
+            foreach ($derivative as $akey=>$asset) {
                 $new = Asset::getInstance();
                 $new->bind($asset);
 
@@ -213,10 +202,9 @@ class Record extends Object
      *
      * @todo Investigate moving to JSpaceTableRecord.
      */
-    private function _saveIdentifiers()
+    private function saveIdentifiers()
     {
-        foreach ($this->identifiers as $identifier)
-        {
+        foreach ($this->identifiers as $identifier) {
             $table = \JTable::getInstance('RecordIdentifier', 'JSpaceTable');
             $table->id = $identifier;
             $table->record_id = $this->id;
@@ -237,7 +225,7 @@ class Record extends Object
         $table = \JTable::getInstance('Record', 'JSpaceTable');
         $table->load($this->id);
 
-        $dispatcher->trigger('onContentBeforeDelete', array(static::$context, $table));
+        $dispatcher->trigger('onJSpaceBeforeDelete', array(static::$context, $table));
 
         $database = \JFactory::getDbo();
         $query = $database->getQuery(true);
@@ -249,23 +237,20 @@ class Record extends Object
 
         $identifiers = $database->setQuery($query)->loadObjectList();
 
-        foreach ($identifiers as $identifier)
-        {
+        foreach ($identifiers as $identifier) {
             $table = \JTable::getInstance('RecordIdentifier', 'JSpaceTable');
             $table->delete($identifier->id);
         }
 
-        foreach ($this->getAssets() as $asset)
-        {
+        foreach ($this->getAssets() as $asset) {
             $asset->delete();
         }
 
-        if (!$table->delete())
-        {
+        if (!$table->delete()) {
             throw new Exception($table->getError());
         }
 
-        $dispatcher->trigger('onContentAfterDelete', array(static::$context, $table));
+        $dispatcher->trigger('onJSpaceAfterDelete', array(static::$context, $table));
 
         return true;
     }
@@ -274,8 +259,7 @@ class Record extends Object
     {
         $table = \JTable::getInstance('Record', 'JSpaceTable');
 
-        if (!$table->load($keys))
-        {
+        if (!$table->load($keys)) {
             return false;
         }
 
@@ -320,8 +304,7 @@ class Record extends Object
             ->from($database->qn('#__jspace_assets'))
             ->where($database->qn('record_id').'='.(int)$this->id);
 
-        foreach ($filters as $key=>$value)
-        {
+        foreach ($filters as $key=>$value) {
             $query->where($database->qn($key).'='.$database->q($value));
         }
 
@@ -354,45 +337,38 @@ class Record extends Object
 
         $table = \JTable::getInstance('Record', 'JSpaceTable');
 
-        if (!$table->load($id))
-        {
+        if (!$table->load($id)) {
             throw new Exception('The record cannot be found.', 404);
         }
 
-        if ($table->title == 'JSpace_Record_Root')
-        {
+        if ($table->title == 'JSpace_Record_Root') {
             throw new Exception('Direct access to root node not allowed', 403);
         }
 
         $items = $table->getTree();
-        return self::_buildTree($items);
+        return self::buildTree($items);
     }
 
-    private static function _buildTree($items, $parent = 0, $level = 0)
+    private static function buildTree($items, $parent = 0, $level = 0)
     {
         if ($level > 1000) return ''; // Make sure not to have an endless recursion
 
         $tree = array();
 
-        if ($parent == 0 && $level == 0)
-        {
+        if ($parent == 0 && $level == 0) {
             $tree = null;
         }
 
-        foreach ($items as $key=>$value)
-        {
-            if(is_null($tree) || (int)$value->parent_id == $parent)
-            {
+        foreach ($items as $key=>$value) {
+            if(is_null($tree) || (int)$value->parent_id == $parent) {
                 $item = $value;
                 unset($items[$key]);
-                $item->children = self::_buildTree($items, $value->id, $value->level);
+                $item->children = self::buildTree($items, $value->id, $value->level);
 
-                if (is_array($tree))
-                {
+                if (is_array($tree)) {
                     $tree[] = $item;
                 }
-                else
-                {
+                else {
                     $tree = $item;
                 }
             }
@@ -413,8 +389,7 @@ class Record extends Object
 
         $parent = Record::getInstance($this->parent_id);
 
-        if ($parent->alias == 'root' || ($parent->access && !in_array($parent->access, $viewLevels)))
-        {
+        if ($parent->alias == 'root' || ($parent->access && !in_array($parent->access, $viewLevels))) {
             $parent = null;
         }
 
@@ -446,8 +421,7 @@ class Record extends Object
         $query = $database->getQuery(true);
 
         $fields = array();
-        foreach ($table->getFields() as $field)
-        {
+        foreach ($table->getFields() as $field) {
             $fields[] = $database->qn($field->Field);
         }
 
@@ -505,8 +479,7 @@ class Record extends Object
     {
         $asset = Asset::getInstance($assetId);
 
-        if ($asset->id)
-        {
+        if ($asset->id) {
             $crosswalk = \JSpace\Factory::getCrosswalk($asset->get('metadata'));
             $this->set('metadata', $crosswalk->walk());
             $this->save();

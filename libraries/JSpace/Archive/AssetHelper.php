@@ -13,7 +13,7 @@ class AssetHelper extends \JObject
     /**
      * Builds a hash-based storage path based on the specified id.
      *
-     * @param   int     $id  The asset id to base the path on.
+     * @param   int     $id    The id to base the path on. The id will in nearly all cases be based on a record id.
      * @param   string  $root  An optional root directory. The JPATH_ROOT constant is also suported.
      *
      * @return  string  An hash-based storage path based on the specified id.
