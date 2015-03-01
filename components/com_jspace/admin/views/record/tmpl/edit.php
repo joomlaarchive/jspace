@@ -11,7 +11,7 @@ $assoc = JLanguageAssociations::isEnabled();
 $ignoreFieldSets = array('title','details','publishing','metadata','item_associations','identifiers', 'licensing');
 ?>
 <script type="text/javascript">
-	Joomla.submitbutton = function(task, schema)
+	Joomla.submitbutton = function(task)
 	{
         if (task == 'record.cancel' || document.formvalidator.isValid(document.id('record-form')))
 		{

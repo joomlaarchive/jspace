@@ -127,7 +127,6 @@ class JSpaceArchiveRecordTest extends \TestCaseDatabase
         $record->set('metadata', $registry);
         $record->set('created_by', 525);
         $record->set('published', 0);
-        $record->set('schema', '[No Schema]');
 
         $record->save();
 

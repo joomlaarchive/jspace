@@ -14,7 +14,6 @@ class OaiTest extends TestCaseDatabase
 
         $registry = new JRegistry;
         $registry->set('harvest_assets', false);
-        $registry->set('default.schema', '__default__');
         $registry->set('default.access', '0');
         $registry->set('default.language', '*');
         $registry->set('default.state', 1);
@@ -226,7 +225,7 @@ class OaiTest extends TestCaseDatabase
 
         $query = JFactory::getDbo()->getQuery(true);
         $query->select("COUNT(*)")->from('#__weblinks AS a')->join('inner', '#__jspace_references AS b ON a.id = b.id');
-        
+
         $this->assertEquals(2, (int)JFactory::getDbo()->setQuery($query)->loadResult());
     }
 

@@ -12,7 +12,7 @@ $this->ignore_fieldsets = array('details', 'publishing', 'discovery');
 $assoc = JLanguageAssociations::isEnabled();
 ?>
 <script type="text/javascript">
-    Joomla.submitbutton = function(task, schema)
+    Joomla.submitbutton = function(task)
     {
         if (task == 'harvest.cancel' || document.formvalidator.isValid(document.id('harvest-form')))
         {
@@ -21,23 +21,23 @@ $assoc = JLanguageAssociations::isEnabled();
     }
 </script>
 
-<form 
-    action="<?php echo JRoute::_('index.php?option=com_jspace&layout=edit&id='.(int)$this->item->id); ?>" 
-    method="post" 
-    name="adminForm" 
-    id="harvest-form" 
+<form
+    action="<?php echo JRoute::_('index.php?option=com_jspace&layout=edit&id='.(int)$this->item->id); ?>"
+    method="post"
+    name="adminForm"
+    id="harvest-form"
     class="form-validate"
     enctype="multipart/form-data">
-    
+
     <div class="form-horizontal">
         <?php echo JHtml::_('bootstrap.startTabSet', 'myTab', array('active'=>'details')); ?>
-                    
-            <?php echo JHtml::_('bootstrap.addTab', 'myTab', 'details', JText::_('COM_JSPACE_HARVEST_FIELDSET_DETAILS_LABEL', 
+
+            <?php echo JHtml::_('bootstrap.addTab', 'myTab', 'details', JText::_('COM_JSPACE_HARVEST_FIELDSET_DETAILS_LABEL',
 true)); ?>
             <div class="row-fluid">
                 <div class="span9">
                     <?php
-                    foreach ($this->form->getFieldset('details') as $field) :    
+                    foreach ($this->form->getFieldset('details') as $field) :
                         echo $field->renderField();
                     endforeach;
                     ?>
@@ -62,19 +62,19 @@ true)); ?>
             <?php echo JHtml::_('bootstrap.endTab'); ?>
 
             <?php if ($this->item->discovered) : ?>
-            <?php echo JHtml::_('bootstrap.addTab', 'myTab', 'publishing', 
+            <?php echo JHtml::_('bootstrap.addTab', 'myTab', 'publishing',
 JText::_('COM_JSPACE_HARVEST_FIELDSET_PUBLISHING_LABEL', true)); ?>
             <div class="row-fluid">
                 <div class="span12">
                     <?php foreach ($this->form->getFieldset('publishing') as $field) : ?>
-                        <?php echo $field->renderField(); ?>                
+                        <?php echo $field->renderField(); ?>
                     <?php endforeach; ?>
                 </div>
             </div>
             <?php echo JHtml::_('bootstrap.endTab'); ?>
-            
+
             <?php echo JLayoutHelper::render('joomla.edit.params', $this); ?>
-            
+
             <?php endif; ?>
 
         <?php echo JHtml::_('bootstrap.endTabSet'); ?>

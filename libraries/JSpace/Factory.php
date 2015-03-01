@@ -66,38 +66,6 @@ class Factory
         }
     }
 
-	/**
-	 * Gets a list of available JSpace schemas.
-	 *
-	 * @return  \JSpace\Archive\Schema[]  An array of JSpaceSchema objects.
-	 */
-	public static function getSchemas()
-    {
-        $schemas = array();
-
-        $formPath = JPATH_ROOT.'/administrator/components/com_jspace/models/forms/schemas';
-
-        foreach (\JFolder::files($formPath, '..*\.xml', false, true) as $file)
-        {
-            $xml = simplexml_load_file($file);
-
-            $schema = new Schema();
-            $schema->name = \JArrayHelper::getValue($xml, 'name', null, 'string');
-
-            if (!$schema->name)
-            {
-                throw new Exception('COM_JSPACE_RECORDSCHEMA_NO_NAME_ATTRIBUTE');
-            }
-
-            $schema->label = \JArrayHelper::getValue($xml, 'label', null, 'string');
-            $schema->description = \JArrayHelper::getValue($xml, 'description', null, 'string');
-
-            $schemas[] = $schema;
-        }
-
-        return $schemas;
-	}
-
     public static function getOAIRequest(\JInput $input)
     {
         return new Request($input->getArray());
