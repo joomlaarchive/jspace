@@ -39,7 +39,7 @@ class PlgJSpaceOpenSearch extends JSpaceIngestionPlugin
      */
     public function onJSpaceHarvestDiscover($sourceUrl)
     {
-        return $this->_discover($sourceUrl);
+        return $this->discover($sourceUrl);
     }
 
     /**
@@ -50,7 +50,7 @@ class PlgJSpaceOpenSearch extends JSpaceIngestionPlugin
      * @return  JRegistry  A OpenSearch description as a JRegistry or false if no description
      * can be found.
      */
-    private function _discover($sourceUrl)
+    private function discover($sourceUrl)
     {
         $discovered = false;
 
@@ -58,13 +58,11 @@ class PlgJSpaceOpenSearch extends JSpaceIngestionPlugin
         $http = JHttpFactory::getHttp();
         $response = $http->get($url);
 
-        if ((int)$response->code === 200)
-        {
+        if ((int)$response->code === 200) {
             $contentType = JArrayHelper::getValue($response->headers, 'Content-Type');
             $contentType = $this->parseContentType($contentType);
 
-            if ($contentType === 'text/html')
-            {
+            if ($contentType === 'text/html') {
                 $dom = new DomDocument();
                 $dom->loadHTML($response->body);
                 $xpath = new DOMXPath($dom);
@@ -72,15 +70,13 @@ class PlgJSpaceOpenSearch extends JSpaceIngestionPlugin
                 $opendocument = '//html/head/link[@type="application/opensearchdescription+xml"]';
                 $links = $xpath->query($opendocument);
 
-                if (count($links))
-                {
+                if (count($links)) {
                     $link = $dom->importNode($links->item(0), true);
 
                     $href = new JUri($link->getAttribute('href'));
 
                     // sometimes the opensearch url is not complete so complete it.
-                    if (!$href->getScheme())
-                    {
+                    if (!$href->getScheme()) {
                         $url->setQuery(array());
                         $url->setPath($href);
                         $url->setQuery($href->getQuery());
@@ -88,31 +84,25 @@ class PlgJSpaceOpenSearch extends JSpaceIngestionPlugin
 
                     $url->setVar('source', $sourceUrl);
 
-                    $discovered = $this->_discover((string)$url);
+                    $discovered = $this->discover((string)$url);
                 }
-            }
-            else if ($contentType === 'application/opensearchdescription+xml')
-            {
+            } else if ($contentType === 'application/opensearchdescription+xml') {
                 $originalUrl = $url->getVar('source');
 
                 $xml = new SimpleXMLElement($response->body);
 
-                if (isset($xml->Url))
-                {
+                if (isset($xml->Url)) {
                     $urls = $xml->Url;
                     $i = 0;
-                    while (($url = $urls[$i]) && !$discovered)
-                    {
+                    while (($url = $urls[$i]) && !$discovered) {
                         $template = JArrayHelper::getValue($url, 'template', null, 'string');
                         $type = JArrayHelper::getValue($url, 'type', null, 'string');
 
                         $link = new JUri($template);
                         $queries = $link->getQuery(true);
                         //@todo a search/replace will probably suffice.
-                        foreach ($queries as $keyq => &$valueq)
-                        {
-                            if ($valueq === "{searchTerms}")
-                            {
+                        foreach ($queries as $keyq => &$valueq) {
+                            if ($valueq === "{searchTerms}") {
                                 $queries[$keyq] = JUri::getInstance($originalUrl)->getVar($keyq);
                                 break;
                             }
@@ -121,17 +111,14 @@ class PlgJSpaceOpenSearch extends JSpaceIngestionPlugin
                         $link->setQuery($queries);
 
                         // don't try and discover the html search.
-                        if (strpos($type, 'text/html') === false)
-                        {
-                            $discovered = $this->_discover((string)$link);
+                        if (strpos($type, 'text/html') === false) {
+                            $discovered = $this->discover((string)$link);
                         }
 
                         $i++;
                     }
                 }
-            }
-            else if (array_search($contentType, array('text/xml', 'application/atom+xml', 'application/rss+xml')) !== false)
-            {
+            } else if (array_search($contentType, array('text/xml', 'application/atom+xml', 'application/rss+xml')) !== false) {
                 //@todo JUri not updating url via setVar. May need more testing.
                 $discovered = new JRegistry;
                 $discovered->set('discovery.type', 'opensearch');
@@ -152,8 +139,7 @@ class PlgJSpaceOpenSearch extends JSpaceIngestionPlugin
      */
     public function onJSpaceHarvestRetrieve($harvest)
     {
-        if ($harvest->get('params')->get('discovery.type') != 'opensearch')
-        {
+        if ($harvest->get('params')->get('discovery.type') != 'opensearch') {
             return;
         }
 
@@ -171,15 +157,12 @@ class PlgJSpaceOpenSearch extends JSpaceIngestionPlugin
         $dom = new DomDocument();
         $count = 0; // the number of records to retrieve.
 
-        do
-        {
+        do {
             $url = new JUri($templateUrl);
             $queries = $url->getQuery(true);
 
-            foreach ($queries as $keyq=>$valueq)
-            {
-                if (array_key_exists($valueq, $parameters))
-                {
+            foreach ($queries as $keyq=>$valueq) {
+                if (array_key_exists($valueq, $parameters)) {
                     $queries[$keyq] = $parameters[$valueq];
                 }
             }
@@ -188,33 +171,26 @@ class PlgJSpaceOpenSearch extends JSpaceIngestionPlugin
 
             $response = $http->get($url);
 
-            if ((int)$response->code === 200)
-            {
+            if ((int)$response->code === 200) {
                 $reader = new XMLReader;
                 $reader->xml($response->body);
 
-                while($reader->read())
-                {
-                    if ($reader->nodeType == XmlReader::ELEMENT)
-                    {
-                        if ($reader->localName == 'entry')
-                        {
+                while($reader->read()) {
+                    if ($reader->nodeType == XmlReader::ELEMENT) {
+                        if ($reader->localName == 'entry') {
                             $entry = simplexml_import_dom($dom->importNode($reader->expand(), true));
                             $this->cache($harvest, $entry);
                         }
 
-                        if ($reader->localName == 'item')
-                        {
+                        if ($reader->localName == 'item') {
                             $entry = simplexml_import_dom($dom->importNode($reader->expand(), true));
                             $this->cache($harvest, $entry);
                         }
 
-                        if ($reader->localName == 'totalResults')
-                        {
+                        if ($reader->localName == 'totalResults') {
                             $totalResults = simplexml_import_dom($dom->importNode($reader->expand(), true));
 
-                            if (!$count)
-                            {
+                            if (!$count) {
                                 $count = (int)$totalResults;
                             }
                         }
@@ -224,26 +200,21 @@ class PlgJSpaceOpenSearch extends JSpaceIngestionPlugin
 
             $parameters['{startIndex?}']+=$parameters['{count?}'];
             $parameters['{startPage?}']+=1;
-        }
-        while($parameters['{startIndex?}'] < $count);
+        } while($parameters['{startIndex?}'] < $count);
     }
 
     protected function cache($harvest, $data)
     {
         $contentType = $harvest->get('params')->get('discovery.plugin.type');
 
-        if (isset($data->id))
-        {
+        if (isset($data->id)) {
             $identifier = (string)$data->id;
-        }
-        else
-        {
+        } else {
             $identifier = (string)$data->link;
         }
 
-        if ($identifier)
-        {
-            $metadata = new JRegistry();
+        if ($identifier) {
+            $metadata = array();
 
             // suppress duplicate attribute errors.
             libxml_use_internal_errors(true);
@@ -254,9 +225,9 @@ class PlgJSpaceOpenSearch extends JSpaceIngestionPlugin
 
             $tags = $xpath->query('//head/meta');
 
-            foreach ($tags as $tag)
-            {
-                $metadata->set(JString::strtolower($tag->getAttribute('name')), $tag->getAttribute('content'));
+            foreach ($tags as $tag) {
+                $key = JString::strtolower($tag->getAttribute('name'));
+                $metadata[$key] = $tag->getAttribute('content');
             }
 
             $cache = array("metadata"=>$metadata);

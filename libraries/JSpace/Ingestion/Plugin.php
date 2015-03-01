@@ -55,7 +55,10 @@ abstract class Plugin extends \JPlugin
                 $array['identifiers'][] = $item->id; // also store the cache id.
 
                 $array['metadata'] = $crosswalk->walk();
-                $array['title'] = $array['metadata']['title'];
+
+                $metadata = \JArrayHelper::getValue($array, 'metadata');
+
+                $array['title'] = \JArrayHelper::getValue($metadata, 'title');
 
                 // if title has more than one value, grab the first.
                 if (is_array($array['title'])) {
@@ -86,8 +89,8 @@ abstract class Plugin extends \JPlugin
                     if ($harvest->get('params')->get('harvest_type') == self::LINKS) {
                         $record->weblinks = $this->getWeblinks($record, $data->assets);
                     } elseif ($harvest->get('params')->get('harvest_type') == self::ASSETS) {
-                        $collection = $this->_getAssets($record, $data->assets);
-                        $this->_expungeExpiredAssets($record, $data->assets);
+                        $collection = $this->getAssets($record, $data->assets);
+                        $this->expungeExpiredAssets($record, $data->assets);
                     }
                 } catch (Exception $e) {
                     JLog::add(__METHOD__.' '.$e->getMessage()."\n".$e->getTraceAsString(), JLog::ERROR, 'jspace');
@@ -96,7 +99,7 @@ abstract class Plugin extends \JPlugin
                 $record->save($collection);
 
                 foreach ($data->assets as $asset) {
-                    \JSpace\FileSystem\File::delete($this->_getTempFile($asset));
+                    \JSpace\FileSystem\File::delete($this->getTempFile($asset));
                 }
             }
 
@@ -152,11 +155,11 @@ abstract class Plugin extends \JPlugin
      *
      * @return  string    The asset's temporary location.
      */
-    private function _getTempFile($asset)
+    private function getTempFile($asset)
     {
         if (!isset($asset->tmp_name) || !\JSpace\FileSystem\File::exists($asset->tmp_name))
         {
-            $this->_download($asset);
+            $this->download($asset);
         }
 
         return $asset->tmp_name;
@@ -168,7 +171,7 @@ abstract class Plugin extends \JPlugin
      * @param  stdClass  $asset  The harvested asset information. This method will add the
      * temporary asset location to the asset as a class variable named tmp_name.
      */
-    private function _download(&$asset)
+    private function download(&$asset)
     {
         $asset->tmp_name = tempnam(sys_get_temp_dir(), '');
 
@@ -250,13 +253,13 @@ abstract class Plugin extends \JPlugin
      * @return  array                   An array of assets conforming to JSpace's asset hierarchy
      * format.
      */
-    private function _getAssets($record, $assets)
+    private function getAssets($record, $assets)
     {
         $collection = array();
 
         foreach ($assets as $asset)
         {
-            $this->_download($asset);
+            $this->download($asset);
 
             $derivative = $asset->derivative;
 
@@ -274,15 +277,15 @@ abstract class Plugin extends \JPlugin
      * saved to.
      * @param   stdClass[]              $assets  An array of assets.
      */
-    private function _expungeExpiredAssets($record, $assets)
+    private function expungeExpiredAssets($record, $assets)
     {
         // file hashes of assets to keep.
         $hashes = array();
 
         foreach ($assets as $asset)
         {
-            $this->_download($asset);
-            $hashes[] = \JSpace\FileSystem\File::getHash($this->_getTempFile($asset));
+            $this->download($asset);
+            $hashes[] = \JSpace\FileSystem\File::getHash($this->getTempFile($asset));
         }
 
         // delete assets that have been removed since last harvest.
