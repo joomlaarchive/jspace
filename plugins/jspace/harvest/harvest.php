@@ -2,7 +2,7 @@
 /**
  * @package     JSpace.Plugin
  *
- * @copyright   Copyright (C) 2014 KnowledgeArc Ltd. All rights reserved.
+ * @copyright   Copyright (C) 2014-2015 KnowledgeArc Ltd. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE
  */
 
@@ -16,11 +16,11 @@ use \JFactory;
 use \JDate;
 
 /**
- * Handles importing items via an OpenSearch compliant search engine.
+ * Handles importing items via an OpenSearch compliant search engine and OAI endpoints.
  *
  * @package     JSpace.Plugin
  */
-class PlgContentHarvest extends JPlugin
+class PlgJSpaceHarvest extends JPlugin
 {
     public function __construct($subject, $config = array())
     {
@@ -40,37 +40,30 @@ class PlgContentHarvest extends JPlugin
 
         $command = JArrayHelper::getValue($commands, 0, 'harvest');
 
-        try
-        {
-            if ($help)
-            {
-                $this->_help();
-            }
-            else if ($command)
-            {
-                switch ($command)
-                {
+        try {
+            if ($help) {
+                $this->help();
+            } else if ($command) {
+                switch ($command) {
                     case 'list':
-                        $this->_list();
+                        $this->getItems();
                         break;
 
                     case 'harvest':
-                        $this->_harvest();
+                        $this->harvest();
                         break;
 
                     default: // if the command doesn't exist, print help.
-                        $this->_help();
+                        $this->help();
                         break;
                 }
             }
-        }
-        catch (Exception $e)
-        {
+        } catch (Exception $e) {
             $this->out($e->getMessage());
         }
     }
 
-    private function _list()
+    private function getItems()
     {
         $database = JFactory::getDbo();
 
@@ -88,8 +81,7 @@ class PlgContentHarvest extends JPlugin
 
         $results = $database->setQuery($query)->loadObjectList();
 
-        foreach ($results as $result)
-        {
+        foreach ($results as $result) {
             $params = new JRegistry;
             $params->loadString($result->params);
 
@@ -99,7 +91,7 @@ class PlgContentHarvest extends JPlugin
         }
     }
 
-    private function _harvest()
+    private function harvest()
     {
         $database = JFactory::getDbo();
 
@@ -118,10 +110,8 @@ class PlgContentHarvest extends JPlugin
         $dispatcher = JEventDispatcher::getInstance();
         JPluginHelper::importPlugin('jspace');
 
-        foreach ($results as $result)
-        {
-            try
-            {
+        foreach ($results as $result) {
+            try {
                 $now = new JDate('now');
 
                 $harvest = Harvest::getInstance($result->id);
@@ -131,15 +121,12 @@ class PlgContentHarvest extends JPlugin
                 $harvest->harvested = $now->toSql();
                 $harvest->total++;
 
-                if ($harvest->frequency != 0 && $harvest->total >= $harvest->frequency)
-                {
+                if ($harvest->frequency != 0 && $harvest->total >= $harvest->frequency) {
                     $harvest->state = 2;
                 }
 
                 $harvest->save();
-            }
-            catch (Exception $e)
-            {
+            } catch (Exception $e) {
                 echo $e->getMessage();
                 echo $e->getTraceAsString();
                 $this->out($e->getMessage());
@@ -156,7 +143,7 @@ class PlgContentHarvest extends JPlugin
      * Prints out the plugin's help and usage information.
      *
      */
-    private function _help()
+    private function help()
     {
         $out = <<<EOT
 Usage: jspace harvest [OPTIONS] [COMMAND]
@@ -182,13 +169,11 @@ EOT;
     {
         $application = JFactory::getApplication('cli');
 
-        if (get_class($application) !== 'JApplicationCli')
-        {
+        if (get_class($application) !== 'JApplicationCli') {
             return;
         }
 
-        if (!$this->params->get('args.q') && !$this->params->get('args.quiet'))
-        {
+        if (!$this->params->get('args.q') && !$this->params->get('args.quiet')) {
             $application->out($out);
         }
     }
