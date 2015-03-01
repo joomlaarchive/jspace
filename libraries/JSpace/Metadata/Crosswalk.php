@@ -97,8 +97,8 @@ class Crosswalk extends \JObject
                 $source = array();
 
                 foreach ($this->source as $skey=>$svalue) {
-                    if (strpos($skey, $key.':') === 0) {
-                        $source[str_replace($key.':', '', $skey)] = $svalue;
+                    if (strpos($skey, $key.':') === 0 || strpos($skey, $key.'.') === 0) {
+                        $source[str_replace(array($key.':', $key.'.'), '', $skey)] = $svalue;
                     }
                 }
             }
