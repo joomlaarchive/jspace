@@ -3,7 +3,7 @@ use JSpace\Archive\Record;
 
 require_once(JSPACEPATH_TESTS.'/core/case/database.php');
 
-class LocalstoreTest extends \TestCaseDatabase
+class WeblinksTest extends \TestCaseDatabase
 {
     public function setUp()
     {

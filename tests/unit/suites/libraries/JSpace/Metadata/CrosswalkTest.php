@@ -186,12 +186,4 @@ class CrosswalkTest extends \TestCaseDatabase
         $this->assertEquals(array('5181'), $crosswalk->walk()['contentLength']);
         $this->assertEquals(array('image/jpeg'), $crosswalk->walk()['contentType']);
     }
-
-    protected function getDataSet()
-    {
-        $dataset = parent::getDataSet();
-        $dataset->addTable('jos_extensions', JSPACEPATH_TESTS.'/stubs/database/jos_extensions_no_storage.csv');
-
-        return $dataset;
-    }
 }

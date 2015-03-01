@@ -256,12 +256,4 @@ class JSpaceArchiveRecordTest extends \TestCaseDatabase
     {
         JSpace\Archive\Record::getTree(1);
     }
-
-    protected function getDataSet()
-    {
-        $dataset = parent::getDataSet();
-        $dataset->addTable('jos_extensions', JSPACEPATH_TESTS.'/stubs/database/jos_extensions_no_storage.csv');
-
-        return $dataset;
-    }
 }
