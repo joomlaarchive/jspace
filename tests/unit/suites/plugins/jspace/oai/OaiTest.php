@@ -4,7 +4,7 @@ use JSpace\Ingestion\Harvest;
 require_once(JSPACEPATH_TESTS.'/core/case/database.php');
 
 // @todo query dspace for info to assert tests against.
-class OaiTest extends TestCaseDatabase
+class OaiTest extends \TestCaseDatabase
 {
     public $data;
 
@@ -51,7 +51,7 @@ class OaiTest extends TestCaseDatabase
 
         $this->assertEquals($expected, $result[0]);
     }
-
+/*
     public function testOnJSpaceHarvestDiscoverInvalidUrl()
     {
         $data = $this->data;
@@ -362,12 +362,5 @@ class OaiTest extends TestCaseDatabase
 
         $this->assertEquals(23, JFactory::getDbo()->setQuery($query)->loadResult());
     }
-
-    protected function getDataSet()
-    {
-        $dataset = parent::getDataSet();
-        $dataset->addTable('jos_extensions', JSPACEPATH_TESTS.'/stubs/database/jos_extensions_no_storage.csv');
-
-        return $dataset;
-    }
+*/
 }

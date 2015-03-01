@@ -19,7 +19,7 @@ class LocalstoreTest extends \TestCaseDatabase
 
         JFactory::getDbo()->setQuery('UPDATE sqlite_sequence SET seq = (SELECT MAX(id) FROM jos_jspace_records) WHERE name="jos_jspace_records"')->execute();
 
-        $plugin = JPluginHelper::getPlugin('jspace', 'localstore');
+        $plugin = JFactory::getDbo()->setQuery("SELECT * FROM jos_extensions WHERE name = 'plg_jspace_localstore';")->loadObject();
 
         $params = new JRegistry();
         $params->loadString($plugin->params);
@@ -31,7 +31,9 @@ class LocalstoreTest extends \TestCaseDatabase
 
     public function tearDown()
     {
-        JFolder::delete($this->local);
+        if (JFolder::exists($this->local)) {
+            JFolder::delete($this->local);
+        }
     }
 
     public function testCreateItem()
