@@ -21,11 +21,11 @@ if (!class_exists('PHPUnit_Extensions_Database_TestCase'))
 abstract class TestCaseDatabase extends PHPUnit_Extensions_Database_TestCase
 {
     protected static $driver;
-    
+
     private static $_stash;
-    
+
     public static function setUpBeforeClass()
-    {    
+    {
         $options = array(
             'driver' => 'sqlite',
             'database' => ':memory:',
@@ -35,9 +35,9 @@ abstract class TestCaseDatabase extends PHPUnit_Extensions_Database_TestCase
         try
         {
             self::$driver = JDatabaseDriver::getInstance($options);
-            
+
             $pdo = new PDO('sqlite::memory:');
-            
+
             $pdo->exec(file_get_contents(JSPACEPATH_TESTS.'/schema/ddl.sql'));
 
             $property = new \ReflectionProperty(get_parent_class(self::$driver), 'connection');
@@ -54,29 +54,29 @@ abstract class TestCaseDatabase extends PHPUnit_Extensions_Database_TestCase
         {
             self::$driver = null;
         }
-        
+
         self::$_stash = JFactory::$database;
         JFactory::$database = self::$driver;
     }
-    
+
     public function setUp()
     {
         if (empty(static::$driver))
         {
             $this->markTestSkipped('There is no database driver.');
         }
-        
+
         parent::setUp();
     }
-    
+
     protected function getDataSet()
     {
         $dataSet = new PHPUnit_Extensions_Database_DataSet_CsvDataSet(',', "'", '\\');
-        
+
         $dataSet->addTable('jos_extensions', JSPACEPATH_TESTS.'/stubs/database/jos_extensions.csv');
         $dataSet->addTable('jos_categories', JSPACEPATH_TESTS.'/stubs/database/jos_categories.csv');
         $dataSet->addTable('jos_usergroups', JSPACEPATH_TESTS.'/stubs/database/jos_usergroups.csv');
-        $dataSet->addTable('jos_viewlevels', JSPACEPATH_TESTS.'/stubs/database/jos_viewlevels.csv');        
+        $dataSet->addTable('jos_viewlevels', JSPACEPATH_TESTS.'/stubs/database/jos_viewlevels.csv');
         $dataSet->addTable('jos_jspace_records', JSPACEPATH_TESTS.'/stubs/database/jos_jspace_records.csv');
         $dataSet->addTable('jos_jspace_assets', JSPACEPATH_TESTS.'/stubs/database/jos_jspace_assets.csv');
         $dataSet->addTable('jos_jspace_cache', JSPACEPATH_TESTS.'/stubs/database/jos_jspace_cache.csv');
@@ -93,10 +93,11 @@ abstract class TestCaseDatabase extends PHPUnit_Extensions_Database_TestCase
         $dataSet->addTable('jos_weblinks', JSPACEPATH_TESTS.'/stubs/database/jos_weblinks.csv');
         $dataSet->addTable('jos_ucm_content', JSPACEPATH_TESTS.'/stubs/database/jos_ucm_content.csv');
         $dataSet->addTable('jos_languages', JSPACEPATH_TESTS.'/stubs/database/jos_languages.csv');
-        
+        $dataSet->addTable('jos_jspace_references', JSPACEPATH_TESTS.'/stubs/database/jos_jspace_references.csv');
+
         return $dataSet;
     }
-    
+
     public function getConnection()
     {
         if (!is_null(self::$driver))
@@ -108,7 +109,7 @@ abstract class TestCaseDatabase extends PHPUnit_Extensions_Database_TestCase
             return null;
         }
     }
-    
+
     public static function tearDownAfterClass()
     {
         JFactory::$database = self::$_stash;

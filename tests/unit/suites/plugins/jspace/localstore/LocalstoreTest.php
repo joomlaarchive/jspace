@@ -17,11 +17,12 @@ class LocalstoreTest extends \TestCaseDatabase
     {
         parent::setUp();
 
+        JFactory::getDbo()->setQuery('UPDATE sqlite_sequence SET seq = (SELECT MAX(id) FROM jos_jspace_records) WHERE name="jos_jspace_records"')->execute();
+
         $plugin = JPluginHelper::getPlugin('jspace', 'localstore');
 
         $params = new JRegistry();
         $params->loadString($plugin->params);
-        $this->url = $params->get('url');
 
         $this->local = $params->get('path');
 
@@ -45,8 +46,8 @@ class LocalstoreTest extends \TestCaseDatabase
 
         $record = JFactory::getDbo()->setQuery($query)->loadAssoc();
 
-        $this->assertEquals($record['title'], 'Test Record');
-        $this->assertEquals($record['metadata'], '{"title":["DSpace Test Case"],"author":["Hayden Young"]}');
+        $this->assertEquals($record['title'], 'Test Title');
+        $this->assertEquals($record['metadata'], '{"title":["Test Title"],"author":["Hayden Young"]}');
 
         $this->assertEquals(2, count($new->getAssets()));
 
@@ -64,7 +65,7 @@ class LocalstoreTest extends \TestCaseDatabase
         $new->save($files);
 
         $metadata = array();
-        $metadata['title'] = array('DSpace Test Case Updated');
+        $metadata['title'] = array('Test Title Updated');
         $metadata['author'] = array('Hayden Young');
         $metadata['description'] = array('Update description.');
 
@@ -86,7 +87,7 @@ class LocalstoreTest extends \TestCaseDatabase
         $record = JFactory::getDbo()->setQuery($query)->loadAssoc();
 
         $this->assertEquals($record['title'], 'Updated Title');
-        $this->assertEquals($record['metadata'], '{"title":["DSpace Test Case Updated"],"author":["Hayden Young"],"description":["Update description."]}');
+        $this->assertEquals($record['metadata'], '{"title":["Test Title Updated"],"author":["Hayden Young"],"description":["Update description."]}');
 
         $this->assertTrue(JFolder::exists($this->local.'/050'));
         $this->assertEquals(3, count($new->getAssets()));
@@ -116,12 +117,12 @@ class LocalstoreTest extends \TestCaseDatabase
     private function createRecord()
     {
         $metadata = array();
-        $metadata['title'] = array('DSpace Test Case');
+        $metadata['title'] = array('Test Title');
         $metadata['author'] = array('Hayden Young');
 
         $record = new Record();
         $record->catid = 9;
-        $record->set('title', 'Test Record');
+        $record->set('title', 'Test Title');
         $record->set('language', '*');
         $record->set('path', 'test-record');
         $record->set('metadata', $metadata);

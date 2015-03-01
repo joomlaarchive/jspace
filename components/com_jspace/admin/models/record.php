@@ -380,7 +380,7 @@ class JSpaceModelRecord extends JModelAdmin
     /**
      * Gets an instance of the JSpaceReference class based on the id and context parameter.
      *
-     * @param   int $id      The id of the JSpaceAsset to retrieve.
+     * @param   int $id          The id of the JSpaceAsset to retrieve.
      *
      * @return  JSpaceReference  An instance of the JSpaceAsset class based on the id parameter.
      */

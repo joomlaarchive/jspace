@@ -99,7 +99,7 @@ class PlgJSpaceWeblinks extends JPlugin
      * @param  array  $data
      * @param  array  $group
      */
-    public function onJSpaceRecordAfterValidate($form, $data, $group = null)
+    public function onJSpaceAfterValidate($form, $data, $group = null)
     {
         //JFactory::getApplication()->enqueueMessage(JText::_('PLG_JSPACE_WEBLINKS_ERROR_INVALID'), 'error');
         return true;
@@ -151,7 +151,7 @@ class PlgJSpaceWeblinks extends JPlugin
 
                 $weblink->url = JArrayHelper::getValue($data, 'url');
                 $weblink->catid = $this->params->get('catid', null);
-                $weblink->title = JArrayHelper::getValue($data, 'title', $data['url']);
+                $weblink->title = JArrayHelper::getValue($data, 'title', $weblink->url);
                 $weblink->alias = (int)$item->id.'-'.JFilterOutput::stringURLSafe($weblink->title);
                 $weblink->state = 1;
                 $weblink->access = $item->access;
@@ -199,9 +199,9 @@ class PlgJSpaceWeblinks extends JPlugin
         $path = JPATH_ROOT.'/administrator/components/com_jspace/';
         JTable::addIncludePath($path.'tables');
 
-        if ($context == 'com_weblinks.weblink') {
-            $reference = JTable::getInstance('Reference', 'JSpaceTable');
+        $reference = JTable::getInstance('Reference', 'JSpaceTable');
 
+        if ($context == 'com_weblinks.weblink') {
             if ($reference->load($item->id)) {
                 $reference->delete($item->id);
             }
@@ -209,16 +209,16 @@ class PlgJSpaceWeblinks extends JPlugin
             $path = JPATH_ROOT.'/administrator/components/com_weblinks/';
             JTable::addIncludePath($path.'tables');
 
+            $weblink = JTable::getInstance('Weblink', 'WeblinksTable');
+
             $database = JFactory::getDbo();
             $query = $database->getQuery(true);
+            $query->select('w.id')->from($database->qn('#__weblinks', 'w'))->join('inner', $database->qn('#__jspace_references', 'r').' ON `w`.`id`=`r`.`id`')->where($database->qn('r.record_id').'='.(int)$item->id)->where($database->qn('r.context').'='.$database->q('com_weblinks.weblink'));
 
-            //@TODO Is it safe to delete web links here? What happens to history?
-            $query = 'DELETE r, w FROM '.$database->qn('#__jspace_references', 'r').' '.
-                     'INNER JOIN '.$database->qn('#__weblinks', 'w').' ON r.id = w.id '.
-                     'WHERE '.$database->qn('r.context').'='.$database->q('com_weblinks.weblink').' '.
-                     'AND '.$database->qn('r.record_id').'='.(int)$item->id;
-
-            $database->setQuery($query)->execute();
+            foreach ($database->setQuery($query)->loadColumn() as $id) {
+                $reference->delete(array('id'=>$id, 'context'=>'com_weblinks.weblink'));
+                $weblink->delete($id);
+            }
         }
 
         return true;
