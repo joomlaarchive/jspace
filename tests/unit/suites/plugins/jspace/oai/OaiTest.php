@@ -20,7 +20,7 @@ class OaiTest extends \TestCaseDatabase
 
         $this->data = array(
             'id'=>1,
-            'originating_url'=>'http://localhost/jspace/request.php',
+            'originating_url'=>'http://localhost/jspace/oai/request.php',
             'harvester'=>0,
             'frequency'=>1,
             'harvested'=>'0000-00-00 00:00:00',
@@ -45,17 +45,17 @@ class OaiTest extends \TestCaseDatabase
 
         $expected = new JRegistry;
         $expected->set('discovery.type', 'oai');
-        $expected->set('discovery.url', 'http://localhost/jspace/request.php');
+        $expected->set('discovery.url', 'http://localhost/jspace/oai/request.php');
         $expected->set('discovery.plugin.metadata', 'qdc');
         $expected->set('discovery.plugin.assets', 'ore');
 
         $this->assertEquals($expected, $result[0]);
     }
-/*
+
     public function testOnJSpaceHarvestDiscoverInvalidUrl()
     {
         $data = $this->data;
-        $data['originating_url'] = 'http://apps.who.int/iris/simple-search?query=Ebola';
+        $data['originating_url'] = 'http://localhost/jspace/opensearch/simple-search.html?query=Ebola';
 
         $harvest = Harvest::getInstance();
         $harvest->bind($data);
@@ -75,7 +75,7 @@ class OaiTest extends \TestCaseDatabase
         $harvest->bind($this->data);
         $harvest->get('params')->set('harvest_type', 0);
         $harvest->get('params')->set('discovery.type', 'oai');
-        $harvest->get('params')->set('discovery.url', 'http://localhost/jspace/request.php');
+        $harvest->get('params')->set('discovery.url', 'http://localhost/jspace/oai/request.php');
         $harvest->get('params')->set('discovery.plugin.metadata', 'qdc');
 
         $dispatcher = JEventDispatcher::getInstance();
@@ -109,7 +109,7 @@ class OaiTest extends \TestCaseDatabase
         $harvest->bind($this->data);
         $harvest->get('params')->set('harvest_type', 0);
         $harvest->get('params')->set('discovery.type', 'oai');
-        $harvest->get('params')->set('discovery.url', 'http://localhost/jspace/request.php');
+        $harvest->get('params')->set('discovery.url', 'http://localhost/jspace/oai/request.php');
         $harvest->get('params')->set('discovery.plugin.metadata', 'oai_dc');
 
         $dispatcher = \JEventDispatcher::getInstance();
@@ -143,7 +143,7 @@ class OaiTest extends \TestCaseDatabase
         $harvest->bind($this->data);
         $harvest->get('params')->set('harvest_type', 0);
         $harvest->get('params')->set('discovery.type', 'oai');
-        $harvest->get('params')->set('discovery.url', 'http://localhost/jspace/request.php');
+        $harvest->get('params')->set('discovery.url', 'http://localhost/jspace/oai/request.php');
         $harvest->get('params')->set('discovery.plugin.metadata', 'oai_dc');
 
         $dispatcher = JEventDispatcher::getInstance();
@@ -203,7 +203,7 @@ class OaiTest extends \TestCaseDatabase
     {
         $harvest = Harvest::getInstance();
         $harvest->bind($this->data);
-        $harvest->originating_url = 'http://localhost/jspace/request_ore.php';
+        $harvest->originating_url = 'http://localhost/jspace/oai/request_ore.php';
         $harvest->get('params')->set('harvest_type', 1);
 
         $dispatcher = JEventDispatcher::getInstance();
@@ -233,7 +233,7 @@ class OaiTest extends \TestCaseDatabase
     {
         $harvest = Harvest::getInstance();
         $harvest->bind($this->data);
-        $harvest->originating_url = 'http://localhost/jspace/request_ore.php';
+        $harvest->originating_url = 'http://localhost/jspace/oai/request_ore.php';
         $harvest->get('params')->set('harvest_type', 2);
         $harvest->get('params')->set('set', 'com_10049_26');
 
@@ -284,7 +284,7 @@ class OaiTest extends \TestCaseDatabase
 
         $this->assertEquals(2, (int)JFactory::getDbo()->setQuery($query)->loadResult());
 
-        $harvest->get('params')->set('discovery.url', 'http://localhost/jspace/request_updated.php');
+        $harvest->get('params')->set('discovery.url', 'http://localhost/jspace/oai/request_updated.php');
 
         // harvest again. We should get shouldn't get duplicates.
         $dispatcher->trigger('onJSpaceHarvestRetrieve', array($harvest));
@@ -362,5 +362,4 @@ class OaiTest extends \TestCaseDatabase
 
         $this->assertEquals(23, JFactory::getDbo()->setQuery($query)->loadResult());
     }
-*/
 }

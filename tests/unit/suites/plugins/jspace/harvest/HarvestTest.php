@@ -8,11 +8,11 @@ use \JFactory;
 use Joomla\Registry\Registry;
 
 // @todo query dspace for info to assert tests against.
-class PlgContentJSpaceHarvestTest extends \TestCaseDatabase
+class HarvestTest extends \TestCaseDatabase
 {
     public function testDiscoveryOAI()
     {
-        $url = 'http://localhost/jspace/request.php';
+        $url = 'http://localhost/jspace/oai/request.php';
 
         $dispatcher = JEventDispatcher::getInstance();
         JPluginHelper::importPlugin('jspace');
@@ -20,7 +20,7 @@ class PlgContentJSpaceHarvestTest extends \TestCaseDatabase
 
         $expected = new Registry;
         $expected->set('discovery.type', 'oai');
-        $expected->set('discovery.url', 'http://localhost/jspace/request.php');
+        $expected->set('discovery.url', 'http://localhost/jspace/oai/request.php');
         $expected->set('discovery.plugin.metadata', 'qdc');
         $expected->set('discovery.plugin.assets', 'ore');
 
@@ -29,7 +29,7 @@ class PlgContentJSpaceHarvestTest extends \TestCaseDatabase
 
     public function testDiscoveryOpenSearch()
     {
-        $url = 'http://apps.who.int/iris/simple-search?query=Ebola';
+        $url = 'http://localhost/jspace/opensearch/simple-search.html?query=Ebola';
 
         $dispatcher = JEventDispatcher::getInstance();
         JPluginHelper::importPlugin('jspace');
@@ -37,7 +37,7 @@ class PlgContentJSpaceHarvestTest extends \TestCaseDatabase
 
         $expected = new Registry;
         $expected->set('discovery.type', 'opensearch');
-        $expected->set('discovery.url', 'http://apps.who.int//iris/open-search/?query=Ebola&start={startIndex?}&rpp={count?}&format=atom');
+        $expected->set('discovery.url', 'http://localhost/jspace/opensearch/atom.xml?query=Ebola&start={startIndex?}&rpp={count?}');
         $expected->set('discovery.plugin.type', 'application/atom+xml');
 
         $this->assertEquals($expected, $result[1]);
@@ -47,11 +47,11 @@ class PlgContentJSpaceHarvestTest extends \TestCaseDatabase
     {
         $params = new Registry;
         $params->set('discovery.type', 'opensearch');
-        $params->set('discovery.url', 'http://archive.demo2.knowledgearc.net/open-search/?query=joomla');
+        $params->set('discovery.url', 'http://localhost/jspace/opensearch/atom.xml?query=joomla');
         $params->set('discovery.plugin.type', 'application/atom+xml');
 
         $data = array(
-            'originating_url'=>'http://archive.demo2.knowledgearc.net/open-search/?query=joomla',
+            'originating_url'=>'http://localhost/jspace/opensearch/atom.xml?query=joomla',
             'harvester'=>0,
             'harvested'=>'0000-00-00 00:00:00',
             'frequency'=>1,
@@ -77,17 +77,15 @@ class PlgContentJSpaceHarvestTest extends \TestCaseDatabase
 
         $harvest->load($harvest->id);
 
-        //$this->assertEquals(2, $harvest->state);
-
         $query = JFactory::getDbo()->getQuery(true);
         $query->select("COUNT(*)")->from('#__jspace_records')->where('alias <> \'root\'');
 
-        $this->assertEquals(1, (int)JFactory::getDbo()->setQuery($query)->loadResult());
+        $this->assertEquals(4, (int)JFactory::getDbo()->setQuery($query)->loadResult());
     }
 
     public function testDiscoverOpenSearchInvalidUrl()
     {
-        $url = "http://archive.demo2.knowledgearc.net/opensearch/?query=joomla";
+        $url = "http://localhost/jspace/opensearch/invalid.xml?query=joomla";
 
         $dispatcher = JEventDispatcher::getInstance();
         JPluginHelper::importPlugin('jspace', 'opensearch');
@@ -101,13 +99,13 @@ class PlgContentJSpaceHarvestTest extends \TestCaseDatabase
     {
         $params = new Registry;
         $params->set('discovery.type', 'oai');
-        $params->set('discovery.url', 'http://localhost/jspace/request.php');
+        $params->set('discovery.url', 'http://localhost/jspace/oai/request.php');
         $params->set('discovery.plugin.metadata', 'qdc');
         $params->set('discovery.plugin.assets', 'ore');
         $params->set('set', 'com_10673_1');
 
         $data = array(
-            'originating_url'=>'http://localhost/jspace/request.php',
+            'originating_url'=>'http://localhost/jspace/oai/request.php',
             'harvester'=>0,
             'harvested'=>'0000-00-00 00:00:00',
             'frequency'=>0,

@@ -12,7 +12,7 @@ class JSpaceIngestionHarvestTest extends \TestCaseDatabase
     public function testSave()
     {
         $data = array(
-            'originating_url'=>'http://apps.who.int/iris/simple-search?query=Ebola',
+            'originating_url'=>'http://localhost/jspace/opensearch/simple-search.html?query=Ebola',
             'harvester'=>'0',
             'frequency'=>1,
             'params'=>json_encode(array()),

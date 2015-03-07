@@ -1,0 +1,11 @@
+<FilesMatch "description.xml">
+    ForceType application/opensearchdescription+xml
+</FilesMatch>
+
+<FilesMatch "atom.xml">
+    ForceType application/atom+xml
+</FilesMatch>
+
+<FilesMatch "rss.xml">
+    ForceType application/rss+xml
+</FilesMatch>

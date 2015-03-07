@@ -1,0 +1,780 @@
+<html><head><title>WHO IRIS: Search</title><meta name="Generator" content="DSpace 3.2"><link rel="stylesheet" href="/iris/styles.css" type="text/css"><link rel="stylesheet" href="/iris/styles.css" type="text/css"><link rel="stylesheet" href="/iris/print.css" media="print" type="text/css"><link rel="shortcut icon" href="/iris/favicon.ico" type="image/x-icon"><link rel="stylesheet" href="/iris/css/discovery.css" type="text/css"><link rel="stylesheet" href="/iris/static/css/jquery-ui-1.8.22.custom/redmond/jquery-ui-1.8.22.custom.css" type="text/css"><link rel="search" type="application/opensearchdescription+xml" href="/jspace/opensearch/description.xml" title="IRIS"><link rel="stylesheet" href="/iris/static/jquery.treeview.css"><script type="text/javascript" src="/iris/static/js/jquery/jquery-1.7.2.min.js"></script><script type="text/javascript" src="/iris/static/js/jquery/jquery-ui-1.8.22.custom.min.js"></script><script type="text/javascript" src="/iris/utils.js"></script><script type="text/javascript" src="/iris/static/js/scriptaculous/prototype.js"> </script><script type="text/javascript" src="/iris/static/js/scriptaculous/effects.js"> </script><script type="text/javascript" src="/iris/static/js/scriptaculous/builder.js"> </script><script type="text/javascript" src="/iris/static/js/scriptaculous/controls.js"> </script><script type="text/javascript" src="/iris/static/js/choice-support.js"> </script><script src="/iris/static/js/scriptaculous/jquery.cookie.js"></script><script src="/iris/static/jquery.treeview.js"></script><script src="/iris/static/js/scriptaculous/jquery.colorbox-min.js"></script><script type="text/javascript">
+	var jQ = jQuery.noConflict();
+	jQ(document).ready(function() {
+		jQ( "#filterquery" )
+			.autocomplete({
+				source: function( request, response ) {
+					jQ.ajax({
+						url: "/iris/json/discovery/autocomplete?query=",
+						dataType: "json",
+						cache: false,
+						data: {
+							auto_idx: jQ("#filtername").val(),
+							auto_query: request.term,
+							auto_sort: 'count',
+							auto_type: jQ("#filtertype").val(),
+							location: ''
+						},
+						success: function( data ) {
+							response( jQ.map( data.autocomplete, function( item ) {
+								var tmp_val = item.authorityKey;
+								if (tmp_val == null || tmp_val == '')
+								{
+									tmp_val = item.displayedValue;
+								}
+								return {
+									label: item.displayedValue + " (" + item.count + ")",
+									value: tmp_val
+								};
+							}))
+						}
+					})
+				}
+			});
+	});
+</script></head><body>
+
+
+    <noscript>
+    <iframe src="//www.googletagmanager.com/ns.html?id=GTM-MDCJXB" height="0" width="0" style="display:none;visibility:hidden"></iframe>
+    </noscript>
+    <script>
+    (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push(
+      {'gtm.start':
+            new Date().getTime(),event:'gtm.js'});
+            var f=d.getElementsByTagName(s)[0], j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';
+            j.async=true;
+            j.src=    '//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-MDCJXB');
+    </script>
+
+
+
+    <div id="page" dir="ltr">
+    <div id="wrapper">
+
+		<div id="header">
+			<div id="langOptions">
+				<h5 class="hidden">Language options</h5>
+
+
+
+
+                        <a class="lang" href="?locale=ar">
+
+                         عربي
+
+
+
+                        <!-- <img src="/iris/image/header/lang/ar_off.gif" alt="العربية" title="العربية" name="ar"/>  --></a>
+
+
+
+                            |
+
+
+                        <a class="lang" href="?locale=zh">
+
+                         中文
+
+
+
+                        <!-- <img src="/iris/image/header/lang/zh_off.gif" alt="中文" title="中文" name="zh"/>  --></a>
+
+
+
+                            |
+
+
+                        <a class="lang" href="?locale=en">
+
+                         English
+
+
+
+                        <!-- <img src="/iris/image/header/lang/en_off.gif" alt="English" title="English" name="en"/>  --></a>
+
+
+
+                            |
+
+
+                        <a class="lang" href="?locale=fr">
+
+                         Français
+
+
+
+                        <!-- <img src="/iris/image/header/lang/fr_off.gif" alt="français" title="français" name="fr"/>  --></a>
+
+
+
+                            |
+
+
+                        <a class="lang" href="?locale=ru">
+
+                         Русский
+
+
+
+                        <!-- <img src="/iris/image/header/lang/ru_off.gif" alt="русский" title="русский" name="ru"/>  --></a>
+
+
+
+                            |
+
+
+                        <a class="lang" href="?locale=es">
+
+                         Español
+
+
+
+                        <!-- <img src="/iris/image/header/lang/es_off.gif" alt="español" title="español" name="es"/>  --></a>
+
+
+			</div>
+
+			<div id="logo" dir="ltr">
+
+			<table>
+			<tr><td class="logocolumnleft">
+			 <a href="/iris">
+					<img src="/iris/image/logos/who_logo_en.gif" alt="WHO home" title="WHO home">
+				</a>
+			</td>
+       <td class="logocolumnright">
+          <img src="/iris/image/logos/second/iris_logo_en.gif" alt="WHO home" title="WHO home">
+
+			</td>
+      </tr></table>
+			</div>
+
+
+			</div>
+
+
+
+
+
+
+
+
+
+
+
+
+      <div id="navigationTop">
+
+        <ul>
+          <li id="navigation_home">
+           <a title="Home" href="/iris/" class="homeall">Home</a>
+          </li>
+
+          <li class="barragris">
+               |
+          </li>
+
+          <li class="navigation_themes">
+           <a href="/iris/community-list">Communities &amp; Collections</a>
+          </li>
+
+          <li class="barragris">
+               |
+          </li>
+
+           <li class="barragris">
+             <a href="http://www.who.int/library/iris_guides/en/index.html" target="_blank">Help</a>
+           </li>
+
+
+
+
+
+        </ul>
+      </div>
+
+
+      <div id="contents">
+
+
+
+        <table class="centralPane" border="0" cellpadding="3" cellspacing="1" dir="ltr">
+
+
+
+
+            <form method="get" action="/iris/simple-search">
+            <tr valign="top">
+            <td class="navigationBarOMS" colspan="3">
+
+
+
+
+            <table width="100%">
+            <tr valign="top">
+            <td class="navigationBarOMSlr" width="10%">
+
+
+
+            </td>
+
+
+            <td class="navigationBarOMSForm" width="75%" align="center">
+
+
+                        <label for="tequery">Search WHO IRIS</label>
+                        <input type="text" name="query" id="tequery" x-webkit-speech="x-webkit-speech">
+                        <input type="submit" id="search_submit" name="submit" value="Go">
+                        <font color="black"> | </font>
+
+                        <a href="/iris/advanced-search">Advanced Search</a>
+
+
+             </td>
+
+
+
+             <td class="navigationBarOMSlr" width="15%">
+
+             </td>
+
+             </tr>
+             </table>
+
+
+
+            </td>
+            </tr>
+            </form>
+
+
+            <tr valign="top">
+
+
+
+            <td class="navigationBar">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table width="100%" border="0">
+
+
+
+  <tr>
+    <td nowrap="nowrap" colspan="2" class="navigationBarSublabel">Browse</td>
+  </tr>
+
+
+
+
+
+
+
+		<tr>
+
+    		<td class="navigationBarItem">
+      			<a href="/iris/browse?type=dateissued">Issue Date</a>
+    		</td>
+  		</tr>
+
+		<tr>
+
+    		<td class="navigationBarItem">
+      			<a href="/iris/browse?type=author">Author</a>
+    		</td>
+  		</tr>
+
+		<tr>
+
+    		<td class="navigationBarItem">
+      			<a href="/iris/browse?type=title">Title</a>
+    		</td>
+  		</tr>
+
+		<tr>
+
+    		<td class="navigationBarItem">
+      			<a href="/iris/browse?type=mesh">Subject</a>
+    		</td>
+  		</tr>
+
+
+
+
+
+</table>
+
+            </td>
+
+
+
+
+
+
+            <td class="pageContents">
+				<p style="text-align: center; font-size: 10pt;"></p>
+
+
+
+
+
+
+
+
+
+
+
+<p class="locationBar">
+
+<a href="/iris/">WHO IRIS</a> &gt;
+
+</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h2>Search</h2>
+
+<div class="discovery-search-form">
+
+	<div class="discovery-query">
+    <form action="simple-search" method="get">
+         <table>
+         <tr><td>
+         <label for="tlocation">
+         	Search:
+         </label>
+         </td><td>
+         <select name="location" id="tlocation">
+
+
+                                    <option selected="selected" value="/">All of WHO IRIS</option>
+
+                                <option value="10665/8">
+                                	Headquarters</option>
+
+                                <option value="10665/1637">
+                                	Regional Office for Africa</option>
+
+                                <option value="10665/107131">
+                                	Regional Office for Europe</option>
+
+                                <option value="10665/126384">
+                                	Regional Office for South-East Asia</option>
+
+                                <option value="10665/113205">
+                                	Regional Office for the Eastern Mediterranean</option>
+
+                                <option value="10665/137517">
+                                	Regional Office for the Western Pacific</option>
+
+                                <option value="10665/75267">
+                                	WHO Framework Convention on Tobacco Control (FCTC)</option>
+                                </select>
+                                </td>
+                                </tr>
+
+
+                                <tr><td>
+                                <label for="query">for</label>
+                                </td><td>
+                                <input type="text" size="40" name="query" value="">
+                                </td></tr>
+                                <tr>
+                                <td colspan="2">
+                                  <input type="checkbox" name="filternumbits" value="apply">
+                                  <label for="filternumbits">Items with full text online </label>
+                                  <input type="submit" value="Go">
+                                </td>
+                                </tr>
+
+                                <input type="hidden" value="10" name="rpp">
+                                <input type="hidden" value="score" name="sort_by">
+                                <input type="hidden" value="desc" name="order">
+                                </table>
+
+
+<a href="/iris/simple-search">New search</a>
+		</form>
+		</div>
+
+		<div class="discovery-search-filters">
+		<form action="simple-search" method="get">
+		<input type="hidden" value="" name="location">
+		<input type="hidden" value="" name="query">
+
+		<span class="discovery-search-filters-heading">Add filters</span>
+		<span class="discovery-search-filters-hint">Refine your search</span>
+		<select id="filtername" name="filtername">
+		<option value="author">Author</option><option value="title">Title</option><option value="mesh">Subject (MeSH)</option><option value="subject">Subject</option><option value="identifier">Identifier</option><option value="dateIssued">Issue date</option><option value="language">Language</option><option value="relationserie">Series</option>
+		</select>
+		<select id="filtertype" name="filtertype">
+		<option value="equals">equals</option><option value="contains">contains</option><option value="notequals">not equals</option><option value="notcontains">not contains</option>
+		</select>
+
+		<input type="text" id="filterquery" name="filterquery" size="25">
+        <input type="hidden" value="10" name="rpp">
+        <input type="hidden" value="score" name="sort_by">
+        <input type="hidden" value="desc" name="order">
+
+		<input type="submit" value="Add Filters">
+		</form>
+		</div>
+
+
+
+
+
+
+
+   <div class="discovery-pagination-controls">
+   <form action="simple-search" method="get">
+   <input type="hidden" value="" name="location">
+   <input type="hidden" value="" name="query">
+
+           <label for="rpp">Results/Page</label>
+           <select name="rpp">
+
+                   <option value="5">5</option>
+
+                   <option value="10" selected="selected">10</option>
+
+                   <option value="15">15</option>
+
+                   <option value="20">20</option>
+
+                   <option value="25">25</option>
+
+                   <option value="30">30</option>
+
+                   <option value="35">35</option>
+
+                   <option value="40">40</option>
+
+                   <option value="45">45</option>
+
+                   <option value="50">50</option>
+
+                   <option value="55">55</option>
+
+                   <option value="60">60</option>
+
+                   <option value="65">65</option>
+
+                   <option value="70">70</option>
+
+                   <option value="75">75</option>
+
+                   <option value="80">80</option>
+
+                   <option value="85">85</option>
+
+                   <option value="90">90</option>
+
+                   <option value="95">95</option>
+
+                   <option value="100">100</option>
+
+           </select>
+            |
+
+               <label for="sort_by">Sort items by</label>
+               <select name="sort_by">
+                   <option value="score">Relevance</option>
+ <option value="dc.title_sort">Title</option> <option value="dc.date.issued_dt">Date Issued</option> <option value="dc.date.accessioned_dt">Submit date</option>
+               </select>
+
+           <label for="order">In order</label>
+           <select name="order">
+               <option value="ASC">Ascending</option>
+               <option value="DESC" selected="selected">Descending</option>
+           </select>
+           <label for="etal">Authors/record</label>
+           <select name="etal">
+
+               <option value="0" selected="selected">All</option>
+<option value="1">1</option>
+                       <option value="5">5</option>
+
+                       <option value="10">10</option>
+
+                       <option value="15">15</option>
+
+                       <option value="20">20</option>
+
+                       <option value="25">25</option>
+
+                       <option value="30">30</option>
+
+                       <option value="35">35</option>
+
+                       <option value="40">40</option>
+
+                       <option value="45">45</option>
+
+                       <option value="50">50</option>
+
+           </select>
+           <input type="submit" name="submit_search" value="Update">
+
+
+</form>
+   </div>
+</div>
+
+<hr>
+<div class="discovery-result-pagination">
+
+
+	<h2 class="info">Results 1-10 of 118335.</h2>
+    <ul class="links">
+
+
+<li class="current-page-link">1</li>
+
+
+
+<li><a href="/iris/simple-search?query=&amp;sort_by=score&amp;order=desc&amp;rpp=10&amp;etal=0&amp;start=10">2</a></li>
+
+
+
+<li><a href="/iris/simple-search?query=&amp;sort_by=score&amp;order=desc&amp;rpp=10&amp;etal=0&amp;start=20">3</a></li>
+
+
+
+<li><a href="/iris/simple-search?query=&amp;sort_by=score&amp;order=desc&amp;rpp=10&amp;etal=0&amp;start=30">4</a></li>
+
+<li>...</li><li><a href="/iris/simple-search?query=&amp;sort_by=score&amp;order=desc&amp;rpp=10&amp;etal=0&amp;start=118330">11834</a></li><li><a href="/iris/simple-search?query=&amp;sort_by=score&amp;order=desc&amp;rpp=10&amp;etal=0&amp;start=10">next</a></li>
+</ul>
+
+<!-- give a content to the div --></div>
+
+
+
+<div class="discovery-result-results">
+
+
+
+
+
+
+    <h3>Item hits:</h3>
+    <table align="center" class="miscTable" summary="This table browses all dspace content">
+<tr>
+<th id="t1" class="oddRowEvenCol">Preview</th><th id="t2" class="oddRowOddCol">Issue Date</th><th id="t3" class="oddRowEvenCol">Title</th><th id="t4" class="oddRowOddCol">Author(s)</th><th id="t5" class="oddRowEvenCol">Document no.</th></tr><tr><td headers="t1" class="evenRowEvenCol"><a href="/iris/handle/10665/107440"></a><img src="/iris/retrieve/496629/EUR_ICP_POLC_96_01_01%28A%29.pdf.jpg" alt="EUR_ICP_POLC_96_01_01(A).pdf.jpg" width="65.41667" height="100.00001" border="0"></td><td headers="t2" class="evenRowOddCol" nowrap="nowrap" align="right">1996</td><td headers="t3" class="evenRowEvenCol"><a href="/iris/handle/10665/107440">WHO healthy cities project : report on a meeting, Maribor, Slovenia, 28-30 April 1996</a></td><td headers="t4" class="evenRowOddCol"><em><a href="/iris/browse?type=author&amp;value=World+Health+Organization.+Regional+Office+for+Europe&amp;value_lang=en">World Health Organization. Regional Office for Europe</a></em></td><td headers="t5" class="evenRowEvenCol"><em>EUR/ICP/POLC 96 06 01 01(A)</em></td></tr>
+<tr><td headers="t1" class="oddRowEvenCol"><a href="/iris/handle/10665/107426"></a><img src="/iris/retrieve/496631/E76503.pdf.jpg" alt="E76503.pdf.jpg" width="70.416664" height="100.0" border="0"></td><td headers="t2" class="oddRowOddCol" nowrap="nowrap" align="right">2002</td><td headers="t3" class="oddRowEvenCol"><a href="/iris/handle/10665/107426">Assuring availability of opioid analgesics for palliative care : report on a WHO workshop, Budapest, Hungary 25-27 February 2002</a></td><td headers="t4" class="oddRowOddCol"><em><a href="/iris/browse?type=author&amp;value=World+Health+Organization.+Regional+Office+for+Europe&amp;value_lang=en">World Health Organization. Regional Office for Europe</a></em></td><td headers="t5" class="oddRowEvenCol"><em>EUR/02/5037079</em></td></tr>
+<tr><td headers="t1" class="evenRowEvenCol"><a href="/iris/handle/10665/107435"></a><img src="/iris/retrieve/496633/E77022.pdf.jpg" alt="E77022.pdf.jpg" width="70.416664" height="100.0" border="0"></td><td headers="t2" class="evenRowOddCol" nowrap="nowrap" align="right">2002</td><td headers="t3" class="evenRowEvenCol"><a href="/iris/handle/10665/107435">Health impact assessment in government policy-making : development in Wales : a case study / by Ceri Breeze and Ruth Hall</a></td><td headers="t4" class="evenRowOddCol"><em><a href="/iris/browse?type=author&amp;value=Breeze%2C+Ceri&amp;value_lang=en">Breeze, Ceri</a>; <a href="/iris/browse?type=author&amp;value=Hall%2C+Ruth&amp;value_lang=en">Hall, Ruth</a>; <a href="/iris/browse?type=author&amp;value=World+Health+Organization.+Regional+Office+for+Europe&amp;value_lang=en">World Health Organization. Regional Office for Europe</a>; <a href="/iris/browse?type=author&amp;value=European+Centre+for+Health+Policy+%28Brussels%29&amp;value_lang=en">European Centre for Health Policy (Brussels)</a></em></td><td headers="t5" class="evenRowEvenCol"><em>EUR/02/5039741</em></td></tr>
+<tr><td headers="t1" class="oddRowEvenCol"><a href="/iris/handle/10665/107455"></a><img src="/iris/retrieve/496635/E77976.pdf.jpg" alt="E77976.pdf.jpg" width="70.416664" height="100.0" border="0"></td><td headers="t2" class="oddRowOddCol" nowrap="nowrap" align="right">2002</td><td headers="t3" class="oddRowEvenCol"><a href="/iris/handle/10665/107455">European strategy for tobacco control</a></td><td headers="t4" class="oddRowOddCol"><em><a href="/iris/browse?type=author&amp;value=World+Health+Organization.+Regional+Office+for+Europe&amp;value_lang=en">World Health Organization. Regional Office for Europe</a></em></td><td headers="t5" class="oddRowEvenCol"><em>EUR/02/5041354</em></td></tr>
+<tr><td headers="t1" class="evenRowEvenCol"><a href="/iris/handle/10665/107414"></a><img src="/iris/retrieve/496641/E75873.pdf.jpg" alt="E75873.pdf.jpg" width="70.416664" height="100.0" border="0"></td><td headers="t2" class="evenRowOddCol" nowrap="nowrap" align="right">1997</td><td headers="t3" class="evenRowEvenCol"><a href="/iris/handle/10665/107414">Troisieme plan d' action pour une Europe sans tabac 1997-2001</a></td><td headers="t4" class="evenRowOddCol"><em><a href="/iris/browse?type=author&amp;value=World+Health+Organization.+Regional+Office+for+Europe&amp;value_lang=en">World Health Organization. Regional Office for Europe</a></em></td><td headers="t5" class="evenRowEvenCol"><em>EUR/ICP/LVNG 01 04 01</em></td></tr>
+<tr><td headers="t1" class="oddRowEvenCol"><a href="/iris/handle/10665/107419"></a><img src="/iris/retrieve/496645/E76230.pdf.jpg" alt="E76230.pdf.jpg" width="70.416664" height="100.0" border="0"></td><td headers="t2" class="oddRowOddCol" nowrap="nowrap" align="right">2001</td><td headers="t3" class="oddRowEvenCol"><a href="/iris/handle/10665/107419">Mental health in Europe : country reports from the WHO European Network on Mental Health</a></td><td headers="t4" class="oddRowOddCol"><em><a href="/iris/browse?type=author&amp;value=World+Health+Organization.+Regional+Office+for+Europe&amp;value_lang=en">World Health Organization. Regional Office for Europe</a></em></td><td headers="t5" class="oddRowEvenCol"><em>EUR/01/5017227</em></td></tr>
+<tr><td headers="t1" class="evenRowEvenCol"><a href="/iris/handle/10665/107448"></a><img src="/iris/retrieve/496647/E77650.pdf.jpg" alt="E77650.pdf.jpg" width="70.416664" height="100.0" border="0"></td><td headers="t2" class="evenRowOddCol" nowrap="nowrap" align="right">2002</td><td headers="t3" class="evenRowEvenCol"><a href="/iris/handle/10665/107448">Good practice in occupational health services : a contribution to workplace health</a></td><td headers="t4" class="evenRowOddCol"><em><a href="/iris/browse?type=author&amp;value=World+Health+Organization.+Regional+Office+for+Europe&amp;value_lang=en">World Health Organization. Regional Office for Europe</a></em></td><td headers="t5" class="evenRowEvenCol"><em>EUR/02/5041181</em></td></tr>
+<tr><td headers="t1" class="oddRowEvenCol"><a href="/iris/handle/10665/107427"></a><img src="/iris/retrieve/496649/E76611.pdf.jpg" alt="E76611.pdf.jpg" width="70.416664" height="100.0" border="0"></td><td headers="t2" class="oddRowOddCol" nowrap="nowrap" align="right">2002</td><td headers="t3" class="oddRowEvenCol"><a href="/iris/handle/10665/107427">Warsaw Declaration for a Tobacco-Free Europe : WHO European Ministerial Conference for a Tobacco-Free Europe, Warsaw, 18-19 February 2002</a></td><td headers="t4" class="oddRowOddCol"><em><a href="/iris/browse?type=author&amp;value=WHO+European+Ministerial+Conference+for+a+Tobacco-free+Europe+%282002%3A+Warsaw%2C+Poland%29&amp;value_lang=en">WHO European Ministerial Conference for a Tobacco-free Europe (2002: Warsaw, Poland)</a>; <a href="/iris/browse?type=author&amp;value=World+Health+Organization.+Regional+Office+for+Europe&amp;value_lang=en">World Health Organization. Regional Office for Europe</a></em></td><td headers="t5" class="oddRowEvenCol"><em>EUR/01/5020906/6</em></td></tr>
+<tr><td headers="t1" class="evenRowEvenCol"><a href="/iris/handle/10665/107436"></a><img src="/iris/retrieve/496655/E77096.pdf.jpg" alt="E77096.pdf.jpg" width="70.416664" height="100.0" border="0"></td><td headers="t2" class="evenRowOddCol" nowrap="nowrap" align="right">2002</td><td headers="t3" class="evenRowEvenCol"><a href="/iris/handle/10665/107436">Floods : climate change and adaptation strategies for human health / report on a WHO meeting, London, United Kingdom 30 June-2 July 2002</a></td><td headers="t4" class="evenRowOddCol">-</td><td headers="t5" class="evenRowEvenCol"><em>EUR/02/5036813</em></td></tr>
+<tr><td headers="t1" class="oddRowEvenCol"><a href="/iris/handle/10665/107441"></a><img src="/iris/retrieve/496657/E77301.pdf.jpg" alt="E77301.pdf.jpg" width="70.416664" height="100.0" border="0"></td><td headers="t2" class="oddRowOddCol" nowrap="nowrap" align="right">2002</td><td headers="t3" class="oddRowEvenCol"><a href="/iris/handle/10665/107441">Sub-regional meeting of national immunization programme managers (Central and Eastern Europe, Turkey and NIS) : report on a WHO meeting, Vienna, Austria 26-28 February 2002</a></td><td headers="t4" class="oddRowOddCol"><em><a href="/iris/browse?type=author&amp;value=World+Health+Organization.+Regional+Office+for+Europe&amp;value_lang=en">World Health Organization. Regional Office for Europe</a></em></td><td headers="t5" class="oddRowEvenCol"><em>EUR/02/5042756</em></td></tr>
+</table>
+
+
+</div>
+
+
+
+
+<div class="discovery-result-pagination">
+
+<h2 class="info">Results 1-10 of 118335.</h2>
+    <ul class="links">
+
+
+<li class="current-page-link">1</li>
+
+
+
+<li><a href="/iris/simple-search?query=&amp;sort_by=score&amp;order=desc&amp;rpp=10&amp;etal=0&amp;start=10">2</a></li>
+
+
+
+<li><a href="/iris/simple-search?query=&amp;sort_by=score&amp;order=desc&amp;rpp=10&amp;etal=0&amp;start=20">3</a></li>
+
+
+
+<li><a href="/iris/simple-search?query=&amp;sort_by=score&amp;order=desc&amp;rpp=10&amp;etal=0&amp;start=30">4</a></li>
+
+<li>...</li><li><a href="/iris/simple-search?query=&amp;sort_by=score&amp;order=desc&amp;rpp=10&amp;etal=0&amp;start=118330">11834</a></li><li><a href="/iris/simple-search?query=&amp;sort_by=score&amp;order=desc&amp;rpp=10&amp;etal=0&amp;start=10">next</a></li>
+</ul>
+
+<!-- give a content to the div --></div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                    <p> </p>
+                </td>
+
+
+
+                <td class="sidebar">
+
+
+
+<h3 class="facets">Refine your search</h3>
+<div id="facets" class="facetsBox">
+
+<div id="facet_author" class="facet">
+	    <span class="facetName">Author</span>
+	    <ul><li><a href="/iris/simple-search?query=&amp;sort_by=score&amp;order=desc&amp;rpp=10&amp;etal=0&amp;filtername=author&amp;filterquery=World+Health+Organization&amp;filtertype=equals" title="World Health Organization">
+                World Health Organization (17830)</a></li><li><a href="/iris/simple-search?query=&amp;sort_by=score&amp;order=desc&amp;rpp=10&amp;etal=0&amp;filtername=author&amp;filterquery=World+Health+Organization%2C+Regional+Office+for+South-East+Asia&amp;filtertype=equals" title="World Health Organization, Regional Office for South-East Asia">
+                World Health Organization, Re... (3116)</a></li><li><a href="/iris/simple-search?query=&amp;sort_by=score&amp;order=desc&amp;rpp=10&amp;etal=0&amp;filtername=author&amp;filterquery=World+Health+Organization.+Regional+Office+for+Europe&amp;filtertype=equals" title="World Health Organization. Regional Office for Europe">
+                World Health Organization. Re... (1389)</a></li><li><a href="/iris/simple-search?query=&amp;sort_by=score&amp;order=desc&amp;rpp=10&amp;etal=0&amp;filtername=author&amp;filterquery=%D0%92%D1%81%D0%B5%D0%BC%D0%B8%D1%80%D0%BD%D0%B0%D1%8F+%D0%BE%D1%80%D0%B3%D0%B0%D0%BD%D0%B8%D0%B7%D0%B0%D1%86%D0%B8%D1%8F+%D0%B7%D0%B4%D1%80%D0%B0%D0%B2%D0%BE%D0%BE%D1%85%D1%80%D0%B0%D0%BD%D0%B5%D0%BD%D0%B8%D1%8F&amp;filtertype=equals" title="Всемирная организация здравоохранения">
+                Всемирная организация здравоо... (883)</a></li><li><a href="/iris/simple-search?query=&amp;sort_by=score&amp;order=desc&amp;rpp=10&amp;etal=0&amp;filtername=author&amp;filterquery=Food+and+Agriculture+Organization+of+the+United+Nations&amp;filtertype=equals" title="Food and Agriculture Organization of the United Nations">
+                Food and Agriculture Organiza... (776)</a></li><li><a href="/iris/simple-search?query=&amp;sort_by=score&amp;order=desc&amp;rpp=10&amp;etal=0&amp;filtername=author&amp;filterquery=International+Programme+on+Chemical+Safety&amp;filtertype=equals" title="International Programme on Chemical Safety">
+                International Programme on Ch... (566)</a></li><li><a href="/iris/simple-search?query=&amp;sort_by=score&amp;order=desc&amp;rpp=10&amp;etal=0&amp;filtername=author&amp;filterquery=UNICEF&amp;filtertype=equals" title="UNICEF">
+                UNICEF (430)</a></li><li><a href="/iris/simple-search?query=&amp;sort_by=score&amp;order=desc&amp;rpp=10&amp;etal=0&amp;filtername=author&amp;filterquery=Organisation+mondiale+de+la+Sante&amp;filtertype=equals" title="Organisation mondiale de la Sante">
+                Organisation mondiale de la S... (378)</a></li><li><a href="/iris/simple-search?query=&amp;sort_by=score&amp;order=desc&amp;rpp=10&amp;etal=0&amp;filtername=author&amp;filterquery=World+Health+Assembly%2C+1&amp;filtertype=equals" title="World Health Assembly, 1">
+                World Health Assembly, 1 (351)</a></li><li><a href="/iris/simple-search?query=&amp;sort_by=score&amp;order=desc&amp;rpp=10&amp;etal=0&amp;filtername=author&amp;filterquery=Assemblee+mondiale+de+la+Sante%2C+2&amp;filtertype=equals" title="Assemblee mondiale de la Sante, 2">
+                Assemblee mondiale de la Sant... (347)</a></li><li class="facet-next"><a href="/iris/simple-search?query=&amp;sort_by=score&amp;order=desc&amp;rpp=10&amp;etal=0&amp;author_page=1">Next</a></li>
+	            </ul></div><div id="facet_mesh" class="facet">
+	    <span class="facetName">Subject</span>
+	    <ul><li><a href="/iris/simple-search?query=&amp;sort_by=score&amp;order=desc&amp;rpp=10&amp;etal=0&amp;filtername=mesh&amp;filterquery=Organization+and+Administration&amp;filtertype=authority" title="Organization and Administration">
+                Organization and Administration (17641)</a></li><li><a href="/iris/simple-search?query=&amp;sort_by=score&amp;order=desc&amp;rpp=10&amp;etal=0&amp;filtername=mesh&amp;filterquery=Budgets&amp;filtertype=authority" title="Budgets">
+                Budgets (9780)</a></li><li><a href="/iris/simple-search?query=&amp;sort_by=score&amp;order=desc&amp;rpp=10&amp;etal=0&amp;filtername=mesh&amp;filterquery=Financial+Management&amp;filtertype=authority" title="Financial Management">
+                Financial Management (9250)</a></li><li><a href="/iris/simple-search?query=&amp;sort_by=score&amp;order=desc&amp;rpp=10&amp;etal=0&amp;filtername=mesh&amp;filterquery=World+Health+Organization&amp;filtertype=authority" title="World Health Organization">
+                World Health Organization (6278)</a></li><li><a href="/iris/simple-search?query=&amp;sort_by=score&amp;order=desc&amp;rpp=10&amp;etal=0&amp;filtername=mesh&amp;filterquery=Interinstitutional+Relations&amp;filtertype=authority" title="Interinstitutional Relations">
+                Interinstitutional Relations (6084)</a></li><li><a href="/iris/simple-search?query=&amp;sort_by=score&amp;order=desc&amp;rpp=10&amp;etal=0&amp;filtername=mesh&amp;filterquery=International+Cooperation&amp;filtertype=authority" title="International Cooperation">
+                International Cooperation (5940)</a></li><li><a href="/iris/simple-search?query=&amp;sort_by=score&amp;order=desc&amp;rpp=10&amp;etal=0&amp;filtername=mesh&amp;filterquery=Regional+Health+Planning&amp;filtertype=authority" title="Regional Health Planning">
+                Regional Health Planning (5865)</a></li><li><a href="/iris/simple-search?query=&amp;sort_by=score&amp;order=desc&amp;rpp=10&amp;etal=0&amp;filtername=mesh&amp;filterquery=Meeting+Abstracts&amp;filtertype=authority" title="Meeting Abstracts">
+                Meeting Abstracts (4506)</a></li><li><a href="/iris/simple-search?query=&amp;sort_by=score&amp;order=desc&amp;rpp=10&amp;etal=0&amp;filtername=mesh&amp;filterquery=Governing+Board&amp;filtertype=authority" title="Governing Board">
+                Governing Board (4222)</a></li><li><a href="/iris/simple-search?query=&amp;sort_by=score&amp;order=desc&amp;rpp=10&amp;etal=0&amp;filtername=mesh&amp;filterquery=National+Health+Programs&amp;filtertype=authority" title="National Health Programs">
+                National Health Programs (4099)</a></li><li class="facet-next"><a href="/iris/simple-search?query=&amp;sort_by=score&amp;order=desc&amp;rpp=10&amp;etal=0&amp;mesh_page=1">Next</a></li>
+	            </ul></div><div id="facet_dateIssued" class="facet">
+	    <span class="facetName">Issue date</span>
+	    <ul><li><a href="/iris/simple-search?query=&amp;sort_by=score&amp;order=desc&amp;rpp=10&amp;etal=0&amp;filtername=dateIssued&amp;filterquery=%5B2000+TO+2015%5D&amp;filtertype=equals" title="2000 - 2015">
+                2000 - 2015 (42244)</a></li><li><a href="/iris/simple-search?query=&amp;sort_by=score&amp;order=desc&amp;rpp=10&amp;etal=0&amp;filtername=dateIssued&amp;filterquery=%5B1900+TO+1999%5D&amp;filtertype=equals" title="1900 - 1999">
+                1900 - 1999 (76084)</a></li><li><a href="/iris/simple-search?query=&amp;sort_by=score&amp;order=desc&amp;rpp=10&amp;etal=0&amp;filtername=dateIssued&amp;filterquery=%5B1866+TO+1899%5D&amp;filtertype=equals" title="1866 - 1899">
+                1866 - 1899 (3)</a></li></ul></div>
+
+</div>
+
+
+                </td>
+
+            </tr>
+
+
+             <tr class="pageFooterBar">
+                <td colspan="3" class="footer_en" align="center">
+
+
+
+
+         					<div class="ftr">
+         						<div class="hidden"><h5>Corporate links</h5></div>
+
+         						<table align="center">
+         						<tr><td>
+        					 	<a href="mailto:repository@who.int" class="ftr">Feedback</a>
+        					 	</td><td>|</td>
+                    <td>
+                    <a href="http://www.who.int/library/en" class="ftr">Library Information</a>
+                    </td>
+                    <td>|</td>
+                    <td>
+                    <a href="http://apps.who.int/iris/mobile" class="ftr">IRIS mobile</a>
+                    </td>
+                    </tr>
+                    </table>
+
+         						<a href="http://www.who.int/about/copyright/en/" class="ftr">© WHO 2014
+         						</a>
+
+         					</div>
+
+                </td>
+            </tr>
+        </table>
+
+
+        </div>
+        </div>
+       </div>
+
+    </body></html>
