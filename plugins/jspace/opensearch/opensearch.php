@@ -118,7 +118,7 @@ class PlgJSpaceOpenSearch extends JSpaceIngestionPlugin
                         $i++;
                     }
                 }
-            } else if (array_search($contentType, array('text/xml', 'application/atom+xml', 'application/rss+xml')) !== false) {
+            } else if (array_search($contentType, array('application/xml', 'text/xml', 'application/atom+xml', 'application/rss+xml')) !== false) {
                 //@todo JUri not updating url via setVar. May need more testing.
                 $discovered = new JRegistry;
                 $discovered->set('discovery.type', 'opensearch');
