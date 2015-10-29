@@ -6,9 +6,9 @@
  * @copyright   Copyright (C) 2014 KnowledgeArc Ltd. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE
  */
- 
+
 defined('_JEXEC') or die('Restricted access');
- 
+
 jimport('joomla.form.helper');
 JFormHelper::loadFieldClass('text');
 
@@ -34,15 +34,15 @@ class JSpaceFormFieldMetadataText extends JFormFieldText
 		$html = JLayoutHelper::render("jspace.form.fields.metadata.text", $this);
 		return $html;
 	}
-	
+
     public function __get($name)
     {
-        switch ($name) 
+        switch ($name)
         {
             case 'maximum':
                 return JArrayHelper::getValue($this->element, 'maximum', 5);
                 break;
-            
+
             default:
                 return parent::__get($name);
                 break;
