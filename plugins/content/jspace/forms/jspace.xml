@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+    <fields name="metadata">
+        <fieldset name="jmetadata">
+            <field
+                name="publisher"
+                type="text"
+                id="publisher"
+                description="The publisher of the article."
+                label="Publisher"
+                size="30"/>
+            <field
+                name="parent"
+                type="modal_article"
+                label="Is Part Of"
+                required="false"
+                edit="true"
+                clear="false"
+                description="The parent article this article belongs to (if applicable)."/>
+            <field
+                name="abstract"
+                type="textarea"
+                label="Abstract"
+                required="false"
+                edit="true"
+                clear="false"
+                description="An excerpt from one or more of the attached files."/>
+        </fieldset>
+    </fields>
+
+    <fields name="jspace">
+        <fields name="files">
+            <fieldset name="files"
+                label="PLG_CONTENT_JSPACE_FIELDSET_FILES_LABEL">
+                <field
+                    name="master"
+                    type="file"
+                    id="master"
+                    description="One or more master files."
+                    label="Master"
+                    multiple="true"/>
+            </fieldset>
+        </fields>
+    </fields>
+</form>

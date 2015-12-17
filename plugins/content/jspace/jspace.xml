@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<extension version="3.4" type="plugin" group="content" method="upgrade">
+    <name>plg_content_jspace</name>
+    <author>KnowledgeArc</author>
+    <creationDate>2015/10/30</creationDate>
+    <copyright>Copyright (C) 2015 KnowledgeArc Ltd. All rights reserved.</copyright>
+    <license>GNU General Public License version 2 or later; see LICENSE.txt</license>
+    <authorEmail>development@knowledgearc.com</authorEmail>
+    <authorUrl>www.knowledgearc.org</authorUrl>
+    <version>1.0.0-dev</version>
+    <description>PLG_CONTENT_JSPACE_XML_DESCRIPTION</description>
+
+    <files>
+        <filename plugin="jspace">jspace.php</filename>
+        <folder>forms</folder>
+    </files>
+
+    <languages>
+        <language tag="en-GB">language/en-GB/en-GB.plg_content_jspace.ini</language>
+        <language tag="en-GB">language/en-GB/en-GB.plg_content_jspace.sys.ini</language>
+    </languages>
+
+    <config>
+    </config>
+</extension>
